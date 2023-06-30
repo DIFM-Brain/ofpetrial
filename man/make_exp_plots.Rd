@@ -12,15 +12,14 @@ make_exp_plots(
   abline_type = "free",
   headland_length = NA,
   side_length = NA,
-  min_plot_length = 200,
-  max_plot_length = 300,
+  min_plot_length = 61,
+  max_plot_length = 91,
   length_unit = "meter",
-  perpendicular = FALSE,
-  file_name_append = file_name_append
+  perpendicular = FALSE
 )
 }
 \arguments{
-\item{input_plot_info}{information of plots created by make_input_plot()}
+\item{input_plot_info}{list of plot information created by make_input_plot()}
 
 \item{boundary_file}{(string) name of the field boundary file}
 
@@ -38,12 +37,48 @@ make_exp_plots(
 
 \item{max_plot_length}{(default = 300 feet) maximum plot length}
 
-\item{length_unit}{(default = "feet")}
+\item{length_unit}{(default = "meter") unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length}
 
 \item{perpendicular}{logical}
-
-\item{file_name_append}{}
+}
+\value{
+experimental plots as sf
 }
 \description{
 Make trial design and return trial design, harvester ab-line, and applicator/planter ab-line.
+}
+\examples{
+seed_plot_info <-
+make_input_plot_data(
+    form = "seed",
+    plot_width = 40,
+    machine_width = 60,
+    section_num = 24,
+    length_unit = "feet"
+  )
+
+n_plot_info <-
+  make_input_plot_data(
+    form = "NH3",
+    plot_width = measurements::conv_unit(30, "ft", "m"),
+    machine_width = measurements::conv_unit(30, "ft", "m"),
+    section_num = 1
+  )
+
+input_plot_info <- list(seed_plot_info, n_plot_info)
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = input_plot_info,
+    boundary_file = here("inst/extdata/boundary-simple1.shp"),
+    abline_file = here("inst/extdata/ab-line-simple1.shp"),
+    harvester_width = 30,
+    abline_type = "free",
+    headland_length = 30,
+    side_length = 60,
+    min_plot_length = 200,
+    max_plot_length = 300,
+    length_unit = "feet",
+    perpendicular = FALSE
+  )
 }

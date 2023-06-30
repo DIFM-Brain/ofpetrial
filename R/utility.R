@@ -60,14 +60,14 @@ get_rates <- function(min_rate,
 group_points_sc <- function(data_sf, by_var = NA, angle_threshold) {
   if (!is.na(by_var)) {
     setup_dt <- data_sf %>%
-      cbind(., st_coordinates(.)) %>%
+      cbind(., sf::st_coordinates(.)) %>%
       data.table() %>%
       .[, original_order_id := 1:nrow(.)] %>%
       setnames(by_var, "group_var")
   } else {
     by_var <- "group_var"
     setup_dt <- data_sf %>%
-      cbind(., st_coordinates(.)) %>%
+      cbind(., sf::st_coordinates(.)) %>%
       data.table() %>%
       .[, original_order_id := 1:nrow(.)] %>%
       .[, group_var := 1]
@@ -120,7 +120,7 @@ group_points_sc <- function(data_sf, by_var = NA, angle_threshold) {
       setnames("group_var", by_var)
   }
 
-  return(st_as_sf(group_dt))
+  return(sf::st_as_sf(group_dt))
 }
 
 #++++++++++++++++++++++++++++++++++++
@@ -131,13 +131,13 @@ expand_grid_df <- function(data_1, data_2) {
     index_1 = seq_len(nrow(data_1)),
     index_2 = seq_len(nrow(data_2))
   ) %>%
-    tibble() %>%
-    rowwise() %>%
-    mutate(
+    tibble::tibble() %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
       data = list(
         cbind(
-          slice(data.table(data_1), index_1),
-          slice(data.table(data_2), index_2)
+          dplyr::slice(data.table(data_1), index_1),
+          dplyr::slice(data.table(data_2), index_2)
         )
       )
     ) %>%
@@ -145,7 +145,7 @@ expand_grid_df <- function(data_1, data_2) {
     ungroup() %>%
     .$data %>%
     rbindlist() %>%
-    tibble()
+    tibble::tibble()
 
   return(expanded_data)
 }

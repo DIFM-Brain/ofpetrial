@@ -7,7 +7,18 @@ usethis::use_package("lwgeom")
 usethis::use_package("stringr")
 usethis::use_package("measurements")
 usethis::use_package("purrr")
+usethis::use_package("tibble")
 usethis::use_package("tidyr")
+usethis::use_package("ggpubr")
 usethis::use_pipe() # can use %>% after this
 
 devtools::document() # regenerate documents reflecting the changes and apply load_all()
+
+usethis::use_build_ignore(c("notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs"))
+
+usethis::use_readme_rmd()
+usethis::use_news_md()
+usethis::use_vignette("ab-line")
+
+
+devtools::load_all()

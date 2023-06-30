@@ -20,4 +20,10 @@ Imports:
     stringr,
     measurements,
     purrr,
-    tidyr
+    tidyr,
+    tibble,
+    ggpubr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

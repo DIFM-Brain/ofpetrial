@@ -4,10 +4,13 @@
 \alias{viz_exp_plots}
 \title{Visualize experiment plots}
 \usage{
-viz_exp_plots(exp_plots)
+viz_exp_plots(exp_data)
 }
 \arguments{
-\item{exp_plots}{experiment plots created by make_exp_plots()}
+\item{exp_data}{experiment plots created by make_exp_plots()}
+}
+\value{
+ggplot2 figure
 }
 \description{
 Visualize experiment plots (no rates assigned)

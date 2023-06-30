@@ -9,6 +9,9 @@ viz_td(trial_design)
 \arguments{
 \item{trial_design}{trial design: experiment plots with input rates assigned}
 }
+\value{
+ggplot2 figure
+}
 \description{
 Visualize trial designs plots (rates assigned)
 }

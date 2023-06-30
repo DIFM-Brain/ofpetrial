@@ -23,19 +23,6 @@ library(lwgeom)
 library(ggplot2)
 library(stringr)
 
-# /*----------------------------------*/
-#' ## Load the field parameter data
-# /*----------------------------------*/
-field_data <-
-  jsonlite::fromJSON(
-    here("data/field_parameter.json"),
-    flatten = TRUE
-  ) %>%
-  data.table() %>%
-  .[, field_year := paste(farm, field, year, sep = "_")]
-
-field_year_ls <- field_data$field_year
-
 source("R/utility.R")
 source("R/utility_spatial.R")
 source("R/make_exp_plots.R")
@@ -45,7 +32,6 @@ source("R/assign_rates.R")
 #' # Make trial designs
 # /*=================================================*/
 
-ffy <- field_year_ls[1]
 
 #!===========================================================
 #! Create experiment plots
@@ -53,31 +39,27 @@ ffy <- field_year_ls[1]
 seed_plot_info <-
   make_input_plot_data(
     form = "seed",
-    unit = "seeds",
-    plot_width = 40,
+    plot_width = 30,
     machine_width = 60,
-    section_num = 24
+    section_num = 24,
+    length_unit = "feet"
   )
 
 n_plot_info <-
   make_input_plot_data(
     form = "NH3",
-    unit = "lbs",
-    plot_width = 30,
-    machine_width = 30,
+    plot_width = measurements::conv_unit(60, "ft", "m"),
+    machine_width = measurements::conv_unit(60, "ft", "m"),
     section_num = 1
   )
 
 input_plot_info <- list(seed_plot_info, n_plot_info)
 
-ggplot(data_exp$exp_plots[[1]]) +
-  geom_sf()
-
 exp_data <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = here("data/boundary-simple1.shp"),
-    abline_file = here("data/ab-line-simple1.shp"),
+    boundary_file = here("inst/extdata/boundary-simple1.shp"),
+    abline_file = here("inst/extdata/ab-line-simple1.shp"),
     harvester_width = 30,
     abline_type = "free",
     headland_length = 30,
@@ -85,9 +67,14 @@ exp_data <-
     min_plot_length = 200,
     max_plot_length = 300,
     length_unit = "feet",
-    perpendicular = FALSE,
-    file_name_append = "test"
+    perpendicular = FALSE
   )
+
+viz_exp_plots(exp_data)
+
+exp_data$harvest_ab_lines
+exp_data$ab_lines
+exp_data$exp_plots
 
 #!===========================================================
 #! Assign rates
@@ -95,30 +82,28 @@ exp_data <-
 seed_rate_info <-
   make_input_rate_data(
     seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
     min_rate = 16000,
     max_rate = 40000,
-    gc_rate = 32000,
     num_rates = 5,
     design_type = "jcl"
   )
 
 n_rate_info <-
   make_input_rate_data(
-    n_plot_info,
+    plot_info = n_plot_info,
     gc_rate = 180,
+    unit = "lb",
     rates = c(100, 140, 180, 220, 260),
     design_type = "jcl",
   )
 
 rate_info <- list(seed_rate_info, n_rate_info)
 
-
 td <- assign_rates(exp_data, rate_info)
 
-#*===========================================================
-#* Write out all the files for 
-#*===========================================================
+ls(td)
 
-#*===========================================================
-#* Visualization #*===========================================================
+viz_td(td)
 

@@ -1,3 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^notes\.md$
+^organize\.R$
+^structure\.rmd$
+^todo\.md$
+^test\.R$
+^docs$
+^README\.Rmd$

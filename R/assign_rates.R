@@ -1,6 +1,6 @@
 #' Assign rates to the plots of experimental plots
 #' 
-#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_into, which can be created by make_input_rate_data()
+#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by make_input_rate_data()
 #' 
 #' @param exp_data experiment plots created by make_exp_plots()
 #' @param rate_info rate information created by make_input_rate_data()
@@ -11,7 +11,7 @@ assign_rates <- function(exp_data, rate_info) {
 
   input_trial_data <-
     data.table::rbindlist(rate_info) %>%
-    dplyr::left_join(exp_data, ., by = c("form", "unit"))
+    dplyr::left_join(exp_data, ., by = "form")
 
   if (nrow(input_trial_data) > 1) {
     input_trial_data$push <- c(FALSE, TRUE)
@@ -59,7 +59,7 @@ assign_rates <- function(exp_data, rate_info) {
         experiment_design,
         headland
       ) %>%
-        st::st_transform(4326)
+        sf::st_transform(4326)
     )) %>%
     dplyr::mutate(trial_design = list(
       if ("tgts_K" %in% names(trial_design)) {
@@ -70,8 +70,7 @@ assign_rates <- function(exp_data, rate_info) {
       }
     )) %>%
     dplyr::select(
-      -exp_plots, -experiment_plots_dissolved,
-      -headland, -experiment_design
+      form, input_type, trial_design, design_type, unit, ab_lines, harvest_ab_lines, field_sf
     )
 
   return(trial_design)
@@ -84,6 +83,7 @@ assign_rates <- function(exp_data, rate_info) {
 #'
 #' @param plot_info plot information created by make_input_plot_data
 #' @param gc_rate numeric: rate the grower would have chosen if not running an experiment
+#' @param unit (string) unit of input 
 #' @param rates (default is NULL)
 #' @param min_rate numeric minimum input rate
 #' @param max_rate numeric maximum input rate
@@ -92,10 +92,10 @@ assign_rates <- function(exp_data, rate_info) {
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export
-make_input_rate_data <- function(plot_info, gc_rate, rates = NULL, min_rate = NULL, max_rate = NULL, num_rates = 5, design_type = NA) {
+make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NULL, max_rate = NULL, num_rates = 5, design_type = NA) {
 
-  #--- extract form nd unit ---#
-  input_trial_data <- dplyr::select(plot_info, form, unit)
+  #--- extract form and unit ---#
+  input_trial_data <- dplyr::select(plot_info, form)
 
   #++++++++++++++++++++++++++++++++++++
   #+Design type
@@ -163,6 +163,7 @@ make_input_rate_data <- function(plot_info, gc_rate, rates = NULL, min_rate = NU
   }
 
   input_trial_data$gc_rate <- gc_rate
+  input_trial_data$unit <- unit
   input_trial_data$rates_data <- list(rates_data)
 
   return(input_trial_data)
@@ -175,11 +176,6 @@ make_input_rate_data <- function(plot_info, gc_rate, rates = NULL, min_rate = NU
 #*+++++++++++++++++++++++++++++++++++
 #* Assign rates (latin and jump-rate-conscious)
 #*+++++++++++++++++++++++++++++++++++
-# exp_sf <- input_trial_data$exp_plots[[2]]
-# rates_data <- input_trial_data$rates_data[[2]]
-# design_type <- input_trial_data$design_type[[2]]
-# push <- input_trial_data$push[[2]]
-# assign_rates_by_input(exp_sf, rates_data, design_type = "ejca", push)
 
 assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
   max_plot_id <- max(exp_sf$plot_id)
@@ -210,7 +206,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
         strip_id = 1:max_strip_id,
         start_rank = full_start_seq
       ) %>%
-      rowwise() %>%
+      dplyr::rowwise() %>%
       dplyr::mutate(rate_rank = list(
         rep(
           get_seq_start(start_rank, basic_seq, strip_id, design_type),
@@ -231,7 +227,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
       .[, rank_in_tier := rowid(tier)]
 
     assigned_rates_data <- rates_data %>%
-      nest_by(tier) %>%
+      dplyr::nest_by(tier) %>%
       dplyr::mutate(num_levels = nrow(data)) %>%
       dplyr::mutate(basic_seq = list(
         gen_sequence(num_rates, design_type, push)
@@ -245,12 +241,12 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
       )) %>%
       dplyr::mutate(strip_plot_data = list(
         if (tier == 1) {
-          filter(exp_sf, (strip_id %% 2) == 1) %>%
+          dplyr::filter(exp_sf, (strip_id %% 2) == 1) %>%
             data.table() %>%
             .[, .(strip_id, plot_id)] %>%
             unique(by = c("strip_id", "plot_id"))
         } else {
-          filter(exp_sf, (strip_id %% 2) == 0) %>%
+          dplyr::filter(exp_sf, (strip_id %% 2) == 0) %>%
             data.table() %>%
             .[, .(strip_id, plot_id)] %>%
             unique(by = c("strip_id", "plot_id"))
@@ -280,12 +276,12 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
       dplyr::mutate(rate_data = list(
         data.table(data)[strip_plot_data[, .(strip_id, plot_id, rank_in_tier)], on = "rank_in_tier"]
       )) %>%
-      pluck("rate_data") %>%
+      purrr::pluck("rate_data") %>%
       rbindlist()
   }
 
   return_data <-
-    left_join(
+    dplyr::left_join(
       exp_sf,
       assigned_rates_data,
       by = c("strip_id", "plot_id")

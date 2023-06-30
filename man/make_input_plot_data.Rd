@@ -4,19 +4,51 @@
 \alias{make_input_plot_data}
 \title{Create a data frame of trial information for a single input}
 \usage{
-make_input_plot_data(form, unit, plot_width, machine_width, section_num)
+make_input_plot_data(
+  form,
+  plot_width,
+  machine_width,
+  section_num,
+  length_unit = "meter"
+)
 }
 \arguments{
 \item{form}{type of input (e.g., UAN32, seed)}
 
-\item{unit}{unit of length of plot_width and machine_width}
+\item{plot_width}{width of plots in meter}
 
-\item{plot_width}{width of plots}
-
-\item{machine_width}{machine width (applicator, planter)}
+\item{machine_width}{machine width (applicator, planter) in meter}
 
 \item{section_num}{number of sections of the machine}
+
+\item{length_unit}{unit of length for machine_width and plot_width (default is "meter")}
+}
+\value{
+data frame of trial information for a single input
 }
 \description{
 Create a data frame of trial information for a single input
+}
+\examples{
+
+seed_plot_info <-
+  make_input_plot_data(
+    form = "seed",
+    plot_width = 40,
+    machine_width = 60,
+    section_num = 24,
+    length_unit = "feet"
+  )
+
+seed_plot_info
+
+n_plot_info <-
+  make_input_plot_data(
+    form = "NH3",
+    plot_width = measurements::conv_unit(30, "ft", "m"),
+    machine_width = measurements::conv_unit(30, "ft", "m"),
+    section_num = 1
+  )
+
+n_plot_info
 }
