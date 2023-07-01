@@ -19,7 +19,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of ofpetrial is to ...
+
+The `ofpetrial` package allows the user to design agronomic input experiments in a reproducible manner without using ArcGIS or QGIS.  
 
 ## Installation
 
@@ -31,7 +32,11 @@ devtools::install_github("DIFM-Brain/ofpetrial")
 
 ## Example
 
+Here, we demonstrate how to use the `ofpetrial` package to create two-input on-farm experiment trial designs.
+
 ### Create experimental plots
+
+We start with specifying plot and machine information for inputs using `make_input_plot_data()`, which simply creates a data.frame of the specified information with some interal unit conversion of length (feet to meter).
 
 ```{r}
 seed_plot_info <-
@@ -43,6 +48,8 @@ seed_plot_info <-
     length_unit = "feet"
   )
 
+seed_plot_info
+
 n_plot_info <-
   make_input_plot_data(
     form = "NH3",
@@ -51,9 +58,10 @@ n_plot_info <-
     section_num = 1
   )
 
-seed_plot_info
 n_plot_info
 ```
+
+Now that plot and machine specifications for the inputs are ready, we can create experiment plots based on them using `make_exp_plots()`. 
 
 ```{r}
 input_plot_info <- list(seed_plot_info, n_plot_info)
@@ -72,11 +80,19 @@ exp_data <-
     length_unit = "feet",
     perpendicular = FALSE
   )
+
+exp_data$exp_plots
 ```
+
+We can visualize the layout of the experiment plots using `viz_exp_plots()`.
 
 ```{r, dpi = 600}
 viz_exp_plots(exp_data)
 ```
+
+### Assign rates
+
+Let's now assign input rates to the experimental plots we just created. Before doing so, we need to prepare rate information for both inputs using `make_input_rate_data()`.
 
 ```{r}
 #!===========================================================
@@ -93,6 +109,8 @@ seed_rate_info <-
     design_type = "jcl"
   )
 
+seed_rate_info
+
 n_rate_info <-
   make_input_rate_data(
     plot_info = n_plot_info,
@@ -102,11 +120,17 @@ n_rate_info <-
     design_type = "jcl",
   )
 
-rate_info <- list(seed_rate_info, n_rate_info)
-
-td <- assign_rates(exp_data, rate_info)
+n_rate_info
 ```
 
+We can now use `assign_rates()` to assign rates to experiment plots.
+
+```{r}
+trial_design <- assign_rates(exp_data, list(seed_rate_info, n_rate_info))
+```
+
+Here is the visualization of the trial design done by `viz_td()`.
+
 ```{r, dpi = 600}
-viz_td(td)
+viz_td(trial_design)
 ```

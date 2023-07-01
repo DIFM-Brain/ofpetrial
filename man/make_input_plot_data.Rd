@@ -34,7 +34,7 @@ Create a data frame of trial information for a single input
 seed_plot_info <-
   make_input_plot_data(
     form = "seed",
-    plot_width = 40,
+    plot_width = 30,
     machine_width = 60,
     section_num = 24,
     length_unit = "feet"
@@ -45,8 +45,8 @@ seed_plot_info
 n_plot_info <-
   make_input_plot_data(
     form = "NH3",
-    plot_width = measurements::conv_unit(30, "ft", "m"),
-    machine_width = measurements::conv_unit(30, "ft", "m"),
+    plot_width = measurements::conv_unit(60, "ft", "m"),
+    machine_width = measurements::conv_unit(60, "ft", "m"),
     section_num = 1
   )
 

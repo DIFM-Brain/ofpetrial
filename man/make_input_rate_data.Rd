@@ -7,6 +7,7 @@
 make_input_rate_data(
   plot_info,
   gc_rate,
+  unit,
   rates = NULL,
   min_rate = NULL,
   max_rate = NULL,
@@ -18,6 +19,8 @@ make_input_rate_data(
 \item{plot_info}{plot information created by make_input_plot_data}
 
 \item{gc_rate}{numeric: rate the grower would have chosen if not running an experiment}
+
+\item{unit}{(string) unit of input}
 
 \item{rates}{(default is NULL)}
 

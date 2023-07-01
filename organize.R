@@ -22,3 +22,10 @@ usethis::use_vignette("ab-line")
 
 
 devtools::load_all()
+rm(
+  list =
+    c(
+      "make_exp_plots",
+      "make_input_plot_data"
+    )
+)

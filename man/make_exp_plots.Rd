@@ -49,7 +49,7 @@ Make trial design and return trial design, harvester ab-line, and applicator/pla
 }
 \examples{
 seed_plot_info <-
-make_input_plot_data(
+  make_input_plot_data(
     form = "seed",
     plot_width = 40,
     machine_width = 60,

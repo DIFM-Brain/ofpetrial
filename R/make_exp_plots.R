@@ -198,7 +198,7 @@ make_exp_plots <- function(input_plot_info,
     #--- whether to lock or not ---#
     dplyr::mutate(lock_ab_line = (abline_type == "lock")) %>%
     #--- input with ab-line lock first ---#
-    arrange(desc(lock_ab_line)) %>%
+    dplyr::arrange(desc(lock_ab_line)) %>%
     dplyr::mutate(input_id = seq_len(nrow(.))) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(line_edge_id = NA) %>%

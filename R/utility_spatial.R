@@ -177,7 +177,7 @@ get_angle_lines <- function(line_1, line_2) {
     )) %>%
     dplyr::mutate(dot_product = sum(i_vect_rotated * h_vec_n)) %>%
     dplyr::mutate(dist = abs(dot_product) - 1) %>%
-    arrange(abs(dist)) %>%
+    dplyr::arrange(abs(dist)) %>%
     ungroup() %>%
     dplyr::slice(1) %>%
     pull(angle)
@@ -189,7 +189,7 @@ get_angle_lines <- function(line_1, line_2) {
 #+ Create strips
 #++++++++++++++++++++++++++++++++++++
 create_strips <- function(field, plot_heading, plot_width, radius) {
-  circle <- st_buffer(sf::st_centroid(field), radius)
+  circle <- sf::st_buffer(sf::st_centroid(field), radius)
 
   strips <-
     sf::st_make_grid(circle, cellsize = c(plot_width, radius * 2 + 50)) %>%

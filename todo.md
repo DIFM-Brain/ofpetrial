@@ -4,6 +4,7 @@
 + [ ] options of specifying sequences (within and across strips)
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates
++ [ ] allow for specifying a complete sequence of rates within strip and across strips.
 
 # Problems
 
@@ -13,3 +14,4 @@
 
 + full demo
 + ab-line options
++ trial design options
