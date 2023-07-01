@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_exp_plots.R
 \name{make_exp_plots}
 \alias{make_exp_plots}
-\title{Make trial design}
+\title{Make experimental plots/strips inside the field boundary}
 \usage{
 make_exp_plots(
   input_plot_info,
@@ -19,33 +19,33 @@ make_exp_plots(
 )
 }
 \arguments{
-\item{input_plot_info}{list of plot information created by make_input_plot()}
+\item{input_plot_info}{(data.fram or a list of two data.frames) list of plot information created by make_input_plot()}
 
-\item{boundary_file}{(string) name of the field boundary file}
+\item{boundary_file}{(string) path of the field boundary file}
 
 \item{harvester_width}{(numeric) width of the harvester}
 
-\item{abline_file}{(string) name of the ab-line file}
+\item{abline_file}{(string) path of the ab-line file}
 
-\item{abline_type}{(string) the type of ab-line generation ("free", "lock", "none")}
+\item{abline_type}{(string) the type of ab-line generation. Select from "free", "lock", and "none"}
 
-\item{headland_length}{(numeric, default = NA) length of the headland}
+\item{headland_length}{(numeric) Default = NA. Length of the headland}
 
-\item{side_length}{(numeric, default = NA) length of the sides}
+\item{side_length}{(numeric) Default = NA. Length of the sides}
 
-\item{min_plot_length}{(default = 200 feet) minimum plot length}
+\item{min_plot_length}{(numeric) Default = 61 meter (200 feet) minimum plot length}
 
-\item{max_plot_length}{(default = 300 feet) maximum plot length}
+\item{max_plot_length}{(numeric) Default = 91 meter (300 feet) maximum plot length}
 
-\item{length_unit}{(default = "meter") unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length}
+\item{length_unit}{("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length}
 
-\item{perpendicular}{logical}
+\item{perpendicular}{(logical) Default = FALSE.}
 }
 \value{
-experimental plots as sf
+a tibble that include experimental plots as sf
 }
 \description{
-Make trial design and return trial design, harvester ab-line, and applicator/planter ab-line.
+Make experimental plots/strips inside the field boundary, harvester ab-line, and applicator/planter ab-line.
 }
 \examples{
 seed_plot_info <-
@@ -70,8 +70,8 @@ input_plot_info <- list(seed_plot_info, n_plot_info)
 exp_data <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = here("inst/extdata/boundary-simple1.shp"),
-    abline_file = here("inst/extdata/ab-line-simple1.shp"),
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     harvester_width = 30,
     abline_type = "free",
     headland_length = 30,
@@ -81,4 +81,6 @@ exp_data <-
     length_unit = "feet",
     perpendicular = FALSE
   )
+
+exp_data$exp_plots
 }

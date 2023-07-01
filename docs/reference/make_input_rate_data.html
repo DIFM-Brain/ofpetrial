@@ -72,11 +72,11 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>plot_info</dt>
-<dd><p>plot information created by make_input_plot_data</p></dd>
+<dd><p>(data.frame) plot information created by make_input_plot_data</p></dd>
 
 
 <dt>gc_rate</dt>
-<dd><p>numeric: rate the grower would have chosen if not running an experiment</p></dd>
+<dd><p>(numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument</p></dd>
 
 
 <dt>unit</dt>
@@ -84,23 +84,23 @@
 
 
 <dt>rates</dt>
-<dd><p>(default is NULL)</p></dd>
+<dd><p>(numeric vector) Default is NULL. Sequence of trial rates in the ascending order.</p></dd>
 
 
 <dt>min_rate</dt>
-<dd><p>numeric minimum input rate</p></dd>
+<dd><p>(numeric) minimum input rate. Ignored if rates are specified.</p></dd>
 
 
 <dt>max_rate</dt>
-<dd><p>numeric maximum input rate</p></dd>
+<dd><p>(numeric) maximum input rate. Ignored if rates are specified</p></dd>
 
 
 <dt>num_rates</dt>
-<dd><p>numeric (default is 5)</p></dd>
+<dd><p>(numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.</p></dd>
 
 
 <dt>design_type</dt>
-<dd><p>(string) type of rate design. available options are "jcl", "sparse", and "ejca"</p></dd>
+<dd><p>(string) type of trial design. available options are "jcl", "sparse", and "ejca". See for more details.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -118,7 +118,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Taro Mieno.</p>
+  <p></p><p>Developed by Taro Mieno, Brittani Edge.</p>
 </div>
 
 <div class="pkgdown">

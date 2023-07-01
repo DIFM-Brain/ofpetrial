@@ -2,7 +2,21 @@ Package: ofpetrial
 Type: Package
 Title: Design On-farm Field Trials
 Version: 0.1.0
-Author: Taro Mieno, Brittani Edge
+Authors@R:
+  c(
+    person(
+      given = "Taro",
+      family =" Mieno",
+      role = c("aut", "cre"),
+      email = "tmieno2@unl.edu"
+    ), 
+    person(
+      given = "Brittani",
+      family = "Edge",
+      role = c("aut", "ctb"),
+      email = "bedge2@illinois.edu"
+    )
+  )
 Maintainer: Taro Mieno <tmieno2@unl.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.

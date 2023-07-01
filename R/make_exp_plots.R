@@ -2,11 +2,11 @@
 #'
 #' Create a data frame of trial information for a single input
 #'
-#' @param form type of input (e.g., UAN32, seed)
-#' @param plot_width width of plots in meter
-#' @param machine_width machine width (applicator, planter) in meter
-#' @param section_num number of sections of the machine
-#' @param length_unit unit of length for machine_width and plot_width (default is "meter")
+#' @param form (character) type of input (e.g., UAN32, seed)
+#' @param plot_width (numeric) width of experimental plots in meter
+#' @param machine_width (numeric) machine width (applicator, planter)
+#' @param section_num (numeric) number of sections of the machine
+#' @param length_unit ("feet" or "meter") unit of length for machine_width and plot_width (default is "meter")
 #' @returns data frame of trial information for a single input
 #' @import data.table
 #' @examples
@@ -68,23 +68,25 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
   return(input_trial_data)
 }
 
-#' Make trial design
+#' Make experimental plots/strips inside the field boundary
 #'
-#' Make trial design and return trial design, harvester ab-line, and applicator/planter ab-line.
+#' Make experimental plots/strips inside the field boundary, harvester ab-line, and applicator/planter ab-line.
 #'
-#' @param input_plot_info list of plot information created by make_input_plot()
-#' @param boundary_file (string) name of the field boundary file
+#' @param input_plot_info (data.fram or a list of two data.frames) list of plot information created by make_input_plot()
+#' @param boundary_file (string) path of the field boundary file
 #' @param harvester_width (numeric) width of the harvester
-#' @param abline_file (string) name of the ab-line file
-#' @param abline_type (string) the type of ab-line generation ("free", "lock", "none")
-#' @param headland_length (numeric, default = NA) length of the headland
-#' @param side_length (numeric, default = NA) length of the sides
-#' @param min_plot_length (default = 200 feet) minimum plot length
-#' @param max_plot_length (default = 300 feet) maximum plot length
-#' @param length_unit (default = "meter") unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length
-#' @param perpendicular logical
-#' @returns experimental plots as sf
+#' @param abline_file (string) path of the ab-line file
+#' @param abline_type (string) the type of ab-line generation. Select from "free", "lock", and "none"
+#' @param headland_length (numeric) Default = NA. Length of the headland
+#' @param side_length (numeric) Default = NA. Length of the sides
+#' @param min_plot_length (numeric) Default = 61 meter (200 feet) minimum plot length
+#' @param max_plot_length (numeric) Default = 91 meter (300 feet) maximum plot length
+#' @param length_unit ("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length
+#' @param perpendicular (logical) Default = FALSE.
+#' @returns a tibble that include experimental plots as sf
 #' @import data.table
+#' @import sf
+#' @import dplyr
 #' @examples
 #' seed_plot_info <-
 #'   make_input_plot_data(
@@ -108,8 +110,8 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
 #' exp_data <-
 #'   make_exp_plots(
 #'     input_plot_info = input_plot_info,
-#'     boundary_file = here("inst/extdata/boundary-simple1.shp"),
-#'     abline_file = here("inst/extdata/ab-line-simple1.shp"),
+#'     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+#'     abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
 #'     harvester_width = 30,
 #'     abline_type = "free",
 #'     headland_length = 30,
@@ -119,6 +121,8 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
 #'     length_unit = "feet",
 #'     perpendicular = FALSE
 #'   )
+#' 
+#' exp_data$exp_plots
 #' @export
 
 make_exp_plots <- function(input_plot_info,
@@ -485,7 +489,8 @@ make_exp_plots <- function(input_plot_info,
       headland,
       exp_plots,
       ab_lines,
-      harvest_ab_lines
+      harvest_ab_lines,
+      ab_line_type
     )
 
   return(trial_data_return)
@@ -550,7 +555,7 @@ make_trial_plots_by_input <- function(field,
   #--- find the group id for the cells that are intersecting with the ab-line  ---#
   ab_int_group <-
     suppressWarnings(sf::st_intersection(strips, plot_heading)) %>%
-    pull(group) %>%
+    dplyr::pull(group) %>%
     unique()
 
   #--- get the sf of the intersecting group ---#
@@ -562,7 +567,7 @@ make_trial_plots_by_input <- function(field,
 
   #--- the distance between the ab-line and the line that connect the centroids of the intersecting sf ---#
   correction_dist <-
-    st_distance(
+    sf::st_distance(
       get_through_line(int_group, radius, ab_xy_nml),
       plot_heading
     ) %>%
@@ -581,7 +586,7 @@ make_trial_plots_by_input <- function(field,
   #   geom_sf(data = plot_heading, color = "red", size = 0.3)
 
   new_dist <-
-    st_distance(
+    sf::st_distance(
       get_through_line(int_group_corrected, radius, ab_xy_nml),
       plot_heading
     ) %>%
@@ -789,7 +794,7 @@ make_trial_plots_by_input <- function(field,
       ungroup() %>%
       dplyr::mutate(base_line = .[1, ]$perpendicular_line) %>%
       dplyr::rowwise() %>%
-      dplyr::mutate(dist_to_base = st_distance(perpendicular_line, base_line) %>%
+      dplyr::mutate(dist_to_base = sf::st_distance(perpendicular_line, base_line) %>%
         as.numeric()) %>%
       dplyr::mutate(remainder = dist_to_base %% harvester_width) %>%
       dplyr::mutate(correction_dist = min(remainder, harvester_width - remainder)) %>%
@@ -801,7 +806,7 @@ make_trial_plots_by_input <- function(field,
       )) %>%
       dplyr::mutate(
         new_remainder =
-          as.numeric(st_distance(base_line, shifted_line)) %% harvester_width
+          as.numeric(sf::st_distance(base_line, shifted_line)) %% harvester_width
       ) %>%
       # if the distance is close enough moving in the wrong
       # direction does not hurt

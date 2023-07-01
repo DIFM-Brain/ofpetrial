@@ -178,9 +178,9 @@ get_angle_lines <- function(line_1, line_2) {
     dplyr::mutate(dot_product = sum(i_vect_rotated * h_vec_n)) %>%
     dplyr::mutate(dist = abs(dot_product) - 1) %>%
     dplyr::arrange(abs(dist)) %>%
-    ungroup() %>%
+    dplyr::ungroup() %>%
     dplyr::slice(1) %>%
-    pull(angle)
+    dplyr::pull(angle)
 
   return(angle)
 }

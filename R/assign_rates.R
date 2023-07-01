@@ -81,14 +81,14 @@ assign_rates <- function(exp_data, rate_info) {
 #'
 #' Create data of input rate information for a single input. This can be used to assign rates to experimentl plots using assign_rates()
 #'
-#' @param plot_info plot information created by make_input_plot_data
-#' @param gc_rate numeric: rate the grower would have chosen if not running an experiment
-#' @param unit (string) unit of input 
-#' @param rates (default is NULL)
-#' @param min_rate numeric minimum input rate
-#' @param max_rate numeric maximum input rate
-#' @param num_rates numeric (default is 5)
-#' @param design_type (string) type of rate design. available options are "jcl", "sparse", and "ejca"
+#' @param plot_info (data.frame) plot information created by make_input_plot_data
+#' @param gc_rate (numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument
+#' @param unit (string) unit of input
+#' @param rates (numeric vector) Default is NULL. Sequence of trial rates in the ascending order. 
+#' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
+#' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
+#' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
+#' @param design_type (string) type of trial design. available options are "jcl", "sparse", and "ejca". See for more details. 
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export

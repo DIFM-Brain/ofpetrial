@@ -58,8 +58,8 @@ input_plot_info <- list(seed_plot_info, n_plot_info)
 exp_data <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = here("inst/extdata/boundary-simple1.shp"),
-    abline_file = here("inst/extdata/ab-line-simple1.shp"),
+    boundary_file = "inst/extdata/boundary-simple1.shp",
+    abline_file = "inst/extdata/ab-line-simple1.shp",
     harvester_width = 30,
     abline_type = "free",
     headland_length = 30,
@@ -106,4 +106,6 @@ td <- assign_rates(exp_data, rate_info)
 ls(td)
 
 viz_td(td)
+
+trial_design <- td
 

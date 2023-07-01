@@ -13,15 +13,15 @@ make_input_plot_data(
 )
 }
 \arguments{
-\item{form}{type of input (e.g., UAN32, seed)}
+\item{form}{(character) type of input (e.g., UAN32, seed)}
 
-\item{plot_width}{width of plots in meter}
+\item{plot_width}{(numeric) width of experimental plots in meter}
 
-\item{machine_width}{machine width (applicator, planter) in meter}
+\item{machine_width}{(numeric) machine width (applicator, planter)}
 
-\item{section_num}{number of sections of the machine}
+\item{section_num}{(numeric) number of sections of the machine}
 
-\item{length_unit}{unit of length for machine_width and plot_width (default is "meter")}
+\item{length_unit}{("feet" or "meter") unit of length for machine_width and plot_width (default is "meter")}
 }
 \value{
 data frame of trial information for a single input

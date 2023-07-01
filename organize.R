@@ -14,6 +14,8 @@ usethis::use_pipe() # can use %>% after this
 
 devtools::document() # regenerate documents reflecting the changes and apply load_all()
 
+pkgdown::build_site()
+
 usethis::use_build_ignore(c("notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs"))
 
 usethis::use_readme_rmd()
