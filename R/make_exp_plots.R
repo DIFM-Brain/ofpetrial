@@ -86,7 +86,6 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
 #' @returns a tibble that include experimental plots as sf
 #' @import data.table
 #' @import sf
-#' @import dplyr
 #' @examples
 #' seed_plot_info <-
 #'   make_input_plot_data(
@@ -466,7 +465,7 @@ make_exp_plots <- function(input_plot_info,
         sf::st_buffer(0.01) %>% # this avoids tiny tiny gaps between plots
         lwgeom::st_snap_to_grid(size = 0.0001) %>%
         sf::st_make_valid() %>%
-        summarize(plot_id = min(plot_id))
+        dplyr::summarize(plot_id = min(plot_id))
     )) %>%
     #--- Create headland ---#
     # experiment_plots_dissolved <- trial_data_eh$experiment_plots_dissolved
@@ -474,7 +473,7 @@ make_exp_plots <- function(input_plot_info,
     dplyr::mutate(headland = list(
       st_difference(field_sf, experiment_plots_dissolved) %>%
         sf::st_as_sf() %>%
-        rename(., geometry = attr(., "sf_column")) %>%
+        dplyr::rename(., geometry = attr(., "sf_column")) %>%
         dplyr::select(geometry)
     ))
 
@@ -489,9 +488,10 @@ make_exp_plots <- function(input_plot_info,
       headland,
       exp_plots,
       ab_lines,
-      harvest_ab_lines,
-      ab_line_type
-    )
+      harvest_ab_lines
+    ) %>%
+    dplyr::mutate(abline_type = abline_type) %>%
+    dplyr::ungroup()
 
   return(trial_data_return)
 }
@@ -761,7 +761,7 @@ make_trial_plots_by_input <- function(field,
     )) %>%
     purrr::pluck("plots") %>%
     purrr::reduce(rbind) %>%
-    rename(strip_id = group) %>%
+    dplyr::rename(strip_id = group) %>%
     dplyr::mutate(strip_id = strip_id - min(strip_id) + 1) %>%
     sf::st_set_crs(sf::st_crs(field))
 
@@ -791,7 +791,7 @@ make_trial_plots_by_input <- function(field,
       dplyr::mutate(perpendicular_line = list(
         get_through_line(first_plot$geometry, radius, ab_xy_nml_p90)
       )) %>%
-      ungroup() %>%
+      dplyr::ungroup() %>%
       dplyr::mutate(base_line = .[1, ]$perpendicular_line) %>%
       dplyr::rowwise() %>%
       dplyr::mutate(dist_to_base = sf::st_distance(perpendicular_line, base_line) %>%
@@ -895,7 +895,7 @@ make_ablines <- function(ab_sf,
         dplyr::select(ab_id, x) %>%
         unique(by = "ab_id") %>%
         sf::st_as_sf() %>%
-        ungroup()
+        dplyr::ungroup()
     } else {
       #--- ab-line re-centering when machine width > plot_width ---#
       ab_lines <- ab_lines_data %>%

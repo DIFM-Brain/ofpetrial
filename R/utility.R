@@ -142,7 +142,7 @@ expand_grid_df <- function(data_1, data_2) {
       )
     ) %>%
     dplyr::select(data) %>%
-    ungroup() %>%
+    dplyr::ungroup() %>%
     .$data %>%
     rbindlist() %>%
     tibble::tibble()

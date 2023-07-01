@@ -41,7 +41,7 @@ write_trial_files <- function(trial_design, folder_path = NA, tr_file_name = NA,
     #+ ab-lines
     #++++++++++++++++++++++++++++++++++++
     summarise(list(
-      if (ab_line_type != "non") {
+      if (abline_type != "non") {
         st_write(
           ab_lines,
           dsn =

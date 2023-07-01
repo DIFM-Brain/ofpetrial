@@ -163,11 +163,46 @@
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Note: length arguments (e.g., harvester_width) are converted to meter as length_unit is specified as "feet". </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::select(trial_data_eh, form, plot_width, field_sf, headland,     exp_plots, ab_lines, harvest_ab_lines, ab_line_type):</span> Can't subset columns that don't exist.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Column `ab_line_type` doesn't exist.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'exp_data' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 928 features and 3 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 352997.9 ymin: 4331451 xmax: 353367.1 ymax: 4332207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: WGS 84 / UTM zone 16N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    plot_id strip_id poly_line                       geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1        1       1_1 POLYGON ((353010.1 4331451,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2        1       1_1 POLYGON ((353010.6 4331474,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3        1       1_1 POLYGON ((353011 4331497, 3...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4        1       1_1 POLYGON ((353011.5 4331521,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5        1       1_1 POLYGON ((353012 4331544, 3...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6        1       1_1 POLYGON ((353012.5 4331567,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7        1       1_1 POLYGON ((353013 4331590, 3...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8        1       1_1 POLYGON ((353013.4 4331614,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9        1       1_1 POLYGON ((353013.9 4331637,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10        1       1_1 POLYGON ((353014.4 4331660,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 1248 features and 3 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 352997.9 ymin: 4331451 xmax: 353370.2 ymax: 4332207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: WGS 84 / UTM zone 16N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    plot_id strip_id poly_line                       geometry</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1        1       1_1 POLYGON ((353007 4331451, 3...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2        1       1_1 POLYGON ((353007.5 4331474,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3        1       1_1 POLYGON ((353008 4331497, 3...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4        1       1_1 POLYGON ((353008.5 4331521,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5        1       1_1 POLYGON ((353008.9 4331544,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6        1       1_1 POLYGON ((353009.4 4331567,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7        1       1_1 POLYGON ((353009.9 4331590,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8        1       1_1 POLYGON ((353010.4 4331614,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9        1       1_1 POLYGON ((353010.9 4331637,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10        1       1_1 POLYGON ((353011.3 4331660,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </div>

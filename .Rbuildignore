@@ -8,3 +8,4 @@
 ^test\.R$
 ^docs$
 ^README\.Rmd$
+^README\.html$

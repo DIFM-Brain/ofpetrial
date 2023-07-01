@@ -6,6 +6,7 @@
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates
 + [ ] allow for specifying a complete sequence of rates within strip and across strips.
++ [ ] cut off ab-lines outside of the field boundary
 
 # Problems
 

@@ -22,13 +22,15 @@ assign_rates <- function(exp_data, rate_info) {
   #  !===========================================================
   # ! Assign rates
   # !===========================================================
-  # exp_sf <- input_trial_data$exp_plots[[1]]
-  # rates_data <- input_trial_data$rates_data[[1]]
-  # design_type <- input_trial_data$design_type[[1]]
-  # push <- input_trial_data$push[[1]]
+  # exp_plots <- input_trial_data$exp_plots[[2]]
+  # exp_sf <- input_trial_data$exp_plots[[2]]
+  # rates_data <- input_trial_data$rates_data[[2]]
+  # design_type <- input_trial_data$design_type[[2]]
+  # push <- input_trial_data$push[[2]]
 
   trial_design <-
     input_trial_data %>%
+    dplyr::rowwise() %>%
     dplyr::mutate(experiment_design = list(
       assign_rates_by_input(
         exp_sf = exp_plots,
@@ -71,7 +73,8 @@ assign_rates <- function(exp_data, rate_info) {
     )) %>%
     dplyr::select(
       form, input_type, trial_design, design_type, unit, ab_lines, harvest_ab_lines, field_sf
-    )
+    ) %>%
+    dplyr::ungroup()
 
   return(trial_design)
 }

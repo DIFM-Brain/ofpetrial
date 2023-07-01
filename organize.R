@@ -16,7 +16,7 @@ devtools::document() # regenerate documents reflecting the changes and apply loa
 
 pkgdown::build_site()
 
-usethis::use_build_ignore(c("notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs"))
+usethis::use_build_ignore(c("notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html"))
 
 usethis::use_readme_rmd()
 usethis::use_news_md()
@@ -24,10 +24,3 @@ usethis::use_vignette("ab-line")
 
 
 devtools::load_all()
-rm(
-  list =
-    c(
-      "make_exp_plots",
-      "make_input_plot_data"
-    )
-)

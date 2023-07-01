@@ -4,10 +4,12 @@
 \alias{viz_td}
 \title{Visualize trial designs}
 \usage{
-viz_td(trial_design)
+viz_td(trial_design, abline = TRUE)
 }
 \arguments{
 \item{trial_design}{trial design: experiment plots with input rates assigned}
+
+\item{abline}{(logical) Default = TRUE. If TRUE, ab-lines are displayed along with the trial designs}
 }
 \value{
 ggplot2 figure
