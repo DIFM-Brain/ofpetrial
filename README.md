@@ -146,11 +146,10 @@ exp_data$exp_plots
 #> 10 POLYGON ((353019 4331660, 3...
 ```
 
-We can visualize the layout of the experiment plots using
-`viz_exp_plots()`.
+We can visualize the layout of the experiment plots using `viz_ep()`.
 
 ``` r
-viz_exp_plots(exp_data)
+viz_ep(exp_data)
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />

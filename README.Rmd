@@ -84,10 +84,10 @@ exp_data <-
 exp_data$exp_plots
 ```
 
-We can visualize the layout of the experiment plots using `viz_exp_plots()`.
+We can visualize the layout of the experiment plots using `viz_ep()`.
 
 ```{r, dpi = 600}
-viz_exp_plots(exp_data)
+viz_ep(exp_data)
 ```
 
 ### Assign rates

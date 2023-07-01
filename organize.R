@@ -1,3 +1,7 @@
+
+#!===========================================================
+#! One-time operations
+#!===========================================================
 usethis::use_package("data.table")
 usethis::use_package("dplyr")
 usethis::use_package("ggplot2")
@@ -12,15 +16,18 @@ usethis::use_package("tidyr")
 usethis::use_package("ggpubr")
 usethis::use_pipe() # can use %>% after this
 
-devtools::document() # regenerate documents reflecting the changes and apply load_all()
-
-pkgdown::build_site()
-
 usethis::use_build_ignore(c("notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html"))
 
 usethis::use_readme_rmd()
 usethis::use_news_md()
 usethis::use_vignette("ab-line")
+usethis::use_vignette("trial-design-options")
 
+#!===========================================================
+#! 
+#!===========================================================
 
-devtools::load_all()
+devtools::document() # regenerate documents reflecting the changes and apply load_all()
+
+pkgdown::build_site()
+
