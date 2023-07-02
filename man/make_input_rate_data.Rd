@@ -32,7 +32,7 @@ make_input_rate_data(
 
 \item{num_rates}{(numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.}
 
-\item{design_type}{(string) type of trial design. available options are "ls", "jcls", "strip", "sparse", and "ejca". See for more details.}
+\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.}
 
 \item{rank_seq_ws}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.}
 

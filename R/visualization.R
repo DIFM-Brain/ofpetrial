@@ -53,7 +53,21 @@ viz_td <- function(trial_design, abline = TRUE) {
         geom_sf(data = trial_design, aes(fill = factor(rate)), color = NA) +
         scale_fill_viridis_d(name = paste0(form, " (", unit, ")")) +
         theme_void() +
-        ggtitle(paste0("Trial design for ", form))
+        ggtitle(
+          paste0(
+            "Trial design for ",
+            form,
+            " (",
+            dplyr::case_when(
+              design_type == "ls" ~ "Latin Square",
+              design_type == "strip" ~ "Strip",
+              design_type == "rb" ~ "Randomized Block",
+              design_type == "jcls" ~ "Jump-conscious Latin Square",
+              design_type == "ejca" ~ "Extra Jump-conscious Alternate",
+            ),
+            ")"
+          )
+        )
     )) %>%
     dplyr::mutate(g_fig = list(
       if (abline == TRUE) {

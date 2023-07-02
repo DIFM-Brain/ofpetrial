@@ -122,6 +122,28 @@ td_strip <-
 viz_td(td_strip, abline = FALSE)
 ```
 
+# Randomized Block ("rb")
+
+```{r}
+n_rate_info <-
+  make_input_rate_data(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "rb",
+  )
+
+td_rb <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz_td(td_rb, abline = FALSE)
+```
 
 # Jump-consicous Latin Square ("jcls")
 

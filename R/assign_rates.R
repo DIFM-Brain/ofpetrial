@@ -27,8 +27,8 @@ assign_rates <- function(exp_data, rate_info) {
   #  !===========================================================
   # ! Assign rates
   # !===========================================================
-  # exp_plots <- input_trial_data$exp_plots[[1]]
   # exp_sf <- input_trial_data$exp_plots[[1]]
+  # exp_plots <- input_trial_data$exp_plots[[1]]
   # rates_data <- input_trial_data$rates_data[[1]]
   # rank_seq_ws <- input_trial_data$rank_seq_ws[[1]]
   # rank_seq_as <- input_trial_data$rank_seq_as[[1]]
@@ -100,7 +100,7 @@ assign_rates <- function(exp_data, rate_info) {
 #' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
 #' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
 #' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
-#' @param design_type (string) type of trial design. available options are "ls", "jcls", "strip", "sparse", and "ejca". See for more details.
+#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.
 #' @param rank_seq_ws (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.
 #' @param rank_seq_as (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.
 #' @returns data.frame of input rate information
@@ -143,7 +143,7 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
   #++++++++++++++++++++++++++++++++++++
   #+ Order (rank) rates based on design type
   #++++++++++++++++++++++++++++++++++++
-  if (design_type %in% c("ls", "jcls", "strip")) {
+  if (design_type %in% c("ls", "jcls", "strip", "rb")) {
     rates_data <-
       data.table(
         rate = rates_ls,
@@ -196,6 +196,7 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
 #* +++++++++++++++++++++++++++++++++++
 
 assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type, push) {
+
   max_plot_id <- max(exp_sf$plot_id)
   max_strip_id <- max(exp_sf$strip_id)
   num_rates <- nrow(rates_data)
@@ -216,9 +217,9 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
     }
 
     if (is.null(rank_seq_as) & is.null(rank_seq_ws)) {
-     message(
-       'Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"'
-     )
+      message(
+        'Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"'
+      )
     }
 
     full_start_seq <-
@@ -259,12 +260,41 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
         assigned_rates_data,
         by = c("strip_id", "plot_id")
       )
+  } else if (design_type == "rb") {
+    if (!is.null(rank_seq_ws)) {
+      message(
+        'Note: rank_seq_ws is ignored when design_type = "rb"'
+      )
+    }
+    if (!is.null(rank_seq_as)) {
+      message(
+        'Note: rank_seq_as is ignored when design_type = "rb"'
+      )
+    }
+    return_data <-
+      exp_sf %>%
+      data.table::data.table() %>%
+      .[, block_row := ((plot_id - 1) %/% num_rates + 1)] %>%
+      .[, block_col := ((strip_id - 1) %/% num_rates + 1)] %>%
+      .[, block_id := paste0(block_row, "-", block_col)] %>%
+      dplyr::nest_by(block_id) %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(data = list(
+        dplyr::mutate(data, rate_rank = get_rank_for_rb(num_rates, data))
+      )) %>%
+      tidyr::unnest(cols = c(data)) %>%
+      data.table::data.table() %>%
+      rates_data[., on = "rate_rank"] %>%
+      .[, block := .GRP, by = block_id] %>%
+      .[, `:=`(block_id = NULL, block_row = NULL, block_col = NULL)] %>%
+      sf::st_as_sf()
+
   } else if (design_type == "jcls") {
 
     #--- get the rate rank sequence within a strip---#
     if (!is.null(rank_seq_ws)) {
       message(
-       'Note: rank_seq_ws is ignored when design_type = "jcls"'
+        'Note: rank_seq_ws is ignored when design_type = "jcls"'
       )
     }
 
@@ -416,8 +446,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       )
   }
 
-
-
   return(return_data)
 }
 
@@ -462,4 +490,16 @@ get_starting_rank_across_strips <- function(num_levels) {
   return_seq <- sample(1:num_levels, num_levels, replace = FALSE, prob = NULL)
 
   return(return_seq)
+}
+
+get_rank_for_rb <- function(num_rates, data) {
+  n_plot <- nrow(data)
+  n_comp_block <- n_plot %/% num_rates
+  n_plots_remaining <- n_plot %% num_rates
+  rate_rank_ls <-
+    c(
+      c(replicate(n_comp_block, sample(1:num_rates, num_rates, replace = FALSE))),
+      sample(1:num_rates, n_plots_remaining, replace = FALSE)
+    )
+  return(rate_rank_ls)
 }
