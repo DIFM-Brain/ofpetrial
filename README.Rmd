@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-
 The `ofpetrial` package allows the user to design agronomic input experiments in a reproducible manner without using ArcGIS or QGIS.  
 
 ## Installation

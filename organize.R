@@ -28,6 +28,8 @@ usethis::use_vignette("trial-design-options")
 #!===========================================================
 
 devtools::document() # regenerate documents reflecting the changes and apply load_all()
+devtools::load_all()
 
+#--- build pkgdown website ---#
 pkgdown::build_site()
 

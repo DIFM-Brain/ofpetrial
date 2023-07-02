@@ -34,6 +34,9 @@
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/ab-line.html">ab-line</a>
     </li>
+    <li>
+      <a href="../articles/trial-design-options.html">Trial Design Options</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -65,7 +68,9 @@
 <span>  min_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  max_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  num_rates <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  design_type <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  design_type <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  rank_seq_ws <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rank_seq_as <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -100,7 +105,15 @@
 
 
 <dt>design_type</dt>
-<dd><p>(string) type of trial design. available options are "jcl", "sparse", and "ejca". See for more details.</p></dd>
+<dd><p>(string) type of trial design. available options are "ls", "jcls", "strip", "sparse", and "ejca". See for more details.</p></dd>
+
+
+<dt>rank_seq_ws</dt>
+<dd><p>(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.</p></dd>
+
+
+<dt>rank_seq_as</dt>
+<dd><p>(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.</p></dd>
 
 </dl></div>
     <div id="value">

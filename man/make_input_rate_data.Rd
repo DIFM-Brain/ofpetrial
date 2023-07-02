@@ -12,7 +12,9 @@ make_input_rate_data(
   min_rate = NULL,
   max_rate = NULL,
   num_rates = 5,
-  design_type = NA
+  design_type = NA,
+  rank_seq_ws = NULL,
+  rank_seq_as = NULL
 )
 }
 \arguments{
@@ -30,7 +32,11 @@ make_input_rate_data(
 
 \item{num_rates}{(numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.}
 
-\item{design_type}{(string) type of trial design. available options are "jcl", "sparse", and "ejca". See for more details.}
+\item{design_type}{(string) type of trial design. available options are "ls", "jcls", "strip", "sparse", and "ejca". See for more details.}
+
+\item{rank_seq_ws}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.}
+
+\item{rank_seq_as}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.}
 }
 \value{
 data.frame of input rate information

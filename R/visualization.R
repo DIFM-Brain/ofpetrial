@@ -51,7 +51,7 @@ viz_td <- function(trial_design, abline = TRUE) {
       ggplot() +
         geom_sf(data = field_sf, fill = NA) +
         geom_sf(data = trial_design, aes(fill = factor(rate)), color = NA) +
-        scale_fill_viridis_d() +
+        scale_fill_viridis_d(name = paste0(form, " (", unit, ")")) +
         theme_void() +
         ggtitle(paste0("Trial design for ", form))
     )) %>%

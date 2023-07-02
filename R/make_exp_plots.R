@@ -120,7 +120,7 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
 #'     length_unit = "feet",
 #'     perpendicular = FALSE
 #'   )
-#' 
+#'
 #' exp_data$exp_plots
 #' @export
 
@@ -142,9 +142,13 @@ make_exp_plots <- function(input_plot_info,
   #++++++++++++++++++++++++++++++++++++
   #+ Create trial data
   #++++++++++++++++++++++++++++++++++++
-  input_trial_data <-
-    input_plot_info %>%
-    rbindlist()
+  if (class(input_plot_info) == "data.frame") {
+    input_trial_data <- input_plot_info
+  } else if (class(input_plot_info) == "list") {
+    input_trial_data <-
+      input_plot_info %>%
+      rbindlist()
+  }
 
   #++++++++++++++++++++++++++++++++++++
   #+Unit conversion (feet to meter) of global parameters

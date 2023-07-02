@@ -1,17 +1,20 @@
 + [ ] measurement unit by input type (N, seed, )
 + [ ] trial design
   + [ ] sparse design
-  + [ ] strip design
-+ [ ] options of specifying sequences (within and across strips)
+  + [x] strip design
+  + [x] latin square
++ [x] options of specifying sequences (within and across strips)
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates
-+ [ ] allow for specifying a complete sequence of rates within strip and across strips.
 + [ ] cut off ab-lines outside of the field boundary
++ [ ] base n rate
++ [ ] function to convert N equivalent rate  
 
 # Problems
 
 1. when field is not straight and plot widths are different, rates transitions do not align well
 2. harvester ab-line for two-input case
+3. what is the white space around the experiment part of the field in readme?
 
 # Vignette
 
@@ -20,3 +23,7 @@
   -  input: as-applied shape file, ab-line file, or angle
   -  lock, free, none 
 + trial design options
+  + ls
+  + jcls
+  + strip
+  + ejca

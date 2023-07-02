@@ -1,17 +1,22 @@
 #' Assign rates to the plots of experimental plots
-#' 
+#'
 #' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by make_input_rate_data()
-#' 
+#'
 #' @param exp_data experiment plots created by make_exp_plots()
 #' @param rate_info rate information created by make_input_rate_data()
 #' @returns trial design as sf (experiment plots with rates assigned)
 #' @import data.table
 #' @export
 assign_rates <- function(exp_data, rate_info) {
-
-  input_trial_data <-
-    data.table::rbindlist(rate_info) %>%
-    dplyr::left_join(exp_data, ., by = "form")
+  if (class(rate_info) == "data.frame") {
+    input_trial_data <-
+      rate_info %>%
+      dplyr::left_join(exp_data, ., by = "form")
+  } else if (class(rate_info) == "list") {
+    input_trial_data <-
+      data.table::rbindlist(rate_info) %>%
+      dplyr::left_join(exp_data, ., by = "form")
+  }
 
   if (nrow(input_trial_data) > 1) {
     input_trial_data$push <- c(FALSE, TRUE)
@@ -22,11 +27,13 @@ assign_rates <- function(exp_data, rate_info) {
   #  !===========================================================
   # ! Assign rates
   # !===========================================================
-  # exp_plots <- input_trial_data$exp_plots[[2]]
-  # exp_sf <- input_trial_data$exp_plots[[2]]
-  # rates_data <- input_trial_data$rates_data[[2]]
-  # design_type <- input_trial_data$design_type[[2]]
-  # push <- input_trial_data$push[[2]]
+  # exp_plots <- input_trial_data$exp_plots[[1]]
+  # exp_sf <- input_trial_data$exp_plots[[1]]
+  # rates_data <- input_trial_data$rates_data[[1]]
+  # rank_seq_ws <- input_trial_data$rank_seq_ws[[1]]
+  # rank_seq_as <- input_trial_data$rank_seq_as[[1]]
+  # design_type <- input_trial_data$design_type[[1]]
+  # push <- input_trial_data$push[[1]]
 
   trial_design <-
     input_trial_data %>%
@@ -35,6 +42,8 @@ assign_rates <- function(exp_data, rate_info) {
       assign_rates_by_input(
         exp_sf = exp_plots,
         rates_data = rates_data,
+        rank_seq_ws = rank_seq_ws,
+        rank_seq_as = rank_seq_as,
         design_type = design_type,
         push = push
       ) %>%
@@ -87,15 +96,17 @@ assign_rates <- function(exp_data, rate_info) {
 #' @param plot_info (data.frame) plot information created by make_input_plot_data
 #' @param gc_rate (numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument
 #' @param unit (string) unit of input
-#' @param rates (numeric vector) Default is NULL. Sequence of trial rates in the ascending order. 
+#' @param rates (numeric vector) Default is NULL. Sequence of trial rates in the ascending order.
 #' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
 #' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
 #' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
-#' @param design_type (string) type of trial design. available options are "jcl", "sparse", and "ejca". See for more details. 
+#' @param design_type (string) type of trial design. available options are "ls", "jcls", "strip", "sparse", and "ejca". See for more details.
+#' @param rank_seq_ws (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.
+#' @param rank_seq_as (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export
-make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NULL, max_rate = NULL, num_rates = 5, design_type = NA) {
+make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NULL, max_rate = NULL, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL) {
 
   #--- extract form and unit ---#
   input_trial_data <- dplyr::select(plot_info, form)
@@ -104,8 +115,8 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
   #+Design type
   #++++++++++++++++++++++++++++++++++++
   if (is.na(design_type)) {
-    #--- if design_type not specified, use jcl ---#
-    input_trial_data$design_type <- "jcl"
+    #--- if design_type not specified, use jcls ---#
+    input_trial_data$design_type <- "jcls"
   } else {
     input_trial_data$design_type <- design_type
   }
@@ -132,7 +143,7 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
   #++++++++++++++++++++++++++++++++++++
   #+ Order (rank) rates based on design type
   #++++++++++++++++++++++++++++++++++++
-  if (design_type == "jcl") {
+  if (design_type %in% c("ls", "jcls", "strip")) {
     rates_data <-
       data.table(
         rate = rates_ls,
@@ -168,6 +179,8 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
   input_trial_data$gc_rate <- gc_rate
   input_trial_data$unit <- unit
   input_trial_data$rates_data <- list(rates_data)
+  input_trial_data$rank_seq_ws <- list(rank_seq_ws)
+  input_trial_data$rank_seq_as <- list(rank_seq_as)
 
   return(input_trial_data)
 }
@@ -176,24 +189,39 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
 # !==================-=========================================
 # ! Helper internal functions
 # !===========================================================
-#*+++++++++++++++++++++++++++++++++++
+#* +++++++++++++++++++++++++++++++++++
 #* Assign rates (latin and jump-rate-conscious)
-#*+++++++++++++++++++++++++++++++++++
+#* +++++++++++++++++++++++++++++++++++
 
-assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
+assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type, push) {
   max_plot_id <- max(exp_sf$plot_id)
   max_strip_id <- max(exp_sf$strip_id)
   num_rates <- nrow(rates_data)
 
-  if (design_type == "jcl") {
-
+  if (design_type == "ls") {
     #--- get the rate rank sequence within a strip---#
-    basic_seq <- gen_sequence(num_rates, design_type, push)
+    if (is.null(rank_seq_ws)) {
+      basic_seq <- gen_sequence(num_rates, design_type, push)
+    } else {
+      basic_seq <- rank_seq_ws
+    }
 
     #--- get the starting ranks across strips for the field---#
+    if (is.null(rank_seq_as)) {
+      start_rank_as <- get_starting_rank_across_strips(num_rates)
+    } else {
+      start_rank_as <- rank_seq_as
+    }
+
+    if (is.null(rank_seq_as) & is.null(rank_seq_ws)) {
+     message(
+       'Note: You did not specify either rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"'
+     )
+    }
+
     full_start_seq <-
       rep(
-        get_starting_rank_across_strips(num_rates),
+        start_rank_as,
         ceiling(max_strip_id / num_rates) + 1
       ) %>%
       .[1:(max_strip_id + 1)]
@@ -222,6 +250,99 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
       .[, plot_id := cumsum(dummy), by = strip_id] %>%
       rates_data[., on = "rate_rank"] %>%
       .[, .(strip_id, plot_id, rate)]
+
+    return_data <-
+      dplyr::left_join(
+        exp_sf,
+        assigned_rates_data,
+        by = c("strip_id", "plot_id")
+      )
+  } else if (design_type == "jcls") {
+
+    #--- get the rate rank sequence within a strip---#
+    if (is.null(rank_seq_ws)) {
+      message(
+       'Note: rank_seq_ws is ignored when design_type = "jcls"'
+      )
+    }
+
+    basic_seq <- gen_sequence(num_rates, design_type, push)
+
+    #--- get the starting ranks across strips for the field---#
+    if (is.null(rank_seq_as)) {
+      start_rank_as <- get_starting_rank_across_strips(num_rates)
+    } else {
+      start_rank_as <- rank_seq_as
+    }
+
+    full_start_seq <-
+      rep(
+        start_rank_as,
+        ceiling(max_strip_id / num_rates) + 1
+      ) %>%
+      .[1:(max_strip_id + 1)]
+
+    if (push) {
+      full_start_seq <- full_start_seq[2:(max_strip_id + 1)]
+    } else {
+      full_start_seq <- full_start_seq[1:max_strip_id]
+    }
+
+    assigned_rates_data <-
+      data.table(
+        strip_id = 1:max_strip_id,
+        start_rank = full_start_seq
+      ) %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(rate_rank = list(
+        rep(
+          get_seq_start(start_rank, basic_seq, strip_id, design_type),
+          ceiling(max_plot_id / length(basic_seq))
+        )
+      )) %>%
+      tidyr::unnest(rate_rank) %>%
+      data.table() %>%
+      .[, dummy := 1] %>%
+      .[, plot_id := cumsum(dummy), by = strip_id] %>%
+      rates_data[., on = "rate_rank"] %>%
+      .[, .(strip_id, plot_id, rate)]
+
+    return_data <-
+      dplyr::left_join(
+        exp_sf,
+        assigned_rates_data,
+        by = c("strip_id", "plot_id")
+      )
+  } else if (design_type == "strip") {
+    if (!is.null(rank_seq_ws)) {
+      message(
+        "Note: You specified rank_seq_ws. However, it is irrelevant for strip design and it is ignored."
+      )
+    }
+    if (is.null(rank_seq_as)) {
+      start_rank_as <- get_starting_rank_across_strips(num_rates)
+    } else {
+      start_rank_as <- rank_seq_as
+    }
+
+    #--- get the starting ranks across strips for the field---#
+    assigned_rates_data <-
+      rep(
+        start_rank_as,
+        ceiling(max_strip_id / num_rates) + 1
+      ) %>%
+      .[1:(max_strip_id + 1)] %>%
+      data.table(rate_rank = .) %>%
+      .[, strip_id := 1:.N] %>%
+      rates_data[., on = "rate_rank"] %>%
+      .[, .(strip_id, rate)]
+
+    return_data <-
+      dplyr::left_join(
+        exp_sf,
+        assigned_rates_data,
+        by = "strip_id"
+      )
   } else if (design_type == "sparse") {
 
   } else if (design_type == "ejca") { # Extra jump-conscious alternate
@@ -229,11 +350,12 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
     rates_data[, tier := ifelse(rate_rank < median(rate_rank), 1, 2)] %>%
       .[, rank_in_tier := rowid(tier)]
 
-    assigned_rates_data <- rates_data %>%
+    assigned_rates_data <-
+      rates_data %>%
       dplyr::nest_by(tier) %>%
       dplyr::mutate(num_levels = nrow(data)) %>%
       dplyr::mutate(basic_seq = list(
-        gen_sequence(num_rates, design_type, push)
+        gen_sequence(num_levels, design_type, push)
       )) %>%
       dplyr::mutate(basic_seq = list(
         if (push) {
@@ -242,6 +364,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
           basic_seq
         }
       )) %>%
+      #--- split the strips to two tiers in an alternate fashion ---#
       dplyr::mutate(strip_plot_data = list(
         if (tier == 1) {
           dplyr::filter(exp_sf, (strip_id %% 2) == 1) %>%
@@ -255,6 +378,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
             unique(by = c("strip_id", "plot_id"))
         }
       )) %>%
+      #--- create new strip id within tier (called group_in_strip) ---#
       dplyr::mutate(strip_plot_data = list(
         strip_plot_data[, group_in_strip := .GRP, by = strip_id]
       )) %>%
@@ -274,24 +398,23 @@ assign_rates_by_input <- function(exp_sf, rates_data, design_type, push) {
       )) %>%
       dplyr::mutate(strip_plot_data = list(
         strip_plot_data[, rank_in_tier :=
-          rep(basic_seq, ceiling(nrow(strip_plot_data) / num_rates))[1:nrow(strip_plot_data)]]
+          rep(basic_seq, ceiling(nrow(strip_plot_data) / num_levels))[1:nrow(strip_plot_data)]]
       )) %>%
       dplyr::mutate(rate_data = list(
         data.table(data)[strip_plot_data[, .(strip_id, plot_id, rank_in_tier)], on = "rank_in_tier"]
       )) %>%
       purrr::pluck("rate_data") %>%
       rbindlist()
+
+    return_data <-
+      dplyr::left_join(
+        exp_sf,
+        assigned_rates_data,
+        by = c("strip_id", "plot_id")
+      )
   }
 
-  return_data <-
-    dplyr::left_join(
-      exp_sf,
-      assigned_rates_data,
-      by = c("strip_id", "plot_id")
-    )
-  # ggplot() +
-  #   geom_sf(data = return_data, aes(fill = factor(rate)), color = NA) +
-  #   scale_fill_viridis_d()
+
 
   return(return_data)
 }
@@ -338,4 +461,3 @@ get_starting_rank_across_strips <- function(num_levels) {
 
   return(return_seq)
 }
-

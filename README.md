@@ -179,8 +179,10 @@ seed_rate_info <-
 seed_rate_info
 #>   form design_type gc_rate unit
 #> 1 seed         jcl   32000 seed
-#>                                         rates_data
-#> 1 16000, 21333, 26667, 32000, 40000, 1, 2, 3, 4, 5
+#>                               rates_data
+#> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5
+#>   rank_seq_ws rank_seq_as
+#> 1        NULL        NULL
 
 n_rate_info <-
   make_input_rate_data(
@@ -196,6 +198,8 @@ n_rate_info
 #> 1  NH3         jcl     180   lb
 #>                               rates_data
 #> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5
+#>   rank_seq_ws rank_seq_as
+#> 1        NULL        NULL
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots.
