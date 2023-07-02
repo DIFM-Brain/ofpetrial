@@ -99,13 +99,13 @@ Let's now assign input rates to the experimental plots we just created. Before d
 #!===========================================================
 seed_rate_info <-
   make_input_rate_data(
-    seed_plot_info,
+    plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
     min_rate = 16000,
     max_rate = 40000,
     num_rates = 5,
-    design_type = "jcl"
+    design_type = "jcls"
   )
 
 seed_rate_info
@@ -116,7 +116,7 @@ n_rate_info <-
     gc_rate = 180,
     unit = "lb",
     rates = c(100, 140, 180, 220, 260),
-    design_type = "jcl",
+    design_type = "jcls",
   )
 
 n_rate_info

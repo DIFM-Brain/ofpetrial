@@ -164,9 +164,9 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
     }
   } else if (design_type == "ejca") {
     if (length(rates_ls) %% 2 == 1) {
-      return(print(
+      stop(
         "Error: You cannot have an odd number of rates for the ejca design. Please either specify rates directly with even numbers of rates or specify an even number for num_rates along with min_rate and max_rate."
-      ))
+      )
     } else {
       rates_data <-
         data.table(
@@ -174,6 +174,8 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
           rate_rank = 1:length(rates_ls)
         )
     }
+  } else {
+    stop("Error: design_type you specified does not match any of the options available.")
   }
 
   input_trial_data$gc_rate <- gc_rate
@@ -215,7 +217,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
 
     if (is.null(rank_seq_as) & is.null(rank_seq_ws)) {
      message(
-       'Note: You did not specify either rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"'
+       'Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"'
      )
     }
 
@@ -260,7 +262,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
   } else if (design_type == "jcls") {
 
     #--- get the rate rank sequence within a strip---#
-    if (is.null(rank_seq_ws)) {
+    if (!is.null(rank_seq_ws)) {
       message(
        'Note: rank_seq_ws is ignored when design_type = "jcls"'
       )

@@ -166,21 +166,21 @@ using `make_input_rate_data()`.
 #!===========================================================
 seed_rate_info <-
   make_input_rate_data(
-    seed_plot_info,
+    plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
     min_rate = 16000,
     max_rate = 40000,
     num_rates = 5,
-    design_type = "jcl"
+    design_type = "jcls"
   )
 #> Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates
 
 seed_rate_info
 #>   form design_type gc_rate unit
-#> 1 seed         jcl   32000 seed
-#>                               rates_data
-#> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5
+#> 1 seed        jcls   32000 seed
+#>                                         rates_data
+#> 1 16000, 21333, 26667, 32000, 40000, 1, 2, 3, 4, 5
 #>   rank_seq_ws rank_seq_as
 #> 1        NULL        NULL
 
@@ -190,12 +190,12 @@ n_rate_info <-
     gc_rate = 180,
     unit = "lb",
     rates = c(100, 140, 180, 220, 260),
-    design_type = "jcl",
+    design_type = "jcls",
   )
 
 n_rate_info
 #>   form design_type gc_rate unit
-#> 1  NH3         jcl     180   lb
+#> 1  NH3        jcls     180   lb
 #>                               rates_data
 #> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5
 #>   rank_seq_ws rank_seq_as

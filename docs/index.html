@@ -220,21 +220,21 @@
 <span><span class="co">#!===========================================================</span></span>
 <span><span class="va">seed_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/make_input_rate_data.html">make_input_rate_data</a></span><span class="op">(</span></span>
-<span>    <span class="va">seed_plot_info</span>,</span>
+<span>    plot_info <span class="op">=</span> <span class="va">seed_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">32000</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"seed"</span>,</span>
 <span>    min_rate <span class="op">=</span> <span class="fl">16000</span>,</span>
 <span>    max_rate <span class="op">=</span> <span class="fl">40000</span>,</span>
 <span>    num_rates <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    design_type <span class="op">=</span> <span class="st">"jcl"</span></span>
+<span>    design_type <span class="op">=</span> <span class="st">"jcls"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
 <span></span>
 <span><span class="va">seed_rate_info</span></span>
 <span><span class="co">#&gt;   form design_type gc_rate unit</span></span>
-<span><span class="co">#&gt; 1 seed         jcl   32000 seed</span></span>
-<span><span class="co">#&gt;                               rates_data</span></span>
-<span><span class="co">#&gt; 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5</span></span>
+<span><span class="co">#&gt; 1 seed        jcls   32000 seed</span></span>
+<span><span class="co">#&gt;                                         rates_data</span></span>
+<span><span class="co">#&gt; 1 16000, 21333, 26667, 32000, 40000, 1, 2, 3, 4, 5</span></span>
 <span><span class="co">#&gt;   rank_seq_ws rank_seq_as</span></span>
 <span><span class="co">#&gt; 1        NULL        NULL</span></span>
 <span></span>
@@ -244,12 +244,12 @@
 <span>    gc_rate <span class="op">=</span> <span class="fl">180</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
 <span>    rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">140</span>, <span class="fl">180</span>, <span class="fl">220</span>, <span class="fl">260</span><span class="op">)</span>,</span>
-<span>    design_type <span class="op">=</span> <span class="st">"jcl"</span>,</span>
+<span>    design_type <span class="op">=</span> <span class="st">"jcls"</span>,</span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">n_rate_info</span></span>
 <span><span class="co">#&gt;   form design_type gc_rate unit</span></span>
-<span><span class="co">#&gt; 1  NH3         jcl     180   lb</span></span>
+<span><span class="co">#&gt; 1  NH3        jcls     180   lb</span></span>
 <span><span class="co">#&gt;                               rates_data</span></span>
 <span><span class="co">#&gt; 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5</span></span>
 <span><span class="co">#&gt;   rank_seq_ws rank_seq_as</span></span>
