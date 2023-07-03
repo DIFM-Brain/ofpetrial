@@ -443,3 +443,8 @@ prepare_ablines <- function(ab_line, field, plot_width) {
   ))
 }
 
+
+#++++++++++++++++++++++++++++++++++++
+#+ Quiet intersection
+#++++++++++++++++++++++++++++++++++++
+st_intersection_quietly <- purrr::quietly(sf::st_intersection)

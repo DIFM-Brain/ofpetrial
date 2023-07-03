@@ -3,10 +3,11 @@
   + [ ] sparse design
   + [x] strip design
   + [x] latin square
+  + [x] randomized block
 + [x] options of specifying sequences (within and across strips)
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates
-+ [ ] cut off ab-lines outside of the field boundary
++ [x] cut off ab-lines outside of the field boundary with a bit of buffer around the field
 + [ ] base n rate
 + [ ] function to convert N equivalent rate  
 

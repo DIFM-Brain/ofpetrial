@@ -246,17 +246,12 @@ make_exp_plots <- function(input_plot_info,
   #+ First input
   #++++++++++++++++++++++++++++++++++++
   # ab_sf <- trial_data_first$ab_sf[[1]]
+  # ab_lines_data <- trial_data_first$ab_lines_data[[1]]
   # base_ab_lines_data <- trial_data_first$base_ab_lines_data[[1]]
   # plot_width <- trial_data_first$plot_width[[1]]
   # machine_width <- trial_data_first$machine_width[[1]]
   # abline_type <- "free"
-  # trial_data_first$exp_data
-  # field <- field_sf
-  # ab_lines_data <- trial_data_first$base_ab_lines_data[[1]]
-  # abline_type <- "free"
-  # plot_width <- trial_data_first$plot_width[[1]]
-  # section_num <- trial_data_first$section_num[[1]]
-  # second_input = FALSE
+  # field_sf <- field_sf
 
   # #--- by default uses the first one ---#
   trial_data_first <-
@@ -300,7 +295,8 @@ make_exp_plots <- function(input_plot_info,
         base_ab_lines_data = base_ab_lines_data,
         plot_width = plot_width,
         machine_width = machine_width,
-        abline_type = abline_type
+        abline_type = abline_type,
+        field_sf = field_sf
       )
     )) %>%
     #--- make ab-lines for the harvester ---#
@@ -311,7 +307,8 @@ make_exp_plots <- function(input_plot_info,
         base_ab_lines_data = base_ab_lines_data,
         plot_width = plot_width,
         machine_width = harvester_width,
-        abline_type = abline_type
+        abline_type = abline_type,
+        field_sf = field_sf
       )
     )) %>%
     dplyr::mutate(line_edge = list(
@@ -365,7 +362,8 @@ make_exp_plots <- function(input_plot_info,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = machine_width,
-          abline_type = abline_type
+          abline_type = abline_type,
+          field_sf = field_sf
         )
       )) %>%
       #--- make ab-lines ---#
@@ -376,7 +374,8 @@ make_exp_plots <- function(input_plot_info,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = harvester_width,
-          abline_type = abline_type
+          abline_type = abline_type,
+          field_sf = field_sf
         )
       ))
 
@@ -429,7 +428,8 @@ make_exp_plots <- function(input_plot_info,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = machine_width,
-          abline_type = abline_type
+          abline_type = abline_type,
+          field_sf = field_sf
         )
       )) %>%
       #--- make ab-lines ---#
@@ -440,7 +440,8 @@ make_exp_plots <- function(input_plot_info,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = harvester_width,
-          abline_type = abline_type
+          abline_type = abline_type,
+          field_sf = field_sf
         )
       ))
 
@@ -882,7 +883,8 @@ make_ablines <- function(ab_sf,
                          base_ab_lines_data,
                          plot_width,
                          machine_width,
-                         abline_type) {
+                         abline_type,
+                         field_sf) {
   ab_xy_nml_p90 <- base_ab_lines_data$ab_xy_nml_p90
 
   if (abline_type == "non") {
@@ -931,10 +933,11 @@ make_ablines <- function(ab_sf,
     #   geom_sf(data = ab_lines, aes(col = factor(ab_id)), size = 1)
 
     # ggplot() +
-    #   geom_sf(data = field, fill = NA) +
-    #   geom_sf(data = exp_plot, fill = "blue", color = NA) +
-    #   geom_sf(data = ab_line, size = 1)
+    #   geom_sf(data = field_sf, fill = NA) +
+    #   geom_sf(data = ab_lines, size = 1)
 
+    ab_lines <- suppressWarnings(sf::st_intersection(ab_lines, sf::st_buffer(field_sf, dist = 20)))
+    
     return(ab_lines)
   }
 }
