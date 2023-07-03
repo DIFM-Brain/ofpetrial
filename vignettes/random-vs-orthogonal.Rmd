@@ -1,0 +1,91 @@
+---
+title: "random-vs-orthogonal"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{random-vs-orthogonal}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ofpetrial)
+```
+
+```{r}
+x <- mvrnorm(100)
+u <- mvrnorm(100)
+cor(x, u)
+```
+```{r}
+nobs <- 100
+mean1 <- 0
+mean2 <- 0
+sd1 <- 1
+sd2 <- 1
+cor <- 0.7
+
+vcov <- matrix(0, nrow = nobs, ncol = 100)
+vcov <- matrix(rep(0, n_vars^2), nrow = n_vars)
+
+for (i in seq_len(nobs)) {
+  vcov[i, ] <- 0.7^abs(i - seq_len(nobs))
+}
+
+rates <- c(0, 50, 100, 150, 200)
+num_rates <- length(rates)
+
+get_cor <- function(i) {
+
+  #--- no inner correlation ---#
+  data_nic <-
+    data.table(
+      x = replicate(nobs / num_rates, sample(rates, num_rates, replace = FALSE)) %>% c(),
+      u = rnorm(nobs)
+    ) %>%
+    .[, y := x + u]
+
+  coef_nic <- lm(y ~ x, data = data_nic)$coef["x"]
+
+  #--- sequenced x ---#
+  data_seq <-
+    data.table(
+      x = rep(rates, nobs / num_rates),
+      u = MASS::mvrnorm(1, mu = rep(0, nobs), Sigma = vcov)
+    ) %>%
+    .[, y := x + u]
+
+  coef_seq <- lm(y ~ x, data = data_seq)$coef["x"]
+
+  cor_tab <-
+    data.table(
+      label = c("nic", "seq"),
+      cor = c(data_nic[, cor(x, u)], data_seq[, cor(x, u)]),
+      coef = c(coef_nic, coef_seq)
+    )
+  return(cor_tab)
+}
+
+cor_data <-
+  lapply(1:5000, get_cor) %>%
+  data.table::rbindlist()
+
+cor_data[, .(
+  avg_coef = mean(coef),
+  sd_coef = sd(coef),
+  avg_cor = mean(cor),
+  sd_cor = sd(cor)
+),
+by = label
+]
+
+ggplot(data = cor_data) +
+  geom_histogram(aes(x = coef)) +
+  facet_grid(label ~ .)
+```
