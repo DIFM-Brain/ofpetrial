@@ -2,9 +2,9 @@
 #'
 #' Check the correlation between the input rate and observed characteristics. It checks the correlation between two inputs for a two-input case.
 #'
-#' @param trial_design
-#' @param field_data
-#' @returns
+#' @param trial_design trial design with rates assigned created by assign_rates()
+#' @param field_data (list) list of sf
+#' @returns table
 #' @import data.table
 #' @export
 diagnose <- function(trial_design, field_data  = NA) {

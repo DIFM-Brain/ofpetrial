@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ab-line • ofpetrial</title>
+<title>Trial AB-line Types and Options • ofpetrial</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="ab-line">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Trial AB-line Types and Options">
 <meta property="og:description" content="ofpetrial">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -50,7 +50,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/ab-line.html">ab-line</a>
+      <a href="../articles/ab-line.html">Trial AB-line Types and Options</a>
+    </li>
+    <li>
+      <a href="../articles/random-vs-orthogonal.html">random-vs-orthogonal</a>
     </li>
     <li>
       <a href="../articles/trial-design-options.html">Trial Design Options</a>
@@ -74,7 +77,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>ab-line</h1>
+      <h1 data-toc-skip>Trial AB-line Types and Options</h1>
             
       
       
@@ -84,8 +87,111 @@
 
     
     
+<p>Load the <code>ofpetrial</code> package</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span></code></pre></div>
+<p>The AB-line is the driving direction of a machine. In practice, a
+farmer uploads AB-lines into the machine and can choose between these
+AB-lines at the time of operation. While this AB-line indicates the
+driving direction of the machine, it can also be used center the machine
+on this line. Centering the machine on the AB-line becomes important
+when conducting OFPEs.</p>
+<p>The function <code>make_input_plot_data</code> contains several
+options for <code>abline_type</code>: “free”, “lock”, and “none”. When
+<code>abline_type</code> equals “lock”, the resulting experimental plots
+will be centered on the initial AB-line given by
+<code>abline_file</code>, and the AB-line returned by the ?? function
+will be identical to that in <code>abline_file</code>. If
+<code>abline_type</code> equals “free”, the experimental plots are also
+centered on the AB-line, but the AB-lines returned by the ??? function
+are created to be in the first and last rows of the experimental plot.
+Then the farmer can choose the side where they prefer to start.
+Generally, the “free” option is best unless there is a reason the farmer
+or operator needs to start in a specific part of the field. Finally, the
+“none” option is similar to lock but it will not return a new AB-line
+for the trial, assuming that the line in <code>abline_file</code> will
+be used.</p>
+<p>The following example uses a seeding trial to demonstrate the three
+options for <code>abline_type</code>. When visualizing the trial plots
+and AB-line with <code>viz_ep</code>, the differences between these
+options are clearer as the AB-line shifts or is not included.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/make_input_plot_data.html">make_input_plot_data</a></span><span class="op">(</span></span>
+<span>    form <span class="op">=</span> <span class="st">"seed"</span>,</span>
+<span>    plot_width <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    section_num <span class="op">=</span> <span class="fl">24</span>,</span>
+<span>    length_unit <span class="op">=</span> <span class="st">"feet"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Note: machine_width and plot_width are converted to meter as length_unit is specified as "feet".</span></span>
+<span></span>
+<span><span class="va">exp_plots_free</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
+<span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
+<span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    abline_type <span class="op">=</span> <span class="st">"free"</span>,</span>
+<span>    headland_length <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>    side_length <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    min_plot_length <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>    max_plot_length <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>    length_unit <span class="op">=</span> <span class="st">"feet"</span>,</span>
+<span>    perpendicular <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Note: length arguments (e.g., harvester_width) are converted to meter as length_unit is specified as "feet".</span></span>
+<span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz_ep.html">viz_ep</a></span><span class="op">(</span><span class="va">exp_plots_free</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ab-line_files/figure-html/ab-line-example1-1.png" width="700"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exp_plots_lock</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
+<span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
+<span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    abline_type <span class="op">=</span> <span class="st">"lock"</span>,</span>
+<span>    headland_length <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>    side_length <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    min_plot_length <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>    max_plot_length <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>    length_unit <span class="op">=</span> <span class="st">"feet"</span>,</span>
+<span>    perpendicular <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Note: length arguments (e.g., harvester_width) are converted to meter as length_unit is specified as "feet".</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz_ep.html">viz_ep</a></span><span class="op">(</span><span class="va">exp_plots_lock</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ab-line_files/figure-html/ab-line-example2-1.png" width="700"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exp_plots_none</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
+<span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
+<span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    abline_type <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>    headland_length <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>    side_length <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    min_plot_length <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>    max_plot_length <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>    length_unit <span class="op">=</span> <span class="st">"feet"</span>,</span>
+<span>    perpendicular <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Note: length arguments (e.g., harvester_width) are converted to meter as length_unit is specified as "feet".</span></span>
+<span></span>
+<span><span class="va">exp_plots_none</span><span class="op">$</span><span class="va">ab_lines</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
+<p>There are also different ways to create an initial AB-line. If there
+is an existing AB-line shapefile, then include the pathway to this file
+in <code>abline_file</code>. If there is a past as-applied, as-planted
+or yield shapefile, the trial can also be centered on the paths from
+that previous operation. This pathway is included in ???. Using the
+points in the past file, an AB-line will be created. As the initial file
+AB-line has no specific AB-line location, the <code>abline_type</code>
+is “free”.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

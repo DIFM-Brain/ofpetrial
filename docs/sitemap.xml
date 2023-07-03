@@ -13,6 +13,9 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/random-vs-orthogonal.html</loc>
+  </url>
+  <url>
     <loc>/articles/trial-design-options.html</loc>
   </url>
   <url>
@@ -29,6 +32,9 @@
   </url>
   <url>
     <loc>/reference/assign_rates.html</loc>
+  </url>
+  <url>
+    <loc>/reference/diagnose.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>

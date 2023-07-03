@@ -39,8 +39,8 @@ input_plot_info <-
 exp_plots_free <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = "inst/extdata/boundary-simple1.shp",
-    abline_file = "inst/extdata/ab-line-simple1.shp",
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     harvester_width = 30,
     abline_type = "free",
     headland_length = 120,
@@ -58,8 +58,8 @@ viz_ep(exp_plots_free)
 exp_plots_lock <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = "inst/extdata/boundary-simple1.shp",
-    abline_file = "inst/extdata/ab-line-simple1.shp",
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     harvester_width = 30,
     abline_type = "lock",
     headland_length = 120,
@@ -77,8 +77,8 @@ viz_ep(exp_plots_lock)
 exp_plots_none <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = "inst/extdata/boundary-simple1.shp",
-    abline_file = "inst/extdata/ab-line-simple1.shp",
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     harvester_width = 30,
     abline_type = "none",
     headland_length = 120,
@@ -89,7 +89,7 @@ exp_plots_none <-
     perpendicular = FALSE
   )
 
-viz_ep(exp_plots_none)
+exp_plots_none$ab_lines
 ```
 
 There are also different ways to create an initial AB-line. If there is an existing AB-line shapefile, then include the pathway to this file in `abline_file`. If there is a past as-applied, as-planted or yield shapefile, the trial can also be centered on the paths from that previous operation. This pathway is included in ???. Using the points in the past file, an AB-line will be created. As the initial file AB-line has no specific AB-line location, the `abline_type` is "free".

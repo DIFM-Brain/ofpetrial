@@ -16,23 +16,14 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ofpetrial)
+library(data.table)
+library(ggplot2)
 ```
 
-```{r}
-x <- mvrnorm(100)
-u <- mvrnorm(100)
-cor(x, u)
-```
 ```{r}
 nobs <- 100
-mean1 <- 0
-mean2 <- 0
-sd1 <- 1
-sd2 <- 1
-cor <- 0.7
 
-vcov <- matrix(0, nrow = nobs, ncol = 100)
-vcov <- matrix(rep(0, n_vars^2), nrow = n_vars)
+vcov <- matrix(0, nrow = nobs, ncol = nobs)
 
 for (i in seq_len(nobs)) {
   vcov[i, ] <- 0.7^abs(i - seq_len(nobs))
@@ -40,7 +31,9 @@ for (i in seq_len(nobs)) {
 
 rates <- c(0, 50, 100, 150, 200)
 num_rates <- length(rates)
+```
 
+```{r}
 get_cor <- function(i) {
 
   #--- no inner correlation ---#
@@ -71,7 +64,9 @@ get_cor <- function(i) {
     )
   return(cor_tab)
 }
+```
 
+```{r, cache = TRUE}
 cor_data <-
   lapply(1:5000, get_cor) %>%
   data.table::rbindlist()
@@ -84,7 +79,9 @@ cor_data[, .(
 ),
 by = label
 ]
+```
 
+```{r, dpi = 600}
 ggplot(data = cor_data) +
   geom_histogram(aes(x = coef)) +
   facet_grid(label ~ .)

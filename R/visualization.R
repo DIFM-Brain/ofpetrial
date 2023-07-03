@@ -57,7 +57,7 @@ viz_td <- function(trial_design, abline = TRUE) {
           paste0(
             "Trial design for ",
             form,
-            " (",
+            "\n(",
             dplyr::case_when(
               design_type == "ls" ~ "Latin Square",
               design_type == "strip" ~ "Strip",

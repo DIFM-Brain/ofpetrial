@@ -22,6 +22,7 @@ usethis::use_readme_rmd()
 usethis::use_news_md()
 usethis::use_vignette("ab-line")
 usethis::use_vignette("trial-design-options")
+usethis::use_vignette("random-vs-orthogonal")
 
 #!===========================================================
 #! 

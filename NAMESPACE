@@ -2,6 +2,7 @@
 
 export("%>%")
 export(assign_rates)
+export(diagnose)
 export(make_exp_plots)
 export(make_input_plot_data)
 export(make_input_rate_data)
