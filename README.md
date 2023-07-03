@@ -27,7 +27,7 @@ two-input on-farm experiment trial designs.
 
 We start with specifying plot and machine information for inputs using
 `make_input_plot_data()`, which simply creates a data.frame of the
-specified information with some interal unit conversion of length (feet
+specified information with some internal unit conversion of length (feet
 to meter).
 
 ``` r

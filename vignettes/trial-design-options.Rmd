@@ -145,7 +145,7 @@ td_rb <-
 viz_td(td_rb, abline = FALSE)
 ```
 
-# Jump-consicous Latin Square ("jcls")
+# Jump-conscious Latin Square ("jcls")
 
 ```{r}
 n_rate_info <-
@@ -168,7 +168,7 @@ td_jcls <-
 viz_td(td_jcls, abline = FALSE)
 ```
 
-# Extra Jump-consious Alternate ("ejca")
+# Extra Jump-conscious Alternate ("ejca")
 
 ```{r}
 n_rate_info <-

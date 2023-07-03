@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# ofpetrial: Design On-farm Precision Experiments 
+# ofpetrial: Design On-farm Precision Experiments
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -35,7 +35,7 @@ Here, we demonstrate how to use the `ofpetrial` package to create two-input on-f
 
 ### Create experimental plots
 
-We start with specifying plot and machine information for inputs using `make_input_plot_data()`, which simply creates a data.frame of the specified information with some interal unit conversion of length (feet to meter).
+We start with specifying plot and machine information for inputs using `make_input_plot_data()`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
 
 ```{r}
 seed_plot_info <-
