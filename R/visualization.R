@@ -64,6 +64,7 @@ viz_td <- function(trial_design, abline = TRUE) {
               design_type == "rb" ~ "Randomized Block",
               design_type == "jcls" ~ "Jump-conscious Latin Square",
               design_type == "ejca" ~ "Extra Jump-conscious Alternate",
+              design_type == "sparse" ~ "Sparse"
             ),
             ")"
           )

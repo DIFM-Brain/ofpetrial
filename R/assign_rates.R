@@ -47,11 +47,13 @@ assign_rates <- function(exp_data, rate_info) {
         design_type = design_type,
         push = push
       ) %>%
-        dplyr::select(rate)
+        dplyr::select(rate, strip_id, plot_id) %>%
+        dplyr::mutate(type = "experiment")
     )) %>%
     dplyr::mutate(headland = list(
-      dplyr::mutate(headland, rate = round(gc_rate)) %>%
-        dplyr::select(rate)
+      dplyr::mutate(headland, rate = gc_rate) %>%
+        dplyr::select(rate) %>%
+        dplyr::mutate(strip_id = NA, plot_id = NA, type = "headland")
     )) %>%
     dplyr::mutate(input_type = list(
       dplyr::case_when(
@@ -81,7 +83,7 @@ assign_rates <- function(exp_data, rate_info) {
       }
     )) %>%
     dplyr::select(
-      form, input_type, trial_design, design_type, unit, ab_lines, harvest_ab_lines, field_sf
+      form, input_type, trial_design, design_type, unit, ab_lines, harvest_ab_lines, field_sf, harvester_width
     ) %>%
     dplyr::ungroup()
 
@@ -196,7 +198,6 @@ make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rat
 #* +++++++++++++++++++++++++++++++++++
 
 assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type, push) {
-
   max_plot_id <- max(exp_sf$plot_id)
   max_strip_id <- max(exp_sf$strip_id)
   num_rates <- nrow(rates_data)
@@ -288,7 +289,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       .[, block := .GRP, by = block_id] %>%
       .[, `:=`(block_id = NULL, block_row = NULL, block_col = NULL)] %>%
       sf::st_as_sf()
-
   } else if (design_type == "jcls") {
 
     #--- get the rate rank sequence within a strip---#
@@ -376,7 +376,60 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
         by = "strip_id"
       )
   } else if (design_type == "sparse") {
+    #* gc_rate is always ranked 1
 
+    #--- get the rate rank sequence within a strip---#
+    if (is.null(rank_seq_ws)) {
+      basic_seq <- gen_sequence(num_rates, design_type, push)
+    } else {
+      basic_seq <- rank_seq_ws
+    }
+
+    #--- get the starting ranks across strips for the field---#
+    if (is.null(rank_seq_as)) {
+      start_rank_as <- get_starting_rank_across_strips(num_rates - 1) + 1
+    } else {
+      start_rank_as <- rank_seq_as
+    }
+
+    # === get the starting ranks across strips for the field ===#
+    full_start_seq <- rep(
+      start_rank_as,
+      ceiling(max_strip_id / num_rates) + 1
+    ) %>%
+      .[1:(max_strip_id + 1)]
+
+    if (push) {
+      full_start_seq <- full_start_seq[2:(max_strip_id + 1)]
+    } else {
+      full_start_seq <- full_start_seq[1:max_strip_id]
+    }
+
+    assigned_rates_data <-
+      data.table(
+        strip_id = 1:max_strip_id,
+        start_rank = full_start_seq
+      ) %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(rate_rank = list(
+        rep(
+          get_seq_start(start_rank, basic_seq, strip_id, design_type),
+          ceiling(max_plot_id / length(basic_seq))
+        )
+      )) %>%
+      tidyr::unnest(rate_rank) %>%
+      data.table() %>%
+      .[, dummy := 1] %>%
+      .[, plot_id := cumsum(dummy), by = strip_id] %>%
+      rates_data[., on = "rate_rank"] %>%
+      .[, .(strip_id, plot_id, rate)]
+
+    return_data <-
+      dplyr::left_join(
+        exp_sf,
+        assigned_rates_data,
+        by = c("strip_id", "plot_id")
+      )
   } else if (design_type == "ejca") { # Extra jump-conscious alternate
 
     rates_data[, tier := ifelse(rate_rank < median(rate_rank), 1, 2)] %>%
@@ -480,7 +533,7 @@ get_seq_start <- function(rate_rank, basic_seq, strip_id, design_type) {
   return_rank <- basic_seq[c(f_seq, s_seq) %>% unique()]
 
   if (strip_id %% 2 == 0 & design_type == "sparse") {
-    return_rank <- append(0, return_rank[-length(return_rank)])
+    return_rank <- append(1, return_rank[-length(return_rank)])
   }
 
   return(return_rank)

@@ -16,7 +16,7 @@ usethis::use_package("tidyr")
 usethis::use_package("ggpubr")
 usethis::use_pipe() # can use %>% after this
 
-usethis::use_build_ignore(c("notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html"))
+usethis::use_build_ignore(c("dev_notes.md", "notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html", "debug"))
 
 usethis::use_readme_rmd()
 usethis::use_news_md()

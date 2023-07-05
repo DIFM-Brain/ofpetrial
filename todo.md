@@ -8,8 +8,10 @@
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates
 + [x] cut off ab-lines outside of the field boundary with a bit of buffer around the field
-+ [ ] base n rate
-+ [ ] function to convert N equivalent rate  
++ [ ] make harvest ab-line (Taro)
++ [ ] let them specify the full sequence (everything is a specical case of this except randomized ones) (Taro)
++ [ ] base_rate, conversion, dictionary (Brittani)
++ [ ] rate option (original unit, or equivalent) (Brittani)
 
 # Problems
 
@@ -26,5 +28,7 @@
 + trial design options
   + ls
   + jcls
+  + rb
   + strip
   + ejca
++ modify rates

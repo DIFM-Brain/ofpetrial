@@ -9,3 +9,5 @@
 ^docs$
 ^README\.Rmd$
 ^README\.html$
+^debug$
+^dev_notes\.md$

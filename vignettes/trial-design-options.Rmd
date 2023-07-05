@@ -27,8 +27,8 @@ Let's first  prepare experiment plots to which we assign rates using various tri
 n_plot_info <-
   make_input_plot_data(
     form = "NH3",
-    plot_width = measurements::conv_unit(60, "ft", "m"),
-    machine_width = measurements::conv_unit(60, "ft", "m"),
+    plot_width = measurements::conv_unit(30, "ft", "m"),
+    machine_width = measurements::conv_unit(30, "ft", "m"),
     section_num = 1
   )
 
@@ -41,8 +41,8 @@ exp_data <-
     abline_type = "free",
     headland_length = 30,
     side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
+    min_plot_length = 240,
+    max_plot_length = 260,
     length_unit = "feet",
     perpendicular = FALSE
   )
@@ -189,5 +189,28 @@ td_ejca <-
 
 ```{r}
 viz_td(td_ejca, abline = FALSE)
+```
+
+# Sparse ("sparse")
+
+```{r}
+n_rate_info <-
+  make_input_rate_data(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260, 300),
+    design_type = "sparse",
+  )
+
+td_sparse <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz_td(td_sparse, abline = FALSE)
 ```
 

@@ -110,3 +110,31 @@ viz_td(td)
 
 trial_design <- td
 
+#!===========================================================
+#! test of abline
+#!===========================================================
+
+n_plot_info <-
+  make_input_plot_data(
+    form = "NH3",
+    plot_width = measurements::conv_unit(60, "ft", "m"),
+    machine_width = measurements::conv_unit(30, "ft", "m"),
+    section_num = 1
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    harvester_width = 30,
+    abline_type = "free",
+    headland_length = 30,
+    side_length = 60,
+    min_plot_length = 240,
+    max_plot_length = 260,
+    length_unit = "feet",
+    perpendicular = FALSE
+  )
+
+viz_ep(exp_data)

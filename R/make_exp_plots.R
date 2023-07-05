@@ -234,6 +234,9 @@ make_exp_plots <- function(input_plot_info,
     create_plot_edge_line <- FALSE
   }
 
+  # ggplot() +
+  #   geom_sf(data = field_sf) +
+  #   geom_sf(data = trial_data_pa$ab_sf[[1]], color = "red")
   # !============================================================
   # ! Create experimental plots
   # !============================================================
@@ -253,7 +256,7 @@ make_exp_plots <- function(input_plot_info,
   # abline_type <- "free"
   # field_sf <- field_sf
 
-  # #--- by default uses the first one ---#
+  #--- by default uses the first one ---#
   trial_data_first <-
     trial_data_pa[1, ] %>%
     dplyr::mutate(base_ab_lines_data = list(
@@ -263,11 +266,11 @@ make_exp_plots <- function(input_plot_info,
         plot_width = plot_width
       )
     )) %>%
-    dplyr::mutate(exp_data = list(
+    dplyr::mutate(exp_plots = list(
       make_trial_plots_by_input(
         field = field_sf,
         #--- by default uses the first one ---#
-        ab_lines_data = base_ab_lines_data,
+        base_ab_lines_data = base_ab_lines_data,
         abline_type = abline_type,
         plot_width = plot_width,
         machine_width = machine_width,
@@ -281,17 +284,18 @@ make_exp_plots <- function(input_plot_info,
         second_input = FALSE
       )
     )) %>%
-    dplyr::mutate(exp_plots = list(
-      exp_data$exp_plots
-    )) %>%
-    dplyr::mutate(ab_lines_data = list(
-      exp_data$ab_lines_data
+    dplyr::mutate(ablines_data = list(
+      make_ablines_data(
+        exp_plots = exp_plots,
+        base_ab_lines_data = base_ab_lines_data,
+        field_sf = field_sf
+      )
     )) %>%
     #--- make ab-lines ---#
     dplyr::mutate(ab_lines = list(
       ab_lines <- make_ablines(
         ab_sf = ab_sf,
-        ab_lines_data = ab_lines_data,
+        ablines_data = ablines_data,
         base_ab_lines_data = base_ab_lines_data,
         plot_width = plot_width,
         machine_width = machine_width,
@@ -299,21 +303,21 @@ make_exp_plots <- function(input_plot_info,
         field_sf = field_sf
       )
     )) %>%
-    #--- make ab-lines for the harvester ---#
+    #--- make harvester ab-lines ---#
     dplyr::mutate(harvest_ab_lines = list(
       harvest_ab_lines <- make_ablines(
         ab_sf = ab_sf,
-        ab_lines_data = ab_lines_data,
+        ablines_data = ablines_data,
         base_ab_lines_data = base_ab_lines_data,
         plot_width = plot_width,
         machine_width = harvester_width,
-        abline_type = abline_type,
+        abline_type = "free",
         field_sf = field_sf
       )
     )) %>%
     dplyr::mutate(line_edge = list(
       make_plot_edge_line(
-        ab_lines_data = ab_lines_data,
+        ablines_data = ablines_data,
         create_plot_edge_line = create_plot_edge_line,
         base_ab_lines_data = base_ab_lines_data,
         plot_width = plot_width
@@ -351,14 +355,14 @@ make_exp_plots <- function(input_plot_info,
         trial_data_first$exp_plots[[1]]
       )) %>%
       #--- use the ab-lines data as the first one ---#
-      dplyr::mutate(ab_lines_data = list(
-        trial_data_first$ab_lines_data[[1]]
+      dplyr::mutate(ablines_data = list(
+        trial_data_first$ablines_data[[1]]
       )) %>%
       #--- make ab-lines ---#
       dplyr::mutate(ab_lines = list(
         ab_lines <- make_ablines(
           ab_sf = ab_sf,
-          ab_lines_data = ab_lines_data,
+          ablines_data = ablines_data,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = machine_width,
@@ -366,18 +370,19 @@ make_exp_plots <- function(input_plot_info,
           field_sf = field_sf
         )
       )) %>%
-      #--- make ab-lines ---#
+      #--- make harvester ab-lines ---#
       dplyr::mutate(harvest_ab_lines = list(
         harvest_ab_lines <- make_ablines(
           ab_sf = ab_sf,
-          ab_lines_data = ab_lines_data,
+          ablines_data = ablines_data,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = harvester_width,
-          abline_type = abline_type,
+          abline_type = "free",
           field_sf = field_sf
         )
       ))
+
 
     trial_data_e <- rbind(trial_data_first, trial_data_second)
     # trial_data_e$exp_plots
@@ -396,11 +401,11 @@ make_exp_plots <- function(input_plot_info,
           plot_width = plot_width
         )
       )) %>%
-      dplyr::mutate(exp_data = list(
+      dplyr::mutate(exp_plots = list(
         make_trial_plots_by_input(
           field = field_sf,
           #--- by default uses the first one ---#
-          ab_lines_data = base_ab_lines_data,
+          base_ab_lines_data = base_ab_lines_data,
           abline_type = abline_type,
           plot_width = plot_width,
           machine_width = machine_width,
@@ -414,17 +419,18 @@ make_exp_plots <- function(input_plot_info,
           second_input = TRUE
         )
       )) %>%
-      dplyr::mutate(exp_plots = list(
-        exp_data$exp_plots
-      )) %>%
-      dplyr::mutate(ab_lines_data = list(
-        exp_data$ab_lines_data
+      dplyr::mutate(ablines_data = list(
+        make_ablines_data(
+          exp_plots = exp_plots,
+          base_ab_lines_data = base_ab_lines_data,
+          field_sf = field_sf
+        )
       )) %>%
       #--- make ab-lines ---#
       dplyr::mutate(ab_lines = list(
         ab_lines <- make_ablines(
           ab_sf = ab_sf,
-          ab_lines_data = ab_lines_data,
+          ablines_data = ablines_data,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = machine_width,
@@ -432,15 +438,15 @@ make_exp_plots <- function(input_plot_info,
           field_sf = field_sf
         )
       )) %>%
-      #--- make ab-lines ---#
+      #--- make harvester ab-lines ---#
       dplyr::mutate(harvest_ab_lines = list(
         harvest_ab_lines <- make_ablines(
           ab_sf = ab_sf,
-          ab_lines_data = ab_lines_data,
+          ablines_data = ablines_data,
           base_ab_lines_data = base_ab_lines_data,
           plot_width = plot_width,
           machine_width = harvester_width,
-          abline_type = abline_type,
+          abline_type = "free",
           field_sf = field_sf
         )
       ))
@@ -454,16 +460,6 @@ make_exp_plots <- function(input_plot_info,
   trial_data_eh <-
     trial_data_e %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(ab_lines = list(
-      if (!is.null(ab_lines)) {
-        sf::st_transform(ab_lines, 4326)
-      }
-    )) %>%
-    dplyr::mutate(harvest_ab_lines = list(
-      if (!is.null(harvest_ab_lines)) {
-        sf::st_transform(harvest_ab_lines, 4326)
-      }
-    )) %>%
     #--- dissolve the experimental plots as a single polygon ---#
     dplyr::mutate(experiment_plots_dissolved = list(
       exp_plots %>%
@@ -496,6 +492,7 @@ make_exp_plots <- function(input_plot_info,
       harvest_ab_lines
     ) %>%
     dplyr::mutate(abline_type = abline_type) %>%
+    dplyr::mutate(harvester_width = harvester_width) %>%
     dplyr::ungroup()
 
   return(trial_data_return)
@@ -508,7 +505,7 @@ make_exp_plots <- function(input_plot_info,
 #+ Make trial plots for a single input
 #++++++++++++++++++++++++++++++++++++
 make_trial_plots_by_input <- function(field,
-                                      ab_lines_data,
+                                      base_ab_lines_data,
                                       abline_type,
                                       plot_width,
                                       machine_width,
@@ -529,11 +526,11 @@ make_trial_plots_by_input <- function(field,
   # side_length <- conv_unit(side_length, "ft", "m")
 
   #--- ab-line tilted by harvester angle ---#
-  plot_heading <- ab_lines_data$plot_heading
+  plot_heading <- base_ab_lines_data$plot_heading
   #--- unit vector pointing in the direction the machine moves ---#
-  ab_xy_nml <- ab_lines_data$ab_xy_nml
+  ab_xy_nml <- base_ab_lines_data$ab_xy_nml
   #--- unit vector pointing in the direction PERPENDICULAR to the direction the machine moves ---#
-  ab_xy_nml_p90 <- ab_lines_data$ab_xy_nml_p90
+  ab_xy_nml_p90 <- base_ab_lines_data$ab_xy_nml_p90
 
   #++++++++++++++++++++++++++++++++++++
   #+ Create strips
@@ -547,10 +544,12 @@ make_trial_plots_by_input <- function(field,
         (f_bbox["ymax"] - f_bbox["ymin"])^2
     ) / 2 + 100
 
+  #--- create strips ---#
+  #* only the angle of plot is used from plot_heading
   strips <- create_strips(field, plot_heading, plot_width, radius)
 
   # ggplot() +
-  #   geom_sf(data = strips, aes(fill = "group")) +
+  #   geom_sf(data = strips, aes(fill = group)) +
   #   geom_sf(data = field, col = "black", fill = NA) +
   #   geom_sf(data = plot_heading, col = "red")
 
@@ -563,7 +562,7 @@ make_trial_plots_by_input <- function(field,
     dplyr::pull(group) %>%
     unique()
 
-  #--- get the sf of the intersecting group ---#
+  #--- get the sf of the intersecting sf ---#
   int_group <- dplyr::filter(strips, group == ab_int_group)
 
   # ggplot() +
@@ -645,7 +644,7 @@ make_trial_plots_by_input <- function(field,
     }
   } else if (second_input == TRUE) {
     #--- if the second input ---#
-    # Note: line_edge is used as the ab-line for the second input
+    # Note: line_edge is being used as the ab-line for the second input
     # the left (right) edge of the cells is shifted so that it is
     # aligned with the line_edge
     if (new_dist > correction_dist) {
@@ -664,7 +663,7 @@ make_trial_plots_by_input <- function(field,
   }
 
   # ggplot() +
-  #   geom_sf(data = strips_shifted, fill = "blue", color = NA) +
+  #   geom_sf(data = strips_shifted, fill = "blue", alpha = 0.3) +
   #   geom_sf(data = plot_heading, col = "red", size = 0.3)
 
   #++++++++++++++++++++++++++++++++++++
@@ -731,7 +730,12 @@ make_trial_plots_by_input <- function(field,
     purrr::pluck("int_line") %>%
     purrr::reduce(rbind)
 
-  final_exp_plots <- int_lines %>%
+  # ggplot() +
+  #   geom_sf(data = field_sf) +
+  #   geom_sf(data = int_lines)
+
+  final_exp_plots <-
+    int_lines %>%
     dplyr::rowwise() %>%
     #--- move int_points inward by (head_dist - side_distance) ---#
     dplyr::mutate(new_center_line = list(
@@ -770,6 +774,11 @@ make_trial_plots_by_input <- function(field,
     dplyr::mutate(strip_id = strip_id - min(strip_id) + 1) %>%
     sf::st_set_crs(sf::st_crs(field))
 
+  # ggplot() +
+  #   geom_sf(data = field_sf) +
+  #   geom_sf(data = final_exp_plots) +
+  #   geom_sf(data = int_lines)
+
   if (perpendicular) {
     # Notes:
     # This is for the case of harvesting and application being perpendicular.
@@ -788,7 +797,8 @@ make_trial_plots_by_input <- function(field,
     #   geom_sf(data = purrr::reduce(final_exp_plots$data, rbind), col = "blue", fill = NA) +
     #   geom_sf(data = final_exp_plots$shifted_line[[13]], col = "blue", fill = NA)
 
-    final_exp_plots <- final_exp_plots %>%
+    final_exp_plots <-
+      final_exp_plots %>%
       dplyr::nest_by(strip_id, poly_line) %>%
       dplyr::mutate(first_plot = list(
         dplyr::filter(data, plot_id == 1)
@@ -827,27 +837,47 @@ make_trial_plots_by_input <- function(field,
       purrr::reduce(rbind)
   }
 
+  return(final_exp_plots)
+}
 
-  #* +++++++++++++++++++++++++++++++++++
-  #* ab-lines data
-  #* +++++++++++++++++++++++++++++++++++
 
-  ab_lines_data <-
+#++++++++++++++++++++++++++++++++++++
+#+Prepare data for creating ab-lines and edge line
+#++++++++++++++++++++++++++++++++++++
+make_ablines_data <- function(exp_plots, base_ab_lines_data, field_sf) {
+
+  #--- prepare vectors ---#
+  ab_xy_nml <- base_ab_lines_data$ab_xy_nml
+  ab_xy_nml_p90 <- base_ab_lines_data$ab_xy_nml_p90
+
+  #--- get length ---#
+  f_bbox <- sf::st_bbox(field_sf)
+  ab_length <-
+    sqrt(
+      (f_bbox["xmax"] - f_bbox["xmin"])^2 +
+        (f_bbox["ymax"] - f_bbox["ymin"])^2
+    ) / 2 + 100
+
+  ablines_data <-
     rbind(
+      #--- line the goes through the center of the first plot of the first
+      #--- strip
       get_through_line(
         dplyr::filter(
-          final_exp_plots,
+          exp_plots,
           strip_id == min(strip_id) & plot_id == 1
         ) %>% dplyr::slice(1),
-        radius,
+        ab_length,
         ab_xy_nml
       ),
+      #--- line the goes through the center of the first plot of the last
+      #--- strip
       get_through_line(
         dplyr::filter(
-          final_exp_plots,
+          exp_plots,
           strip_id == max(strip_id) & plot_id == 1
         ) %>% dplyr::slice(1),
-        radius,
+        ab_length,
         ab_xy_nml
       )
     ) %>%
@@ -863,23 +893,19 @@ make_trial_plots_by_input <- function(field,
       ))
     )) %>%
     dplyr::mutate(intersection = list(
-      sf::st_as_sf(ab_line_for_direction_check[final_exp_plots, ])
+      sf::st_as_sf(ab_line_for_direction_check[exp_plots, ])
     )) %>%
     dplyr::mutate(int_check = nrow(intersection))
 
-  return(list(
-    exp_plots = final_exp_plots,
-    ab_lines_data = ab_lines_data
-  ))
+  return(ablines_data)
 }
-
 
 #* +++++++++++++++++++++++++++++++++++
 #* Make ab-line
 #* +++++++++++++++++++++++++++++++++++
 
 make_ablines <- function(ab_sf,
-                         ab_lines_data,
+                         ablines_data,
                          base_ab_lines_data,
                          plot_width,
                          machine_width,
@@ -897,14 +923,17 @@ make_ablines <- function(ab_sf,
     return(ab_lines)
   } else if (abline_type == "free") {
     if (machine_width == plot_width) {
-      ab_lines <- ab_lines_data %>%
+      #--- no further adjustment necessary ---#
+      ab_lines <-
+        ablines_data %>%
         dplyr::select(ab_id, x) %>%
         unique(by = "ab_id") %>%
         sf::st_as_sf() %>%
         dplyr::ungroup()
     } else {
-      #--- ab-line re-centering when machine width > plot_width ---#
-      ab_lines <- ab_lines_data %>%
+      #--- ab-line re-centering ---#
+      ab_lines <-
+        ablines_data %>%
         #--- which direction to go ---#
         # Notes: go inward (intersecting) if machine_width > plot_width, otherwise outward
         dplyr::filter(int_check == ifelse(machine_width > plot_width, 1, 0)) %>%
@@ -937,12 +966,12 @@ make_ablines <- function(ab_sf,
     #   geom_sf(data = ab_lines, size = 1)
 
     ab_lines <- suppressWarnings(sf::st_intersection(ab_lines, sf::st_buffer(field_sf, dist = 20)))
-    
+
     return(ab_lines)
   }
 }
 
-make_plot_edge_line <- function(ab_lines_data,
+make_plot_edge_line <- function(ablines_data,
                                 create_plot_edge_line,
                                 base_ab_lines_data,
                                 plot_width) {
@@ -951,13 +980,13 @@ make_plot_edge_line <- function(ab_lines_data,
   # Note 2: even if the starting point is locked, this still applies
 
   #--- which way to move for the first to go inward ---#
-  # ab_lines_data$int_check
+  # ablines_data$int_check
 
   ab_xy_nml_p90 <- base_ab_lines_data$ab_xy_nml_p90
 
   if (create_plot_edge_line) {
     line_edge <-
-      ab_lines_data %>%
+      ablines_data %>%
       #--- the direction that goes off of the field ---#
       dplyr::filter(int_check == 0) %>%
       #--- use only the first one ---#
@@ -973,3 +1002,4 @@ make_plot_edge_line <- function(ab_lines_data,
     return(NULL)
   }
 }
+

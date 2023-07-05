@@ -74,8 +74,8 @@ exp_data <-
     abline_type = "free",
     headland_length = 30,
     side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
+    min_plot_length = 240,
+    max_plot_length = 360,
     length_unit = "feet",
     perpendicular = FALSE
   )
@@ -125,7 +125,7 @@ n_rate_info
 We can now use `assign_rates()` to assign rates to experiment plots.
 
 ```{r}
-trial_design <- assign_rates(exp_data, list(seed_rate_info, n_rate_info))
+trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
 ```
 
 Here is the visualization of the trial design done by `viz_td()`.
@@ -133,3 +133,4 @@ Here is the visualization of the trial design done by `viz_td()`.
 ```{r, dpi = 600}
 viz_td(trial_design)
 ```
+

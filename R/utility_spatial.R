@@ -112,9 +112,9 @@ make_heading_from_past_asapplied <- function(past_aa_input, field) {
   #   tm_dots()
 
   #--- polygons? ---#
-  inlude_polygon <- "POLYGON" %in% sf::st_geometry_type(past_aa_input)
+  include_polygon <- "POLYGON" %in% sf::st_geometry_type(past_aa_input)
 
-  if (inlude_polygon) {
+  if (include_polygon) {
     return(NULL)
   } else {
     dominant_slope <-
