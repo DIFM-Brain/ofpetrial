@@ -95,10 +95,10 @@ plot(yield$geometry, pch = 1, cex = .1)
 
 ```{r ab-line-from-yield}
 input_plot_info <-
-  make_input_plot_data(
+  prep_plot_fs(
     form = "seed",
-    machine_width = 60,
-    section_num = 24,
+    machine_width = 54,
+    section_num = 1,
     harvester_width = 45,
     plot_width = 45
   )
