@@ -18,7 +18,6 @@ Load the `ofpetrial` package
 
 ```{r setup}
 library(ofpetrial)
-library(tidyr)
 ```
 
 The AB-line is the driving direction of a machine. In practice, a farmer uploads AB-lines into the machine and can choose between these AB-lines at the time of operation. While this AB-line indicates the driving direction of the machine, it can also be used center the machine on this line. Centering the machine on the AB-line becomes important when conducting OFPEs. 
@@ -34,7 +33,7 @@ input_plot_info <-
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
-    plot_width = 30
+    plot_width = 60
   )
 
 exp_plots_free <-
@@ -74,42 +73,41 @@ exp_plots_none$ab_lines
 
 There are also different ways to create an initial AB-line. If there is an existing AB-line shapefile, then include the pathway to this file in `abline_file`. If there is a past as-applied, as-planted or yield shapefile, the trial can also be centered on the paths from that previous operation. This pathway is included in ???. Using the points in the past file, an AB-line will be created. As the initial file AB-line has no specific AB-line location, the `abline_type` is "free".
 
-```{r ab-line-from-as-applied}
-exp_plots_aa <-
-  make_exp_plots(
-    input_plot_info = input_plot_info,
-    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-    abline_file = system.file("extdata", "as-applied-simple1.shp", package = "ofpetrial"),
-    abline_type = "free")
-
-viz_ep(exp_plots_aa)
-```
-
-The sample data `yield-simple1.shp` is a yield map from a soybean trial with a 45-foot harvester. We can use this data to create an AB-line for a new soybean trial with the same equipment.
+The sample data `as-applied-simple1.shp` is a soybean planting map from a trial with a 60-foot planter We can use this data to create an AB-line for a new soybean trial with the same equipment.
 
 ```{r plot-yield-data}
-yield <- system.file("extdata", "yield-simple1.shp", package = "ofpetrial") %>%
+aa <- system.file("extdata", "as-applied-simple1.shp", package = "ofpetrial") %>%
   sf::st_read() 
-plot(yield$geometry, pch = 1, cex = .1)
+plot(aa$geometry, pch = 1, cex = .1)
 ```
 
 ```{r ab-line-from-yield}
 input_plot_info <-
   prep_plot_fs(
     form = "seed",
-    machine_width = 54,
+    machine_width = 60,
     section_num = 1,
-    harvester_width = 45,
-    plot_width = 45
+    harvester_width = 60,
+    plot_width = 60
   )
 
-exp_plots_yield <-
+exp_plots_aa <-
   make_exp_plots(
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-    abline_file = system.file("extdata", "yield-simple1.shp", package = "ofpetrial"),
-    abline_type = "free"
+    abline_file = system.file("extdata", "as-applied-simple1.shp", package = "ofpetrial"),
+    abline_type = "lock"
   )
 
-viz_ep(exp_plots_yield)
+viz_ep(exp_plots_aa)
 ```
+
+
+```{r view-results-from-yield}
+      ggplot() +
+        geom_sf(data = exp_plots_aa$exp_plots[[1]], fill = NA) +
+        geom_sf(data = aa, color = "blue", size = 0.25) +
+        theme_void() 
+
+```
+
