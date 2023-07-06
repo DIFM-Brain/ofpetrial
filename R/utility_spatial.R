@@ -126,7 +126,7 @@ make_heading_from_past_asapplied <- function(past_aa_input, field) {
           lm(Y ~ X, data = data)$coef[2]
       ) %>%
       dplyr::filter(!is.na(slope)) %>%
-      unnest() %>%
+      tidyr::unnest() %>%
       dplyr::mutate(cluster = kmeans(slope, 6)$cluster) %>%
       data.table() %>%
       .[, .(slope, cluster)] %>%
