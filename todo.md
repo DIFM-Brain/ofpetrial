@@ -8,11 +8,11 @@
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates
 + [x] cut off ab-lines outside of the field boundary with a bit of buffer around the field
-+ [ ] make harvest ab-line (Taro)
++ [x] make harvest ab-line (Taro)
 + [ ] let them specify the full sequence (everything is a specical case of this except randomized ones) (Taro)
 + [ ] base_rate, conversion, dictionary (Brittani)
 + [ ] rate option (original unit, or equivalent) (Brittani)
-
++ [ ] check examples
 # Problems
 
 1. when field is not straight and plot widths are different, rates transitions do not align well

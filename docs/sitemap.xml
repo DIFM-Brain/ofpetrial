@@ -22,6 +22,9 @@
     <loc>/authors.html</loc>
   </url>
   <url>
+    <loc>/dev_notes.html</loc>
+  </url>
+  <url>
     <loc>/index.html</loc>
   </url>
   <url>
@@ -31,7 +34,19 @@
     <loc>/notes.html</loc>
   </url>
   <url>
+    <loc>/reference/add_blocks.html</loc>
+  </url>
+  <url>
     <loc>/reference/assign_rates.html</loc>
+  </url>
+  <url>
+    <loc>/reference/change_rate_by_block.html</loc>
+  </url>
+  <url>
+    <loc>/reference/change_rate_by_strip.html</loc>
+  </url>
+  <url>
+    <loc>/reference/check_alignment.html</loc>
   </url>
   <url>
     <loc>/reference/diagnose.html</loc>
@@ -53,6 +68,24 @@
   </url>
   <url>
     <loc>/reference/plot.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_plot_fd.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_plot_fs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_plot_md.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_plot_ms.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_rates_d.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_rates_s.html</loc>
   </url>
   <url>
     <loc>/reference/viz_ep.html</loc>

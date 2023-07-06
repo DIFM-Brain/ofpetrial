@@ -1,14 +1,14 @@
 #' Assign rates to the plots of experimental plots
 #'
-#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by make_input_rate_data()
+#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single()
 #'
 #' @param exp_data experiment plots created by make_exp_plots()
-#' @param rate_info rate information created by make_input_rate_data()
+#' @param rate_info rate information created by prep_rates_single()
 #' @returns trial design as sf (experiment plots with rates assigned)
 #' @import data.table
 #' @export
 assign_rates <- function(exp_data, rate_info) {
-  if (class(rate_info) == "data.frame") {
+  if ("data.frame" %in% class(rate_info)) {
     input_trial_data <-
       rate_info %>%
       dplyr::left_join(exp_data, ., by = "form")
@@ -90,103 +90,143 @@ assign_rates <- function(exp_data, rate_info) {
   return(trial_design)
 }
 
-
-#' Create data of input rate information for a single input
+#' Add blocks to trial design
 #'
-#' Create data of input rate information for a single input. This can be used to assign rates to experimentl plots using assign_rates()
+#' Delineate blocks on a trial design and assign block id to all the plots
 #'
-#' @param plot_info (data.frame) plot information created by make_input_plot_data
-#' @param gc_rate (numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument
-#' @param unit (string) unit of input
-#' @param rates (numeric vector) Default is NULL. Sequence of trial rates in the ascending order.
-#' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
-#' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
-#' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
-#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.
-#' @param rank_seq_ws (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.
-#' @param rank_seq_as (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.
-#' @returns data.frame of input rate information
+#' @param td trial design made by applying assign_rates() to experimental plots made by make_exp_plots()
+#' @returns trial design with block_id added
 #' @import data.table
 #' @export
-make_input_rate_data <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NULL, max_rate = NULL, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL) {
+#' @examples
+#' #--- load rate information ---#
+#' data(trial_design)
+#' 
+#' #--- add blocks ---#
+#' td_with_blocks <- add_blocks(trial_design)
+#' 
+#' #--- take a look ---#
+#' td_with_blocks$trial_design
+#' 
+#' #--- visualize ---#
+#' library(ggplot2)
+#' ggplot(td_with_blocks$trial_design[[1]]) +
+#'   geom_sf(aes(fill = factor(block_id))) +
+#'   geom_sf_text(aes(label = plot_id_within_block)) +
+#'   scale_fill_discrete(name = "block_id") +
+#'   theme_void()
+#'
+add_blocks <- function(td) {
+  td_return <-
+    td %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
+      num_rates =
+        dplyr::filter(trial_design, type == "experiment")$rate %>% unique() %>% length()
+    ) %>%
+    dplyr::mutate(trial_design = list(
+      trial_design %>%
+        data.table::data.table() %>%
+        .[, block_row := ((plot_id - 1) %/% num_rates + 1)] %>%
+        .[, block_col := ((strip_id - 1) %/% num_rates + 1)] %>%
+        .[, block_id := .GRP, by = .(block_row, block_col)] %>%
+        .[type == "headland", block_id := NA] %>%
+        .[, plot_id_within_block := 1:.N, by = block_id] %>%
+        .[type == "headland", plot_id_within_block := NA] %>%
+        .[, `:=`(block_row = NULL, block_col = NULL)] %>%
+        sf::st_as_sf()
+    ))
+  return(td_return)
+}
 
-  #--- extract form and unit ---#
-  input_trial_data <- dplyr::select(plot_info, form)
+#' Change the assigned rate by block
+#' 
+#' Change the assigned rates by block on trial design
+#' 
+#' @param form (character) input name
+#' @param block_ids (numeric) vector of block_ids
+#' @param block_rates (numeric) vector of rates
+#' @param td trial design
+#' @returns trial design with changed rates
+#' @import data.table
+#' @export
+#' @examples
+#' #--- load rate information ---#
+#' data(trial_design)
+#'
+#' #--- add blocks ---#
+#' td_with_blocks <- add_blocks(trial_design)
+#'
+#' #--- change rates of some blocks ---#
+#' block_ids <- c(3, 5)
+#' block_rates <- c(180, 180)
+#' 
+#' td_changed <- change_rate_by_block("NH3", block_ids, block_rates, td_with_blocks)
+#'
+#' #--- visualize ---# 
+#' library(ggplot2)
+#' ggplot(td_changed$trial_design[[1]]) +
+#'   geom_sf(aes(fill = factor(rate))) +
+#'   scale_fill_viridis_d() +
+#'   theme_void()
 
-  #++++++++++++++++++++++++++++++++++++
-  #+Design type
-  #++++++++++++++++++++++++++++++++++++
-  if (is.na(design_type)) {
-    #--- if design_type not specified, use jcls ---#
-    input_trial_data$design_type <- "jcls"
-  } else {
-    input_trial_data$design_type <- design_type
+change_rate_by_block <- function(form, block_ids, block_rates, td) {
+  temp_design <-
+    td %>%
+    dplyr::filter(form == form) %>%
+    .$trial_design %>%
+    .[[1]]
+
+  for (i in seq_len(length(block_ids))) {
+    temp_design <- dplyr::mutate(temp_design, rate = ifelse(block_id == block_ids[i], block_rates[i], rate))
   }
 
-  #++++++++++++++++++++++++++++++++++++
-  #+Specify the trial rates
-  #++++++++++++++++++++++++++++++++++++
-  if (!is.null(rates)) {
-    rates_ls <- rates
-  } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
-    #--- if min_rate, max_rate, and num_rates are specified ---#
-    cat("Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates")
-    rates_ls <-
-      get_rates(
-        min_rate,
-        max_rate,
-        gc_rate,
-        num_rates
-      )
-  } else {
-    cat("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
+  return_td <- dplyr::mutate(td, trial_design = ifelse(form == form, list(temp_design), list(trial_design)))
+
+  return(return_td)
+}
+
+#' Change the assigned rate by strip
+#' 
+#' Change the assigned rates by strip on trial design
+#' 
+#' @param form (character) input name
+#' @param strip_ids (numeric) vector of strip_ids
+#' @param strip_rates (numeric) vector of rates
+#' @param td trial design
+#' @returns trial design with changed rates
+#' @import data.table
+#' @export
+#' @examples
+#' #--- load rate information ---#
+#' data(trial_design)
+#'
+#' #--- change rates of some strips ---#
+#' strip_ids <- c(1, 6, 11, 16, 21)
+#' strip_rates <- rep(0, length(strip_ids))
+#' 
+#' td_changed <- change_rate_by_strip("NH3", strip_ids, strip_rates, trial_design)
+#' 
+#' #--- visualize ---#
+#' library(ggplot2)
+#' ggplot(td_changed$trial_design[[1]]) +
+#'   geom_sf(aes(fill = factor(rate))) +
+#'   scale_fill_viridis_d() +
+#'   theme_void()
+change_rate_by_strip <- function(form, strip_ids, strip_rates, td) {
+  temp_design <-
+    td %>%
+    dplyr::filter(form == form) %>%
+    .$trial_design %>%
+    .[[1]]
+
+  for (i in seq_len(length(strip_ids))) {
+    temp_design <- dplyr::mutate(temp_design, rate = ifelse(strip_id == strip_ids[i], strip_rates[i], rate))
   }
 
-  #++++++++++++++++++++++++++++++++++++
-  #+ Order (rank) rates based on design type
-  #++++++++++++++++++++++++++++++++++++
-  if (design_type %in% c("ls", "jcls", "strip", "rb")) {
-    rates_data <-
-      data.table(
-        rate = rates_ls,
-        rate_rank = 1:length(rates_ls)
-      )
-  } else if (design_type == "sparse") {
-    if (!gc_rate %in% rates_ls) {
-      return(print(
-        "Error: You specified the trial rates directly using the rates argument, but they do not include gc_rate. For the sparse design, please include gc_rate in the rates."
-      ))
-    } else {
-      rates_ls <- rates_ls[!rates_ls %in% gc_rate]
-      rates_data <-
-        data.table(
-          rate = append(gc_rate, rates_ls),
-          rate_rank = 1:(length(rates_ls) + 1)
-        )
-    }
-  } else if (design_type == "ejca") {
-    if (length(rates_ls) %% 2 == 1) {
-      stop(
-        "Error: You cannot have an odd number of rates for the ejca design. Please either specify rates directly with even numbers of rates or specify an even number for num_rates along with min_rate and max_rate."
-      )
-    } else {
-      rates_data <-
-        data.table(
-          rate = rates_ls,
-          rate_rank = 1:length(rates_ls)
-        )
-    }
-  } else {
-    stop("Error: design_type you specified does not match any of the options available.")
-  }
+  return_td <- dplyr::mutate(td, trial_design = ifelse(form == form, list(temp_design), list(trial_design)))
 
-  input_trial_data$gc_rate <- gc_rate
-  input_trial_data$unit <- unit
-  input_trial_data$rates_data <- list(rates_data)
-  input_trial_data$rank_seq_ws <- list(rank_seq_ws)
-  input_trial_data$rank_seq_as <- list(rank_seq_as)
-
-  return(input_trial_data)
+  return(return_td)
 }
 
 
