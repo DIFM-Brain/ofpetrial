@@ -18,11 +18,12 @@ Load the `ofpetrial` package
 
 ```{r setup}
 library(ofpetrial)
+library(tidyr)
 ```
 
 The AB-line is the driving direction of a machine. In practice, a farmer uploads AB-lines into the machine and can choose between these AB-lines at the time of operation. While this AB-line indicates the driving direction of the machine, it can also be used center the machine on this line. Centering the machine on the AB-line becomes important when conducting OFPEs. 
 
-The function `make_input_plot_data` contains several options for `abline_type`: "free", "lock", and "none". When `abline_type` equals "lock", the resulting experimental plots will be centered on the initial AB-line given by `abline_file`, and the AB-line returned by the ?? function will be identical to that in `abline_file`. If `abline_type` equals "free", the experimental plots are also centered on the AB-line, but the AB-lines returned by the ??? function are created to be in the first and last rows of the experimental plot. Then the farmer can choose the side where they prefer to start. Generally, the "free" option is best unless there is a reason the farmer or operator needs to start in a specific part of the field. Finally, the "none" option is similar to lock but it will not return a new AB-line for the trial, assuming that the line in `abline_file` will be used. 
+The function `make_input_plot_data` contains several options for `abline_type`: "free", "lock", and "none". When `abline_type` equals "lock", the resulting experimental plots will be centered on the initial AB-line given by `abline_file`, and the AB-line returned by the `write_trial_files` function will be identical to that in `abline_file`. If `abline_type` equals "free", the experimental plots are also centered on the AB-line, but the AB-lines returned by the `write_trial_files` function are created to be in the first and last rows of the experimental plot. Then the farmer can choose the side where they prefer to start. Generally, the "free" option is best unless there is a reason the farmer or operator needs to start in a specific part of the field. Finally, the "none" option is similar to lock but it will not return a new AB-line for the trial, assuming that the line in `abline_file` will be used. 
 
 The following example uses a seeding trial to demonstrate the three options for `abline_type`. When visualizing the trial plots and AB-line with `viz_ep`, the differences between these options are clearer as the AB-line shifts or is not included. 
 
@@ -93,3 +94,58 @@ exp_plots_none$ab_lines
 ```
 
 There are also different ways to create an initial AB-line. If there is an existing AB-line shapefile, then include the pathway to this file in `abline_file`. If there is a past as-applied, as-planted or yield shapefile, the trial can also be centered on the paths from that previous operation. This pathway is included in ???. Using the points in the past file, an AB-line will be created. As the initial file AB-line has no specific AB-line location, the `abline_type` is "free".
+
+```{r ab-line-from-as-applied}
+exp_plots_aa <-
+  make_exp_plots(
+    input_plot_info = input_plot_info,
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "as-applied-simple1.shp", package = "ofpetrial"),
+    harvester_width = 30,
+    abline_type = "free",
+    headland_length = 120,
+    side_length = 60,
+    min_plot_length = 200,
+    max_plot_length = 300,
+    length_unit = "feet",
+    perpendicular = FALSE
+  )
+
+viz_ep(exp_plots_aa)
+```
+
+The sample data `yield-simple1.shp` is a yield map from a soybean trial with a 45-foot harvester. We can use this data to create an AB-line for a new soybean trial with the same equipment.
+
+```{r plot-yield-data}
+yield <- system.file("extdata", "yield-simple1.shp", package = "ofpetrial") %>%
+  sf::st_read() 
+plot(yield$geometry, pch = 1, cex = .1)
+```
+
+```{r ab-line-from-yield}
+input_plot_info <-
+  make_input_plot_data(
+    form = "seed",
+    plot_width = 45,
+    machine_width = 45,
+    section_num = 1,
+    length_unit = "feet"
+  )
+
+exp_plots_yield <-
+  make_exp_plots(
+    input_plot_info = input_plot_info,
+    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_file = system.file("extdata", "yield-simple1.shp", package = "ofpetrial"),
+    harvester_width = 45,
+    abline_type = "free",
+    headland_length = 90,
+    side_length = 45,
+    min_plot_length = 200,
+    max_plot_length = 300,
+    length_unit = "feet",
+    perpendicular = FALSE
+  )
+
+viz_ep(exp_plots_yield)
+```

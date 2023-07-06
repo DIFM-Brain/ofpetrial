@@ -27,6 +27,7 @@ You can install the development version of ofpetrial from [Github](https://githu
 
 ```{r, eval = FALSE}
 devtools::install_github("DIFM-Brain/ofpetrial")
+library(ofpetrial)
 ```
 
 ## Example
