@@ -7,15 +7,8 @@
 make_exp_plots(
   input_plot_info,
   boundary_file,
-  harvester_width,
   abline_file = NA,
-  abline_type = "free",
-  headland_length = NA,
-  side_length = NA,
-  min_plot_length = 61,
-  max_plot_length = 91,
-  length_unit = "meter",
-  perpendicular = FALSE
+  abline_type = "free"
 )
 }
 \arguments{
@@ -23,11 +16,11 @@ make_exp_plots(
 
 \item{boundary_file}{(string) path of the field boundary file}
 
-\item{harvester_width}{(numeric) width of the harvester}
-
 \item{abline_file}{(string) path of the ab-line file}
 
 \item{abline_type}{(string) the type of ab-line generation. Select from "free", "lock", and "none"}
+
+\item{harvester_width}{(numeric) width of the harvester}
 
 \item{headland_length}{(numeric) Default = NA. Length of the headland}
 
@@ -38,8 +31,6 @@ make_exp_plots(
 \item{max_plot_length}{(numeric) Default = 91 meter (300 feet) maximum plot length}
 
 \item{length_unit}{("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length}
-
-\item{perpendicular}{(logical) Default = FALSE.}
 }
 \value{
 a tibble that include experimental plots as sf

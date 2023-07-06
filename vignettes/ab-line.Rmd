@@ -29,12 +29,12 @@ The following example uses a seeding trial to demonstrate the three options for 
 
 ```{r ab-line-example1}
 input_plot_info <-
-  make_input_plot_data(
+  prep_plot_fs(
     form = "seed",
-    plot_width = 60,
     machine_width = 60,
     section_num = 24,
-    length_unit = "feet"
+    harvester_width = 30,
+    plot_width = 30
   )
 
 exp_plots_free <-
@@ -42,14 +42,7 @@ exp_plots_free <-
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
-    harvester_width = 30,
-    abline_type = "free",
-    headland_length = 120,
-    side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
-    length_unit = "feet",
-    perpendicular = FALSE
+    abline_type = "free"
   )
 
 viz_ep(exp_plots_free)
@@ -61,14 +54,7 @@ exp_plots_lock <-
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
-    harvester_width = 30,
-    abline_type = "lock",
-    headland_length = 120,
-    side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
-    length_unit = "feet",
-    perpendicular = FALSE
+    abline_type = "lock"
   )
 
 viz_ep(exp_plots_lock)
@@ -80,14 +66,7 @@ exp_plots_none <-
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
-    harvester_width = 30,
-    abline_type = "none",
-    headland_length = 120,
-    side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
-    length_unit = "feet",
-    perpendicular = FALSE
+    abline_type = "none"
   )
 
 exp_plots_none$ab_lines

@@ -36,26 +36,27 @@ Here, we demonstrate how to use the `ofpetrial` package to create two-input on-f
 
 ### Create experimental plots
 
-We start with specifying plot and machine information for inputs using `make_input_plot_data()`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
+We start with specifying plot and machine information for inputs using `prep_plot_fs()`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
 
 ```{r}
 seed_plot_info <-
-  make_input_plot_data(
+  prep_plot_fs(
     form = "seed",
-    plot_width = 30,
     machine_width = 60,
     section_num = 24,
-    length_unit = "feet"
+    harvester_width = 30,
+    plot_width = 30
   )
 
 seed_plot_info
 
 n_plot_info <-
-  make_input_plot_data(
+  prep_plot_ms(
     form = "NH3",
-    plot_width = measurements::conv_unit(60, "ft", "m"),
     machine_width = measurements::conv_unit(60, "ft", "m"),
-    section_num = 1
+    section_num = 1,
+    harvester_width = measurements::conv_unit(30, "ft", "m"),
+    plot_width = measurements::conv_unit(60, "ft", "m")
   )
 
 n_plot_info
@@ -71,17 +72,20 @@ exp_data <-
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
-    harvester_width = 30,
-    abline_type = "free",
-    headland_length = 30,
-    side_length = 60,
-    min_plot_length = 240,
-    max_plot_length = 360,
-    length_unit = "feet",
-    perpendicular = FALSE
+    abline_type = "free"
   )
+```
 
+The experiment plots created by `make_exp_plots()` is stored in `exp_plots`.
+
+```{r}
 exp_data$exp_plots
+```
+
+`exp_data$exp_plots` is a list and you can access the individual experiment plots (an `sf` object) like this.
+
+```{r}
+exp_data$exp_plots[[1]]
 ```
 
 We can visualize the layout of the experiment plots using `viz_ep()`.
@@ -92,14 +96,14 @@ viz_ep(exp_data)
 
 ### Assign rates
 
-Let's now assign input rates to the experimental plots we just created. Before doing so, we need to prepare rate information for both inputs using `make_input_rate_data()`.
+Let's now assign input rates to the experimental plots we just created. Before doing so, we need to prepare rate information for both inputs using `prep_rates_s()`.
 
 ```{r}
 #!===========================================================
 #! Assign rates
 #!===========================================================
 seed_rate_info <-
-  make_input_rate_data(
+  prep_rates_s(
     plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
@@ -112,12 +116,13 @@ seed_rate_info <-
 seed_rate_info
 
 n_rate_info <-
-  make_input_rate_data(
+  prep_rates_s(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
     rates = c(100, 140, 180, 220, 260),
-    design_type = "jcls",
+    design_type = "ls",
+    rank_seq_ws = c(5, 4, 3, 2, 1)
   )
 
 n_rate_info

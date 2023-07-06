@@ -1,6 +1,6 @@
 #!===========================================================
-#! Exported functions
-#!===========================================================
+# ! Exported functions
+# !===========================================================
 #' Prepare plot information for a two-input experiment (meter)
 #'
 #' Prepare plot information for a two-input experiment case. All the length values need to be specified in meter.
@@ -24,18 +24,18 @@
 #' section_num <- c(12, 1)
 #' plot_width <- c(9.5, 36)
 #' harvester_width <- 12
-# preapre_double_m(form, machine_width, section_num, harvester_width, plot_width)
+#' prep_plot_md(form, machine_width, section_num, harvester_width, plot_width)
 #'
-preapre_double_m <- function(form,
-                             machine_width,
-                             section_num,
-                             harvester_width,
-                             plot_width = c(NA, NA),
-                             headland_length = NA,
-                             side_length = NA,
-                             max_plot_width = 36.576, # 120 feet
-                             min_plot_length = 73.152, # 240 feet
-                             max_plot_length = 79.248 # 260 feet
+prep_plot_md <- function(form,
+                         machine_width,
+                         section_num,
+                         harvester_width,
+                         plot_width = c(NA, NA),
+                         headland_length = NA,
+                         side_length = NA,
+                         max_plot_width = measurements::conv_unit(120, "ft", "m"), # 36.4576 meter
+                         min_plot_length = measurements::conv_unit(240, "ft", "m"), # 73.152 feet
+                         max_plot_length = measurements::conv_unit(260, "ft", "m") # 79.248 meter
 ) {
 
   #--- dimension check ---#
@@ -47,14 +47,14 @@ preapre_double_m <- function(form,
   section_width <- machine_width / section_num
 
   plot_data <-
-    data.table(
+    data.frame(
       form = form,
       machine_width = machine_width,
       section_num = section_num,
       harvester_width = harvester_width,
       plot_width = plot_width
     ) %>%
-    .[, section_width := machine_width / section_num] %>%
+    dplyr::mutate(section_width = machine_width / section_num) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
       lcm_found =
@@ -70,7 +70,7 @@ preapre_double_m <- function(form,
   #++++++++++++++++++++++++++++++++++++
   #+ Check and notify the mixed treatment problems (with potential suggestions)
   #++++++++++++++++++++++++++++++++++++
-  warnings <-
+  warning_message <-
     plot_data %>%
     dplyr::mutate(messages = list(
       if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
@@ -83,14 +83,16 @@ preapre_double_m <- function(form,
         )
       } else if (!lcm_found & plot_width != proposed_plot_width) {
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, "ensures that at least one harvest path within the path of ", form, " does not have the problems."
+          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
         )
+      } else {
+        NULL
       }
     )) %>%
     dplyr::pull(messages)
 
   #--- notify the user of potential problems and improvements ---#
-  message(unlist(warnings))
+  message(unlist(warning_message))
 
   #--- warnd the user that they may have serious mixed treatment problems   ---#
   if (all(!plot_data$lcm_found)) {
@@ -154,18 +156,18 @@ preapre_double_m <- function(form,
 #' section_num <- c(12, 1)
 #' plot_width <- c(9.5, 36)
 #' harvester_width <- 12
-#' preapre_double_f(form, machine_width, section_num, harvester_width, plot_width)
+#' prep_plot_fd(form, machine_width, section_num, harvester_width, plot_width)
 #'
-preapre_double_f <- function(form,
-                             machine_width,
-                             section_num,
-                             harvester_width,
-                             plot_width = c(NA, NA),
-                             headland_length = NA,
-                             side_length = NA,
-                             max_plot_width = 120, # 120 feet
-                             min_plot_length = 240, # 240 feet
-                             max_plot_length = 260 # 260 feet
+prep_plot_fd <- function(form,
+                         machine_width,
+                         section_num,
+                         harvester_width,
+                         plot_width = c(NA, NA),
+                         headland_length = NA,
+                         side_length = NA,
+                         max_plot_width = 120, # 120 feet
+                         min_plot_length = 240, # 240 feet
+                         max_plot_length = 260 # 260 feet
 ) {
 
   #--- dimension check ---#
@@ -177,14 +179,14 @@ preapre_double_f <- function(form,
   section_width <- machine_width / section_num
 
   plot_data <-
-    data.table(
+    data.frame(
       form = form,
       machine_width = machine_width,
       section_num = section_num,
       harvester_width = harvester_width,
       plot_width = plot_width
     ) %>%
-    .[, section_width := machine_width / section_num] %>%
+    dplyr::mutate(section_width = machine_width / section_num) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(
       lcm_found =
@@ -200,7 +202,7 @@ preapre_double_f <- function(form,
   #++++++++++++++++++++++++++++++++++++
   #+ Check and notify the mixed treatment problems (with potential suggestions)
   #++++++++++++++++++++++++++++++++++++
-  warnings <-
+  warning_message <-
     plot_data %>%
     dplyr::mutate(messages = list(
       if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
@@ -213,14 +215,16 @@ preapre_double_f <- function(form,
         )
       } else if (!lcm_found & plot_width != proposed_plot_width) {
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, "ensures that at least one harvest path within the path of ", form, " does not have the problems."
+          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
         )
+      } else {
+        NULL
       }
     )) %>%
     dplyr::pull(messages)
 
   #--- notify the user of potential problems and improvements ---#
-  message(unlist(warnings))
+  message(unlist(warning_message))
 
   #--- warnd the user that they may have serious mixed treatment problems   ---#
   if (all(!plot_data$lcm_found)) {
@@ -291,18 +295,18 @@ preapre_double_f <- function(form,
 #' section_num <- 12
 #' plot_width <- NA
 #' harvester_width <- 24
-#' preapre_single_m(form, machine_width, section_num, harvester_width)
+#' prep_plot_ms(form, machine_width, section_num, harvester_width)
 #'
-preapre_single_m <- function(form,
-                             machine_width,
-                             section_num,
-                             harvester_width,
-                             plot_width = NA,
-                             headland_length = NA,
-                             side_length = NA,
-                             max_plot_width = 36.576, # 120 feet
-                             min_plot_length = 73.152, # 240 feet
-                             max_plot_length = 79.248 # 260 feet
+prep_plot_ms <- function(form,
+                         machine_width,
+                         section_num,
+                         harvester_width,
+                         plot_width = NA,
+                         headland_length = NA,
+                         side_length = NA,
+                         max_plot_width = measurements::conv_unit(120, "ft", "m"), # 36.4576 meter
+                         min_plot_length = measurements::conv_unit(240, "ft", "m"), # 73.152 feet
+                         max_plot_length = measurements::conv_unit(260, "ft", "m") # 79.248 meter
 ) {
 
   #--- dimension check ---#
@@ -313,10 +317,40 @@ preapre_single_m <- function(form,
 
   section_width <- machine_width / section_num
 
+  #++++++++++++++++++++++++++++++++++++
+  #+ Check and notify the mixed treatment problems (with potential suggestions)
+  #++++++++++++++++++++++++++++++++++++
+  lcm_found <- lcm_check(section_width, harvester_width, max_plot_width)
+  proposed_plot_width <- find_plotwidth(section_width, harvester_width, max_plot_width)
+
   if (is.na(plot_width)) {
-    plot_width <- find_plotwidth(section_width, harvester_width, max_plot_width)
+    plot_width <- proposed_plot_width
+  } else {
+    warning_message <- NULL
+    if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
+      warning_message <-
+        paste0(
+          "For ", form, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
+        )
+    } else if (lcm_found & plot_width %% proposed_plot_width != 0) {
+      warning_message <-
+        paste0(
+          "For ", form, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
+        )
+    } else if (!lcm_found & plot_width != proposed_plot_width) {
+      warning_message <-
+        paste0(
+          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
+        )
+    }
+    #--- notify the user of potential problems and improvements ---#
+    message(warning_message)
   }
 
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Headland and side lengths
+  #++++++++++++++++++++++++++++++++++++
   #--- head distance ---#
   if (is.na(headland_length)) {
     headland_length <- 2 * machine_width
@@ -327,8 +361,11 @@ preapre_single_m <- function(form,
     side_length <- max(section_width, measurements::conv_unit(30, "ft", "m"))
   }
 
+  #++++++++++++++++++++++++++++++++++++
+  #+ Put together the data
+  #++++++++++++++++++++++++++++++++++++
   plot_data <-
-    data.table(
+    data.frame(
       form = form,
       machine_width = machine_width,
       section_num = section_num,
@@ -366,18 +403,18 @@ preapre_single_m <- function(form,
 #' section_num <- 24
 #' plot_width <- NA
 #' harvester_width <- 30
-#' preapre_single_f(form, machine_width, section_num, harvester_width)
+#' prep_plot_fs(form, machine_width, section_num, harvester_width)
 #'
-preapre_single_f <- function(form,
-                             machine_width,
-                             section_num,
-                             harvester_width,
-                             plot_width = NA,
-                             headland_length = NA,
-                             side_length = NA,
-                             max_plot_width = 120, # 120 feet
-                             min_plot_length = 240, # 240 feet
-                             max_plot_length = 260 # 260 feet
+prep_plot_fs <- function(form,
+                         machine_width,
+                         section_num,
+                         harvester_width,
+                         plot_width = NA,
+                         headland_length = NA,
+                         side_length = NA,
+                         max_plot_width = 120, # 120 feet
+                         min_plot_length = 240, # 240 feet
+                         max_plot_length = 260 # 260 feet
 ) {
 
   #--- dimension check ---#
@@ -388,9 +425,39 @@ preapre_single_f <- function(form,
 
   section_width <- machine_width / section_num
 
+  #++++++++++++++++++++++++++++++++++++
+  #+ Check and notify the mixed treatment problems (with potential suggestions)
+  #++++++++++++++++++++++++++++++++++++
+  lcm_found <- lcm_check(section_width, harvester_width, max_plot_width)
+  proposed_plot_width <- find_plotwidth(section_width, harvester_width, max_plot_width)
+
   if (is.na(plot_width)) {
-    plot_width <- find_plotwidth(section_width, harvester_width, max_plot_width)
+    plot_width <- proposed_plot_width
+  } else {
+    warning_message <- NULL
+    if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
+      warning_message <-
+        paste0(
+          "For ", form, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
+        )
+    } else if (lcm_found & plot_width %% proposed_plot_width != 0) {
+      warning_message <-
+        paste0(
+          "For ", form, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
+        )
+    } else if (!lcm_found & plot_width != proposed_plot_width) {
+      warning_message <-
+        paste0(
+          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
+        )
+    }
+    #--- notify the user of potential problems and improvements ---#
+    message(warning_message)
   }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Headland and side lengths
+  #++++++++++++++++++++++++++++++++++++
 
   #--- head distance ---#
   if (is.na(headland_length)) {
@@ -402,8 +469,11 @@ preapre_single_f <- function(form,
     side_length <- max(section_width, 30)
   }
 
+  #++++++++++++++++++++++++++++++++++++
+  #+ Put together the data
+  #++++++++++++++++++++++++++++++++++++
   plot_data <-
-    data.table(
+    data.frame(
       form = form,
       machine_width = measurements::conv_unit(machine_width, "ft", "m"),
       section_num = section_num,
@@ -419,9 +489,9 @@ preapre_single_f <- function(form,
 }
 
 
-#!===========================================================
-#! Helper functions
-#!===========================================================
+# !===========================================================
+# ! Helper functions
+# !===========================================================
 find_plotwidth <- function(section_width, harvester_width, max_plot_width) {
   #--- least common multiple (lcm) ---#
   plot_width <- lcm(section_width, harvester_width)

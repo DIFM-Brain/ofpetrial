@@ -1,73 +1,3 @@
-#' Create a data frame of trial information for a single input
-#'
-#' Create a data frame of trial information for a single input
-#'
-#' @param form (character) type of input (e.g., UAN32, seed)
-#' @param plot_width (numeric) width of experimental plots in meter
-#' @param machine_width (numeric) machine width (applicator, planter)
-#' @param section_num (numeric) number of sections of the machine
-#' @param length_unit ("feet" or "meter") unit of length for machine_width and plot_width (default is "meter")
-#' @returns data frame of trial information for a single input
-#' @import data.table
-#' @examples
-#'
-#' seed_plot_info <-
-#'   make_input_plot_data(
-#'     form = "seed",
-#'     plot_width = 30,
-#'     machine_width = 60,
-#'     section_num = 24,
-#'     length_unit = "feet"
-#'   )
-#'
-#' seed_plot_info
-#'
-#' n_plot_info <-
-#'   make_input_plot_data(
-#'     form = "NH3",
-#'     plot_width = measurements::conv_unit(60, "ft", "m"),
-#'     machine_width = measurements::conv_unit(60, "ft", "m"),
-#'     section_num = 1
-#'   )
-#'
-#' n_plot_info
-#' @export
-
-make_input_plot_data <- function(form, plot_width, machine_width, section_num, length_unit = "meter") {
-  if (!length_unit %in% c("meter", "feet")) {
-    stop('Error: length_unit specified is neither "meter" or "feet".')
-  } else if (length_unit == "feet") {
-    message(
-      'Note: machine_width and plot_width are converted to meter as length_unit is specified as "feet". '
-    )
-  }
-
-  input_trial_data <-
-    data.frame(
-      form = form,
-      plot_width = plot_width,
-      machine_width = machine_width,
-      section_num = section_num
-    ) %>%
-    dplyr::mutate(
-      plot_width = ifelse(
-        length_unit == "feet",
-        measurements::conv_unit(plot_width, "ft", "m"),
-        plot_width
-      )
-    ) %>%
-    dplyr::mutate(
-      machine_width = ifelse(
-        length_unit == "feet",
-        measurements::conv_unit(machine_width, "ft", "m"),
-        machine_width
-      )
-    ) %>%
-    dplyr::mutate(section_width = machine_width / section_num)
-
-  return(input_trial_data)
-}
-
 #' Make experimental plots/strips inside the field boundary
 #'
 #' Make experimental plots/strips inside the field boundary, harvester ab-line, and applicator/planter ab-line.
@@ -82,7 +12,6 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
 #' @param min_plot_length (numeric) Default = 61 meter (200 feet) minimum plot length
 #' @param max_plot_length (numeric) Default = 91 meter (300 feet) maximum plot length
 #' @param length_unit ("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length
-#' @param perpendicular (logical) Default = FALSE.
 #' @returns a tibble that include experimental plots as sf
 #' @import data.table
 #' @import sf
@@ -126,55 +55,30 @@ make_input_plot_data <- function(form, plot_width, machine_width, section_num, l
 
 make_exp_plots <- function(input_plot_info,
                            boundary_file,
-                           harvester_width,
                            abline_file = NA,
-                           abline_type = "free", # one of "free", "lock", "non"
-                           headland_length = NA,
-                           side_length = NA,
-                           min_plot_length = 61, # about 200 feet
-                           max_plot_length = 91, # about 300 feet
-                           length_unit = "meter",
-                           perpendicular = FALSE) {
+                           abline_type = "free" # one of "free", "lock", "non"
+) {
+  # !===========================================================
+  # ! Check and modify input_plot_info if necessary
+  # !===========================================================
+  if (class(input_plot_info) == "list") {
+    input_plot_info <- rbindlist(input_plot_info)
 
-  # !============================================================
-  # ! Set up
-  # !============================================================
-  #++++++++++++++++++++++++++++++++++++
-  #+ Create trial data
-  #++++++++++++++++++++++++++++++++++++
-  if (class(input_plot_info) == "data.frame") {
-    input_trial_data <- input_plot_info
-  } else if (class(input_plot_info) == "list") {
-    input_trial_data <-
-      input_plot_info %>%
-      rbindlist()
+    check_length_consistency <-
+      lapply(
+        input_plot_info[, .(harvester_width, min_plot_length, max_plot_length)],
+        function(x) length(unique(x))
+      ) %>%
+      unlist() %>%
+      all(. == 1)
+    if (!check_length_consistency) {
+      stop("You specified inconsistent length for at least one of harvester_width, min_plot_length, and max_plot_length. Please make sure they are the same when preparing plot information individually. Or, please use prep_plot_md() or prep_plot_fd() to avoid these inconsistencies.")
+    }
+
+    input_plot_info$headland_length <- max(input_plot_info$headland_length)
+    input_plot_info$side_length <- max(input_plot_info$side_length)
   }
 
-  #++++++++++++++++++++++++++++++++++++
-  #+Unit conversion (feet to meter) of global parameters
-  #++++++++++++++++++++++++++++++++++++
-  #--- head distance ---#
-  if (is.na(headland_length)) {
-    headland_length <- 2 * max(input_trial_data$machine_width)
-  }
-
-  #--- side distance ---#
-  if (is.na(side_length)) {
-    side_length <- max(max(input_trial_data$section_width), measurements::conv_unit(30, "ft", "m"))
-  }
-
-  if (!length_unit %in% c("meter", "feet")) {
-    stop('Error: length_unit specified is neither "meter" or "feet".')
-  } else if (length_unit == "feet") {
-    message(
-      'Note: length arguments (e.g., harvester_width) are converted to meter as length_unit is specified as "feet". '
-    )
-    harvester_width <- measurements::conv_unit(harvester_width, "ft", "m")
-    min_plot_length <- measurements::conv_unit(min_plot_length, "ft", "m")
-    max_plot_length <- measurements::conv_unit(max_plot_length, "ft", "m")
-    headland_length <- measurements::conv_unit(headland_length, "ft", "m")
-    side_length <- measurements::conv_unit(side_length, "ft", "m")
-  }
 
   # !============================================================
   # ! Get the data ready (field boundary and plot-heading)
@@ -201,7 +105,7 @@ make_exp_plots <- function(input_plot_info,
   #+ Plot-heading and other parameter
   #++++++++++++++++++++++++++++++++++++
   trial_data_pa <-
-    input_trial_data %>%
+    input_plot_info %>%
     #--- whether to lock or not ---#
     dplyr::mutate(lock_ab_line = (abline_type == "lock")) %>%
     #--- input with ab-line lock first ---#
@@ -248,13 +152,17 @@ make_exp_plots <- function(input_plot_info,
   #++++++++++++++++++++++++++++++++++++
   #+ First input
   #++++++++++++++++++++++++++++++++++++
-  # ab_sf <- trial_data_first$ab_sf[[1]]
-  # ab_lines_data <- trial_data_first$ab_lines_data[[1]]
   # base_ab_lines_data <- trial_data_first$base_ab_lines_data[[1]]
+  # abline_type <- "free"
   # plot_width <- trial_data_first$plot_width[[1]]
   # machine_width <- trial_data_first$machine_width[[1]]
-  # abline_type <- "free"
-  # field_sf <- field_sf
+  # harvester_width <- trial_data_first$harvester_width[[1]]
+  # section_num <- trial_data_first$section_num[[1]]
+  # headland_length <- trial_data_first$headland_length[[1]]
+  # side_length <- trial_data_first$side_length[[1]]
+  # min_plot_length <- trial_data_first$min_plot_length[[1]]
+  # max_plot_length <- trial_data_first$max_plot_length[[1]]
+  # second_input <- FALSE
 
   #--- by default uses the first one ---#
   trial_data_first <-
@@ -280,7 +188,6 @@ make_exp_plots <- function(input_plot_info,
         side_length = side_length,
         min_plot_length = min_plot_length,
         max_plot_length = max_plot_length,
-        perpendicular = perpendicular,
         second_input = FALSE
       )
     )) %>%
@@ -288,6 +195,7 @@ make_exp_plots <- function(input_plot_info,
       make_ablines_data(
         exp_plots = exp_plots,
         base_ab_lines_data = base_ab_lines_data,
+        plot_width = plot_width,
         field_sf = field_sf
       )
     )) %>%
@@ -415,7 +323,6 @@ make_exp_plots <- function(input_plot_info,
           side_length = side_length,
           min_plot_length = min_plot_length,
           max_plot_length = max_plot_length,
-          perpendicular = perpendicular,
           second_input = TRUE
         )
       )) %>%
@@ -423,6 +330,7 @@ make_exp_plots <- function(input_plot_info,
         make_ablines_data(
           exp_plots = exp_plots,
           base_ab_lines_data = base_ab_lines_data,
+          plot_width = plot_width,
           field_sf = field_sf
         )
       )) %>%
@@ -484,6 +392,7 @@ make_exp_plots <- function(input_plot_info,
     dplyr::select(
       trial_data_eh,
       form,
+      harvester_width,
       plot_width,
       field_sf,
       headland,
@@ -492,7 +401,6 @@ make_exp_plots <- function(input_plot_info,
       harvest_ab_lines
     ) %>%
     dplyr::mutate(abline_type = abline_type) %>%
-    dplyr::mutate(harvester_width = harvester_width) %>%
     dplyr::ungroup()
 
   return(trial_data_return)
@@ -515,7 +423,6 @@ make_trial_plots_by_input <- function(field,
                                       side_length,
                                       min_plot_length,
                                       max_plot_length,
-                                      perpendicular,
                                       second_input = FALSE) {
 
   #--- conversion ---#
@@ -779,72 +686,13 @@ make_trial_plots_by_input <- function(field,
   #   geom_sf(data = final_exp_plots) +
   #   geom_sf(data = int_lines)
 
-  if (perpendicular) {
-    # Notes:
-    # This is for the case of harvesting and application being perpendicular.
-    # All the plots must have the same length (specified by min_plot_length and max_plot_length)
-    # Plots are "misaligned" by the exact multiple of harvester width to avoid harvester having to straddle
-
-    # ggplot() +
-    #   geom_sf(data = final_exp_plots_hadjsuted, col = "red", fill = NA) +
-    #   geom_sf(data = final_exp_plots, col = "blue", fill = NA)
-    # ggplot() +
-    #   geom_sf(data = final_exp_plots, aes(fill = strip_id))
-
-    # ggplot() +
-    #   geom_sf(data = purrr::reduce(final_exp_plots$shifted_plots, rbind), col = "red", fill = NA) +
-    #   geom_sf(data = purrr::reduce(final_exp_plots$shifted_line, rbind), col = "red", fill = NA) +
-    #   geom_sf(data = purrr::reduce(final_exp_plots$data, rbind), col = "blue", fill = NA) +
-    #   geom_sf(data = final_exp_plots$shifted_line[[13]], col = "blue", fill = NA)
-
-    final_exp_plots <-
-      final_exp_plots %>%
-      dplyr::nest_by(strip_id, poly_line) %>%
-      dplyr::mutate(first_plot = list(
-        dplyr::filter(data, plot_id == 1)
-      )) %>%
-      dplyr::mutate(perpendicular_line = list(
-        get_through_line(first_plot$geometry, radius, ab_xy_nml_p90)
-      )) %>%
-      dplyr::ungroup() %>%
-      dplyr::mutate(base_line = .[1, ]$perpendicular_line) %>%
-      dplyr::rowwise() %>%
-      dplyr::mutate(dist_to_base = sf::st_distance(perpendicular_line, base_line) %>%
-        as.numeric()) %>%
-      dplyr::mutate(remainder = dist_to_base %% harvester_width) %>%
-      dplyr::mutate(correction_dist = min(remainder, harvester_width - remainder)) %>%
-      dplyr::mutate(shifted_first_plot = list(
-        st_shift(first_plot, correction_dist * ab_xy_nml)
-      )) %>%
-      dplyr::mutate(shifted_line = list(
-        get_through_line(shifted_first_plot$geometry, radius, ab_xy_nml_p90)
-      )) %>%
-      dplyr::mutate(
-        new_remainder =
-          as.numeric(sf::st_distance(base_line, shifted_line)) %% harvester_width
-      ) %>%
-      # if the distance is close enough moving in the wrong
-      # direction does not hurt
-      dplyr::mutate(is_close_enough = min(new_remainder, harvester_width - new_remainder) < 1e-6) %>%
-      dplyr::mutate(shift_direction = list(
-        ifelse(is_close_enough, 1, -1)
-      )) %>%
-      dplyr::mutate(shifted_plots = list(
-        st_shift(data, shift_direction * correction_dist * ab_xy_nml) %>%
-          dplyr::mutate(strip_id = strip_id)
-      )) %>%
-      purrr::pluck("shifted_plots") %>%
-      purrr::reduce(rbind)
-  }
-
   return(final_exp_plots)
 }
-
 
 #++++++++++++++++++++++++++++++++++++
 #+Prepare data for creating ab-lines and edge line
 #++++++++++++++++++++++++++++++++++++
-make_ablines_data <- function(exp_plots, base_ab_lines_data, field_sf) {
+make_ablines_data <- function(exp_plots, base_ab_lines_data, plot_width, field_sf) {
 
   #--- prepare vectors ---#
   ab_xy_nml <- base_ab_lines_data$ab_xy_nml
@@ -1002,4 +850,3 @@ make_plot_edge_line <- function(ablines_data,
     return(NULL)
   }
 }
-
