@@ -80,15 +80,7 @@ exp_plots_aa <-
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_file = system.file("extdata", "as-applied-simple1.shp", package = "ofpetrial"),
-    harvester_width = 30,
-    abline_type = "free",
-    headland_length = 120,
-    side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
-    length_unit = "feet",
-    perpendicular = FALSE
-  )
+    abline_type = "free")
 
 viz_ep(exp_plots_aa)
 ```
@@ -105,10 +97,10 @@ plot(yield$geometry, pch = 1, cex = .1)
 input_plot_info <-
   make_input_plot_data(
     form = "seed",
-    plot_width = 45,
-    machine_width = 45,
-    section_num = 1,
-    length_unit = "feet"
+    machine_width = 60,
+    section_num = 24,
+    harvester_width = 45,
+    plot_width = 45
   )
 
 exp_plots_yield <-
@@ -116,14 +108,7 @@ exp_plots_yield <-
     input_plot_info = input_plot_info,
     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_file = system.file("extdata", "yield-simple1.shp", package = "ofpetrial"),
-    harvester_width = 45,
-    abline_type = "free",
-    headland_length = 90,
-    side_length = 45,
-    min_plot_length = 200,
-    max_plot_length = 300,
-    length_unit = "feet",
-    perpendicular = FALSE
+    abline_type = "free"
   )
 
 viz_ep(exp_plots_yield)
