@@ -126,7 +126,7 @@ make_heading_from_past_asapplied <- function(past_aa_input, field) {
           lm(Y ~ X, data = data)$coef[2]
       ) %>%
       dplyr::filter(!is.na(slope)) %>%
-      unnest() %>%
+      tidyr::unnest() %>%
       dplyr::mutate(cluster = kmeans(slope, 6)$cluster) %>%
       data.table() %>%
       .[, .(slope, cluster)] %>%
@@ -135,7 +135,8 @@ make_heading_from_past_asapplied <- function(past_aa_input, field) {
       .[, mean(slope)]
   }
 
-  ab_start <- sf::st_geometry(sf::st_centroid(field))[[1]]
+  ab_start <- sf::st_geometry(sf::st_centroid(
+    past_aa_input[which.min(st_distance(past_aa_input, sf::st_geometry(sf::st_centroid(field)))),]))[[1]]
   ab_end <- ab_start + c(1, dominant_slope)
 
   ab_line <-
