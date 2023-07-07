@@ -1,9 +1,10 @@
 + [ ] measurement unit by input type (N, seed, )
 + [ ] trial design
-  + [ ] sparse design
+  + [x] sparse design
   + [x] strip design
   + [x] latin square
   + [x] randomized block
++ [ ] assign rates
 + [x] options of specifying sequences (within and across strips)
 + [ ] available form options in the website 
 + [ ] (deal with problem 1) check the overlap of rates

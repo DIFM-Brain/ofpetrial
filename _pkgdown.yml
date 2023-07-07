@@ -1,3 +1,36 @@
 template:
   params:
     ganalytics: G-B09QYRX8XQ
+
+reference:
+  - title: Preparation for rates assignment
+    contents:
+      - prep_plot_md
+      - prep_plot_fd
+      - prep_plot_ms
+      - prep_plot_fs
+  - title: Preparation for rates assignment
+    contents:
+      - prep_rates_s
+      - prep_rates_d
+  - title: Generate trial designs
+    contents:
+      - make_exp_plots
+      - assign_rates
+  - title: Modify trial design
+    contents:
+      - add_blocks
+      - change_rate_by_block
+      - change_rate_by_strip
+  - title: Diagnose trial designs
+    contents:
+      - diagnose
+      - check_alignment
+  - title: Visualization
+    desc: Visualize experimental plots and trial designs
+    contents:
+      - viz_ep
+      - viz_td
+  - title: Write out files
+    contents:
+      - write_trial_files
