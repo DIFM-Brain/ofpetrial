@@ -4,16 +4,24 @@
   + [x] strip design
   + [x] latin square
   + [x] randomized block
-+ [ ] assign rates
++ [x] assign rates
 + [x] options of specifying sequences (within and across strips)
 + [ ] available form options in the website 
-+ [ ] (deal with problem 1) check the overlap of rates
 + [x] cut off ab-lines outside of the field boundary with a bit of buffer around the field
 + [x] make harvest ab-line (Taro)
-+ [ ] let them specify the full sequence (everything is a specical case of this except randomized ones) (Taro)
++ [ ] let them specify the full sequence (everything is a special case of this except randomized ones) (Taro)
 + [ ] base_rate, conversion, dictionary (Brittani)
 + [ ] rate option (original unit, or equivalent) (Brittani)
 + [ ] check examples
++ [ ] explain the structure of experiment plots and trial design, what is the definition of plot?
++ [x] visualize strip id, plot id, block id
++ [x] accept sf as boundary and ab-line
++ [ ] what is stratification by MSU?
++ [ ] explain parameters well in the prep functions
++ [ ] use past trial design plots and change according to the past trial rates
++ [ ] add harvester abline in writing files
+
+
 # Problems
 
 1. when field is not straight and plot widths are different, rates transitions do not align well
@@ -26,10 +34,11 @@
 + ab-line options
   -  input: as-applied shape file, ab-line file, or angle
   -  lock, free, none 
-+ trial design options
++[x] trial design options
   + ls
   + jcls
   + rb
   + strip
   + ejca
-+ modify rates
++ [x] modify rates
++ [ ] key parameters in make_plots

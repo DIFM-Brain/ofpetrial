@@ -3,59 +3,37 @@
 #' Make experimental plots/strips inside the field boundary, harvester ab-line, and applicator/planter ab-line.
 #'
 #' @param input_plot_info (data.fram or a list of two data.frames) list of plot information created by make_input_plot()
-#' @param boundary_file (string) path of the field boundary file
-#' @param harvester_width (numeric) width of the harvester
-#' @param abline_file (string) path of the ab-line file
-#' @param abline_type (string) the type of ab-line generation. Select from "free", "lock", and "none"
-#' @param headland_length (numeric) Default = NA. Length of the headland
-#' @param side_length (numeric) Default = NA. Length of the sides
-#' @param min_plot_length (numeric) Default = 61 meter (200 feet) minimum plot length
-#' @param max_plot_length (numeric) Default = 91 meter (300 feet) maximum plot length
-#' @param length_unit ("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length
+#' @param boundary_data (character) path of the field boundary file or boundary as an sf
+#' @param abline_data (character or sf) path of the ab-line file or ab-line as an sf
+#' @param abline_type (character) the type of ab-line generation. Select from "free", "lock", and "none"
 #' @returns a tibble that include experimental plots as sf
 #' @import data.table
 #' @import sf
 #' @examples
-#' seed_plot_info <-
-#'   make_input_plot_data(
-#'     form = "seed",
-#'     plot_width = 40,
-#'     machine_width = 60,
-#'     section_num = 24,
-#'     length_unit = "feet"
-#'   )
-#'
 #' n_plot_info <-
-#'   make_input_plot_data(
-#'     form = "NH3",
-#'     plot_width = measurements::conv_unit(30, "ft", "m"),
-#'     machine_width = measurements::conv_unit(30, "ft", "m"),
-#'     section_num = 1
+#'   prep_plot_fs(
+#'     input_name = "NH3",
+#'     machine_width = 30,
+#'     section_num = 1,
+#'     harvester_width = 20,
+#'     headland_length = 30,
+#'     side_length = 60
 #'   )
-#'
-#' input_plot_info <- list(seed_plot_info, n_plot_info)
 #'
 #' exp_data <-
 #'   make_exp_plots(
-#'     input_plot_info = input_plot_info,
-#'     boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-#'     abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
-#'     harvester_width = 30,
-#'     abline_type = "free",
-#'     headland_length = 30,
-#'     side_length = 60,
-#'     min_plot_length = 200,
-#'     max_plot_length = 300,
-#'     length_unit = "feet",
-#'     perpendicular = FALSE
+#'     input_plot_info = n_plot_info,
+#'     boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+#'     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+#'     abline_type = "free"
 #'   )
 #'
 #' exp_data$exp_plots
 #' @export
 
 make_exp_plots <- function(input_plot_info,
-                           boundary_file,
-                           abline_file = NA,
+                           boundary_data,
+                           abline_data = NA,
                            abline_type = "free" # one of "free", "lock", "non"
 ) {
   # !===========================================================
@@ -79,17 +57,21 @@ make_exp_plots <- function(input_plot_info,
     input_plot_info$side_length <- max(input_plot_info$side_length)
   }
 
-
   # !============================================================
   # ! Get the data ready (field boundary and plot-heading)
   # !============================================================
   #++++++++++++++++++++++++++++++++++++
   #+ Field boundary
   #++++++++++++++++++++++++++++++++++++
-  field_sf <-
-    sf::st_read(boundary_file, quiet = TRUE) %>%
-    make_sf_utm() %>%
-    sf::st_combine()
+  boundary_class <- class(boundary_data)
+  if ("sf" %in% boundary_class) {
+    field_sf <- boundary_data
+  } else if ("character" %in% boundary_class) {
+    field_sf <-
+      sf::st_read(boundary_data, quiet = TRUE) %>%
+      make_sf_utm() %>%
+      sf::st_combine()
+  }
 
   #--- get the boundary box of the field ---#
   field_bbox <- sf::st_bbox(field_sf)
@@ -104,6 +86,7 @@ make_exp_plots <- function(input_plot_info,
   #++++++++++++++++++++++++++++++++++++
   #+ Plot-heading and other parameter
   #++++++++++++++++++++++++++++++++++++
+  abline_class <- class(abline_data)
   trial_data_pa <-
     input_plot_info %>%
     #--- whether to lock or not ---#
@@ -114,7 +97,13 @@ make_exp_plots <- function(input_plot_info,
     dplyr::rowwise() %>%
     dplyr::mutate(line_edge_id = NA) %>%
     #--- heading sf ---#
-    dplyr::mutate(ab_sf = list(sf::st_read(abline_file, quiet = TRUE) %>% make_sf_utm())) %>%
+    dplyr::mutate(ab_sf = list(
+      if ("sf" %in% abline_class) {
+        abline_data %>% make_sf_utm()
+      } else if ("character" %in% abline_class) {
+        sf::st_read(abline_data, quiet = TRUE) %>% make_sf_utm()
+      }
+    )) %>%
     dplyr::mutate(ab_sf = list(
       if ("POINT" %in% sf::st_geometry_type(ab_sf)) {
         #--- as-applied file should be point sf instead line sf ---#
@@ -391,7 +380,7 @@ make_exp_plots <- function(input_plot_info,
   trial_data_return <-
     dplyr::select(
       trial_data_eh,
-      form,
+      input_name,
       harvester_width,
       plot_width,
       field_sf,
@@ -424,7 +413,6 @@ make_trial_plots_by_input <- function(field,
                                       min_plot_length,
                                       max_plot_length,
                                       second_input = FALSE) {
-
   #--- conversion ---#
   # plot_width <- conv_unit(plot_width, "ft", "m")
   # machine_width <- conv_unit(machine_width, "ft", "m")
@@ -504,7 +492,6 @@ make_trial_plots_by_input <- function(field,
     as.numeric()
 
   if (second_input == FALSE & abline_type == "lock") {
-
     # move the intersecting strip so the ab-line goes through the center
     if (new_dist > correction_dist) {
       #--- if moved further away ---#
@@ -576,9 +563,7 @@ make_trial_plots_by_input <- function(field,
   #++++++++++++++++++++++++++++++++++++
   #+ Create experiment plots
   #++++++++++++++++++++++++++++++++++++
-  min_length <- measurements::conv_unit(min_plot_length, "ft", "m") # (200 feet)
-  max_length <- measurements::conv_unit(max_plot_length, "ft", "m") #  (300 feet)
-  mean_length <- (min_length + max_length) / 2
+  mean_length <- (min_plot_length + max_plot_length) / 2
 
   side_length <- 1.5 * side_length
 
@@ -659,7 +644,7 @@ make_trial_plots_by_input <- function(field,
     dplyr::mutate(plot_data = list(
       get_plot_data(
         tot_plot_length,
-        min_length,
+        min_plot_length,
         mean_length
       )
     )) %>%
@@ -693,7 +678,6 @@ make_trial_plots_by_input <- function(field,
 #+Prepare data for creating ab-lines and edge line
 #++++++++++++++++++++++++++++++++++++
 make_ablines_data <- function(exp_plots, base_ab_lines_data, plot_width, field_sf) {
-
   #--- prepare vectors ---#
   ab_xy_nml <- base_ab_lines_data$ab_xy_nml
   ab_xy_nml_p90 <- base_ab_lines_data$ab_xy_nml_p90
@@ -823,7 +807,6 @@ make_plot_edge_line <- function(ablines_data,
                                 create_plot_edge_line,
                                 base_ab_lines_data,
                                 plot_width) {
-
   # Note 1: this is used to align the left (or) right edges of the first input experiment plot
   # Note 2: even if the starting point is locked, this still applies
 

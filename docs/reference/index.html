@@ -38,13 +38,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ab-line.html">Trial AB-line Types and Options</a>
+      <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
     </li>
     <li>
-      <a href="../articles/random-vs-orthogonal.html">random-vs-orthogonal</a>
+      <a href="../articles/V2-ab-line.html">Trial AB-line Types and Options</a>
     </li>
     <li>
-      <a href="../articles/trial-design-options.html">Trial Design Options</a>
+      <a href="../articles/V3-change-rates-manually.html">Change Trial Rates Manually</a>
+    </li>
+    <li>
+      <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
   </ul></li>
 <li>
@@ -69,15 +72,15 @@
       </tr></tbody><tbody><tr><td>
           <p><code><a href="prep_plot_md.html">prep_plot_md()</a></code> </p>
         </td>
-        <td><p>Prepare plot information for a two-input experiment (meter)</p></td>
+        <td><p>Prepare plot information for a two-input experiment (length in meter)</p></td>
       </tr><tr><td>
           <p><code><a href="prep_plot_fd.html">prep_plot_fd()</a></code> </p>
         </td>
-        <td><p>Prepare plot information for a two-input experiment (feet)</p></td>
+        <td><p>Prepare plot information for a two-input experiment (length in feet)</p></td>
       </tr><tr><td>
           <p><code><a href="prep_plot_ms.html">prep_plot_ms()</a></code> </p>
         </td>
-        <td><p>Prepare plot information for a single-input experiment (meter)</p></td>
+        <td><p>Prepare plot information for a single-input experiment (length in meter)</p></td>
       </tr><tr><td>
           <p><code><a href="prep_plot_fs.html">prep_plot_fs()</a></code> </p>
         </td>
@@ -107,13 +110,17 @@
         </td>
         <td><p>Assign rates to the plots of experimental plots</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="modify-trial-design">Modify trial design <a href="#modify-trial-design" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="modify-input-rates">Modify input rates <a href="#modify-input-rates" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="add_blocks.html">add_blocks()</a></code> </p>
         </td>
         <td><p>Add blocks to trial design</p></td>
+      </tr><tr><td>
+          <p><code><a href="change_rate_by_plot.html">change_rate_by_plot()</a></code> </p>
+        </td>
+        <td><p>Change the assigned rate by plot</p></td>
       </tr><tr><td>
           <p><code><a href="change_rate_by_block.html">change_rate_by_block()</a></code> </p>
         </td>
@@ -127,9 +134,9 @@
           <p class="section-desc"></p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="diagnose.html">diagnose()</a></code> </p>
+          <p><code><a href="check_cor_inputs.html">check_cor_inputs()</a></code> </p>
         </td>
-        <td><p>Diagnose the trial design</p></td>
+        <td><p>Check the correlation of the two inputs</p></td>
       </tr><tr><td>
           <p><code><a href="check_alignment.html">check_alignment()</a></code> </p>
         </td>
@@ -139,13 +146,9 @@
           <p class="section-desc"></p><p>Visualize experimental plots and trial designs</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="viz_ep.html">viz_ep()</a></code> </p>
+          <p><code><a href="viz.html">viz()</a></code> </p>
         </td>
-        <td><p>Visualize experiment plots</p></td>
-      </tr><tr><td>
-          <p><code><a href="viz_td.html">viz_td()</a></code> </p>
-        </td>
-        <td><p>Visualize trial designs</p></td>
+        <td><p>Visualize various aspects of a trial design</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="write-out-files">Write out files <a href="#write-out-files" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p>
@@ -154,6 +157,30 @@
           <p><code><a href="write_trial_files.html">write_trial_files()</a></code> </p>
         </td>
         <td><p>Write trial design files for field implementation</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="data">Data <a href="#data" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="plot_info.html">plot_info</a></code> </p>
+        </td>
+        <td><p>Plot information</p></td>
+      </tr><tr><td>
+          <p><code><a href="exp_data.html">exp_data</a></code> </p>
+        </td>
+        <td><p>Experiment data</p></td>
+      </tr><tr><td>
+          <p><code><a href="rate_info.html">rate_info</a></code> </p>
+        </td>
+        <td><p>Rate information</p></td>
+      </tr><tr><td>
+          <p><code><a href="td_single_input.html">td_single_input</a></code> </p>
+        </td>
+        <td><p>Trial design (single-input)</p></td>
+      </tr><tr><td>
+          <p><code><a href="td_two_input.html">td_two_input</a></code> </p>
+        </td>
+        <td><p>Trial design (two-input)</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

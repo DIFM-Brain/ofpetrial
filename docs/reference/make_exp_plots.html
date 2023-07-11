@@ -38,13 +38,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ab-line.html">Trial AB-line Types and Options</a>
+      <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
     </li>
     <li>
-      <a href="../articles/random-vs-orthogonal.html">random-vs-orthogonal</a>
+      <a href="../articles/V2-ab-line.html">Trial AB-line Types and Options</a>
     </li>
     <li>
-      <a href="../articles/trial-design-options.html">Trial Design Options</a>
+      <a href="../articles/V3-change-rates-manually.html">Change Trial Rates Manually</a>
+    </li>
+    <li>
+      <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
   </ul></li>
 <li>
@@ -71,8 +74,8 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_exp_plots</span><span class="op">(</span></span>
 <span>  <span class="va">input_plot_info</span>,</span>
-<span>  <span class="va">boundary_file</span>,</span>
-<span>  abline_file <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  <span class="va">boundary_data</span>,</span>
+<span>  abline_data <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -83,40 +86,16 @@
 <dd><p>(data.fram or a list of two data.frames) list of plot information created by make_input_plot()</p></dd>
 
 
-<dt>boundary_file</dt>
-<dd><p>(string) path of the field boundary file</p></dd>
+<dt>boundary_data</dt>
+<dd><p>(character) path of the field boundary file or boundary as an sf</p></dd>
 
 
-<dt>abline_file</dt>
-<dd><p>(string) path of the ab-line file</p></dd>
+<dt>abline_data</dt>
+<dd><p>(character or sf) path of the ab-line file or ab-line as an sf</p></dd>
 
 
 <dt>abline_type</dt>
-<dd><p>(string) the type of ab-line generation. Select from "free", "lock", and "none"</p></dd>
-
-
-<dt>harvester_width</dt>
-<dd><p>(numeric) width of the harvester</p></dd>
-
-
-<dt>headland_length</dt>
-<dd><p>(numeric) Default = NA. Length of the headland</p></dd>
-
-
-<dt>side_length</dt>
-<dd><p>(numeric) Default = NA. Length of the sides</p></dd>
-
-
-<dt>min_plot_length</dt>
-<dd><p>(numeric) Default = 61 meter (200 feet) minimum plot length</p></dd>
-
-
-<dt>max_plot_length</dt>
-<dd><p>(numeric) Default = 91 meter (300 feet) maximum plot length</p></dd>
-
-
-<dt>length_unit</dt>
-<dd><p>("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length</p></dd>
+<dd><p>(character) the type of ab-line generation. Select from "free", "lock", and "none"</p></dd>
 
 </dl></div>
     <div id="value">
@@ -128,63 +107,44 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">seed_plot_info</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">make_input_plot_data</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    form <span class="op">=</span> <span class="st">"seed"</span>,</span></span>
-<span class="r-in"><span>    plot_width <span class="op">=</span> <span class="fl">40</span>,</span></span>
-<span class="r-in"><span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span></span>
-<span class="r-in"><span>    section_num <span class="op">=</span> <span class="fl">24</span>,</span></span>
-<span class="r-in"><span>    length_unit <span class="op">=</span> <span class="st">"feet"</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span></span>
+<span class="r-in"><span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>    harvester_width <span class="op">=</span> <span class="fl">20</span>,</span></span>
+<span class="r-in"><span>    headland_length <span class="op">=</span> <span class="fl">30</span>,</span></span>
+<span class="r-in"><span>    side_length <span class="op">=</span> <span class="fl">60</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in make_input_plot_data(form = "seed", plot_width = 40, machine_width = 60,     section_num = 24, length_unit = "feet"):</span> could not find function "make_input_plot_data"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span>  <span class="fu">make_input_plot_data</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    form <span class="op">=</span> <span class="st">"NH3"</span>,</span></span>
-<span class="r-in"><span>    plot_width <span class="op">=</span> <span class="fu">measurements</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/measurements/man/conv_unit.html" class="external-link">conv_unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"ft"</span>, <span class="st">"m"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    machine_width <span class="op">=</span> <span class="fu">measurements</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/measurements/man/conv_unit.html" class="external-link">conv_unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"ft"</span>, <span class="st">"m"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    section_num <span class="op">=</span> <span class="fl">1</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in make_input_plot_data(form = "NH3", plot_width = measurements::conv_unit(30,     "ft", "m"), machine_width = measurements::conv_unit(30, "ft",     "m"), section_num = 1):</span> could not find function "make_input_plot_data"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_plot_info</span>, <span class="va">n_plot_info</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'seed_plot_info' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">exp_data</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">make_exp_plots</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span></span>
-<span class="r-in"><span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span></span>
-<span class="r-in"><span>    abline_type <span class="op">=</span> <span class="st">"free"</span>,</span></span>
-<span class="r-in"><span>    headland_length <span class="op">=</span> <span class="fl">30</span>,</span></span>
-<span class="r-in"><span>    side_length <span class="op">=</span> <span class="fl">60</span>,</span></span>
-<span class="r-in"><span>    min_plot_length <span class="op">=</span> <span class="fl">200</span>,</span></span>
-<span class="r-in"><span>    max_plot_length <span class="op">=</span> <span class="fl">300</span>,</span></span>
-<span class="r-in"><span>    length_unit <span class="op">=</span> <span class="st">"feet"</span>,</span></span>
-<span class="r-in"><span>    perpendicular <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span>    input_plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span></span>
+<span class="r-in"><span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in make_exp_plots(input_plot_info = input_plot_info, boundary_file = system.file("extdata",     "boundary-simple1.shp", package = "ofpetrial"), abline_file = system.file("extdata",     "ab-line-simple1.shp", package = "ofpetrial"), harvester_width = 30,     abline_type = "free", headland_length = 30, side_length = 60,     min_plot_length = 200, max_plot_length = 300, length_unit = "feet",     perpendicular = FALSE):</span> unused arguments (harvester_width = 30, headland_length = 30, side_length = 60, min_plot_length = 200, max_plot_length = 300, length_unit = "feet", perpendicular = FALSE)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 608 features and 3 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 171 features and 3 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 353000.9 ymin: 4331451 xmax: 353364.1 ymax: 4332207</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: WGS 84 / UTM zone 16N</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: 353002 ymin: 4331451 xmax: 353363 ymax: 4332207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Projected CRS: WGS 84 / UTM zone 28N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    plot_id strip_id poly_line                       geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1        1       1_1 POLYGON ((353019.2 4331451,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2        1       1_1 POLYGON ((353019.7 4331474,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3        1       1_1 POLYGON ((353020.2 4331498,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4        1       1_1 POLYGON ((353020.7 4331521,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5        1       1_1 POLYGON ((353021.1 4331544,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6        1       1_1 POLYGON ((353021.6 4331567,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7        1       1_1 POLYGON ((353022.1 4331590,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8        1       1_1 POLYGON ((353022.6 4331614,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9        1       1_1 POLYGON ((353023.1 4331637,...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10      10        1       1_1 POLYGON ((353023.5 4331660,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1        1       1_1 POLYGON ((353020.3 4331451,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2        1       1_1 POLYGON ((353021.7 4331527,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3        1       1_1 POLYGON ((353023 4331604, 3...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4        1       1_1 POLYGON ((353024.4 4331680,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5        1       1_1 POLYGON ((353025.7 4331756,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6        1       1_1 POLYGON ((353027.1 4331832,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        7        1       1_1 POLYGON ((353028.5 4331908,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        8        1       1_1 POLYGON ((353029.8 4331985,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        9        1       1_1 POLYGON ((353031.7 4332090,...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       1        2       1_1 POLYGON ((353038.6 4331452,...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

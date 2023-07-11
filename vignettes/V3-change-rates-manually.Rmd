@@ -1,0 +1,172 @@
+---
+title: "Change Trial Rates Manually"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{chante-rates-manually}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 6
+)
+```
+
+```{r setup}
+library(ofpetrial)
+library(ggplot2)
+library(dplyr)
+```
+
+Suppose you have created a trial design is made using `assign_rates()` to experiment plots made by `make_exp_plots()`, but you are not quite satisfied with it and would like to change rates here and there. You can easily do so manually. This vignette demonstrates such operations. 
+
+# Data Preparation 
+
+Let's first create a trial design for a single input case.
+
+```{r}
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+    rank_seq_ws = c(1, 2, 3, 4, 5),
+    rank_seq_as = c(1, 2, 3, 4, 5)
+  )
+
+td <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+Here is what the trial design looks like.
+
+```{r}
+viz(td, type = "rates")
+```
+
+# Changing rates 
+
+It is important to be aware that every single plot is assigned a withint-strip plot id and a strip id when they were created using `make_exp_plots()`. 
+
+```{r}
+td$trial_design[[1]]
+```
+
+The figure below shows the strip id associated with each plot.
+```{r, fig.height = 9}
+viz(td, type = "strip_id")
+```
+
+The figure below shows the plot id associated with each plot.
+```{r, fig.height = 9}
+viz(td, type = "plot_id")
+```
+
+As you can see, `plot_id` is the unique numeric identifier assigned to each of the plots **within** a strip. So, there are multiple plots with the same `plot_id` values, but a combination of `strip_id` and `plot_id` uniquely identifies a plot.
+
+## By plot
+
+You can use `change_rate_by_plot()` to change rates. The code below change the rate asscociated the plot with `strip_id = 1` and `plot_id = 1` (left bottom cell) to 0.
+
+```{r}
+modified_td <- 
+  change_rate_by_plot(
+    td,
+    input_name = "NH3",
+    strip_ids = 1,
+    plot_ids = 1,
+    new_rate = 0
+  )
+```
+
+```{r}
+viz(modified_td, type = "rates", abline = FALSE)
+```
+
+You can change rates of multiple plots with the same `plot_id` across multiple `strip_id`s.
+
+```{r}
+change_rate_by_plot(
+  td,
+  input_name = "NH3",
+  strip_ids = 1:10,
+  plot_ids = 10,
+  new_rate = 0
+) %>%
+viz(abline = FALSE)
+```
+
+When you give vectors of values to `stip_ids` and `plot_ids`, the plots with all the possible combinations of `strip_id`-`plot_id` are going to have a new rate.
+
+```{r}
+change_rate_by_plot(
+  td,
+  input_name = "NH3",
+  strip_ids = 1:10,
+  plot_ids = c(1, 5, 9, 14, 19, 24),
+  new_rate = 0
+) %>%
+viz(abline = FALSE)
+```
+
+## By strip
+
+`change_rate_by_strip()` lets you change the rate of all the plot in the strips you specified. When you supply vectoros of equal length to `strip_ids` and `new_rates`, then **n**th element of `strip_ids` is matched with **n**th element of `new_rates`.
+
+```{r}
+change_rate_by_strip(
+  td,
+  input_name = "NH3",
+  strip_ids = c(1, 4, 7, 10, 13, 16, 19),
+  new_rates = seq(0, 270, length = 7)
+) %>%
+viz(abline = FALSE)
+```
+
+If you supply a single value to `new_rates` while supplying more than one values to `strip_ids`, the single rate will be assigned to all the strips specified in `strip_ids`.
+
+```{r}
+change_rate_by_strip(
+  td,
+  input_name = "NH3",
+  strip_ids = c(1, 4, 7, 10, 13, 16, 19),
+  new_rates = 0
+) %>%
+viz(abline = FALSE)
+```
+
+## By block
+
+By default, experiment plots made using `make_exp_plots()` are not assigned block IDs. You can do so using `add_blocks()`.
+
+```{r, fig.height = 9}
+td_with_blocks <- add_blocks(td)
+
+viz(td_with_blocks, type = "block_id")
+```

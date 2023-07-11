@@ -38,7 +38,7 @@ source("R/assign_rates.R")
 #!===========================================================
 seed_plot_info <-
   make_input_plot_data(
-    form = "seed",
+    input_name = "seed",
     plot_width = 30,
     machine_width = 60,
     section_num = 24,
@@ -47,7 +47,7 @@ seed_plot_info <-
 
 n_plot_info <-
   make_input_plot_data(
-    form = "NH3",
+    input_name = "NH3",
     plot_width = measurements::conv_unit(60, "ft", "m"),
     machine_width = measurements::conv_unit(60, "ft", "m"),
     section_num = 1
@@ -59,8 +59,8 @@ input_plot_info <- list(seed_plot_info, n_plot_info)
 exp_data <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = "inst/extdata/boundary-simple1.shp",
-    abline_file = "inst/extdata/ab-line-simple1.shp",
+    boundary_data = "inst/extdata/boundary-simple1.shp",
+    abline_data = "inst/extdata/ab-line-simple1.shp",
     harvester_width = 30,
     abline_type = "free",
     headland_length = 30,
@@ -106,7 +106,7 @@ td <- assign_rates(exp_data, rate_info)
 
 ls(td)
 
-viz_td(td)
+viz_design(td)
 
 trial_design <- td
 
@@ -116,7 +116,7 @@ trial_design <- td
 
 n_plot_info <-
   make_input_plot_data(
-    form = "NH3",
+    input_name = "NH3",
     plot_width = measurements::conv_unit(60, "ft", "m"),
     machine_width = measurements::conv_unit(30, "ft", "m"),
     section_num = 1
@@ -125,8 +125,8 @@ n_plot_info <-
 exp_data <-
   make_exp_plots(
     input_plot_info = n_plot_info,
-    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     harvester_width = 30,
     abline_type = "free",
     headland_length = 30,
@@ -137,4 +137,4 @@ exp_data <-
     perpendicular = FALSE
   )
 
-viz_ep(exp_data)
+viz_layout(exp_data)

@@ -7,7 +7,31 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/1-trial-design-options.html</loc>
+  </url>
+  <url>
+    <loc>/articles/2-ab-line.html</loc>
+  </url>
+  <url>
+    <loc>/articles/3-change-rates-manually.html</loc>
+  </url>
+  <url>
+    <loc>/articles/V1-trial-design-options.html</loc>
+  </url>
+  <url>
+    <loc>/articles/V2-ab-line.html</loc>
+  </url>
+  <url>
+    <loc>/articles/V3-change-rates-manually.html</loc>
+  </url>
+  <url>
+    <loc>/articles/V4-diagnose-td.html</loc>
+  </url>
+  <url>
     <loc>/articles/ab-line.html</loc>
+  </url>
+  <url>
+    <loc>/articles/change-rates-manually.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
@@ -46,13 +70,22 @@
     <loc>/reference/change_rate_by_block.html</loc>
   </url>
   <url>
+    <loc>/reference/change_rate_by_plot.html</loc>
+  </url>
+  <url>
     <loc>/reference/change_rate_by_strip.html</loc>
   </url>
   <url>
     <loc>/reference/check_alignment.html</loc>
   </url>
   <url>
+    <loc>/reference/check_cor_inputs.html</loc>
+  </url>
+  <url>
     <loc>/reference/diagnose.html</loc>
+  </url>
+  <url>
+    <loc>/reference/exp_data.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
@@ -73,6 +106,9 @@
     <loc>/reference/plot.html</loc>
   </url>
   <url>
+    <loc>/reference/plot_info.html</loc>
+  </url>
+  <url>
     <loc>/reference/prep_plot_fd.html</loc>
   </url>
   <url>
@@ -89,6 +125,21 @@
   </url>
   <url>
     <loc>/reference/prep_rates_s.html</loc>
+  </url>
+  <url>
+    <loc>/reference/rate_info.html</loc>
+  </url>
+  <url>
+    <loc>/reference/td_single_input.html</loc>
+  </url>
+  <url>
+    <loc>/reference/td_two_input.html</loc>
+  </url>
+  <url>
+    <loc>/reference/trial_design.html</loc>
+  </url>
+  <url>
+    <loc>/reference/viz.html</loc>
   </url>
   <url>
     <loc>/reference/viz_ep.html</loc>

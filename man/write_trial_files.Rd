@@ -4,34 +4,29 @@
 \alias{write_trial_files}
 \title{Write trial design files for field implementation}
 \usage{
-write_trial_files(
-  trial_design,
-  folder_path = NA,
-  tr_file_name = NA,
-  a_abline_file_name = NA,
-  h_abline_file_name = NA,
-  overwrite = FALSE,
-  zip = FALSE
-)
+write_trial_files(td, folder_path = NA, zip = FALSE, zip_name = NA)
 }
 \arguments{
-\item{trial_design}{(tibble) tibble that was created by applying assign_rate() to experimental plots made by make_exp_plots().}
+\item{td}{(tibble) a tibble of a trial design created by applying assign_rate() to experimental plots made by make_exp_plots().}
 
 \item{folder_path}{(character) path to the folder in which the files will be saved}
-
-\item{tr_file_name}{(character) file name given to the trial design shape files}
-
-\item{a_abline_file_name}{(character) file name given to the applicator/planter ab-line shape files}
-
-\item{h_abline_file_name}{(character) file name given to the harvester ab-line shape files}
-
-\item{overwrite}{(logical) Default = FALSE. If TRUE, the existing shape file with the same file name will be overwritten.}
 
 \item{zip}{(logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.}
 }
 \value{
-write out files
+nothing
 }
 \description{
-Desc
+Write out all the necessary files to implement the trial design created. Exported files include
+}
+\examples{
+#--- load trial design ---#
+data(td_two_input)
+\dontrun{
+write_trial_files(
+  td = td_two_input,
+  folder_path = NA,
+  zip = TRUE
+)
+}
 }

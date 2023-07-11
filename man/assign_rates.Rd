@@ -15,5 +15,20 @@ assign_rates(exp_data, rate_info)
 trial design as sf (experiment plots with rates assigned)
 }
 \description{
-This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single()
+This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single().
+}
+\examples{
+#--- load experiment plots made by make_exp_plots() ---#
+data(exp_data)
+exp_data
+
+#--- load rate information ---#
+data(rate_info)
+rate_info
+
+#--- assign rates ---#
+td <- assign_rates(exp_data, rate_info)
+ 
+#--- visualization of the assigned rates ---# 
+viz(td)
 }

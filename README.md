@@ -16,6 +16,7 @@ You can install the development version of ofpetrial from
 
 ``` r
 devtools::install_github("DIFM-Brain/ofpetrial")
+library(ofpetrial)
 ```
 
 ## Example
@@ -33,7 +34,7 @@ meter).
 ``` r
 seed_plot_info <-
   prep_plot_fs(
-    form = "seed",
+    input_name = "seed",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -42,16 +43,16 @@ seed_plot_info <-
 #> 
 
 seed_plot_info
-#>   form machine_width section_num section_width
-#> 1 seed        18.288          24         0.762
-#>   harvester_width plot_width headland_length side_length
-#> 1           9.144      9.144          36.576       9.144
-#>   min_plot_length max_plot_length
-#> 1          73.152          79.248
+#>   input_name machine_width section_num section_width harvester_width
+#> 1       seed        18.288          24         0.762           9.144
+#>   plot_width headland_length side_length min_plot_length
+#> 1      9.144          36.576       9.144          73.152
+#>   max_plot_length
+#> 1          79.248
 
 n_plot_info <-
   prep_plot_ms(
-    form = "NH3",
+    input_name = "NH3",
     machine_width = measurements::conv_unit(60, "ft", "m"),
     section_num = 1,
     harvester_width = measurements::conv_unit(30, "ft", "m"),
@@ -60,12 +61,12 @@ n_plot_info <-
 #> 
 
 n_plot_info
-#>   form machine_width section_num section_width
-#> 1  NH3        18.288           1        18.288
-#>   harvester_width plot_width headland_length side_length
-#> 1           9.144     18.288          36.576      18.288
-#>   min_plot_length max_plot_length
-#> 1          73.152          79.248
+#>   input_name machine_width section_num section_width harvester_width
+#> 1        NH3        18.288           1        18.288           9.144
+#>   plot_width headland_length side_length min_plot_length
+#> 1     18.288          36.576      18.288          73.152
+#>   max_plot_length
+#> 1          79.248
 ```
 
 Now that plot and machine specifications for the inputs are ready, we
@@ -77,8 +78,8 @@ input_plot_info <- list(seed_plot_info, n_plot_info)
 exp_data <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
 ```
@@ -89,42 +90,42 @@ The experiment plots created by `make_exp_plots()` is stored in
 ``` r
 exp_data$exp_plots
 #> [[1]]
-#> Simple feature collection with 1209 features and 3 fields
+#> Simple feature collection with 351 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: 352996.6 ymin: 4331460 xmax: 353368.4 ymax: 4332198
-#> Projected CRS: WGS 84 / UTM zone 16N
+#> Bounding box:  xmin: 352997.6 ymin: 4331460 xmax: 353367.4 ymax: 4332198
+#> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
 #>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((353005.7 4331460,...
-#> 2        2        1       1_1 POLYGON ((353006.2 4331483,...
-#> 3        3        1       1_1 POLYGON ((353006.7 4331507,...
-#> 4        4        1       1_1 POLYGON ((353007.1 4331530,...
-#> 5        5        1       1_1 POLYGON ((353007.6 4331553,...
-#> 6        6        1       1_1 POLYGON ((353008.1 4331576,...
-#> 7        7        1       1_1 POLYGON ((353008.6 4331599,...
-#> 8        8        1       1_1 POLYGON ((353009 4331623, 3...
-#> 9        9        1       1_1 POLYGON ((353009.5 4331646,...
-#> 10      10        1       1_1 POLYGON ((353010 4331669, 3...
+#> 1        1        1       1_1 POLYGON ((353006.7 4331460,...
+#> 2        2        1       1_1 POLYGON ((353008.1 4331536,...
+#> 3        3        1       1_1 POLYGON ((353009.5 4331613,...
+#> 4        4        1       1_1 POLYGON ((353010.8 4331689,...
+#> 5        5        1       1_1 POLYGON ((353012.2 4331765,...
+#> 6        6        1       1_1 POLYGON ((353013.5 4331841,...
+#> 7        7        1       1_1 POLYGON ((353014.9 4331917,...
+#> 8        8        1       1_1 POLYGON ((353016.3 4331993,...
+#> 9        9        1       1_1 POLYGON ((353018 4332089, 3...
+#> 10       1        2       1_1 POLYGON ((353015.9 4331460,...
 #> 
 #> [[2]]
-#> Simple feature collection with 589 features and 3 fields
+#> Simple feature collection with 171 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: 352996.6 ymin: 4331460 xmax: 353359.3 ymax: 4332197
-#> Projected CRS: WGS 84 / UTM zone 16N
+#> Bounding box:  xmin: 352997.6 ymin: 4331460 xmax: 353358.3 ymax: 4332197
+#> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
 #>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((353014.8 4331460,...
-#> 2        2        1       1_1 POLYGON ((353015.3 4331483,...
-#> 3        3        1       1_1 POLYGON ((353015.8 4331507,...
-#> 4        4        1       1_1 POLYGON ((353016.3 4331530,...
-#> 5        5        1       1_1 POLYGON ((353016.8 4331553,...
-#> 6        6        1       1_1 POLYGON ((353017.2 4331576,...
-#> 7        7        1       1_1 POLYGON ((353017.7 4331599,...
-#> 8        8        1       1_1 POLYGON ((353018.2 4331623,...
-#> 9        9        1       1_1 POLYGON ((353018.7 4331646,...
-#> 10      10        1       1_1 POLYGON ((353019.2 4331669,...
+#> 1        1        1       1_1 POLYGON ((353015.9 4331460,...
+#> 2        2        1       1_1 POLYGON ((353017.2 4331536,...
+#> 3        3        1       1_1 POLYGON ((353018.6 4331613,...
+#> 4        4        1       1_1 POLYGON ((353020 4331689, 3...
+#> 5        5        1       1_1 POLYGON ((353021.3 4331765,...
+#> 6        6        1       1_1 POLYGON ((353022.7 4331841,...
+#> 7        7        1       1_1 POLYGON ((353024.1 4331917,...
+#> 8        8        1       1_1 POLYGON ((353025.4 4331994,...
+#> 9        9        1       1_1 POLYGON ((353027.1 4332089,...
+#> 10       1        2       1_1 POLYGON ((353034.2 4331461,...
 ```
 
 `exp_data$exp_plots` is a list and you can access the individual
@@ -132,29 +133,30 @@ experiment plots (an `sf` object) like this.
 
 ``` r
 exp_data$exp_plots[[1]]
-#> Simple feature collection with 1209 features and 3 fields
+#> Simple feature collection with 351 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: 352996.6 ymin: 4331460 xmax: 353368.4 ymax: 4332198
-#> Projected CRS: WGS 84 / UTM zone 16N
+#> Bounding box:  xmin: 352997.6 ymin: 4331460 xmax: 353367.4 ymax: 4332198
+#> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
 #>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((353005.7 4331460,...
-#> 2        2        1       1_1 POLYGON ((353006.2 4331483,...
-#> 3        3        1       1_1 POLYGON ((353006.7 4331507,...
-#> 4        4        1       1_1 POLYGON ((353007.1 4331530,...
-#> 5        5        1       1_1 POLYGON ((353007.6 4331553,...
-#> 6        6        1       1_1 POLYGON ((353008.1 4331576,...
-#> 7        7        1       1_1 POLYGON ((353008.6 4331599,...
-#> 8        8        1       1_1 POLYGON ((353009 4331623, 3...
-#> 9        9        1       1_1 POLYGON ((353009.5 4331646,...
-#> 10      10        1       1_1 POLYGON ((353010 4331669, 3...
+#> 1        1        1       1_1 POLYGON ((353006.7 4331460,...
+#> 2        2        1       1_1 POLYGON ((353008.1 4331536,...
+#> 3        3        1       1_1 POLYGON ((353009.5 4331613,...
+#> 4        4        1       1_1 POLYGON ((353010.8 4331689,...
+#> 5        5        1       1_1 POLYGON ((353012.2 4331765,...
+#> 6        6        1       1_1 POLYGON ((353013.5 4331841,...
+#> 7        7        1       1_1 POLYGON ((353014.9 4331917,...
+#> 8        8        1       1_1 POLYGON ((353016.3 4331993,...
+#> 9        9        1       1_1 POLYGON ((353018 4332089, 3...
+#> 10       1        2       1_1 POLYGON ((353015.9 4331460,...
 ```
 
-We can visualize the layout of the experiment plots using `viz_ep()`.
+We can visualize the layout of the experiment plots using
+`viz_layout()`.
 
 ``` r
-viz_ep(exp_data)
+viz(exp_data, type = "layout")
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
@@ -182,12 +184,12 @@ seed_rate_info <-
 #> Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates
 
 seed_rate_info
-#>   form design_type gc_rate unit
-#> 1 seed        jcls   32000 seed
-#>                                         rates_data
-#> 1 16000, 21333, 26667, 32000, 40000, 1, 2, 3, 4, 5
-#>   rank_seq_ws rank_seq_as
-#> 1        NULL        NULL
+#>   input_name design_type gc_rate unit
+#> 1       seed        jcls   32000 seed
+#>                                         rates_data rank_seq_ws
+#> 1 16000, 21333, 26667, 32000, 40000, 1, 2, 3, 4, 5        NULL
+#>   rank_seq_as
+#> 1        NULL
 
 n_rate_info <-
   prep_rates_s(
@@ -200,12 +202,10 @@ n_rate_info <-
   )
 
 n_rate_info
-#>   form design_type gc_rate unit
-#> 1  NH3          ls     180   lb
-#>                               rates_data   rank_seq_ws
-#> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5 5, 4, 3, 2, 1
-#>   rank_seq_as
-#> 1        NULL
+#>   input_name design_type gc_rate unit
+#> 1        NH3          ls     180   lb
+#>                               rates_data   rank_seq_ws rank_seq_as
+#> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5 5, 4, 3, 2, 1        NULL
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots.
@@ -217,7 +217,7 @@ trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_i
 Here is the visualization of the trial design done by `viz_td()`.
 
 ``` r
-viz_td(trial_design)
+viz(trial_design)
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />

@@ -1,32 +1,32 @@
 #!===========================================================
 # ! Exported functions
 # !===========================================================
-#' Prepare plot information for a two-input experiment (meter)
+#' Prepare plot information for a two-input experiment (length in meter)
 #'
 #' Prepare plot information for a two-input experiment case. All the length values need to be specified in meter.
 #'
-#' @param form (vector of two elements)
-#' @param machine_width (vector of two elements)
-#' @param section_num (vector of two elements)
-#' @param harvester_width (numeric)
-#' @param plot_width (vector of two elements) Default is c(NA, NA)
-#' @param headland_length (numeric) Default is NA.
-#' @param side_length (numeric) Default is NA.
-#' @param max_plot_width (numeric) Default is 36.576 meter (120 feet).
-#' @param max_plot_length (numeric) Default is 73.152 meter (240 feet).
-#' @param min_plot_length (numeric) Default is 79.248 meter (260 feet).
+#' @param input_name (character) A vector of two input names
+#' @param machine_width (numeric) A vector of two numeric numbers in meter that indicate the width of the applicator or planter of the inputs 
+#' @param section_num (numeric) A vector of two numeric numbers that indicate the number of sections of the applicator or planter of the inputs
+#' @param harvester_width (numeric) A numeric number in meter that indicates the width of the harvester
+#' @param plot_width (numeric) A vector of two numeric numbers in meter that indicate the plot width for each of the two inputs. Default is c(NA, NA). 
+#' @param headland_length (numeric) A numeric number in meter that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.
+#' @param side_length (numeric) A numeric number in meter that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
+#' @param max_plot_width (numeric) Maximum width of the plots in meter. Default is 36.576 meter (120 feet).
+#' @param min_plot_length (numeric) Minimum length of the plots in meter. Default is 73.152 meter (240 feet).
+#' @param max_plot_length (numeric) Maximum length of the plots in meter. Default is 79.248 meter (260 feet).
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
 #' @examples
-#' form <- c("seed", "NH3")
+#' input_name <- c("seed", "NH3")
 #' machine_width <- c(12, 9)
 #' section_num <- c(12, 1)
 #' plot_width <- c(9.5, 36)
 #' harvester_width <- 12
-#' prep_plot_md(form, machine_width, section_num, harvester_width, plot_width)
+#' prep_plot_md(input_name, machine_width, section_num, harvester_width, plot_width)
 #'
-prep_plot_md <- function(form,
+prep_plot_md <- function(input_name,
                          machine_width,
                          section_num,
                          harvester_width,
@@ -39,16 +39,16 @@ prep_plot_md <- function(form,
 ) {
 
   #--- dimension check ---#
-  fms_ls <- c(length(form), length(machine_width), length(section_num), length(plot_width))
+  fms_ls <- c(length(input_name), length(machine_width), length(section_num), length(plot_width))
   if (any(fms_ls != 2)) {
-    stop("Inconsistent numbers of elements in form, machine_width, section_num, and plot_width. Check if all of them have two elements.")
+    stop("Inconsistent numbers of elements in input_name, machine_width, section_num, and plot_width. Check if all of them have two elements.")
   }
 
   section_width <- machine_width / section_num
 
   plot_data <-
     data.frame(
-      form = form,
+      input_name = input_name,
       machine_width = machine_width,
       section_num = section_num,
       harvester_width = harvester_width,
@@ -75,15 +75,15 @@ prep_plot_md <- function(form,
     dplyr::mutate(messages = list(
       if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
         paste0(
-          "For ", form, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
       } else if (lcm_found & plot_width %% proposed_plot_width != 0) {
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
       } else if (!lcm_found & plot_width != proposed_plot_width) {
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", input_name, " does not have the problems."
         )
       } else {
         NULL
@@ -97,7 +97,7 @@ prep_plot_md <- function(form,
   #--- warnd the user that they may have serious mixed treatment problems   ---#
   if (all(!plot_data$lcm_found)) {
     message(paste0(
-      "Neither of ", form[1], " and ", form[2], " does not have a plot width without mixed treatment problems. Please consider running experiments with a single input instead of two."
+      "Neither of ", input_name[1], " and ", input_name[2], " does not have a plot width without mixed treatment problems. Please consider running experiments with a single input instead of two."
     ))
   }
 
@@ -126,39 +126,39 @@ prep_plot_md <- function(form,
       max_plot_length = max_plot_length
     ) %>%
     dplyr::select(
-      form, machine_width, section_num, section_width, harvester_width, plot_width, proposed_plot_width, headland_length, side_length, min_plot_length, max_plot_length
+      input_name, machine_width, section_num, section_width, harvester_width, plot_width, proposed_plot_width, headland_length, side_length, min_plot_length, max_plot_length
     ) %>%
     dplyr::ungroup()
 
   return(plot_data)
 }
 
-#' Prepare plot information for a two-input experiment (feet)
+#' Prepare plot information for a two-input experiment (length in feet)
 #'
 #' Prepare plot information for a two-input experiment case. All the length values need to be specified in feet.
 #'
-#' @param form (vector of two elements)
-#' @param machine_width (vector of two elements)
-#' @param section_num (vector of two elements)
-#' @param harvester_width (numeric)
-#' @param plot_width (vector of two elements) Default is c(NA, NA).
-#' @param headland_length (numeric) Default is NA.
-#' @param side_length (numeric) Default is NA.
-#' @param max_plot_width (numeric) Default is 120 feet.
-#' @param max_plot_length (numeric) Default is 240 feet.
-#' @param min_plot_length (numeric) Default is 260 feet.
+#' @param input_name (character) A vector of two input names
+#' @param machine_width (numeric) A vector of two numeric numbers in feet that indicate the width of the applicator or planter of the inputs 
+#' @param section_num (numeric) A vector of two numeric numbers that indicate the number of sections of the applicator or planter of the inputs
+#' @param harvester_width (numeric) A numeric number in feet that indicates the width of the harvester
+#' @param plot_width (numeric) A vector of two numeric numbers in feet that indicate the plot width for each of the two inputs. Default is c(NA, NA). 
+#' @param headland_length (numeric) A numeric number in feet that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.
+#' @param side_length (numeric) A numeric number in feet that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
+#' @param max_plot_width (numeric) Maximum width of the plots in feet. Default is (36.576 meter).
+#' @param min_plot_length (numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).
+#' @param max_plot_length (numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
 #' @examples
-#' form <- c("seed", "NH3")
+#' input_name <- c("seed", "NH3")
 #' machine_width <- c(12, 9)
 #' section_num <- c(12, 1)
 #' plot_width <- c(9.5, 36)
 #' harvester_width <- 12
-#' prep_plot_fd(form, machine_width, section_num, harvester_width, plot_width)
+#' prep_plot_fd(input_name, machine_width, section_num, harvester_width, plot_width)
 #'
-prep_plot_fd <- function(form,
+prep_plot_fd <- function(input_name,
                          machine_width,
                          section_num,
                          harvester_width,
@@ -171,16 +171,16 @@ prep_plot_fd <- function(form,
 ) {
 
   #--- dimension check ---#
-  fms_ls <- c(length(form), length(machine_width), length(section_num), length(plot_width))
+  fms_ls <- c(length(input_name), length(machine_width), length(section_num), length(plot_width))
   if (any(fms_ls != 2)) {
-    stop("Inconsistent numbers of elements in form, machine_width, section_num, and plot_width. Check if all of them have two elements.")
+    stop("Inconsistent numbers of elements in input_name, machine_width, section_num, and plot_width. Check if all of them have two elements.")
   }
 
   section_width <- machine_width / section_num
 
   plot_data <-
     data.frame(
-      form = form,
+      input_name = input_name,
       machine_width = machine_width,
       section_num = section_num,
       harvester_width = harvester_width,
@@ -207,15 +207,15 @@ prep_plot_fd <- function(form,
     dplyr::mutate(messages = list(
       if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
         paste0(
-          "For ", form, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
       } else if (lcm_found & plot_width %% proposed_plot_width != 0) {
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
       } else if (!lcm_found & plot_width != proposed_plot_width) {
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", input_name, " does not have the problems."
         )
       } else {
         NULL
@@ -229,7 +229,7 @@ prep_plot_fd <- function(form,
   #--- warnd the user that they may have serious mixed treatment problems   ---#
   if (all(!plot_data$lcm_found)) {
     message(paste0(
-      "Neither of ", form[1], " and ", form[2], " does not have a plot width without mixed treatment problems. Please consider running experiments with a single input instead of two."
+      "Neither of ", input_name[1], " and ", input_name[2], " does not have a plot width without mixed treatment problems. Please consider running experiments with a single input instead of two."
     ))
   }
 
@@ -257,7 +257,7 @@ prep_plot_fd <- function(form,
       max_plot_length = max_plot_length
     ) %>%
     dplyr::select(
-      form, machine_width, section_num, section_width, harvester_width, plot_width, proposed_plot_width, headland_length, side_length, min_plot_length, max_plot_length
+      input_name, machine_width, section_num, section_width, harvester_width, plot_width, proposed_plot_width, headland_length, side_length, min_plot_length, max_plot_length
     )
 
   #++++++++++++++++++++++++++++++++++++
@@ -272,32 +272,32 @@ prep_plot_fd <- function(form,
   return(plot_data)
 }
 
-#' Prepare plot information for a single-input experiment (meter)
+#' Prepare plot information for a single-input experiment (length in meter)
 #'
 #' Prepare plot information for a single-input experiment case. All the length values need to be specified in meter.
 #'
-#' @param form (character)
-#' @param machine_width (numeric)
-#' @param section_num (numeric)
-#' @param harvester_width (numeric)
+#' @param input_name (character) Input name
+#' @param machine_width (numeric) A numeric number in meter that indicates the width of the applicator or planter of the input 
+#' @param section_num (numeric) A numeric number that indicates the number of sections of the applicator or planter of the input
+#' @param harvester_width (numeric) A numeric number in meter that indicates the width of the harvester
 #' @param plot_width (numeric) Default is c(NA, NA).
-#' @param headland_length (numeric) Default is NA.
-#' @param side_length (numeric) Default is NA.
-#' @param max_plot_width (numeric) Default is 36.576 meter (120 feet).
-#' @param max_plot_length (numeric) Default is 73.152 meter (240 feet).
-#' @param min_plot_length (numeric) Default is 79.248 meter (260 feet).
+#' @param headland_length (numeric) A numeric number in meter that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.
+#' @param side_length (numeric) A numeric number in meter that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
+#' @param max_plot_width (numeric) Maximum width of the plots in meter. Default is 36.576 meter (120 feet).
+#' @param min_plot_length (numeric) Minimum length of the plots in meter. Default is 73.152 meter (240 feet).
+#' @param max_plot_length (numeric) Maximum length of the plots in meter. Default is 79.248 meter (260 feet)
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
 #' @examples
-#' form <- "seed"
+#' input_name <- "seed"
 #' machine_width <- 12
 #' section_num <- 12
 #' plot_width <- NA
 #' harvester_width <- 24
-#' prep_plot_ms(form, machine_width, section_num, harvester_width)
+#' prep_plot_ms(input_name, machine_width, section_num, harvester_width)
 #'
-prep_plot_ms <- function(form,
+prep_plot_ms <- function(input_name,
                          machine_width,
                          section_num,
                          harvester_width,
@@ -310,9 +310,9 @@ prep_plot_ms <- function(form,
 ) {
 
   #--- dimension check ---#
-  fms_ls <- c(length(form), length(machine_width), length(section_num), length(plot_width))
+  fms_ls <- c(length(input_name), length(machine_width), length(section_num), length(plot_width))
   if (any(fms_ls != 1)) {
-    stop("Inconsistent numbers of elements in form, machine_width, section_num, and plot_width. Check if all of them have a single element.")
+    stop("Inconsistent numbers of elements in input_name, machine_width, section_num, and plot_width. Check if all of them have a single element.")
   }
 
   section_width <- machine_width / section_num
@@ -330,17 +330,17 @@ prep_plot_ms <- function(form,
     if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
       warning_message <-
         paste0(
-          "For ", form, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
     } else if (lcm_found & plot_width %% proposed_plot_width != 0) {
       warning_message <-
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
     } else if (!lcm_found & plot_width != proposed_plot_width) {
       warning_message <-
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", input_name, " does not have the problems."
         )
     }
     #--- notify the user of potential problems and improvements ---#
@@ -366,7 +366,7 @@ prep_plot_ms <- function(form,
   #++++++++++++++++++++++++++++++++++++
   plot_data <-
     data.frame(
-      form = form,
+      input_name = input_name,
       machine_width = machine_width,
       section_num = section_num,
       section_width = section_width,
@@ -384,28 +384,28 @@ prep_plot_ms <- function(form,
 #'
 #' Prepare plot information for a single-input experiment case. All the length values need to be specified in feet.
 #'
-#' @param form (character)
-#' @param machine_width (numeric)
-#' @param section_num (numeric)
-#' @param harvester_width (numeric)
+#' @param input_name (character) Input name
+#' @param machine_width (numeric) A numeric number in feet that indicates the width of the applicator or planter of the input 
+#' @param section_num (numeric) A numeric number that indicates the number of sections of the applicator or planter of the input
+#' @param harvester_width (numeric) A numeric number in feet that indicates the width of the harvester
 #' @param plot_width (numeric) Default is c(NA, NA).
-#' @param headland_length (numeric) Default is NA.
-#' @param side_length (numeric) Default is NA.
-#' @param max_plot_width (numeric) Default is 120 feet.
-#' @param max_plot_length (numeric) Default is 240 feet.
-#' @param min_plot_length (numeric) Default is 260 feet.
+#' @param headland_length (numeric) A numeric number in feet that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.
+#' @param side_length (numeric) A numeric number in feet that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
+#' @param max_plot_width (numeric) Maximum width of the plots in feet. Default is (36.576 meter).
+#' @param min_plot_length (numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).
+#' @param max_plot_length (numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
 #' @examples
-#' form <- "seed"
+#' input_name <- "seed"
 #' machine_width <- 60
 #' section_num <- 24
 #' plot_width <- NA
 #' harvester_width <- 30
-#' prep_plot_fs(form, machine_width, section_num, harvester_width)
+#' prep_plot_fs(input_name, machine_width, section_num, harvester_width)
 #'
-prep_plot_fs <- function(form,
+prep_plot_fs <- function(input_name,
                          machine_width,
                          section_num,
                          harvester_width,
@@ -418,9 +418,9 @@ prep_plot_fs <- function(form,
 ) {
 
   #--- dimension check ---#
-  fms_ls <- c(length(form), length(machine_width), length(section_num), length(plot_width))
+  fms_ls <- c(length(input_name), length(machine_width), length(section_num), length(plot_width))
   if (any(fms_ls != 1)) {
-    stop("Inconsistent numbers of elements in form, machine_width, section_num, and plot_width. Check if all of them have a single element.")
+    stop("Inconsistent numbers of elements in input_name, machine_width, section_num, and plot_width. Check if all of them have a single element.")
   }
 
   section_width <- machine_width / section_num
@@ -438,17 +438,17 @@ prep_plot_fs <- function(form,
     if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
       warning_message <-
         paste0(
-          "For ", form, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
     } else if (lcm_found & plot_width %% proposed_plot_width != 0) {
       warning_message <-
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use ", proposed_plot_width, " as the plot width."
         )
     } else if (!lcm_found & plot_width != proposed_plot_width) {
       warning_message <-
         paste0(
-          "For ", form, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", form, " does not have the problems."
+          "For ", input_name, ", the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of ", proposed_plot_width, " ensures that at least one harvest path within the path of ", input_name, " does not have the problems."
         )
     }
     #--- notify the user of potential problems and improvements ---#
@@ -474,7 +474,7 @@ prep_plot_fs <- function(form,
   #++++++++++++++++++++++++++++++++++++
   plot_data <-
     data.frame(
-      form = form,
+      input_name = input_name,
       machine_width = measurements::conv_unit(machine_width, "ft", "m"),
       section_num = section_num,
       section_width = measurements::conv_unit(section_width, "ft", "m"),

@@ -32,22 +32,22 @@ prep_rates_s(
 
 \item{num_rates}{(numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.}
 
-\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.}
+\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See for more details.}
 
-\item{rank_seq_ws}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.}
+\item{rank_seq_ws}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.}
 
-\item{rank_seq_as}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.}
+\item{rank_seq_as}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.}
 }
 \value{
 data.frame of input rate information
 }
 \description{
-Create data of input rate information for a single input. This can be used to assign rates to experimentl plots using assign_rates()
+Create data of input rate information for a single input. This can be used to assign rates to experiment plots using assign_rates()
 }
 \examples{
 plot_info <-
   prep_plot_fs(
-    form = "seed",
+    input_name = "seed",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,

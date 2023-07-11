@@ -1,0 +1,212 @@
+---
+title: "Trial Design Options"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{trial-design-options}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 6
+)
+```
+
+
+Load the `ofpetrial` package.
+
+```{r setup}
+library(ofpetrial)
+```
+
+Let's first  prepare experiment plots to which we assign rates using various trial design options.
+
+```{r}
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+viz(exp_data, type = "layout", abline = FALSE)
+```
+
+# Latin Square ("ls")
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+    rank_seq_ws = c(1, 2, 3, 4, 5),
+    rank_seq_as = c(1, 2, 3, 4, 5)
+  )
+
+td_ls_1 <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_ls_1, type = "rates", abline = FALSE)
+```
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+    rank_seq_ws = c(5, 2, 4, 1, 3),
+    rank_seq_as = c(1, 5, 2, 4, 3)
+  )
+
+td_ls_2 <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_ls_2, type = "rates", abline = FALSE)
+```
+
+# Strip trial ("strip")
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 160, 220, 280),
+    rank_seq_as = c(1, 4, 3, 2),
+    design_type = "strip",
+  )
+
+td_strip <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_strip, type = "rates", abline = FALSE)
+```
+
+# Randomized Block ("rb")
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "rb",
+  )
+
+td_rb <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_rb, type = "rates", abline = FALSE)
+```
+
+# Jump-conscious Latin Square ("jcls")
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "jcls",
+  )
+
+td_jcls <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_jcls, type = "rates", abline = FALSE)
+```
+
+# Extra Jump-conscious Alternate ("ejca")
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260, 300),
+    design_type = "ejca",
+  )
+
+td_ejca <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_ejca, type = "rates", abline = FALSE)
+```
+
+# Sparse ("sparse")
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260, 300),
+    design_type = "sparse",
+  )
+
+td_sparse <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+```{r}
+viz(td_sparse, type = "rates", abline = FALSE)
+```
+

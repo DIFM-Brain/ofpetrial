@@ -59,7 +59,7 @@
       <a href="../articles/ab-line.html">Trial AB-line Types and Options</a>
     </li>
     <li>
-      <a href="../articles/random-vs-orthogonal.html">random-vs-orthogonal</a>
+      <a href="../articles/change-rates-manually.html">Change Trial Rates Manually</a>
     </li>
     <li>
       <a href="../articles/trial-design-options.html">Trial Design Options</a>
@@ -95,7 +95,8 @@
     
 <p>Load the <code>ofpetrial</code> package</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>The AB-line is the driving direction of a machine. In practice, a
 farmer uploads AB-lines into the machine and can choose between these
 AB-lines at the time of operation. While this AB-line indicates the
@@ -106,60 +107,60 @@ when conducting OFPEs.</p>
 options for <code>abline_type</code>: “free”, “lock”, and “none”. When
 <code>abline_type</code> equals “lock”, the resulting experimental plots
 will be centered on the initial AB-line given by
-<code>abline_file</code>, and the AB-line returned by the ?? function
-will be identical to that in <code>abline_file</code>. If
-<code>abline_type</code> equals “free”, the experimental plots are also
-centered on the AB-line, but the AB-lines returned by the ??? function
-are created to be in the first and last rows of the experimental plot.
-Then the farmer can choose the side where they prefer to start.
-Generally, the “free” option is best unless there is a reason the farmer
-or operator needs to start in a specific part of the field. Finally, the
-“none” option is similar to lock but it will not return a new AB-line
-for the trial, assuming that the line in <code>abline_file</code> will
-be used.</p>
+<code>abline_data</code>, and the AB-line returned by the
+<code>write_trial_files</code> function will be identical to that in
+<code>abline_data</code>. If <code>abline_type</code> equals “free”, the
+experimental plots are also centered on the AB-line, but the AB-lines
+returned by the <code>write_trial_files</code> function are created to
+be in the first and last rows of the experimental plot. Then the farmer
+can choose the side where they prefer to start. Generally, the “free”
+option is best unless there is a reason the farmer or operator needs to
+start in a specific part of the field. Finally, the “none” option is
+similar to lock but it will not return a new AB-line for the trial,
+assuming that the line in <code>abline_data</code> will be used.</p>
 <p>The following example uses a seeding trial to demonstrate the three
 options for <code>abline_type</code>. When visualizing the trial plots
-and AB-line with <code>viz_ep</code>, the differences between these
+and AB-line with <code>viz_layout</code>, the differences between these
 options are clearer as the AB-line shifts or is not included.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
-<span>    form <span class="op">=</span> <span class="st">"seed"</span>,</span>
+<span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">24</span>,</span>
 <span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>    plot_width <span class="op">=</span> <span class="fl">30</span></span>
+<span>    plot_width <span class="op">=</span> <span class="fl">60</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; For seed, there is a plot width that is smaller than the plot width you suggested and avoids mixed treatement problem. It is suggested that you use 30 as the plot width.</span></span>
 <span></span>
 <span><span class="va">exp_plots_free</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
 <span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
-<span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
-<span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz_ep.html">viz_ep</a></span><span class="op">(</span><span class="va">exp_plots_free</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_free</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ab-line_files/figure-html/ab-line-example1-1.png" width="700"></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_plots_lock</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
 <span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
-<span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
-<span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"lock"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz_ep.html">viz_ep</a></span><span class="op">(</span><span class="va">exp_plots_lock</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_lock</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ab-line_files/figure-html/ab-line-example2-1.png" width="700"></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_plots_none</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
 <span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
-<span>    boundary_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
-<span>    abline_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"none"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
@@ -168,12 +169,62 @@ options are clearer as the AB-line shifts or is not included.</p>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>There are also different ways to create an initial AB-line. If there
 is an existing AB-line shapefile, then include the pathway to this file
-in <code>abline_file</code>. If there is a past as-applied, as-planted
+in <code>abline_data</code>. If there is a past as-applied, as-planted
 or yield shapefile, the trial can also be centered on the paths from
 that previous operation. This pathway is included in ???. Using the
 points in the past file, an AB-line will be created. As the initial file
 AB-line has no specific AB-line location, the <code>abline_type</code>
 is “free”.</p>
+<p>The sample data <code>as-applied-simple1.shp</code> is a soybean
+planting map from a trial with a 60-foot planter We can use this data to
+create an AB-line for a new soybean trial with the same equipment.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">aa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="co">#&gt; Reading layer `as-applied-simple1' from data source </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpwDYHXl/temp_libpath12bcd8729552/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
+<span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
+<span><span class="co">#&gt; Simple feature collection with 10404 features and 32 fields</span></span>
+<span><span class="co">#&gt; Geometry type: POINT</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: -16.70074 ymin: 39.11965 xmax: -16.69611 ymax: 39.12688</span></span>
+<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">aa</span><span class="op">$</span><span class="va">geometry</span>, pch <span class="op">=</span> <span class="fl">1</span>, cex <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ab-line_files/figure-html/plot-yield-data-1.png" width="700"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
+<span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    harvester_width <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    plot_width <span class="op">=</span> <span class="fl">60</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span></span>
+<span><span class="va">exp_plots_aa</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
+<span>    input_plot_info <span class="op">=</span> <span class="va">input_plot_info</span>,</span>
+<span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_type <span class="op">=</span> <span class="st">"lock"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: There were 3 warnings in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `ab_sf = list(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
+<span><span class="co">#&gt; Caused by warning in `acos()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> NaNs produced</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_aa</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ab-line_files/figure-html/ab-line-from-yield-1.png" width="700"></p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">exp_plots_aa</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">aa</span>, color <span class="op">=</span> <span class="st">"blue"</span>, size <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>        <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> </span></code></pre></div>
+<p><img src="ab-line_files/figure-html/view-results-from-yield-1.png" width="700"></p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

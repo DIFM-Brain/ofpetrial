@@ -1,6 +1,6 @@
 #' Create data of input rate information for a single input
 #'
-#' Create data of input rate information for a single input. This can be used to assign rates to experimentl plots using assign_rates()
+#' Create data of input rate information for a single input. This can be used to assign rates to experiment plots using assign_rates()
 #'
 #' @param plot_info (data.frame) plot information created by make_input_plot_data
 #' @param gc_rate (numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument
@@ -9,16 +9,16 @@
 #' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
 #' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
 #' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
-#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.
-#' @param rank_seq_ws (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.
-#' @param rank_seq_as (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.
+#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See for more details.
+#' @param rank_seq_ws (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.
+#' @param rank_seq_as (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export
 #' @examples
 #' plot_info <-
 #'   prep_plot_fs(
-#'     form = "seed",
+#'     input_name = "seed",
 #'     machine_width = 60,
 #'     section_num = 24,
 #'     harvester_width = 30,
@@ -33,8 +33,8 @@
 #' )
 prep_rates_s <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL) {
 
-  #--- extract form and unit ---#
-  input_trial_data <- dplyr::select(plot_info, form)
+  #--- extract input_name and unit ---#
+  input_trial_data <- dplyr::select(plot_info, input_name)
 
   #++++++++++++++++++++++++++++++++++++
   #+Design type
@@ -115,7 +115,7 @@ prep_rates_s <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, 
 
 #' Create data of input rate information for a single input
 #'
-#' Create data of input rate information for a single input. This can be used to assign rates to experimentl plots using assign_rates()
+#' Create data of input rate information for a single input. This can be used to assign rates to experiment plots using assign_rates()
 #'
 #' @param plot_info (data.frame) plot information created by make_input_plot_data
 #' @param gc_rate (numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument
@@ -124,16 +124,16 @@ prep_rates_s <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, 
 #' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
 #' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
 #' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
-#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.
-#' @param rank_seq_ws (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.
-#' @param rank_seq_as (interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.
+#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See for more details.
+#' @param rank_seq_ws (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.
+#' @param rank_seq_as (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export
 #' @examples
 #' seed_plot_info <-
 #'   prep_plot_fs(
-#'     form = "seed",
+#'     input_name = "seed",
 #'     machine_width = 60,
 #'     section_num = 24,
 #'     harvester_width = 30,
@@ -142,17 +142,17 @@ prep_rates_s <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, 
 #'
 #' n_plot_info <-
 #'   prep_plot_ms(
-#'     form = "NH3",
+#'     input_name = "NH3",
 #'     machine_width = measurements::conv_unit(60, "ft", "m"),
 #'     section_num = 1,
 #'     harvester_width = measurements::conv_unit(30, "ft", "m"),
 #'     plot_width = measurements::conv_unit(60, "ft", "m")
 #'   )
 #'
-#' input_plot_info <- list(seed_plot_info, n_plot_info)
+#' plot_info <- list(seed_plot_info, n_plot_info)
 #'
 #' prep_rates_d(
-#'   input_plot_info,
+#'   plot_info,
 #'   gc_rate = c(30000, 160),
 #'   unit = c("seeds", "lb"),
 #'   rates = list(
@@ -161,8 +161,8 @@ prep_rates_s <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, 
 #'   )
 #' )
 #'
-prep_rates_d <- function(input_plot_info, gc_rate, unit, rates = list(NULL, NULL), min_rate = c(NA, NA), max_rate = c(NA, NA), num_rates = c(5, 5), design_type = c(NA, NA), rank_seq_ws = list(NULL, NULL), rank_seq_as = list(NULL, NULL)) {
-  if (class(input_plot_info) == "list") {
+prep_rates_d <- function(plot_info, gc_rate, unit, rates = list(NULL, NULL), min_rate = c(NA, NA), max_rate = c(NA, NA), num_rates = c(5, 5), design_type = c(NA, NA), rank_seq_ws = list(NULL, NULL), rank_seq_as = list(NULL, NULL)) {
+  if (class(plot_info) == "list") {
     plot_info <- dplyr::bind_rows(plot_info)
   }
 
@@ -181,9 +181,9 @@ prep_rates_d <- function(input_plot_info, gc_rate, unit, rates = list(NULL, NULL
     stop("Inconsistent numbers of elements in the arguments.")
   }
 
-  #--- extract form and unit ---#
+  #--- extract input_name and unit ---#
   input_trial_data <-
-    dplyr::select(plot_info, form) %>%
+    dplyr::select(plot_info, input_name) %>%
     #++++++++++++++++++++++++++++++++++++
     #+ design type
     #++++++++++++++++++++++++++++++++++++
@@ -213,7 +213,7 @@ prep_rates_d <- function(input_plot_info, gc_rate, unit, rates = list(NULL, NULL
         rates
       } else if (!is.na(min_rate) & !is.na(max_rate) & !is.na(num_rates)) {
         #--- if min_rate, max_rate, and num_rates are specified ---#
-        message("Trial rates were not specified directly for ", form, " so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates\n")
+        message("Trial rates were not specified directly for ", input_name, " so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates\n")
         get_rates(
           min_rate,
           max_rate,

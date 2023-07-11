@@ -41,7 +41,7 @@ We start with specifying plot and machine information for inputs using `prep_plo
 ```{r}
 seed_plot_info <-
   prep_plot_fs(
-    form = "seed",
+    input_name = "seed",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -51,12 +51,12 @@ seed_plot_info <-
 seed_plot_info
 
 n_plot_info <-
-  prep_plot_ms(
-    form = "NH3",
-    machine_width = measurements::conv_unit(60, "ft", "m"),
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 45,
     section_num = 1,
-    harvester_width = measurements::conv_unit(30, "ft", "m"),
-    plot_width = measurements::conv_unit(60, "ft", "m")
+    harvester_width = 30,
+    plot_width = 45
   )
 
 n_plot_info
@@ -70,8 +70,8 @@ input_plot_info <- list(seed_plot_info, n_plot_info)
 exp_data <-
   make_exp_plots(
     input_plot_info = input_plot_info,
-    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
 ```
@@ -88,10 +88,10 @@ exp_data$exp_plots
 exp_data$exp_plots[[1]]
 ```
 
-We can visualize the layout of the experiment plots using `viz_ep()`.
+We can visualize the layout of the experiment plots using `viz_layout()`.
 
 ```{r, dpi = 600}
-viz_ep(exp_data)
+viz(exp_data, type = "layout")
 ```
 
 ### Assign rates
@@ -137,6 +137,6 @@ trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_i
 Here is the visualization of the trial design done by `viz_td()`.
 
 ```{r, dpi = 600}
-viz_td(trial_design)
+viz(trial_design)
 ```
 

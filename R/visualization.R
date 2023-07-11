@@ -1,85 +1,117 @@
-#' Visualize experiment plots
+
+#' Visualize various aspects of a trial design
 #'
-#' Visualize experiment plots (no rates assigned)
-#'
-#' @param exp_data experiment plots created by make_exp_plots()
-#' @param abline (logical) Default = TRUE. If TRUE, ab-lines are displayed along with the experiment plots
-#' @returns ggplot2 figure
+#' Create plots of experiment rates, plot layout, plot_id, strip_id, and block_id, which can be specified by the `type` argument.
+#' 
+#' @param td (tibble) experiment plots made by make_exp_plots()
+#' @param type (character) type of plots to create. Available options are "rates", "layout", "plot_id", "strip_id", and "block_id"
+#' @param input_index (numeric) a vector of length 1 or 2. 1 means the 1st input of the td, 2 means the second input of the td, and c(1, 2) means both of the inputs, which is the DEFAULT
+#' @param text_size (numeric) the size of plot ID, strip ID, and block ID numbers printed in the plots
+#' @param abline (logical) If TRUE, ab-lines are displayed as well. Default = TRUE. This applies only ton type = "rates" and type = "layout".
+#' @returns plot as a ggplot object 
 #' @import ggplot2
 #' @export
-viz_ep <- function(exp_data, abline = TRUE) {
-  gg_exp <-
-    dplyr::rowwise(exp_data) %>%
-    dplyr::mutate(g_exp = list(
-      ggplot() +
-        geom_sf(data = field_sf, fill = NA) +
-        geom_sf(data = exp_plots, fill = NA, color = "blue") +
-        theme_void() +
-        ggtitle(paste0("Trial plots for ", form))
-    )) %>%
-    dplyr::mutate(g_fig = list(
-      if (abline == TRUE) {
-        g_exp +
-          geom_sf(data = ab_lines, aes(color = "ab-line")) +
-          scale_color_manual(name = "", values = c("ab-line" = "red"))
-      } else {
-        g_exp
-      }
-    )) %>%
-    dplyr::select(g_fig)
-
-  if (nrow(gg_exp) > 1) {
-    ggpubr::ggarrange(gg_exp$g_fig[[1]], gg_exp$g_fig[[2]], ncol = 2)
-  } else {
-    gg_exp$g_fig[[1]]
+viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE) {
+  #--- select rows ---#
+  if (nrow(td) == 1) {
+    input_index <- 1
   }
-}
 
-#' Visualize trial designs
-#'
-#' Visualize trial designs plots (rates assigned)
-#'
-#' @param trial_design trial design: experiment plots with input rates assigned
-#' @param abline (logical) Default = TRUE. If TRUE, ab-lines are displayed along with the trial designs
-#' @returns ggplot2 figure
-#' @import ggplot2
-#' @export
-viz_td <- function(trial_design, abline = TRUE) {
-  gg_td <-
-    dplyr::rowwise(trial_design) %>%
-    dplyr::mutate(g_tr = list(
-      ggplot() +
-        geom_sf(data = field_sf, fill = NA) +
-        geom_sf(data = trial_design, aes(fill = factor(rate)), color = NA) +
-        scale_fill_viridis_d(name = paste0(form, " (", unit, ")")) +
-        theme_void() +
-        ggtitle(
-          paste0(
-            "Trial design for ",
-            form,
-            "\n(",
-            dplyr::case_when(
-              design_type == "ls" ~ "Latin Square",
-              design_type == "strip" ~ "Strip",
-              design_type == "rb" ~ "Randomized Block",
-              design_type == "jcls" ~ "Jump-conscious Latin Square",
-              design_type == "ejca" ~ "Extra Jump-conscious Alternate",
-              design_type == "sparse" ~ "Sparse"
-            ),
-            ")"
+  td_rows <-
+    td[input_index, ] %>%
+    dplyr::rowwise()
+
+  if (type == "block_id") {
+    gg_td <-
+      td_rows %>%
+      dplyr::mutate(g_fig = list(
+        ggplot() +
+          geom_sf(data = trial_design, aes(fill = factor(block_id))) +
+          geom_sf_text(data = trial_design, aes(label = block_id), size = text_size) +
+          scale_fill_discrete(name = "Block ID") +
+          theme_void() +
+          ggtitle(paste0("Block ID of experiment plots for ", input_name))
+      ))
+  } else if (type == "strip_id") {
+    gg_td <-
+      td_rows %>%
+      dplyr::mutate(g_fig = list(
+        ggplot() +
+          geom_sf(data = trial_design, aes(fill = factor(strip_id))) +
+          geom_sf_text(data = trial_design, aes(label = strip_id), size = text_size) +
+          scale_fill_discrete(name = "Strip ID") +
+          theme_void() +
+          ggtitle(paste0("Strip ID of experiment plots for ", input_name))
+      ))
+  } else if (type == "plot_id") {
+    gg_td <-
+      td_rows %>%
+      dplyr::mutate(g_fig = list(
+        ggplot() +
+          geom_sf(data = trial_design, fill = NA) +
+          geom_sf_text(data = trial_design, aes(label = plot_id), size = text_size) +
+          theme_void() +
+          ggtitle(paste0("Plot ID of experiment plots for ", input_name))
+      ))
+  } else if (type == "rates") {
+    gg_td <-
+      td_rows %>%
+      dplyr::mutate(g_tr = list(
+        ggplot() +
+          geom_sf(data = field_sf, fill = NA) +
+          geom_sf(data = trial_design, aes(fill = factor(rate)), color = NA) +
+          scale_fill_viridis_d(name = paste0(input_name, " (", unit, ")")) +
+          theme_void() +
+          ggtitle(
+            paste0(
+              "Trial design for ",
+              input_name,
+              "\n(",
+              dplyr::case_when(
+                design_type == "ls" ~ "Latin Square",
+                design_type == "strip" ~ "Strip",
+                design_type == "rb" ~ "Randomized Block",
+                design_type == "jcls" ~ "Jump-conscious Latin Square",
+                design_type == "ejca" ~ "Extra Jump-conscious Alternate",
+                design_type == "sparse" ~ "Sparse"
+              ),
+              ")"
+            )
           )
-        )
-    )) %>%
-    dplyr::mutate(g_fig = list(
-      if (abline == TRUE) {
-        g_tr +
-          geom_sf(data = ab_lines, aes(color = "ab-line")) +
-          scale_color_manual(name = "", values = c("ab-line" = "red"))
-      } else {
-        g_tr
-      }
-    )) %>%
-    dplyr::select(g_fig)
+      )) %>%
+      dplyr::mutate(g_fig = list(
+        if (abline == TRUE) {
+          g_tr +
+            geom_sf(data = ab_lines, aes(color = "ab-line")) +
+            scale_color_manual(name = "", values = c("ab-line" = "red"))
+        } else {
+          g_tr
+        }
+      )) %>%
+      dplyr::select(g_fig)
+  } else if (type == "layout") {
+    gg_td <-
+      td_rows %>%
+      dplyr::mutate(g_exp = list(
+        ggplot() +
+          geom_sf(data = field_sf, fill = NA) +
+          geom_sf(data = exp_plots, fill = NA, color = "blue") +
+          theme_void() +
+          ggtitle(paste0("Trial plots for ", input_name))
+      )) %>%
+      dplyr::mutate(g_fig = list(
+        if (abline == TRUE) {
+          g_exp +
+            geom_sf(data = ab_lines, aes(color = "ab-line")) +
+            scale_color_manual(name = "", values = c("ab-line" = "red"))
+        } else {
+          g_exp
+        }
+      ))
+  } else {
+    stop("The type you specified is not one of the allowed options.")
+  }
+
 
   if (nrow(gg_td) > 1) {
     ggpubr::ggarrange(gg_td$g_fig[[1]], gg_td$g_fig[[2]], ncol = 2)

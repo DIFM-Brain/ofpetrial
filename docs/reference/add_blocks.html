@@ -38,13 +38,16 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/ab-line.html">Trial AB-line Types and Options</a>
+      <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
     </li>
     <li>
-      <a href="../articles/random-vs-orthogonal.html">random-vs-orthogonal</a>
+      <a href="../articles/V2-ab-line.html">Trial AB-line Types and Options</a>
     </li>
     <li>
-      <a href="../articles/trial-design-options.html">Trial Design Options</a>
+      <a href="../articles/V3-change-rates-manually.html">Change Trial Rates Manually</a>
+    </li>
+    <li>
+      <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
   </ul></li>
 <li>
@@ -88,51 +91,46 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- load rate information ---#</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- add blocks ---#</span></span></span>
-<span class="r-in"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu">add_blocks</span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu">add_blocks</span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- take a look ---#</span></span></span>
 <span class="r-in"><span><span class="va">td_with_blocks</span><span class="op">$</span><span class="va">trial_design</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 609 features and 6 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 172 features and 6 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -88.70078 ymin: 39.11957 xmax: -88.69604 ymax: 39.12696</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> First 10 features:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    rate strip_id plot_id       type block_id plot_id_within_block</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   100        1       1 experiment        1                    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   260        1       2 experiment        1                    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   220        1       3 experiment        1                    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   180        1       4 experiment        1                    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   140        1       5 experiment        1                    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   140        1       2 experiment        1                    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   180        1       3 experiment        1                    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   220        1       4 experiment        1                    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   260        1       5 experiment        1                    5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   100        1       6 experiment        2                    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   260        1       7 experiment        2                    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   220        1       8 experiment        2                    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   180        1       9 experiment        2                    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  140        1      10 experiment        2                    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   140        1       7 experiment        2                    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   180        1       8 experiment        2                    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   220        1       9 experiment        2                    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  140        2       1 experiment        1                    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          geometry</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  POLYGON ((-88.70022 39.1198...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POLYGON ((-88.70022 39.1200...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POLYGON ((-88.70022 39.1202...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POLYGON ((-88.70022 39.1204...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POLYGON ((-88.70022 39.1206...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POLYGON ((-88.70022 39.1208...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POLYGON ((-88.70022 39.1210...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POLYGON ((-88.70022 39.1213...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POLYGON ((-88.70022 39.1215...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POLYGON ((-88.70021 39.1217...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  POLYGON ((-16.70021 39.1198...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  POLYGON ((-16.70021 39.1205...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POLYGON ((-16.70021 39.1212...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POLYGON ((-16.70021 39.1219...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  POLYGON ((-16.70021 39.1225...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POLYGON ((-16.70021 39.1232...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POLYGON ((-16.70021 39.1239...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POLYGON ((-16.70021 39.1246...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POLYGON ((-16.70021 39.1255...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POLYGON ((-16.7 39.11984, -...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- visualize ---#</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">td_with_blocks</span><span class="op">$</span><span class="va">trial_design</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">block_id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf_text</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">plot_id_within_block</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html" class="external-link">scale_fill_discrete</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>st_point_on_surface may not give correct results for longitude/latitude data</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (`geom_text()`).</span>
 <span class="r-plt img"><img src="add_blocks-1.png" alt="" width="700" height="433"></span>

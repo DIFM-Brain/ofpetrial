@@ -2,10 +2,10 @@
 % Please edit documentation in R/prepre_plot_info.R
 \name{prep_plot_fd}
 \alias{prep_plot_fd}
-\title{Prepare plot information for a two-input experiment (feet)}
+\title{Prepare plot information for a two-input experiment (length in feet)}
 \usage{
 prep_plot_fd(
-  form,
+  input_name,
   machine_width,
   section_num,
   harvester_width,
@@ -18,25 +18,25 @@ prep_plot_fd(
 )
 }
 \arguments{
-\item{form}{(vector of two elements)}
+\item{input_name}{(character) A vector of two input names}
 
-\item{machine_width}{(vector of two elements)}
+\item{machine_width}{(numeric) A vector of two numeric numbers in feet that indicate the width of the applicator or planter of the inputs}
 
-\item{section_num}{(vector of two elements)}
+\item{section_num}{(numeric) A vector of two numeric numbers that indicate the number of sections of the applicator or planter of the inputs}
 
-\item{harvester_width}{(numeric)}
+\item{harvester_width}{(numeric) A numeric number in feet that indicates the width of the harvester}
 
-\item{plot_width}{(vector of two elements) Default is c(NA, NA).}
+\item{plot_width}{(numeric) A vector of two numeric numbers in feet that indicate the plot width for each of the two inputs. Default is c(NA, NA).}
 
-\item{headland_length}{(numeric) Default is NA.}
+\item{headland_length}{(numeric) A numeric number in feet that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.}
 
-\item{side_length}{(numeric) Default is NA.}
+\item{side_length}{(numeric) A numeric number in feet that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.}
 
-\item{max_plot_width}{(numeric) Default is 120 feet.}
+\item{max_plot_width}{(numeric) Maximum width of the plots in feet. Default is (36.576 meter).}
 
-\item{min_plot_length}{(numeric) Default is 260 feet.}
+\item{min_plot_length}{(numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).}
 
-\item{max_plot_length}{(numeric) Default is 240 feet.}
+\item{max_plot_length}{(numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).}
 }
 \value{
 a tibble with plot information necessary to create experiment plots
@@ -45,11 +45,11 @@ a tibble with plot information necessary to create experiment plots
 Prepare plot information for a two-input experiment case. All the length values need to be specified in feet.
 }
 \examples{
-form <- c("seed", "NH3")
+input_name <- c("seed", "NH3")
 machine_width <- c(12, 9)
 section_num <- c(12, 1)
 plot_width <- c(9.5, 36)
 harvester_width <- 12
-prep_plot_fd(form, machine_width, section_num, harvester_width, plot_width)
+prep_plot_fd(input_name, machine_width, section_num, harvester_width, plot_width)
 
 }

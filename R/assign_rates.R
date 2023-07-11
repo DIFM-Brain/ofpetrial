@@ -1,21 +1,35 @@
 #' Assign rates to the plots of experimental plots
 #'
-#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single()
+#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single(). 
 #'
 #' @param exp_data experiment plots created by make_exp_plots()
 #' @param rate_info rate information created by prep_rates_single()
 #' @returns trial design as sf (experiment plots with rates assigned)
 #' @import data.table
 #' @export
+#' @examples
+#' #--- load experiment plots made by make_exp_plots() ---#
+#' data(exp_data)
+#' exp_data
+#' 
+#' #--- load rate information ---#
+#' data(rate_info)
+#' rate_info
+#' 
+#' #--- assign rates ---#
+#' td <- assign_rates(exp_data, rate_info)
+#'  
+#' #--- visualization of the assigned rates ---# 
+#' viz(td)
 assign_rates <- function(exp_data, rate_info) {
   if ("data.frame" %in% class(rate_info)) {
     input_trial_data <-
       rate_info %>%
-      dplyr::left_join(exp_data, ., by = "form")
+      dplyr::left_join(exp_data, ., by = "input_name")
   } else if (class(rate_info) == "list") {
     input_trial_data <-
       data.table::rbindlist(rate_info) %>%
-      dplyr::left_join(exp_data, ., by = "form")
+      dplyr::left_join(exp_data, ., by = "input_name")
   }
 
   if (nrow(input_trial_data) > 1) {
@@ -57,14 +71,14 @@ assign_rates <- function(exp_data, rate_info) {
     )) %>%
     dplyr::mutate(input_type = list(
       dplyr::case_when(
-        form == "seed" ~ "S",
-        form %in% c("uan28", "uan32", "urea", "NH3", "cover") ~ "N",
-        form %in% "chicken_manure" ~ "M",
-        form %in% "forage_pea" ~ "P",
+        input_name == "seed" ~ "S",
+        input_name %in% c("uan28", "uan32", "urea", "NH3", "cover") ~ "N",
+        input_name %in% "chicken_manure" ~ "M",
+        input_name %in% "forage_pea" ~ "P",
         # === needs to change this ===#
-        form %in% c("potash", "K") ~ "K",
-        form == "KCL" ~ "C",
-        form == "boron" ~ "B"
+        input_name %in% c("potash", "K") ~ "K",
+        input_name == "KCL" ~ "C",
+        input_name == "boron" ~ "B"
       )
     )) %>%
     dplyr::mutate(trial_design = list(
@@ -83,150 +97,11 @@ assign_rates <- function(exp_data, rate_info) {
       }
     )) %>%
     dplyr::select(
-      form, input_type, trial_design, design_type, unit, ab_lines, harvest_ab_lines, field_sf, harvester_width
+      input_name, input_type, trial_design, design_type, unit, abline_type, ab_lines, harvest_ab_lines, field_sf, harvester_width
     ) %>%
     dplyr::ungroup()
 
   return(trial_design)
-}
-
-#' Add blocks to trial design
-#'
-#' Delineate blocks on a trial design and assign block id to all the plots
-#'
-#' @param td trial design made by applying assign_rates() to experimental plots made by make_exp_plots()
-#' @returns trial design with block_id added
-#' @import data.table
-#' @export
-#' @examples
-#' #--- load rate information ---#
-#' data(trial_design)
-#' 
-#' #--- add blocks ---#
-#' td_with_blocks <- add_blocks(trial_design)
-#' 
-#' #--- take a look ---#
-#' td_with_blocks$trial_design
-#' 
-#' #--- visualize ---#
-#' library(ggplot2)
-#' ggplot(td_with_blocks$trial_design[[1]]) +
-#'   geom_sf(aes(fill = factor(block_id))) +
-#'   geom_sf_text(aes(label = plot_id_within_block)) +
-#'   scale_fill_discrete(name = "block_id") +
-#'   theme_void()
-#'
-add_blocks <- function(td) {
-  td_return <-
-    td %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(
-      num_rates =
-        dplyr::filter(trial_design, type == "experiment")$rate %>% unique() %>% length()
-    ) %>%
-    dplyr::mutate(trial_design = list(
-      trial_design %>%
-        data.table::data.table() %>%
-        .[, block_row := ((plot_id - 1) %/% num_rates + 1)] %>%
-        .[, block_col := ((strip_id - 1) %/% num_rates + 1)] %>%
-        .[, block_id := .GRP, by = .(block_row, block_col)] %>%
-        .[type == "headland", block_id := NA] %>%
-        .[, plot_id_within_block := 1:.N, by = block_id] %>%
-        .[type == "headland", plot_id_within_block := NA] %>%
-        .[, `:=`(block_row = NULL, block_col = NULL)] %>%
-        sf::st_as_sf()
-    ))
-  return(td_return)
-}
-
-#' Change the assigned rate by block
-#' 
-#' Change the assigned rates by block on trial design
-#' 
-#' @param form (character) input name
-#' @param block_ids (numeric) vector of block_ids
-#' @param block_rates (numeric) vector of rates
-#' @param td trial design
-#' @returns trial design with changed rates
-#' @import data.table
-#' @export
-#' @examples
-#' #--- load rate information ---#
-#' data(trial_design)
-#'
-#' #--- add blocks ---#
-#' td_with_blocks <- add_blocks(trial_design)
-#'
-#' #--- change rates of some blocks ---#
-#' block_ids <- c(3, 5)
-#' block_rates <- c(180, 180)
-#' 
-#' td_changed <- change_rate_by_block("NH3", block_ids, block_rates, td_with_blocks)
-#'
-#' #--- visualize ---# 
-#' library(ggplot2)
-#' ggplot(td_changed$trial_design[[1]]) +
-#'   geom_sf(aes(fill = factor(rate))) +
-#'   scale_fill_viridis_d() +
-#'   theme_void()
-
-change_rate_by_block <- function(form, block_ids, block_rates, td) {
-  temp_design <-
-    td %>%
-    dplyr::filter(form == form) %>%
-    .$trial_design %>%
-    .[[1]]
-
-  for (i in seq_len(length(block_ids))) {
-    temp_design <- dplyr::mutate(temp_design, rate = ifelse(block_id == block_ids[i], block_rates[i], rate))
-  }
-
-  return_td <- dplyr::mutate(td, trial_design = ifelse(form == form, list(temp_design), list(trial_design)))
-
-  return(return_td)
-}
-
-#' Change the assigned rate by strip
-#' 
-#' Change the assigned rates by strip on trial design
-#' 
-#' @param form (character) input name
-#' @param strip_ids (numeric) vector of strip_ids
-#' @param strip_rates (numeric) vector of rates
-#' @param td trial design
-#' @returns trial design with changed rates
-#' @import data.table
-#' @export
-#' @examples
-#' #--- load rate information ---#
-#' data(trial_design)
-#'
-#' #--- change rates of some strips ---#
-#' strip_ids <- c(1, 6, 11, 16, 21)
-#' strip_rates <- rep(0, length(strip_ids))
-#' 
-#' td_changed <- change_rate_by_strip("NH3", strip_ids, strip_rates, trial_design)
-#' 
-#' #--- visualize ---#
-#' library(ggplot2)
-#' ggplot(td_changed$trial_design[[1]]) +
-#'   geom_sf(aes(fill = factor(rate))) +
-#'   scale_fill_viridis_d() +
-#'   theme_void()
-change_rate_by_strip <- function(form, strip_ids, strip_rates, td) {
-  temp_design <-
-    td %>%
-    dplyr::filter(form == form) %>%
-    .$trial_design %>%
-    .[[1]]
-
-  for (i in seq_len(length(strip_ids))) {
-    temp_design <- dplyr::mutate(temp_design, rate = ifelse(strip_id == strip_ids[i], strip_rates[i], rate))
-  }
-
-  return_td <- dplyr::mutate(td, trial_design = ifelse(form == form, list(temp_design), list(trial_design)))
-
-  return(return_td)
 }
 
 

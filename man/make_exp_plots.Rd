@@ -6,31 +6,19 @@
 \usage{
 make_exp_plots(
   input_plot_info,
-  boundary_file,
-  abline_file = NA,
+  boundary_data,
+  abline_data = NA,
   abline_type = "free"
 )
 }
 \arguments{
 \item{input_plot_info}{(data.fram or a list of two data.frames) list of plot information created by make_input_plot()}
 
-\item{boundary_file}{(string) path of the field boundary file}
+\item{boundary_data}{(character) path of the field boundary file or boundary as an sf}
 
-\item{abline_file}{(string) path of the ab-line file}
+\item{abline_data}{(character or sf) path of the ab-line file or ab-line as an sf}
 
-\item{abline_type}{(string) the type of ab-line generation. Select from "free", "lock", and "none"}
-
-\item{harvester_width}{(numeric) width of the harvester}
-
-\item{headland_length}{(numeric) Default = NA. Length of the headland}
-
-\item{side_length}{(numeric) Default = NA. Length of the sides}
-
-\item{min_plot_length}{(numeric) Default = 61 meter (200 feet) minimum plot length}
-
-\item{max_plot_length}{(numeric) Default = 91 meter (300 feet) maximum plot length}
-
-\item{length_unit}{("meter" or "feet") Default = "meter", unit of length for harvester_width, headland_length, side_length, min_plot_length, and max_plot_length}
+\item{abline_type}{(character) the type of ab-line generation. Select from "free", "lock", and "none"}
 }
 \value{
 a tibble that include experimental plots as sf
@@ -39,38 +27,22 @@ a tibble that include experimental plots as sf
 Make experimental plots/strips inside the field boundary, harvester ab-line, and applicator/planter ab-line.
 }
 \examples{
-seed_plot_info <-
-  make_input_plot_data(
-    form = "seed",
-    plot_width = 40,
-    machine_width = 60,
-    section_num = 24,
-    length_unit = "feet"
-  )
-
 n_plot_info <-
-  make_input_plot_data(
-    form = "NH3",
-    plot_width = measurements::conv_unit(30, "ft", "m"),
-    machine_width = measurements::conv_unit(30, "ft", "m"),
-    section_num = 1
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
   )
-
-input_plot_info <- list(seed_plot_info, n_plot_info)
 
 exp_data <-
   make_exp_plots(
-    input_plot_info = input_plot_info,
-    boundary_file = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
-    abline_file = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
-    harvester_width = 30,
-    abline_type = "free",
-    headland_length = 30,
-    side_length = 60,
-    min_plot_length = 200,
-    max_plot_length = 300,
-    length_unit = "feet",
-    perpendicular = FALSE
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
   )
 
 exp_data$exp_plots

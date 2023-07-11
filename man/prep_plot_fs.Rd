@@ -5,7 +5,7 @@
 \title{Prepare plot information for a single-input experiment (feet)}
 \usage{
 prep_plot_fs(
-  form,
+  input_name,
   machine_width,
   section_num,
   harvester_width,
@@ -18,25 +18,25 @@ prep_plot_fs(
 )
 }
 \arguments{
-\item{form}{(character)}
+\item{input_name}{(character) Input name}
 
-\item{machine_width}{(numeric)}
+\item{machine_width}{(numeric) A numeric number in feet that indicates the width of the applicator or planter of the input}
 
-\item{section_num}{(numeric)}
+\item{section_num}{(numeric) A numeric number that indicates the number of sections of the applicator or planter of the input}
 
-\item{harvester_width}{(numeric)}
+\item{harvester_width}{(numeric) A numeric number in feet that indicates the width of the harvester}
 
 \item{plot_width}{(numeric) Default is c(NA, NA).}
 
-\item{headland_length}{(numeric) Default is NA.}
+\item{headland_length}{(numeric) A numeric number in feet that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.}
 
-\item{side_length}{(numeric) Default is NA.}
+\item{side_length}{(numeric) A numeric number in feet that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.}
 
-\item{max_plot_width}{(numeric) Default is 120 feet.}
+\item{max_plot_width}{(numeric) Maximum width of the plots in feet. Default is (36.576 meter).}
 
-\item{min_plot_length}{(numeric) Default is 260 feet.}
+\item{min_plot_length}{(numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).}
 
-\item{max_plot_length}{(numeric) Default is 240 feet.}
+\item{max_plot_length}{(numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).}
 }
 \value{
 a tibble with plot information necessary to create experiment plots
@@ -45,11 +45,11 @@ a tibble with plot information necessary to create experiment plots
 Prepare plot information for a single-input experiment case. All the length values need to be specified in feet.
 }
 \examples{
-form <- "seed"
+input_name <- "seed"
 machine_width <- 60
 section_num <- 24
 plot_width <- NA
 harvester_width <- 30
-prep_plot_fs(form, machine_width, section_num, harvester_width)
+prep_plot_fs(input_name, machine_width, section_num, harvester_width)
 
 }

@@ -5,7 +5,7 @@
 \title{Create data of input rate information for a single input}
 \usage{
 prep_rates_d(
-  input_plot_info,
+  plot_info,
   gc_rate,
   unit,
   rates = list(NULL, NULL),
@@ -18,6 +18,8 @@ prep_rates_d(
 )
 }
 \arguments{
+\item{plot_info}{(data.frame) plot information created by make_input_plot_data}
+
 \item{gc_rate}{(numeric) Input ate the grower would have chosen if not running an experiment. This rate is assigned to the non-experiment part of the field. This rate also becomes one of the trial input rates unless you specify the trial rates directly using rates argument}
 
 \item{unit}{(string) unit of input}
@@ -30,24 +32,22 @@ prep_rates_d(
 
 \item{num_rates}{(numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.}
 
-\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-consicous Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-consious Alternate "ejca". See for more details.}
+\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See for more details.}
 
-\item{rank_seq_ws}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "within" a strip.}
+\item{rank_seq_ws}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.}
 
-\item{rank_seq_as}{(interger) vector of integers indicating the order of the ranking of the rates, which will be repetead "across" strip for their first plots.}
-
-\item{plot_info}{(data.frame) plot information created by make_input_plot_data}
+\item{rank_seq_as}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.}
 }
 \value{
 data.frame of input rate information
 }
 \description{
-Create data of input rate information for a single input. This can be used to assign rates to experimentl plots using assign_rates()
+Create data of input rate information for a single input. This can be used to assign rates to experiment plots using assign_rates()
 }
 \examples{
 seed_plot_info <-
   prep_plot_fs(
-    form = "seed",
+    input_name = "seed",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -56,17 +56,17 @@ seed_plot_info <-
 
 n_plot_info <-
   prep_plot_ms(
-    form = "NH3",
+    input_name = "NH3",
     machine_width = measurements::conv_unit(60, "ft", "m"),
     section_num = 1,
     harvester_width = measurements::conv_unit(30, "ft", "m"),
     plot_width = measurements::conv_unit(60, "ft", "m")
   )
 
-input_plot_info <- list(seed_plot_info, n_plot_info)
+plot_info <- list(seed_plot_info, n_plot_info)
 
 prep_rates_d(
-  input_plot_info,
+  plot_info,
   gc_rate = c(30000, 160),
   unit = c("seeds", "lb"),
   rates = list(

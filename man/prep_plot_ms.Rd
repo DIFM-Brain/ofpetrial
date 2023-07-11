@@ -2,10 +2,10 @@
 % Please edit documentation in R/prepre_plot_info.R
 \name{prep_plot_ms}
 \alias{prep_plot_ms}
-\title{Prepare plot information for a single-input experiment (meter)}
+\title{Prepare plot information for a single-input experiment (length in meter)}
 \usage{
 prep_plot_ms(
-  form,
+  input_name,
   machine_width,
   section_num,
   harvester_width,
@@ -18,25 +18,25 @@ prep_plot_ms(
 )
 }
 \arguments{
-\item{form}{(character)}
+\item{input_name}{(character) Input name}
 
-\item{machine_width}{(numeric)}
+\item{machine_width}{(numeric) A numeric number in meter that indicates the width of the applicator or planter of the input}
 
-\item{section_num}{(numeric)}
+\item{section_num}{(numeric) A numeric number that indicates the number of sections of the applicator or planter of the input}
 
-\item{harvester_width}{(numeric)}
+\item{harvester_width}{(numeric) A numeric number in meter that indicates the width of the harvester}
 
 \item{plot_width}{(numeric) Default is c(NA, NA).}
 
-\item{headland_length}{(numeric) Default is NA.}
+\item{headland_length}{(numeric) A numeric number in meter that indicates the length of the headland (how long the non-experimental space is in the direction machines drive). Default is NA.}
 
-\item{side_length}{(numeric) Default is NA.}
+\item{side_length}{(numeric) A numeric number in meter that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.}
 
-\item{max_plot_width}{(numeric) Default is 36.576 meter (120 feet).}
+\item{max_plot_width}{(numeric) Maximum width of the plots in meter. Default is 36.576 meter (120 feet).}
 
-\item{min_plot_length}{(numeric) Default is 79.248 meter (260 feet).}
+\item{min_plot_length}{(numeric) Minimum length of the plots in meter. Default is 73.152 meter (240 feet).}
 
-\item{max_plot_length}{(numeric) Default is 73.152 meter (240 feet).}
+\item{max_plot_length}{(numeric) Maximum length of the plots in meter. Default is 79.248 meter (260 feet)}
 }
 \value{
 a tibble with plot information necessary to create experiment plots
@@ -45,11 +45,11 @@ a tibble with plot information necessary to create experiment plots
 Prepare plot information for a single-input experiment case. All the length values need to be specified in meter.
 }
 \examples{
-form <- "seed"
+input_name <- "seed"
 machine_width <- 12
 section_num <- 12
 plot_width <- NA
 harvester_width <- 24
-prep_plot_ms(form, machine_width, section_num, harvester_width)
+prep_plot_ms(input_name, machine_width, section_num, harvester_width)
 
 }

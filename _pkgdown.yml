@@ -17,20 +17,27 @@ reference:
     contents:
       - make_exp_plots
       - assign_rates
-  - title: Modify trial design
+  - title: Modify input rates
     contents:
       - add_blocks
+      - change_rate_by_plot
       - change_rate_by_block
       - change_rate_by_strip
   - title: Diagnose trial designs
     contents:
-      - diagnose
+      - check_cor_inputs
       - check_alignment
   - title: Visualization
     desc: Visualize experimental plots and trial designs
     contents:
-      - viz_ep
-      - viz_td
+      - viz
   - title: Write out files
     contents:
       - write_trial_files
+  - title: Data
+    contents:
+      - plot_info
+      - exp_data
+      - rate_info
+      - td_single_input
+      - td_two_input

@@ -12,3 +12,7 @@
 ^debug$
 ^dev_notes\.md$
 ^checklist\.md$
+^random-vs-orthogonal\.Rmd$
+^test$
+^dev$
+^_pkgdown\.yml$
