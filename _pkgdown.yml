@@ -3,13 +3,15 @@ template:
     ganalytics: G-B09QYRX8XQ
 
 reference:
-  - title: Preparation for rates assignment
+  - title: Prepare plot information
+    desc: Prepare information necessary to create experiment plots
     contents:
       - prep_plot_md
       - prep_plot_fd
       - prep_plot_ms
       - prep_plot_fs
-  - title: Preparation for rates assignment
+  - title: Prepare rate information
+    desc: Prepare information necessary to assign rates to experiment plots
     contents:
       - prep_rates_s
       - prep_rates_d
@@ -23,12 +25,12 @@ reference:
       - change_rate_by_plot
       - change_rate_by_block
       - change_rate_by_strip
-  - title: Diagnose trial designs
+  - title: Diagnose trial design
     contents:
-      - check_cor_inputs
+      - check_ortho_inputs
+      - check_ortho_with_chars
       - check_alignment
   - title: Visualization
-    desc: Visualize experimental plots and trial designs
     contents:
       - viz
   - title: Write out files

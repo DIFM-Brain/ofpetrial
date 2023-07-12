@@ -32,9 +32,11 @@ usethis::use_package("lwgeom")
 usethis::use_package("stringr")
 usethis::use_package("measurements")
 usethis::use_package("purrr")
+usethis::use_package("terra")
 usethis::use_package("tibble")
 usethis::use_package("tidyr")
 usethis::use_package("ggpubr")
+usethis::use_package("ggExtra")
 usethis::use_pipe() # can use %>% after this
 
 #++++++++++++++++++++++++++++++++++++

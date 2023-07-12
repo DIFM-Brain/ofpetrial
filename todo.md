@@ -20,6 +20,7 @@
 + [ ] explain parameters well in the prep functions
 + [ ] use past trial design plots and change according to the past trial rates
 + [ ] add harvester abline in writing files
++ [ ] add explanations of how sequencing work in rate assignment
 
 
 # Problems

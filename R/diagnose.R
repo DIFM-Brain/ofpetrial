@@ -2,17 +2,17 @@
 #'
 #' Check the correlation between the rates of the two inputs for a two-input experiment.
 #'
-#' @param td trial design with rates assigned created by assign_rates()
+#' @param td trial design for a two-input experiment with rates assigned
 #' @returns table
 #' @import data.table
 #' @export
 #' @examples
 #' #--- load a trial design for a two-input experiment ---#
 #' data(td_two_input)
-#' 
+#'
 #' #--- check correlation ---#
-#' check_cor_inputs(td_two_input)
-check_cor_inputs <- function(td) {
+#' check_ortho_inputs(td_two_input)
+check_ortho_inputs <- function(td) {
   if (nrow(td) > 1) {
     td_1 <- td$trial_design[[1]]
     td_2 <- td$trial_design[[2]]
@@ -47,13 +47,13 @@ check_cor_inputs <- function(td) {
 #' @returns a tibble
 #' @import data.table
 #' @export
-#' @examples 
+#' @examples
 #' #--- check the alignment of harvester and applicator/planter ---#
 #' machine_alignment <- check_alignment(td)
-#' 
+#'
 #' #--- check the degree of mixed treatment problem ---#
 #' machine_alignment$overlap_data
-#' 
+#'
 #' #--- visualize the degree of mixed treatment problem ---#
 #' machine_alignment$g_overlap[[2]]
 check_alignment <- function(td) {
@@ -93,4 +93,181 @@ check_alignment <- function(td) {
     )) %>%
     dplyr::ungroup()
   return(checks)
+}
+
+#' Check the orthogonality with field/topographic characteristics
+#'
+#' Check the orthogonality of the trial input rates and observed characteristics provided by the user
+#'
+#' @param td (tibble) trial design data created by make_exp_plots() and assign_rates()
+#' @param sp_data_list (list) list of spatial datasets as `sf` from the `sf` package or `SpatRaster` from the `terra` package
+#' @param vars_list (list) list of character vectors indicating the name of the variables to be used in the datasets specified in sp_data_list
+#' @returns a list
+#' @import data.table
+#' @import ggplot2
+#' @export
+#' @examples
+#' data(td_single_input)
+#' yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
+#' ssurgo_sf <-
+#'   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %>%
+#'   dplyr::mutate(mukey = factor(mukey))
+#' topo_rast <-
+#'   c(
+#'     terra::rast(system.file("extdata", "slope.tif", package = "ofpetrial")),
+#'     terra::rast(system.file("extdata", "twi.tif", package = "ofpetrial"))
+#'   )
+#'
+#' checks <-
+#'   check_ortho_with_chars(
+#'     td = td_single_input,
+#'     sp_data_list = list(yield_sf, ssurgo_sf, temp),
+#'     vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(temp))
+#'   )
+#'
+#' checks$summary_data[[1]]
+#'
+#' checks$summary_fig[[1]]
+check_ortho_with_chars <- function(td, sp_data_list, vars_list) {
+  char_data <-
+    tibble::tibble(
+      variable = vars_list,
+      spatial_data = sp_data_list
+    )
+
+  expand_grid_df(char_data, dplyr::select(td, input_name, trial_design)) %>%
+    dplyr::mutate(
+      checks =
+        purrr::pmap(
+          list(trial_design, spatial_data, variable),
+          summarize_chars
+        )
+    ) %>%
+    tidyr::unnest(checks) %>%
+    dplyr::select(var, input_name, summary_data, summary_fig)
+}
+
+
+# !===========================================================
+# ! Helper functions
+# !===========================================================
+# trial_design <- td_single_input$trial_design[[1]]
+# char_vars <- char_data$char_var[[3]]
+# topo_rast <-
+#   c(
+#     terra::rast("inst/extdata/slope.tif"),
+#     terra::rast("inst/extdata/twi.tif")
+#   )
+#++++++++++++++++++++++++++++++++++++
+#+ summarize one set of characteristic variables and spatial data
+#++++++++++++++++++++++++++++++++++++
+summarize_chars <- function(trial_design, spatial_data, char_vars) {
+  rate_design <- dplyr::select(trial_design, rate)
+
+  sp_data_class <- class(spatial_data)
+
+  if ("sf" %in% sp_data_class) {
+    char_sf <- dplyr::select(spatial_data, one_of(char_vars))
+    #---------------------
+    # sf
+    #---------------------
+    dominant_geom_type <-
+      data.table(geom = sf::st_geometry_type(spatial_data)) %>%
+      .[, .(count = .N), by = geom] %>%
+      .[order(count), ] %>%
+      .[1, geom]
+
+    if ("POINT" == dominant_geom_type) {
+      joined_data <- sf::st_join(trial_design, char_sf)
+    } else if (dominant_geom_type %in% c("POLYGON", "MULTIPOLYGON")) {
+      suppressWarnings(
+        joined_data <-
+          sf::st_intersection(rate_design, char_sf)
+      )
+    }
+  } else if (sp_data_class %in% "SpatRaster") {
+    #---------------------
+    # Raster
+    #---------------------
+    joined_data <-
+      terra::extract(spatial_data, rate_design, fun = mean, na.rm = TRUE) %>%
+      data.table() %>%
+      .[, ..char_vars] %>%
+      cbind(rate_design, .)
+  } else {
+    "The object you provided as a character data is not compatible with this function."
+  }
+
+  #--- summarize ---#
+  return_data <-
+    purrr::map(char_vars, \(x) summarize_indiv_char(joined_data, var = x)) %>%
+    dplyr::bind_rows()
+
+  return(return_data)
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ summarize single set of variable and spatial data
+#++++++++++++++++++++++++++++++++++++
+# ssurgo_sf <- st_read("inst/extdata/ssurgo-simple1.shp")
+# spatial_data <- ssurgo_sf
+# char_vars <- c("mukey", "clay")
+# var <- "mukey"
+# var <- "clay"
+
+#- Note: Summarize the relationship between input rate and a characteristic. If the characteristics variable is numeric, it find its correlation with the input rate. If categorical, it finds the mean and sd of rate by category.
+
+summarize_indiv_char <- function(joined_data, var) {
+  var_class <- class(joined_data[[var]])
+  var_with_rate <- c("rate", var)
+
+  if (var_class %in% c("numeric", "integer")) {
+    cor_temp <-
+      data.table(joined_data)[, ..var_with_rate] %>%
+      cor(use = "complete.obs")
+
+    sum_data <- data.frame(var = var, cor_with_rate = cor_temp[1, 2])
+
+    setnames(joined_data, var, "var")
+
+    g_fig <-
+      (
+        ggplot(joined_data, aes(y = rate, x = var)) +
+          geom_point() +
+          ylab("Input Rate") +
+          xlab(var) +
+          theme_bw()
+      ) %>%
+      ggExtra::ggMarginal(type = "histogram")
+  } else if (var_class %in% c("character", "factor")) {
+    sum_data <-
+      data.table(joined_data)[, ..var_with_rate] %>%
+      .[, .(rate_mean = mean(rate), rate_sd = sd(rate)), by = var] %>%
+      as.data.frame()
+
+    setnames(joined_data, var, "var")
+
+    g_cor <-
+      ggplot(joined_data) +
+      geom_boxplot(aes(y = rate, x = var)) +
+      ylab("Input Rate") +
+      xlab(var) +
+      theme_bw()
+
+    g_hist_var <-
+      ggplot(joined_data) +
+      geom_bar(aes(x = {{ var }})) +
+      ylab("Count") +
+      theme_bw()
+
+    g_fig <- ggpubr::ggarrange(g_cor, g_hist_var, ncol = 1)
+  }
+
+  return_table <-
+    tibble::tibble(
+      var = var,
+      summary_data = list(sum_data),
+      summary_fig = list(g_fig)
+    )
+  return(return_table)
 }

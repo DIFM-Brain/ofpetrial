@@ -36,7 +36,9 @@ Imports:
     purrr,
     tidyr,
     tibble,
-    ggpubr
+    ggpubr,
+    ggExtra,
+    terra
 Suggests: 
     knitr,
     rmarkdown
