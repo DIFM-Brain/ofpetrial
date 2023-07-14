@@ -50,7 +50,7 @@
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul></li>
 <li>
@@ -101,11 +101,12 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">exp_data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name harvester_width plot_width                        field_sf headland</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> NH3                   6.10       18.3 (((352970.3 4331423, 353137 43… <span style="color: #949494;">&lt;sf&gt;</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: exp_plots &lt;list&gt;, ab_lines &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   harvest_ab_lines &lt;list&gt;, abline_type &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name harvest…¹ plot_…²                  field_sf headl…³ exp_p…⁴ ab_li…⁵</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> NH3             6.10    18.3 (((352970.3 4331423, 353… &lt;sf&gt;    &lt;sf&gt;    &lt;sf&gt;   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 2 more variables: harvest_ab_lines &lt;list&gt;, abline_type &lt;chr&gt;, and</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​harvester_width, ²​plot_width, ³​headland,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​exp_plots, ⁵​ab_lines</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- load rate information ---#</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">rate_info</span><span class="op">)</span></span></span>

@@ -1,5 +1,5 @@
 ---
-title: "Understanding the structure of objects created by the `ofpetrial` package"
+title: "Understanding the structure of objects"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{V5-understanding-structure}

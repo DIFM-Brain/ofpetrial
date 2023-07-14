@@ -68,7 +68,7 @@
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul>
 </li>
@@ -99,13 +99,15 @@
 
     
     
-<p>Load the <code>ofpetrial</code> package.</p>
+<p>The <code>ofpetrial</code> package offers various trial design types.
+This vignette provides examples of availabl design types. Let’s first
+prepare experiment plots to which we assign rates using various trial
+design options.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span></code></pre></div>
-<p>Let’s first prepare experiment plots to which we assign rates using
-various trial design options.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span>
@@ -124,12 +126,93 @@ various trial design options.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p>We will be assigning rates to the experimental plots using various
+trial design types below.</p>
 <div class="section level2">
 <h2 id="latin-square-ls">Latin Square (“ls”)<a class="anchor" aria-label="anchor" href="#latin-square-ls"></a>
 </h2>
+<p>By default, here is what <code>design_type = "ls"</code>
+produces.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
+<span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
+<span>    gc_rate <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
+<span>    rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">140</span>, <span class="fl">180</span>, <span class="fl">220</span>, <span class="fl">260</span><span class="op">)</span>,</span>
+<span>    design_type <span class="op">=</span> <span class="st">"ls"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">td_ls_d</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span></span>
+<span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
+<span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p>However, you can customize the spatial pattern of input rate when
+<code>design_type = "ls"</code> using the <code>rank_seq_ws</code> and
+<code>rank_seq_as</code> options. To do so, it is important to
+understand how <code>plot_id</code> and <code>strip_id</code> are
+assigned to each of the plots. Here are their maps.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, type <span class="op">=</span> <span class="st">"strip_id"</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, type <span class="op">=</span> <span class="st">"plot_id"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span>
+<span><span class="co">#&gt; Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p>As you can see, <code>plot_id</code> is the unique numeric identifier
+assigned to each of the plots <strong>within</strong> a strip. So, there
+are multiple plots with the same <code>plot_id</code> values, but a
+combination of <code>strip_id</code> and <code>plot_id</code> uniquely
+identifies a plot.</p>
+<p>The <code>rank_seq_ws</code> option specifies the order of rate
+rankings to be repetead <strong>withing</strong> a strip (this is why
+<code>_ws</code> at the end of the function). Suppose you have
+<code>rank_seq_ws = c(5, 4, 3, 2, 1)</code>. <code>5</code> refers to
+the 5th-ranked (highest) rate, which is 260 because we have
+<code>rates = c(100, 140, 180, 220, 260)</code> above. <code>1</code>
+refers to the first-ranked (lowest) rate, which is 100. Rates are
+assigned in this order to the plots within a strip. The
+<code>rank_seq_as</code> option specifies the order of the rate rankings
+of <strong>the very first</strong> plot of each strip
+<strong>across</strong> all the strips. So, for example, if
+<code>rank_seq_as = c(1, 4, 3, 2, 5)</code>, then the first plot
+(<code>plot_id == 1</code>) of the first strip
+(<code>strip_id == 1</code>) will be assigned rate rank of 1. The first
+plot of 5th strip ((<code>strip_id == 5</code>)) will be assigned rate
+rank of 5. This sequence will be repeated until the first plot of all
+the strips are assigned a rate rank. Now, for a given strip, rate ranks
+specified by <code>rank_seq_ws</code> will be repeated <strong>starting
+from</strong> the rate rank of the first plot. For example, the first
+plot of the 3rd strip has a rate rank of 3 (so, 180). This means that
+the code will go over the rest of the rate ranks in
+<code>rank_seq_ws</code> (2 and 1), and then go back to the beginning of
+<code>rank_seq_ws</code>, which is 5. So, for the third strip, the rate
+rank of its plots look like this.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">rank_seq_ws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  plot_id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
+<span>  rate_rank <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span>, <span class="va">rank_seq_ws</span>, <span class="va">rank_seq_ws</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;    plot_id rate_rank</span></span>
+<span><span class="co">#&gt; 1        1         3</span></span>
+<span><span class="co">#&gt; 2        2         2</span></span>
+<span><span class="co">#&gt; 3        3         1</span></span>
+<span><span class="co">#&gt; 4        4         5</span></span>
+<span><span class="co">#&gt; 5        5         4</span></span>
+<span><span class="co">#&gt; 6        6         3</span></span>
+<span><span class="co">#&gt; 7        7         2</span></span>
+<span><span class="co">#&gt; 8        8         1</span></span>
+<span><span class="co">#&gt; 9        9         5</span></span>
+<span><span class="co">#&gt; 10      10         4</span></span></code></pre></div>
+<p>Let’s try few examples.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -145,11 +228,11 @@ various trial design options.</p>
 <span>  <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span></span>
 <span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_1</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_1</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -165,10 +248,10 @@ various trial design options.</p>
 <span>  <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span></span>
 <span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_2</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_2</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="strip-trial-strip">Strip trial (“strip”)<a class="anchor" aria-label="anchor" href="#strip-trial-strip"></a>
@@ -191,7 +274,7 @@ various trial design options.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_strip</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="randomized-block-rb">Randomized Block (“rb”)<a class="anchor" aria-label="anchor" href="#randomized-block-rb"></a>
@@ -213,7 +296,7 @@ various trial design options.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_rb</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="jump-conscious-latin-square-jcls">Jump-conscious Latin Square (“jcls”)<a class="anchor" aria-label="anchor" href="#jump-conscious-latin-square-jcls"></a>
@@ -235,7 +318,7 @@ various trial design options.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_jcls</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="extra-jump-conscious-alternate-ejca">Extra Jump-conscious Alternate (“ejca”)<a class="anchor" aria-label="anchor" href="#extra-jump-conscious-alternate-ejca"></a>
@@ -257,7 +340,7 @@ various trial design options.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ejca</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="sparse-sparse">Sparse (“sparse”)<a class="anchor" aria-label="anchor" href="#sparse-sparse"></a>
@@ -279,7 +362,7 @@ various trial design options.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_sparse</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
   </div>
 

@@ -68,7 +68,7 @@
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul>
 </li>
@@ -188,7 +188,7 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <code class="sourceCode R"><span><span class="va">aa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `as-applied-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpKN0Kgq/temp_libpath749251ef89bb/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpaS3NpW/temp_libpath175b4526c4748/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 10404 features and 32 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -215,13 +215,11 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"lock"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: There were 2 warnings in `dplyr::mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `ab_sf = list(...)`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
-<span><span class="co">#&gt; Caused by warning in `acos()`:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> NaNs produced</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
+<span><span class="co">#&gt; Warning in acos(vec_ip_d): NaNs produced</span></span>
+<span><span class="co">#&gt; Warning: `cols` is now required when using `unnest()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `cols = c(data)`.</span></span>
+<span><span class="co">#&gt; Warning in st_centroid.sf(past_aa_input[which.min(st_distance(past_aa_input, :</span></span>
+<span><span class="co">#&gt; st_centroid assumes attributes are constant over geometries of x</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_aa</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V2-ab-line_files/figure-html/ab-line-from-yield-1.png" width="700"></p>

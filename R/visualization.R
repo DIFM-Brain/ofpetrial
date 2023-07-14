@@ -16,7 +16,7 @@
 #' data(td_two_input)
 #' viz(td_two_input)
 #' viz(td_two_input, type = "ab_line")
-
+#'
 viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE) {
   #--- select rows ---#
   if (nrow(td) == 1) {
@@ -24,18 +24,18 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
   }
 
   #--- determine the stack orientation ---#
-    field_bbox <- 
-      td$field_sf[[1]] %>%
-      sf::st_bbox()
-    
-    x_length <- field_bbox["xmax"]- field_bbox["xmin"]
-    y_length <- field_bbox["ymax"]- field_bbox["ymin"]
+  field_bbox <-
+    td$field_sf[[1]] %>%
+    sf::st_bbox()
 
-    if (x_length > y_length) {
-      stack_field_orientation <- "vertical"
-    } else {
-      stack_field_orientation <- "horizontal"
-    }
+  x_length <- field_bbox["xmax"] - field_bbox["xmin"]
+  y_length <- field_bbox["ymax"] - field_bbox["ymin"]
+
+  if (x_length > y_length) {
+    stack_field_orientation <- "vertical"
+  } else {
+    stack_field_orientation <- "horizontal"
+  }
 
   #--- prepare data to be used across different types ---#
   td_rows <-
@@ -48,7 +48,12 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       dplyr::mutate(g_fig = list(
         ggplot() +
           geom_sf(data = trial_design, aes(fill = factor(block_id))) +
-          geom_sf_text(data = trial_design, aes(label = block_id), size = text_size) +
+          geom_sf_text(
+            data = trial_design,
+            aes(label = block_id),
+            size = text_size,
+            fun.geometry = sf::st_centroid
+          ) +
           scale_fill_discrete(name = "Block ID") +
           theme_void() +
           ggtitle(paste0("Block ID of experiment plots for ", input_name))
@@ -59,7 +64,12 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       dplyr::mutate(g_fig = list(
         ggplot() +
           geom_sf(data = trial_design, aes(fill = factor(strip_id))) +
-          geom_sf_text(data = trial_design, aes(label = strip_id), size = text_size) +
+          geom_sf_text(
+            data = trial_design,
+            aes(label = strip_id),
+            size = text_size,
+            fun.geometry = sf::st_centroid
+          ) +
           scale_fill_discrete(name = "Strip ID") +
           theme_void() +
           ggtitle(paste0("Strip ID of experiment plots for ", input_name))
@@ -70,7 +80,12 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       dplyr::mutate(g_fig = list(
         ggplot() +
           geom_sf(data = trial_design, fill = NA) +
-          geom_sf_text(data = trial_design, aes(label = plot_id), size = text_size) +
+          geom_sf_text(
+            data = trial_design,
+            aes(label = plot_id),
+            size = text_size,
+            fun.geometry = sf::st_centroid
+          ) +
           theme_void() +
           ggtitle(paste0("Plot ID of experiment plots for ", input_name))
       ))

@@ -50,7 +50,7 @@
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul></li>
 <li>
@@ -102,7 +102,7 @@
 <span class="r-in"><span><span class="co">#--- take a look ---#</span></span></span>
 <span class="r-in"><span><span class="va">td_with_blocks</span><span class="op">$</span><span class="va">trial_design</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 172 features and 6 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 191 features and 6 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span>
@@ -118,23 +118,22 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   140        1       7 experiment        2                    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   180        1       8 experiment        2                    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   220        1       9 experiment        2                    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  140        2       1 experiment        1                    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  260        1      10 experiment        2                    5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          geometry</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  POLYGON ((-16.70021 39.1198...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  POLYGON ((-16.70021 39.1205...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POLYGON ((-16.70021 39.1212...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POLYGON ((-16.70021 39.1219...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  POLYGON ((-16.70021 39.1211...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  POLYGON ((-16.70021 39.1218...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  POLYGON ((-16.70021 39.1225...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POLYGON ((-16.70021 39.1232...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POLYGON ((-16.70021 39.1239...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POLYGON ((-16.70021 39.1246...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POLYGON ((-16.70021 39.1255...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POLYGON ((-16.7 39.11984, -...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  POLYGON ((-16.70021 39.1231...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  POLYGON ((-16.70021 39.1238...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  POLYGON ((-16.70021 39.1245...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  POLYGON ((-16.70021 39.1251...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 POLYGON ((-16.70021 39.1258...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- visualize ---#</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>st_point_on_surface may not give correct results for longitude/latitude data</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (`geom_text()`).</span>
 <span class="r-plt img"><img src="add_blocks-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

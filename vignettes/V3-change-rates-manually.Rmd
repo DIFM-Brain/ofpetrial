@@ -15,7 +15,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, include = FALSE}
+library(ofpetrial)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r setup-show, eval = FALSE}
 library(ofpetrial)
 library(ggplot2)
 library(dplyr)
@@ -67,7 +73,7 @@ td <-
 Here is what the trial design looks like.
 
 ```{r}
-viz(td, type = "rates")
+viz(td, type = "rates", abline = FALSE)
 ```
 
 # Changing rates 

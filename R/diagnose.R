@@ -13,17 +13,25 @@
 #' #--- check correlation ---#
 #' check_ortho_inputs(td_two_input)
 check_ortho_inputs <- function(td) {
+
+  #*+++++++++++++++++++++++++++++++++++
+  #* Debug
+  #*+++++++++++++++++++++++++++++++++++
+  # data(td_two_input)
+  # td <- td_two_input
+
+  #*+++++++++++++++++++++++++++++++++++
+  #* Main
+  #*+++++++++++++++++++++++++++++++++++
   if (nrow(td) > 1) {
     message("Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.")
     td_1 <- td$trial_design[[1]] %>% dplyr::filter(type == "experiment")
     td_2 <- td$trial_design[[2]] %>% dplyr::filter(type == "experiment")
 
-    td_1_area <- mean(sf::st_area(td_1))
-    td_2_area <- mean(sf::st_area(td_2))
-
     suppressWarnings(
       interesected_data <-
         sf::st_intersection(td_1, td_2) %>%
+        sf::st_make_valid() %>%
         dplyr::mutate(area = st_area(geometry) %>% as.numeric()) %>%
         dplyr::select(rate, rate.1, area) %>%
         sf::st_drop_geometry()

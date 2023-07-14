@@ -50,7 +50,7 @@
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul></li>
 <li>
@@ -104,7 +104,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">yield_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"yield-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `yield-simple1' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpKN0Kgq/temp_libpath749251ef89bb/ofpetrial/extdata/yield-simple1.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpaS3NpW/temp_libpath175b4526c4748/ofpetrial/extdata/yield-simple1.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 16822 features and 34 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
@@ -115,7 +115,7 @@
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ssurgo-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mukey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">mukey</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `ssurgo-simple1' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpKN0Kgq/temp_libpath749251ef89bb/ofpetrial/extdata/ssurgo-simple1.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpaS3NpW/temp_libpath175b4526c4748/ofpetrial/extdata/ssurgo-simple1.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 11 features and 9 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
@@ -134,17 +134,13 @@
 <span class="r-in"><span>    sp_data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">yield_sf</span>, <span class="va">ssurgo_sf</span>, <span class="va">topo_rast</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    vars_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Yld_Vol_Dr"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mukey"</span>, <span class="st">"clay"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>There was 1 warning in `dplyr::mutate()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In argument: `checks = purrr::pmap(list(trial_design, spatial_data,</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   variable), summarize_chars)`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by warning:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Computation failed in `stat_bin()`</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_bin()`</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `abs()`:</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> non-numeric argument to mathematical function</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">checks</span><span class="op">$</span><span class="va">summary_data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          var cor_with_rate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Yld_Vol_Dr    0.02913188</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Yld_Vol_Dr    0.01821775</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">checks</span><span class="op">$</span><span class="va">summary_fig</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-plt img"><img src="check_ortho_with_chars-1.png" alt="" width="700" height="433"></span>

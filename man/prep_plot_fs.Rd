@@ -14,7 +14,7 @@ prep_plot_fs(
   side_length = NA,
   max_plot_width = 120,
   min_plot_length = 240,
-  max_plot_length = 260
+  max_plot_length = 300
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ prep_plot_fs(
 
 \item{min_plot_length}{(numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).}
 
-\item{max_plot_length}{(numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).}
+\item{max_plot_length}{(numeric) Maximum length of the plots in feet. Default is 300 feet (91.440 meter).}
 }
 \value{
 a tibble with plot information necessary to create experiment plots

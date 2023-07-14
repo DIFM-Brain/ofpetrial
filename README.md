@@ -45,28 +45,24 @@ seed_plot_info <-
 seed_plot_info
 #>   input_name machine_width section_num section_width harvester_width
 #> 1       seed        18.288          24         0.762           9.144
-#>   plot_width headland_length side_length min_plot_length
-#> 1      9.144          36.576       9.144          73.152
-#>   max_plot_length
-#> 1          79.248
+#>   plot_width headland_length side_length min_plot_length max_plot_length
+#> 1      9.144          36.576       9.144          73.152           91.44
 
 n_plot_info <-
   prep_plot_fs(
     input_name = "NH3",
-    machine_width = 45,
+    machine_width = 30,
     section_num = 1,
     harvester_width = 30,
-    plot_width = 45
+    plot_width = 30
   )
-#> For NH3, the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use 90 as the plot width.
+#> 
 
 n_plot_info
 #>   input_name machine_width section_num section_width harvester_width
-#> 1        NH3        13.716           1        13.716           9.144
-#>   plot_width headland_length side_length min_plot_length
-#> 1     13.716          27.432      13.716          73.152
-#>   max_plot_length
-#> 1          79.248
+#> 1        NH3         9.144           1         9.144           9.144
+#>   plot_width headland_length side_length min_plot_length max_plot_length
+#> 1      9.144          18.288       9.144          73.152           91.44
 ```
 
 Now that plot and machine specifications for the inputs are ready, we
@@ -90,7 +86,7 @@ The experiment plots created by `make_exp_plots()` is stored in
 ``` r
 exp_data$exp_plots
 #> [[1]]
-#> Simple feature collection with 365 features and 3 fields
+#> Simple feature collection with 369 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
@@ -98,34 +94,34 @@ exp_data$exp_plots
 #> First 10 features:
 #>    plot_id strip_id poly_line                       geometry
 #> 1        1        1       1_1 POLYGON ((352997.6 4331460,...
-#> 2        2        1       1_1 POLYGON ((352998.9 4331536,...
-#> 3        3        1       1_1 POLYGON ((353000.3 4331612,...
-#> 4        4        1       1_1 POLYGON ((353001.7 4331688,...
-#> 5        5        1       1_1 POLYGON ((353003 4331765, 3...
-#> 6        6        1       1_1 POLYGON ((353004.7 4331858,...
-#> 7        1        2       1_1 POLYGON ((353006.7 4331460,...
-#> 8        2        2       1_1 POLYGON ((353008.1 4331536,...
-#> 9        3        2       1_1 POLYGON ((353009.5 4331613,...
-#> 10       4        2       1_1 POLYGON ((353010.8 4331689,...
+#> 2        2        1       1_1 POLYGON ((352999 4331540, 3...
+#> 3        3        1       1_1 POLYGON ((353000.5 4331621,...
+#> 4        4        1       1_1 POLYGON ((353001.9 4331702,...
+#> 5        5        1       1_1 POLYGON ((353003.3 4331782,...
+#> 6        6        1       1_1 POLYGON ((353004.8 4331863,...
+#> 7        7        1       1_1 POLYGON ((353006.2 4331943,...
+#> 8        8        1       1_1 POLYGON ((353007.7 4332024,...
+#> 9        9        1       1_1 POLYGON ((353009.1 4332104,...
+#> 10       1        2       1_1 POLYGON ((353006.7 4331460,...
 #> 
 #> [[2]]
-#> Simple feature collection with 243 features and 3 fields
+#> Simple feature collection with 369 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
-#> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353372 ymax: 4332198
+#> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
 #>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((353002.2 4331460,...
-#> 2        2        1       1_1 POLYGON ((353003.5 4331536,...
-#> 3        3        1       1_1 POLYGON ((353004.9 4331612,...
-#> 4        4        1       1_1 POLYGON ((353006.2 4331688,...
-#> 5        5        1       1_1 POLYGON ((353007.6 4331765,...
-#> 6        6        1       1_1 POLYGON ((353009 4331841, 3...
-#> 7        7        1       1_1 POLYGON ((353010.3 4331917,...
-#> 8        8        1       1_1 POLYGON ((353011.7 4331993,...
-#> 9        9        1       1_1 POLYGON ((353013.4 4332089,...
-#> 10       1        2       1_1 POLYGON ((353015.9 4331460,...
+#> 1        1        1       1_1 POLYGON ((352997.6 4331460,...
+#> 2        2        1       1_1 POLYGON ((352999 4331540, 3...
+#> 3        3        1       1_1 POLYGON ((353000.5 4331621,...
+#> 4        4        1       1_1 POLYGON ((353001.9 4331702,...
+#> 5        5        1       1_1 POLYGON ((353003.3 4331782,...
+#> 6        6        1       1_1 POLYGON ((353004.8 4331863,...
+#> 7        7        1       1_1 POLYGON ((353006.2 4331943,...
+#> 8        8        1       1_1 POLYGON ((353007.7 4332024,...
+#> 9        9        1       1_1 POLYGON ((353009.1 4332104,...
+#> 10       1        2       1_1 POLYGON ((353006.7 4331460,...
 ```
 
 `exp_data$exp_plots` is a list and you can access the individual
@@ -133,7 +129,7 @@ experiment plots (an `sf` object) like this.
 
 ``` r
 exp_data$exp_plots[[1]]
-#> Simple feature collection with 365 features and 3 fields
+#> Simple feature collection with 369 features and 3 fields
 #> Geometry type: POLYGON
 #> Dimension:     XY
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
@@ -141,15 +137,15 @@ exp_data$exp_plots[[1]]
 #> First 10 features:
 #>    plot_id strip_id poly_line                       geometry
 #> 1        1        1       1_1 POLYGON ((352997.6 4331460,...
-#> 2        2        1       1_1 POLYGON ((352998.9 4331536,...
-#> 3        3        1       1_1 POLYGON ((353000.3 4331612,...
-#> 4        4        1       1_1 POLYGON ((353001.7 4331688,...
-#> 5        5        1       1_1 POLYGON ((353003 4331765, 3...
-#> 6        6        1       1_1 POLYGON ((353004.7 4331858,...
-#> 7        1        2       1_1 POLYGON ((353006.7 4331460,...
-#> 8        2        2       1_1 POLYGON ((353008.1 4331536,...
-#> 9        3        2       1_1 POLYGON ((353009.5 4331613,...
-#> 10       4        2       1_1 POLYGON ((353010.8 4331689,...
+#> 2        2        1       1_1 POLYGON ((352999 4331540, 3...
+#> 3        3        1       1_1 POLYGON ((353000.5 4331621,...
+#> 4        4        1       1_1 POLYGON ((353001.9 4331702,...
+#> 5        5        1       1_1 POLYGON ((353003.3 4331782,...
+#> 6        6        1       1_1 POLYGON ((353004.8 4331863,...
+#> 7        7        1       1_1 POLYGON ((353006.2 4331943,...
+#> 8        8        1       1_1 POLYGON ((353007.7 4332024,...
+#> 9        9        1       1_1 POLYGON ((353009.1 4332104,...
+#> 10       1        2       1_1 POLYGON ((353006.7 4331460,...
 ```
 
 We can visualize the layout of the experiment plots using
@@ -169,8 +165,8 @@ using `prep_rates_s()`.
 
 ``` r
 #!===========================================================
-#! Assign rates
-#!===========================================================
+# ! Assign rates
+# !===========================================================
 seed_rate_info <-
   prep_rates_s(
     plot_info = seed_plot_info,
@@ -208,7 +204,12 @@ n_rate_info
 #> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5 5, 4, 3, 2, 1        NULL
 ```
 
-We can now use `assign_rates()` to assign rates to experiment plots.
+We can now use `assign_rates()` to assign rates to experiment plots (see
+[this
+vignette](https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html)
+for other design options and [this
+vignette](https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html)
+for changing rates manually.).
 
 ``` r
 trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
@@ -221,3 +222,49 @@ viz(trial_design)
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+Along with the spatial pattern of the input rates, the
+applicator/planter ab-line and harvester ab-line are drawn by default.
+
+### Diagnose the trial design
+
+The `ofpetrial` package offers several functions to check the soundness
+of a trial design (see [this
+vignette](https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html)
+for more details and examples).
+
+Let’s check if the seed and NH3 rates has very little correlationl.
+
+``` r
+(
+  cor_inputs <- check_ortho_inputs(trial_design)
+)
+#> Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.
+#> [1] -0.06303213
+```
+
+Great, the correlation coefficient is merely -0.06.
+
+### Write the trial design files for implementation
+
+Once you are satisfied with the trial design adn the location of the
+ab-lines, you can write out all the necessary files as shape files for
+the machine operators to actually implement the trial.
+
+``` r
+write_trial_files(td, zip = TRUE, zip_name = "td-collection")
+```
+
+Here, all the shape files (trial dsign, applicator/planter ab-line, and
+harvester ab-line) are packed in a zipped folder, named
+“td-collection.zip”.
+
+# Acknowledgement
+
+This project was funded in part by a United States Department of
+Agriculture—National Institute of Food and Agriculture (USDA—NIFA) Food
+Security Program Grant (Award Number 2016-68004-24769) and by United
+States Department of Agriculture (USDA) -Natural Resources Conservation
+Service (NRCS), Commodity Credit Corporation (CCC), Conservation
+Innovation Grants On-Farm Conservation Innovation Trials (Award Number
+USDA-NRCS-NHQ-CIGOFT-20-GEN0010750).

@@ -14,7 +14,7 @@ prep_plot_md(
   side_length = NA,
   max_plot_width = measurements::conv_unit(120, "ft", "m"),
   min_plot_length = measurements::conv_unit(240, "ft", "m"),
-  max_plot_length = measurements::conv_unit(260, "ft", "m")
+  max_plot_length = measurements::conv_unit(300, "ft", "m")
 )
 }
 \arguments{
@@ -36,7 +36,7 @@ prep_plot_md(
 
 \item{min_plot_length}{(numeric) Minimum length of the plots in meter. Default is 73.152 meter (240 feet).}
 
-\item{max_plot_length}{(numeric) Maximum length of the plots in meter. Default is 79.248 meter (260 feet).}
+\item{max_plot_length}{(numeric) Maximum length of the plots in meter. Default is 91.44 meter (300 feet).}
 }
 \value{
 a tibble with plot information necessary to create experiment plots

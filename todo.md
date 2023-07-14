@@ -12,6 +12,7 @@
 + [x] let them specify the full sequence (everything is a special case of this except randomized ones) (Taro)
 + [ ] base_rate, conversion, dictionary (Brittani)
 + [ ] rate option (original unit, or equivalent) (Brittani)
++ [ ] Don't produce a planter AB-line when they are planting at a different angle. Make this part of vignette. Just make sure it is "none" (Brittani)
 + [ ] check examples
 + [ ] explain the structure of experiment plots and trial design, what is the definition of plot?
 + [x] visualize strip id, plot id, block id
@@ -24,6 +25,11 @@
 + [x] visualize with focus on ab-line
 + [x] transform utm of ab-lines and harvest ab-lines when writing
 + [x] check plot width is the multiple of machine width
++ [ ] warning from using geom_sf_text()
++ [ ] two N fertilizers (total N)
++ [ ] discrete example? cover crop?
++ [ ] check the orthogonality with past trial design
+
 
 
 # Problems

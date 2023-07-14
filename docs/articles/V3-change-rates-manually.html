@@ -68,7 +68,7 @@
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul>
 </li>
@@ -102,15 +102,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <p>Suppose you have created a trial design is made using
 <code><a href="../reference/assign_rates.html">assign_rates()</a></code> to experiment plots made by
 <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>, but you are not quite satisfied with it
@@ -158,7 +150,7 @@ manually. This vignette demonstrates such operations.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>Here is what the trial design looks like.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -169,7 +161,7 @@ withint-strip plot id and a strip id when they were created using
 <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">td</span><span class="op">$</span><span class="va">trial_design</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 172 features and 4 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 191 features and 4 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span></span>
@@ -178,26 +170,22 @@ withint-strip plot id and a strip id when they were created using
 <span><span class="co">#&gt;    rate strip_id plot_id       type                       geometry</span></span>
 <span><span class="co">#&gt; 1   100        1       1 experiment POLYGON ((-16.70021 39.1198...</span></span>
 <span><span class="co">#&gt; 2   140        1       2 experiment POLYGON ((-16.70021 39.1205...</span></span>
-<span><span class="co">#&gt; 3   180        1       3 experiment POLYGON ((-16.70021 39.1212...</span></span>
-<span><span class="co">#&gt; 4   220        1       4 experiment POLYGON ((-16.70021 39.1219...</span></span>
+<span><span class="co">#&gt; 3   180        1       3 experiment POLYGON ((-16.70021 39.1211...</span></span>
+<span><span class="co">#&gt; 4   220        1       4 experiment POLYGON ((-16.70021 39.1218...</span></span>
 <span><span class="co">#&gt; 5   260        1       5 experiment POLYGON ((-16.70021 39.1225...</span></span>
-<span><span class="co">#&gt; 6   100        1       6 experiment POLYGON ((-16.70021 39.1232...</span></span>
-<span><span class="co">#&gt; 7   140        1       7 experiment POLYGON ((-16.70021 39.1239...</span></span>
-<span><span class="co">#&gt; 8   180        1       8 experiment POLYGON ((-16.70021 39.1246...</span></span>
-<span><span class="co">#&gt; 9   220        1       9 experiment POLYGON ((-16.70021 39.1255...</span></span>
-<span><span class="co">#&gt; 10  140        2       1 experiment POLYGON ((-16.7 39.11984, -...</span></span></code></pre></div>
+<span><span class="co">#&gt; 6   100        1       6 experiment POLYGON ((-16.70021 39.1231...</span></span>
+<span><span class="co">#&gt; 7   140        1       7 experiment POLYGON ((-16.70021 39.1238...</span></span>
+<span><span class="co">#&gt; 8   180        1       8 experiment POLYGON ((-16.70021 39.1245...</span></span>
+<span><span class="co">#&gt; 9   220        1       9 experiment POLYGON ((-16.70021 39.1251...</span></span>
+<span><span class="co">#&gt; 10  260        1      10 experiment POLYGON ((-16.70021 39.1258...</span></span></code></pre></div>
 <p>The figure below shows the strip id associated with each plot.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"strip_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
-<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The figure below shows the plot id associated with each plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"plot_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
-<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>As you can see, <code>plot_id</code> is the unique numeric identifier
@@ -292,8 +280,6 @@ are not assigned block IDs. You can do so using
 <code class="sourceCode R"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_blocks.html">add_blocks</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in st_point_on_surface.sfc(sf::st_zm(x)): st_point_on_surface may not</span></span>
-<span><span class="co">#&gt; give correct results for longitude/latitude data</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>

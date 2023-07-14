@@ -548,8 +548,6 @@ make_trial_plots_by_input <- function(field,
   #++++++++++++++++++++++++++++++++++++
   #+ Create experiment plots
   #++++++++++++++++++++++++++++++++++++
-  mean_length <- (min_plot_length + max_plot_length) / 2
-
   side_length <- 1.5 * side_length
 
   # ggplot(final_exp_plots) +
@@ -630,7 +628,7 @@ make_trial_plots_by_input <- function(field,
       get_plot_data(
         tot_plot_length,
         min_plot_length,
-        mean_length
+        max_plot_length
       )
     )) %>%
     dplyr::filter(!is.null(plot_data)) %>%
@@ -737,7 +735,6 @@ make_ablines <- function(ab_sf,
       ab_sf %>%
       sf::st_as_sf() %>%
       dplyr::mutate(ab_id = 1)
-    return(ab_lines)
   } else if (abline_type == "free") {
     if (machine_width == plot_width) {
       #--- no further adjustment necessary ---#

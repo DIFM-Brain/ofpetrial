@@ -53,10 +53,10 @@ seed_plot_info
 n_plot_info <-
   prep_plot_fs(
     input_name = "NH3",
-    machine_width = 45,
+    machine_width = 30,
     section_num = 1,
     harvester_width = 30,
-    plot_width = 45
+    plot_width = 30
   )
 
 n_plot_info
@@ -100,8 +100,8 @@ Let's now assign input rates to the experimental plots we just created. Before d
 
 ```{r}
 #!===========================================================
-#! Assign rates
-#!===========================================================
+# ! Assign rates
+# !===========================================================
 seed_rate_info <-
   prep_rates_s(
     plot_info = seed_plot_info,
@@ -128,7 +128,7 @@ n_rate_info <-
 n_rate_info
 ```
 
-We can now use `assign_rates()` to assign rates to experiment plots.
+We can now use `assign_rates()` to assign rates to experiment plots (see [this vignette](https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html) for other design options and [this vignette](https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html) for changing rates manually.).
 
 ```{r}
 trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
@@ -142,6 +142,22 @@ viz(trial_design)
 
 Along with the spatial pattern of the input rates, the applicator/planter ab-line and harvester ab-line are drawn by default.
 
+### Diagnose the trial design
+
+The `ofpetrial` package offers several functions to check the soundness of a trial design (see [this vignette](https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html) for more details and examples). 
+
+Let's check if the seed and NH3 rates has very little correlationl. 
+
+```{r}
+(
+  cor_inputs <- check_ortho_inputs(trial_design)
+)
+```
+
+Great, the correlation coefficient is merely `r round(cor_inputs, digits = 2)`.
+
+### Write the trial design files for implementation
+
 Once you are satisfied with the trial design adn the location of the ab-lines, you can write out all the necessary files as shape files for the machine operators to actually implement the trial.
 
 ```{r, eval = FALSE}
@@ -150,3 +166,6 @@ write_trial_files(td, zip = TRUE, zip_name = "td-collection")
 
 Here, all the shape files (trial dsign, applicator/planter ab-line, and harvester ab-line) are packed in a zipped folder, named "td-collection.zip".
 
+# Acknowledgement
+
+This project was funded in part by a United States Department of Agriculture—National Institute of Food and Agriculture (USDA—NIFA) Food Security Program Grant (Award Number 2016-68004-24769) and by United States Department of Agriculture (USDA) -Natural Resources Conservation Service (NRCS), Commodity Credit Corporation (CCC), Conservation Innovation Grants On-Farm Conservation Innovation Trials (Award Number USDA-NRCS-NHQ-CIGOFT-20-GEN0010750).

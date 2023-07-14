@@ -69,7 +69,7 @@
       <a href="articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
     <li>
-      <a href="articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+      <a href="articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
   </ul>
 </li>
@@ -89,6 +89,7 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div class="section level1">
 <div class="page-header"><h1 id="ofpetrial-design-on-farm-precision-experiments">ofpetrial: Design On-farm Precision Experiments<a class="anchor" aria-label="anchor" href="#ofpetrial-design-on-farm-precision-experiments"></a>
 </h1></div>
@@ -125,28 +126,24 @@
 <span><span class="va">seed_plot_info</span></span>
 <span><span class="co">#&gt;   input_name machine_width section_num section_width harvester_width</span></span>
 <span><span class="co">#&gt; 1       seed        18.288          24         0.762           9.144</span></span>
-<span><span class="co">#&gt;   plot_width headland_length side_length min_plot_length</span></span>
-<span><span class="co">#&gt; 1      9.144          36.576       9.144          73.152</span></span>
-<span><span class="co">#&gt;   max_plot_length</span></span>
-<span><span class="co">#&gt; 1          79.248</span></span>
+<span><span class="co">#&gt;   plot_width headland_length side_length min_plot_length max_plot_length</span></span>
+<span><span class="co">#&gt; 1      9.144          36.576       9.144          73.152           91.44</span></span>
 <span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
-<span>    machine_width <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>    plot_width <span class="op">=</span> <span class="fl">45</span></span>
+<span>    plot_width <span class="op">=</span> <span class="fl">30</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; For NH3, the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use 90 as the plot width.</span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="va">n_plot_info</span></span>
 <span><span class="co">#&gt;   input_name machine_width section_num section_width harvester_width</span></span>
-<span><span class="co">#&gt; 1        NH3        13.716           1        13.716           9.144</span></span>
-<span><span class="co">#&gt;   plot_width headland_length side_length min_plot_length</span></span>
-<span><span class="co">#&gt; 1     13.716          27.432      13.716          73.152</span></span>
-<span><span class="co">#&gt;   max_plot_length</span></span>
-<span><span class="co">#&gt; 1          79.248</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        NH3         9.144           1         9.144           9.144</span></span>
+<span><span class="co">#&gt;   plot_width headland_length side_length min_plot_length max_plot_length</span></span>
+<span><span class="co">#&gt; 1      9.144          18.288       9.144          73.152           91.44</span></span></code></pre></div>
 <p>Now that plot and machine specifications for the inputs are ready, we can create experiment plots based on them using <code><a href="reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_plot_info</span>, <span class="va">n_plot_info</span><span class="op">)</span></span>
@@ -162,7 +159,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 365 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 369 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
@@ -170,38 +167,38 @@
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
 <span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352998.9 4331536,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.3 4331612,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.7 4331688,...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003 4331765, 3...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.7 4331858,...</span></span>
-<span><span class="co">#&gt; 7        1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
-<span><span class="co">#&gt; 8        2        2       1_1 POLYGON ((353008.1 4331536,...</span></span>
-<span><span class="co">#&gt; 9        3        2       1_1 POLYGON ((353009.5 4331613,...</span></span>
-<span><span class="co">#&gt; 10       4        2       1_1 POLYGON ((353010.8 4331689,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352999 4331540, 3...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.5 4331621,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.9 4331702,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003.3 4331782,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.8 4331863,...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353006.2 4331943,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353007.7 4332024,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353009.1 4332104,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 243 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 369 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353372 ymax: 4332198</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353002.2 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353003.5 4331536,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353004.9 4331612,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353006.2 4331688,...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353007.6 4331765,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353009 4331841, 3...</span></span>
-<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353010.3 4331917,...</span></span>
-<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353011.7 4331993,...</span></span>
-<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353013.4 4332089,...</span></span>
-<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353015.9 4331460,...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352999 4331540, 3...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.5 4331621,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.9 4331702,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003.3 4331782,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.8 4331863,...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353006.2 4331943,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353007.7 4332024,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353009.1 4332104,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353006.7 4331460,...</span></span></code></pre></div>
 <p><code>exp_data$exp_plots</code> is a list and you can access the individual experiment plots (an <code>sf</code> object) like this.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 365 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 369 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
@@ -209,15 +206,15 @@
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
 <span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352998.9 4331536,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.3 4331612,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.7 4331688,...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003 4331765, 3...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.7 4331858,...</span></span>
-<span><span class="co">#&gt; 7        1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
-<span><span class="co">#&gt; 8        2        2       1_1 POLYGON ((353008.1 4331536,...</span></span>
-<span><span class="co">#&gt; 9        3        2       1_1 POLYGON ((353009.5 4331613,...</span></span>
-<span><span class="co">#&gt; 10       4        2       1_1 POLYGON ((353010.8 4331689,...</span></span></code></pre></div>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352999 4331540, 3...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.5 4331621,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.9 4331702,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003.3 4331782,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.8 4331863,...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353006.2 4331943,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353007.7 4332024,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353009.1 4332104,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353006.7 4331460,...</span></span></code></pre></div>
 <p>We can visualize the layout of the experiment plots using <code>viz_layout()</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
@@ -229,8 +226,8 @@
 <p>Let’s now assign input rates to the experimental plots we just created. Before doing so, we need to prepare rate information for both inputs using <code><a href="reference/prep_rates_s.html">prep_rates_s()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#!===========================================================</span></span>
-<span><span class="co">#! Assign rates</span></span>
-<span><span class="co">#!===========================================================</span></span>
+<span><span class="co"># ! Assign rates</span></span>
+<span><span class="co"># !===========================================================</span></span>
 <span><span class="va">seed_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">seed_plot_info</span>,</span>
@@ -266,16 +263,44 @@
 <span><span class="co">#&gt; 1        NH3          ls     180   lb</span></span>
 <span><span class="co">#&gt;                               rates_data   rank_seq_ws rank_seq_as</span></span>
 <span><span class="co">#&gt; 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5 5, 4, 3, 2, 1        NULL</span></span></code></pre></div>
-<p>We can now use <code><a href="reference/assign_rates.html">assign_rates()</a></code> to assign rates to experiment plots.</p>
+<p>We can now use <code><a href="reference/assign_rates.html">assign_rates()</a></code> to assign rates to experiment plots (see <a href="https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html" class="external-link">this vignette</a> for other design options and <a href="https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html" class="external-link">this vignette</a> for changing rates manually.).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trial_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Here is the visualization of the trial design done by <code>viz_td()</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/viz.html">viz</a></span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-10-1.png" width="100%"></p>
+<p>Along with the spatial pattern of the input rates, the applicator/planter ab-line and harvester ab-line are drawn by default.</p>
+</div>
+<div class="section level3">
+<h3 id="diagnose-the-trial-design">Diagnose the trial design<a class="anchor" aria-label="anchor" href="#diagnose-the-trial-design"></a>
+</h3>
+<p>The <code>ofpetrial</code> package offers several functions to check the soundness of a trial design (see <a href="https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html" class="external-link">this vignette</a> for more details and examples).</p>
+<p>Let’s check if the seed and NH3 rates has very little correlationl.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span></span>
+<span>  <span class="va">cor_inputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/check_ortho_inputs.html">check_ortho_inputs</a></span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.</span></span>
+<span><span class="co">#&gt; [1] -0.06303213</span></span></code></pre></div>
+<p>Great, the correlation coefficient is merely -0.06.</p>
+</div>
+<div class="section level3">
+<h3 id="write-the-trial-design-files-for-implementation">Write the trial design files for implementation<a class="anchor" aria-label="anchor" href="#write-the-trial-design-files-for-implementation"></a>
+</h3>
+<p>Once you are satisfied with the trial design adn the location of the ab-lines, you can write out all the necessary files as shape files for the machine operators to actually implement the trial.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/write_trial_files.html">write_trial_files</a></span><span class="op">(</span><span class="va">td</span>, zip <span class="op">=</span> <span class="cn">TRUE</span>, zip_name <span class="op">=</span> <span class="st">"td-collection"</span><span class="op">)</span></span></code></pre></div>
+<p>Here, all the shape files (trial dsign, applicator/planter ab-line, and harvester ab-line) are packed in a zipped folder, named “td-collection.zip”.</p>
 </div>
 </div>
 </div>
+<div class="section level1">
+<h1 id="acknowledgement">Acknowledgement<a class="anchor" aria-label="anchor" href="#acknowledgement"></a>
+</h1>
+<p>This project was funded in part by a United States Department of Agriculture—National Institute of Food and Agriculture (USDA—NIFA) Food Security Program Grant (Award Number 2016-68004-24769) and by United States Department of Agriculture (USDA) -Natural Resources Conservation Service (NRCS), Commodity Credit Corporation (CCC), Conservation Innovation Grants On-Farm Conservation Innovation Trials (Award Number USDA-NRCS-NHQ-CIGOFT-20-GEN0010750).</p>
+</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

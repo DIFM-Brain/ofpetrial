@@ -136,7 +136,8 @@ make_heading_from_past_asapplied <- function(past_aa_input, field) {
   }
 
   ab_start <- sf::st_geometry(sf::st_centroid(
-    past_aa_input[which.min(st_distance(past_aa_input, sf::st_geometry(sf::st_centroid(field)))),]))[[1]]
+    past_aa_input[which.min(st_distance(past_aa_input, sf::st_geometry(sf::st_centroid(field)))), ]
+  ))[[1]]
   ab_end <- ab_start + c(1, dominant_slope)
 
   ab_line <-
@@ -281,55 +282,105 @@ move_points_inward <- function(line, dist, ab_xy_nml) {
 #++++++++++++++++++++++++++++++++++++
 #+ Get plot data
 #++++++++++++++++++++++++++++++++++++
-get_plot_data <- function(tot_plot_length, min_plot_length, mean_length) {
-  num_comp_plots <- tot_plot_length %/% mean_length
-  remainder <- tot_plot_length %% mean_length
+get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
 
-  return_data <- data.table(plot_id = seq_len(num_comp_plots + 1))
+  #* +++++++++++++++++++++++++++++++++++
+  #* For debugging
+  #* +++++++++++++++++++++++++++++++++++
+  # tot_plot_length <- 2500
+  # min_plot_length <- 260
+  # max_plot_length <- 300
 
-  if (num_comp_plots == 0) { # if no complete plots
-    if (remainder < min_plot_length) {
-      return(NULL)
-    } else {
-      return_data[, plot_length := remainder]
-    }
-  } else if (min_plot_length == mean_length) { # no flexibility in plot length allowed
-    return_data <- return_data %>%
-      .[seq_len(num_comp_plots), ] %>%
-      .[, plot_length := mean_length]
-  } else if (remainder >= (2 * min_plot_length - mean_length)) {
-    # make the last two short
-    return_data[, plot_length := c(
-      rep(mean_length, num_comp_plots - 1),
-      rep((mean_length + remainder) / 2, 2)
-    )]
-  } else if (
-    num_comp_plots >= 2 &
-      remainder >= (3 * min_plot_length - 2 * mean_length)
-  ) {
-    # make the last three short
-    return_data[, plot_length := c(
-      rep(mean_length, num_comp_plots - 2),
-      rep((2 * mean_length + remainder) / 3, 3)
-    )]
-  } else if (
-    num_comp_plots >= 2
-  ) {
-    # make the 2nd and 3rd last longer
-    return_data <- return_data[, plot_length := c(
-      rep(mean_length, num_comp_plots - 2),
-      rep((2 * mean_length + remainder) / 2, 2),
-      NA
-    )] %>%
-      .[!is.na(plot_length), ]
+  #* +++++++++++++++++++++++++++++++++++
+  #* Main
+  #* +++++++++++++++++++++++++++++++++++
+  mean_plot_length <- (min_plot_length + max_plot_length) / 2
+  num_comp_plots <- tot_plot_length %/% mean_plot_length
+  remainder <- tot_plot_length %% min_plot_length
+
+  #--- number of plots (comp + 1) ---#
+  plot_length_s <- tot_plot_length / (num_comp_plots + 1)
+  #--- number of plots (comp) ---#
+  plot_length_l <- tot_plot_length / (num_comp_plots)
+
+  if (plot_length_s > min_plot_length & plot_length_s < max_plot_length) {
+    #--- if the average length satisfy the condition ---#
+    return_data <-
+      data.table(
+        plot_id = seq_len(num_comp_plots + 1),
+        plot_length = plot_length_s
+      )
+    return(return_data)
+  } else if (plot_length_l > min_plot_length & plot_length_l < max_plot_length) {
+    return_data <-
+      data.table(
+        plot_id = seq_len(num_comp_plots),
+        plot_length = plot_length_l
+      )
+    return(return_data)
   } else {
-    # only 1 complete plot
-    return_data <- return_data[, plot_length := mean_length + remainder] %>%
-      .[1, ]
-  }
+    message("The range of plot width you specified (", min_plot_length, ", ", max_plot_length, ") ", "may be too narrow for this field. Consider expanding the range.")
 
-  return(return_data)
+    num_comp_plots <- tot_plot_length %/% min_plot_length
+
+    return_data <-
+      data.table(
+        plot_id = seq_len(num_comp_plots),
+        plot_length = min_plot_length
+      )
+    return(return_data)
+  }
 }
+
+# get_plot_data <- function(tot_plot_length, min_plot_length, mean_length) {
+#   num_comp_plots <- tot_plot_length %/% mean_length
+#   remainder <- tot_plot_length %% mean_length
+
+#   return_data <- data.table(plot_id = seq_len(num_comp_plots + 1))
+
+#   if (num_comp_plots == 0) { # if no complete plots
+#     if (remainder < min_plot_length) {
+#       return(NULL)
+#     } else {
+#       return_data[, plot_length := remainder]
+#     }
+#   } else if (min_plot_length == mean_length) { # no flexibility in plot length allowed
+#     return_data <- return_data %>%
+#       .[seq_len(num_comp_plots), ] %>%
+#       .[, plot_length := mean_length]
+#   } else if (remainder >= (2 * min_plot_length - mean_length)) {
+#     # make the last two short
+#     return_data[, plot_length := c(
+#       rep(mean_length, num_comp_plots - 1),
+#       rep((mean_length + remainder) / 2, 2)
+#     )]
+#   } else if (
+#     num_comp_plots >= 2 &
+#       remainder >= (3 * min_plot_length - 2 * mean_length)
+#   ) {
+#     # make the last three short
+#     return_data[, plot_length := c(
+#       rep(mean_length, num_comp_plots - 2),
+#       rep((2 * mean_length + remainder) / 3, 3)
+#     )]
+#   } else if (
+#     num_comp_plots >= 2
+#   ) {
+#     # make the 2nd and 3rd last longer
+#     return_data <- return_data[, plot_length := c(
+#       rep(mean_length, num_comp_plots - 2),
+#       rep((2 * mean_length + remainder) / 2, 2),
+#       NA
+#     )] %>%
+#       .[!is.na(plot_length), ]
+#   } else {
+#     # only 1 complete plot
+#     return_data <- return_data[, plot_length := mean_length + remainder] %>%
+#       .[1, ]
+#   }
+
+#   return(return_data)
+# }
 
 #++++++++++++++++++++++++++++++++++++
 #+ Create plots in a strip
@@ -444,9 +495,9 @@ prepare_ablines <- function(ab_line, field, plot_width) {
   ))
 }
 
-#*+++++++++++++++++++++++++++++++++++
+#* +++++++++++++++++++++++++++++++++++
 #* Make harvester (yield) polygons based on harvester ab-line
-#*+++++++++++++++++++++++++++++++++++
+#* +++++++++++++++++++++++++++++++++++
 make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
   base_ab_lines_data <-
     prepare_ablines(

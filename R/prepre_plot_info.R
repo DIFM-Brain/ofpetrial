@@ -14,7 +14,7 @@
 #' @param side_length (numeric) A numeric number in meter that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
 #' @param max_plot_width (numeric) Maximum width of the plots in meter. Default is 36.576 meter (120 feet).
 #' @param min_plot_length (numeric) Minimum length of the plots in meter. Default is 73.152 meter (240 feet).
-#' @param max_plot_length (numeric) Maximum length of the plots in meter. Default is 79.248 meter (260 feet).
+#' @param max_plot_length (numeric) Maximum length of the plots in meter. Default is 91.44 meter (300 feet).
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
@@ -35,7 +35,7 @@ prep_plot_md <- function(input_name,
                          side_length = NA,
                          max_plot_width = measurements::conv_unit(120, "ft", "m"), # 36.4576 meter
                          min_plot_length = measurements::conv_unit(240, "ft", "m"), # 73.152 feet
-                         max_plot_length = measurements::conv_unit(260, "ft", "m") # 79.248 meter
+                         max_plot_length = measurements::conv_unit(300, "ft", "m") # 79.248 meter
 ) {
 
   #--- dimension check ---#
@@ -154,7 +154,7 @@ prep_plot_md <- function(input_name,
 #' @param side_length (numeric) A numeric number in feet that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
 #' @param max_plot_width (numeric) Maximum width of the plots in feet. Default is (36.576 meter).
 #' @param min_plot_length (numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).
-#' @param max_plot_length (numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).
+#' @param max_plot_length (numeric) Maximum length of the plots in feet. Default is 300 feet (91.44 meter).
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
@@ -173,9 +173,9 @@ prep_plot_fd <- function(input_name,
                          plot_width = c(NA, NA),
                          headland_length = NA,
                          side_length = NA,
-                         max_plot_width = 120, # 120 feet
-                         min_plot_length = 240, # 240 feet
-                         max_plot_length = 260 # 260 feet
+                         max_plot_width = 120,
+                         min_plot_length = 240,
+                         max_plot_length = 300
 ) {
 
   #--- dimension check ---#
@@ -301,7 +301,7 @@ prep_plot_fd <- function(input_name,
 #' @param side_length (numeric) A numeric number in meter that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
 #' @param max_plot_width (numeric) Maximum width of the plots in meter. Default is 36.576 meter (120 feet).
 #' @param min_plot_length (numeric) Minimum length of the plots in meter. Default is 73.152 meter (240 feet).
-#' @param max_plot_length (numeric) Maximum length of the plots in meter. Default is 79.248 meter (260 feet)
+#' @param max_plot_length (numeric) Maximum length of the plots in meter. Default is 91.440 meter (300 feet)
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
@@ -322,7 +322,7 @@ prep_plot_ms <- function(input_name,
                          side_length = NA,
                          max_plot_width = measurements::conv_unit(120, "ft", "m"), # 36.4576 meter
                          min_plot_length = measurements::conv_unit(240, "ft", "m"), # 73.152 feet
-                         max_plot_length = measurements::conv_unit(260, "ft", "m") # 79.248 meter
+                         max_plot_length = measurements::conv_unit(300, "ft", "m") # 91.440 meter
 ) {
 
   #--- dimension check ---#
@@ -412,7 +412,7 @@ prep_plot_ms <- function(input_name,
 #' @param side_length (numeric) A numeric number in feet that indicates the length of the two sides of the field (how long the non-experimental space is in the direction perpendicular to the direction of machines). Default is NA.
 #' @param max_plot_width (numeric) Maximum width of the plots in feet. Default is (36.576 meter).
 #' @param min_plot_length (numeric) Minimum length of the plots in feet. Default is 240 feet (73.152 meter).
-#' @param max_plot_length (numeric) Maximum length of the plots in feet. Default is 260 feet (79.248 meter).
+#' @param max_plot_length (numeric) Maximum length of the plots in feet. Default is 300 feet (91.440 meter).
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
 #' @export
@@ -433,7 +433,7 @@ prep_plot_fs <- function(input_name,
                          side_length = NA,
                          max_plot_width = 120, # 120 feet
                          min_plot_length = 240, # 240 feet
-                         max_plot_length = 260 # 260 feet
+                         max_plot_length = 300 # 300 feet
 ) {
 
   #--- dimension check ---#

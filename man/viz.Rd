@@ -28,4 +28,5 @@ Create plots of experiment rates, plot layout, plot_id, strip_id, and block_id, 
 data(td_two_input)
 viz(td_two_input)
 viz(td_two_input, type = "ab_line")
+
 }

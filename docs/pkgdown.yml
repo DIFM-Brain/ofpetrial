@@ -1,4 +1,4 @@
-pandoc: 2.19.1
+pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -7,5 +7,5 @@ articles:
   V3-change-rates-manually: V3-change-rates-manually.html
   V4-diagnose-td: V4-diagnose-td.html
   V5-understanding-structure: V5-understanding-structure.html
-last_built: 2023-07-14T01:32Z
+last_built: 2023-07-14T23:32Z
 
