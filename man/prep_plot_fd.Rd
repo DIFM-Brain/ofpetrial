@@ -48,7 +48,7 @@ Prepare plot information for a two-input experiment case. All the length values 
 input_name <- c("seed", "NH3")
 machine_width <- c(12, 9)
 section_num <- c(12, 1)
-plot_width <- c(9.5, 36)
+plot_width <- c(12, 36)
 harvester_width <- 12
 prep_plot_fd(input_name, machine_width, section_num, harvester_width, plot_width)
 

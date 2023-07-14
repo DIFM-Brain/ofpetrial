@@ -14,25 +14,31 @@
 #' check_ortho_inputs(td_two_input)
 check_ortho_inputs <- function(td) {
   if (nrow(td) > 1) {
-    td_1 <- td$trial_design[[1]]
-    td_2 <- td$trial_design[[2]]
+    message("Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.")
+    td_1 <- td$trial_design[[1]] %>% dplyr::filter(type == "experiment")
+    td_2 <- td$trial_design[[2]] %>% dplyr::filter(type == "experiment")
 
     td_1_area <- mean(sf::st_area(td_1))
     td_2_area <- mean(sf::st_area(td_2))
 
     suppressWarnings(
-      if (td_1_area < td_2_area) {
-        cor_input <-
-          dplyr::mutate(td_1, rate_2 = stats::aggregate(td_2, td_1, mean)$rate) %>%
-          data.table() %>%
-          .[, stats::cor(rate, rate_2)]
-      } else {
-        cor_input <-
-          dplyr::mutate(td_2, rate_2 = stats::aggregate(td_1, td_2, mean)$rate) %>%
-          data.table() %>%
-          .[, stats::cor(rate, rate_2)]
-      }
+      interesected_data <-
+        sf::st_intersection(td_1, td_2) %>%
+        dplyr::mutate(area = st_area(geometry) %>% as.numeric()) %>%
+        dplyr::select(rate, rate.1, area) %>%
+        sf::st_drop_geometry()
     )
+
+    cor_input <-
+      cov.wt(
+        interesected_data[, c("rate", "rate.1")],
+        wt = interesected_data[, "area"],
+        cor = TRUE
+      ) %>%
+      .$cor %>%
+      .[1, 2]
+  } else {
+    message("This is not a two-input experiment. You do not have to worry about high correlation between the two inputs here.")
   }
 
   return(cor_input)
@@ -48,18 +54,37 @@ check_ortho_inputs <- function(td) {
 #' @import data.table
 #' @export
 #' @examples
+#' #--- load trial design ---#
+#' data(td_single_input)
+#'
 #' #--- check the alignment of harvester and applicator/planter ---#
-#' machine_alignment <- check_alignment(td)
+#' machine_alignment <- check_alignment(td_single_input)
 #'
 #' #--- check the degree of mixed treatment problem ---#
 #' machine_alignment$overlap_data
 #'
 #' #--- visualize the degree of mixed treatment problem ---#
-#' machine_alignment$g_overlap[[2]]
+#' machine_alignment$g_overlap[[1]]
 check_alignment <- function(td) {
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Debug helper
+  #++++++++++++++++++++++++++++++++++++
+  # data(td_single_input)
+  # td <- td_single_input
+  # input_name <-  td$input_name[[1]]
+  # exp_plots <-  td$exp_plots[[1]]
+  # harvester_width <-  td$harvester_width[[1]]
+  # harvest_ab_lines <-  td$harvest_ab_lines[[1]]
+  # field_sf <-  td$field_sf[[1]]
+  # harvester_path <- checks$harvester_path[[1]]
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Main
+  #++++++++++++++++++++++++++++++++++++
   checks <-
     td %>%
-    dplyr::select(input_name, trial_design, harvester_width, harvest_ab_lines, field_sf) %>%
+    dplyr::select(input_name, exp_plots, harvester_width, harvest_ab_lines, field_sf) %>%
     tidyr::unnest(harvest_ab_lines) %>%
     dplyr::rename(harvest_ab_line = x) %>%
     dplyr::rowwise() %>%
@@ -67,8 +92,27 @@ check_alignment <- function(td) {
       make_harvest_path(harvester_width, harvest_ab_line, field_sf) %>%
         dplyr::mutate(ha_area = as.numeric(st_area(geometry)))
     )) %>%
+    dplyr::mutate(g_path_alignment = list(
+      ggplot() +
+        geom_sf(
+          data = harvester_path,
+          aes(color = "Harvester"),
+          fill = NA,
+          alpha = 0.3
+        ) +
+        geom_sf(
+          data = exp_plots,
+          aes(color = "Applicator/Planter"),
+          fill = NA
+        ) +
+        scale_color_manual(
+          name = "",
+          values = c("Harvester" = "red", "Applicator/Planter" = "blue")
+        ) +
+        theme_void()
+    )) %>%
     dplyr::mutate(overlap_data = list(
-      st_intersection_quietly(harvester_path, st_transform_utm(trial_design)) %>%
+      st_intersection_quietly(harvester_path, st_transform_utm(exp_plots)) %>%
         .$result %>%
         dplyr::mutate(area = as.numeric(st_area(geometry))) %>%
         data.table() %>%
@@ -82,10 +126,10 @@ check_alignment <- function(td) {
         .[, dominant_pct := area / total_intersecting_ha_area] %>%
         .[order(ha_strip_id), ]
     )) %>%
-    dplyr::select(input_name, harvest_ab_line, overlap_data, harvester_path) %>%
+    dplyr::select(input_name, harvest_ab_line, overlap_data, harvester_path, g_path_alignment) %>%
     dplyr::mutate(g_overlap = list(
       ggplot(overlap_data) +
-        geom_histogram(aes(x = dominant_pct)) +
+        geom_histogram(aes(x = dominant_pct * 100)) +
         xlim(0, NA) +
         theme_bw() +
         xlab("Percentage of the strip area occupied by a single rate") +
@@ -121,8 +165,8 @@ check_alignment <- function(td) {
 #' checks <-
 #'   check_ortho_with_chars(
 #'     td = td_single_input,
-#'     sp_data_list = list(yield_sf, ssurgo_sf, temp),
-#'     vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(temp))
+#'     sp_data_list = list(yield_sf, ssurgo_sf, topo_rast),
+#'     vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(topo_rast))
 #'   )
 #'
 #' checks$summary_data[[1]]

@@ -10,10 +10,396 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.height = 6
 )
 ```
 
 ```{r setup}
+#--- pacakges ---#
 library(ofpetrial)
+library(terra)
+library(ggplot2)
+
+#--- file names ---#
+boundary_file <- system.file("extdata", "boundary-simple1.shp", package = "ofpetrial")
+abline_file <- system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial")
 ```
+
+## Check the alignment of the harvester and applicator/planter 
+
+It is ideal for each of the yield data points to be associated with a single input rate. However, this cannot be achieved sometimes because the width of a machine is not a multiple of that of the other machines. In such a case, you will have a mixed treatment problem where some data points are associated with more than one input rates. The `check_alignment()` function checks the alignment of harvester and applicator/planter to quantify and visualize the degree of mixed treatment problems of a trial design.
+
+Let's first create experiment plots where plot width is specified as 90 feet, which is twice as wide as the applicator of the nitrogen fertilizer and three times as wide as the harvesters.
+
+```{r}
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 45,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 90
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = boundary_file,
+    abline_data = abline_file,
+    abline_type = "free"
+  )
+```
+
+Running `check_alignment()` to `exp_data`,
+
+```{r}
+(
+  machine_alignment_check <- check_alignment(exp_data)
+)
+```
+
+One of the elements of the resulting output is `g_path_alignment`, which is a `ggplot` figure of the path of the harvester (red) and applicator (blue).
+
+```{r}
+machine_alignment_check$g_path_alignment
+```
+
+As you can see, three yield paths fit perfectly in a single applicator path. That is, there is not mixed treatment problme in this layout of experiment plots. The `g_overlap` element is a `ggplot` figure of the histogram of the highest percentage of the harvester strip area occupied by a single rate. In this trial design, since all the strips have only a single input rate, all 45 strips have value of 100%.
+
+```{r}
+machine_alignment_check$g_overlap
+```
+
+Now, let's make the plot width 45 feet.
+
+```{r}
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 45,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 45
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = boundary_file,
+    abline_data = abline_file,
+    abline_type = "free"
+  )
+
+#--- check alignment ---#
+machine_alignment_check <- check_alignment(exp_data)
+```
+
+As you can see below, every three harvester paths is associated with two input rates. 
+
+```{r}
+machine_alignment_check$g_path_alignment
+```
+
+This can be confirmed with the following figure, which shows that a third of harvester strips have 50% mix. 
+
+```{r}
+machine_alignment_check$g_overlap
+```
+
+If you see this kind of problem, reconsider changing the plot width, unless it is not avoidable. If you are not sure what the right plot width is, it might be advisable to leave `plot_width` unspecified (`plot_width = NA`) in a `prep_plot_*()` function, in which case, the package will automally suggest an appropriate (may not be optimal) plot width.
+
+## Check the correlation of the input rates for a two-input experiment
+
+Suppose you are running a two-input experiment. High correlation between the two input rates should be avoided as it will hurt statistical efficiency, rendering the estimation of the individual impact of the two inputs inaccurate. The available pre-made trial design options the `ofpetrial` packge are designed to avoid this problem. However, when you assign rates yourself using the `rank_seq_ws` and `rank_seq_as` options for the `ls` design type, you may accidentally create trial design where the two input rates are highly correlated. Here is an example.
+
+We first create experiment plots. Note that the `plot_width` of both inputs are the same.
+
+```{r}
+seed_plot_info <-
+  prep_plot_fs(
+    input_name = "seed",
+    machine_width = 60,
+    section_num = 24,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = list(seed_plot_info, n_plot_info),
+    boundary_data = boundary_file,
+    abline_data = abline_file,
+    abline_type = "free"
+  )
+```
+
+Now, we assign rates for both inputs using the same `rank_seq_ws` and `rank_seq_as`. 
+
+```{r}
+seed_rate_info <-
+  prep_rates_s(
+    plot_info = seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
+    min_rate = 16000,
+    max_rate = 40000,
+    num_rates = 5,
+    design_type = "ls",
+    rank_seq_ws = c(5, 4, 3, 2, 1),
+    rank_seq_as = c(5, 1, 4, 2, 3)
+  )
+
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+    rank_seq_ws = c(5, 4, 3, 2, 1),
+    rank_seq_as = c(5, 1, 4, 2, 3)
+  )
+
+td_two_input <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+```
+
+Here is the visualization of the assigned rates for both inputs. It is easy to see that both input have exactly the same pattern because of the same `rank_seq_ws` and `plot_width`.
+
+```{r}
+viz(td_two_input, abline = FALSE)
+```
+
+You can check the correlation of the two inputs using `check_ortho_inputs()` like this.
+
+```{r}
+check_ortho_inputs(td_two_input)
+```
+
+As you can see, they are extremely highly correlated. When you see this, you should reassign rates for one of the inputs.
+
+Now, let's change the width of the plots for NH3 to 60 feet, which is twice as wide as that for seed. We then use the same rate information to assign rates to the new experiment plots.
+
+```{r}
+#++++++++++++++++++++++++++++++++++++
+#+ change the plot width for NH3
+#++++++++++++++++++++++++++++++++++++
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 60,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 60
+  )
+
+#++++++++++++++++++++++++++++++++++++
+#+ Recreate experient plots for NH3
+#++++++++++++++++++++++++++++++++++++
+exp_data <-
+  make_exp_plots(
+    input_plot_info = list(seed_plot_info, n_plot_info),
+    boundary_data = boundary_file,
+    abline_data = abline_file,
+    abline_type = "free"
+  )
+
+#++++++++++++++++++++++++++++++++++++
+#+ Assign rates again with the same rate information
+#++++++++++++++++++++++++++++++++++++
+td_two_input_2 <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+```
+
+```{r}
+viz(td_two_input_2, abline = FALSE)
+```
+
+Now, there are two plots of different rates of seed in a single plot of NH3. Consequently, their correlation is very low now. 
+
+```{r}
+check_ortho_inputs(td_two_input_2)
+```
+
+---
+
+Now, let's think about a case where the randomized block design is used for both inputs^[we do not recommend using the randomized block design. see add citation.] We are using the same plot width for both inputs just like the first case.
+
+
+```{r}
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = list(seed_plot_info, n_plot_info),
+    boundary_data = boundary_file,
+    abline_data = abline_file,
+    abline_type = "free"
+  )
+```
+
+Now, we assign rates for both inputs using the randomized block design (`rb`). Since rates are randomly assigned by block for both inputs, some cases introduce a higher correlation than others. 
+
+```{r}
+seed_rate_info <-
+  prep_rates_s(
+    plot_info = seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
+    min_rate = 16000,
+    max_rate = 40000,
+    num_rates = 5,
+    design_type = "rb"
+  )
+
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "rb"
+  )
+```
+
+```{r, include = FALSE}
+#--- case 1 ---#
+set.seed(543)
+td_two_input_rb_1 <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+cor_case_1 <- check_ortho_inputs(td_two_input_rb_1)
+
+#--- case 2 ---#
+set.seed(383543)
+td_two_input_rb_2 <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+cor_case_2 <- check_ortho_inputs(td_two_input_rb_2)
+```
+
+The first case has a correlation of `r cor_case_1`, while the second case is `r cor_case_2`.
+
+```{r, eval = F}
+#--- case 1 ---#
+set.seed(543)
+td_two_input_rb_1 <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+cor_case_1 <- check_ortho_inputs(td_two_input_rb_1)
+```
+
+```{r}
+cor_case_1
+```
+
+```{r, eval = F}
+#--- case 2 ---#
+set.seed(383543)
+td_two_input_rb_2 <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+cor_case_2 <- check_ortho_inputs(td_two_input_rb_2)
+```
+
+```{r}
+cor_case_2
+```
+
+## Check the correlation of the input rates with observed field/topographic characteristics
+
+When analyzing the experiment data and applying statistical methods to estimate yield response functions, field and topographic characteristics are often included in the model to control for their effects, which help isolate the impact of the input on yield. In designing experiments, it would be nice to have the input rates uncorrelated (orthogonal to) with those observed characteristics. The `check_ortho_with_chars()` checks this.
+
+Let's first import an already-design trial design called `td_single_input`.
+```{r}
+data(td_single_input)
+```
+
+Here is the visualization of the trial desing.
+
+```{r}
+viz(td_single_input, abline = FALSE)
+```
+
+Here, we have three sets of spatial data we want to check.
+
++ Past yield data (`Yld_Vol_Dr`) from the same field (points data)
++ SSURGO data (polygons data)
+  + clay content (`clay`)
+  + soil category (`mukey`)
++ Slope (`slope`) of the field (raster data)
++ Topographic Wetness Index (`twi`) of the field (raster data)
+
+---
+
+**Yield data** 
+
+```{r}
+yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
+
+ggplot(yield_sf) +
+  geom_sf(aes(color = Yld_Vol_Dr)) +
+  scale_color_viridis_c() +
+  theme_void()
+```
+
+---
+
+**SSURGO** 
+
+```{r}
+ssurgo_sf <-
+  sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %>%
+  dplyr::mutate(mukey = factor(mukey))
+
+ggplot(ssurgo_sf) +
+  geom_sf(aes(fill = mukey)) +
+  theme_void()
+
+ggplot(ssurgo_sf) +
+  geom_sf(aes(fill = clay)) +
+  scale_fill_viridis_c() +
+  theme_void()
+```
+
+---
+
+**Slope and TWI**
+
+```{r}
+topo_rast <-
+  c(
+    terra::rast(system.file("extdata", "slope.tif", package = "ofpetrial")),
+    terra::rast(system.file("extdata", "twi.tif", package = "ofpetrial"))
+  )
+
+plot(topo_rast)
+```
+
+---
+
+```{r}
+checks <-
+  check_ortho_with_chars(
+    td = td_single_input,
+    sp_data_list = list(yield_sf, ssurgo_sf, topo_rast),
+    vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(topo_rast))
+  )
+```
+
+```{r}
+checks$summary_data[[1]]
+```
+
+```{r}
+checks$summary_fig[[1]]
+```
+

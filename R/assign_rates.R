@@ -1,6 +1,6 @@
 #' Assign rates to the plots of experimental plots
 #'
-#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single(). 
+#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single().
 #'
 #' @param exp_data experiment plots created by make_exp_plots()
 #' @param rate_info rate information created by prep_rates_single()
@@ -11,15 +11,15 @@
 #' #--- load experiment plots made by make_exp_plots() ---#
 #' data(exp_data)
 #' exp_data
-#' 
+#'
 #' #--- load rate information ---#
 #' data(rate_info)
 #' rate_info
-#' 
+#'
 #' #--- assign rates ---#
 #' td <- assign_rates(exp_data, rate_info)
-#'  
-#' #--- visualization of the assigned rates ---# 
+#'
+#' #--- visualization of the assigned rates ---#
 #' viz(td)
 assign_rates <- function(exp_data, rate_info) {
   if ("data.frame" %in% class(rate_info)) {
@@ -97,7 +97,7 @@ assign_rates <- function(exp_data, rate_info) {
       }
     )) %>%
     dplyr::select(
-      input_name, input_type, trial_design, design_type, unit, abline_type, ab_lines, harvest_ab_lines, field_sf, harvester_width
+      input_name, input_type, exp_plots, trial_design, design_type, unit, abline_type, ab_lines, harvest_ab_lines, field_sf, harvester_width
     ) %>%
     dplyr::ungroup()
 
@@ -145,7 +145,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       ) %>%
       .[1:(max_strip_id + 1)]
 
-    if (push) {
+    if (push & is.null(rank_seq_as)) {
       full_start_seq <- full_start_seq[2:(max_strip_id + 1)]
     } else {
       full_start_seq <- full_start_seq[1:max_strip_id]
@@ -187,6 +187,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
         'Note: rank_seq_as is ignored when design_type = "rb"'
       )
     }
+
     return_data <-
       exp_sf %>%
       data.table::data.table() %>%
@@ -464,10 +465,15 @@ get_rank_for_rb <- function(num_rates, data) {
   n_plot <- nrow(data)
   n_comp_block <- n_plot %/% num_rates
   n_plots_remaining <- n_plot %% num_rates
-  rate_rank_ls <-
-    c(
-      c(replicate(n_comp_block, sample(1:num_rates, num_rates, replace = FALSE))),
-      sample(1:num_rates, n_plots_remaining, replace = FALSE)
-    )
+  if (n_comp_block > 0) {
+    rate_rank_ls <-
+      c(
+        c(replicate(n_comp_block, sample(1:num_rates, num_rates, replace = FALSE))),
+        sample(1:num_rates, n_plots_remaining, replace = FALSE)
+      )
+  } else {
+    rate_rank_ls <- sample(1:num_rates, n_plots_remaining, replace = FALSE)
+  }
+
   return(rate_rank_ls)
 }

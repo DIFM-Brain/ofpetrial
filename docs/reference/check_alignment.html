@@ -49,6 +49,9 @@
     <li>
       <a href="../articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
+    <li>
+      <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -90,17 +93,140 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- check the alignment of harvester and applicator/planter ---#</span></span></span>
-<span class="r-in"><span><span class="va">machine_alignment</span> <span class="op">&lt;-</span> <span class="fu">check_alignment</span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::select(., input_name, trial_design, harvester_width, harvest_ab_lines,     field_sf):</span> object 'td' not found</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- load trial design ---#</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#--- check the alignment of harvester and applicator/planter ---#</span></span></span>
+<span class="r-in"><span><span class="va">machine_alignment</span> <span class="op">&lt;-</span> <span class="fu">check_alignment</span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- check the degree of mixed treatment problem ---#</span></span></span>
 <span class="r-in"><span><span class="va">machine_alignment</span><span class="op">$</span><span class="va">overlap_data</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'machine_alignment' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ha_strip_id strip_id     area  ha_area total_intersecting_ha_area</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:           7        1 4532.308 4867.192                   4532.308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:           8        1 4532.308 4867.222                   4532.308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:           9        1 4532.308 4867.253                   4532.308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:          10        2 4532.399 4867.284                   4532.399</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:          11        2 4532.399 4867.314                   4532.399</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:          12        2 4532.399 4867.345                   4532.399</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:          13        3 4532.491 4867.375                   4532.491</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:          14        3 4532.491 4867.406                   4532.491</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:          15        3 4532.491 4867.436                   4532.491</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:          16        4 4532.583 4867.467                   4532.583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:          17        4 4532.583 4867.497                   4532.583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:          18        4 4532.583 4867.528                   4532.583</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:          19        5 4532.674 4867.558                   4532.674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:          20        5 4532.674 4867.589                   4532.674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:          21        5 4532.674 4867.619                   4532.674</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:          22        6 4532.766 4867.650                   4532.766</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:          23        6 4532.766 4867.680                   4532.766</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:          24        6 4532.766 4867.711                   4532.766</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:          25        7 4532.857 4867.741                   4532.857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:          26        7 4532.857 4867.772                   4532.857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:          27        7 4532.857 4867.802                   4532.857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:          28        8 4533.664 4867.833                   4533.664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:          29        8 4533.664 4868.389                   4533.664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:          30        8 4533.664 4870.038                   4533.664</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:          31        9 4540.821 4871.851                   4540.821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:          32        9 4540.821 4876.168                   4540.821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:          33        9 4540.821 4881.447                   4540.821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28:          34       10 4556.657 4886.726                   4556.657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:          35       10 4556.657 4892.004                   4556.657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30:          36       10 4556.657 4897.279                   4556.657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:          37       11 4565.770 4900.014                   4565.770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32:          38       11 4565.770 4900.577                   4565.770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:          39       11 4565.770 4901.140                   4565.770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34:          40       12 4567.460 4901.703                   4567.460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:          41       12 4567.460 4902.267                   4567.460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36:          42       12 4567.460 4902.830                   4567.460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:          43       13 4569.150 4903.393                   4569.150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38:          44       13 4569.150 4903.957                   4569.150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:          45       13 4569.150 4904.520                   4569.150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40:          46       14 4570.840 4905.083                   4570.840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:          47       14 4570.840 4905.647                   4570.840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42:          48       14 4570.840 4906.210                   4570.840</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:          49       15 4572.530 4906.773                   4572.530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44:          50       15 4572.530 4907.336                   4572.530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:          51       15 4572.530 4907.900                   4572.530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46:          52       16 4574.220 4908.463                   4574.220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47:          53       16 4574.220 4909.026                   4574.220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48:          54       16 4574.220 4909.590                   4574.220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49:          55       17 4575.910 4910.153                   4575.910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50:          56       17 4575.910 4910.716                   4575.910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51:          57       17 4575.910 4911.279                   4575.910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52:          58       18 4577.599 4911.843                   4577.599</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53:          59       18 4577.599 4912.406                   4577.599</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54:          60       18 4577.599 4912.969                   4577.599</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55:          61       19 4579.289 4913.533                   4579.289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56:          62       19 4579.289 4914.096                   4579.289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57:          63       19 4579.289 4914.659                   4579.289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ha_strip_id strip_id     area  ha_area total_intersecting_ha_area</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     intersecting_pct dominant_pct</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1:        0.9311956            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  2:        0.9311898            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  3:        0.9311839            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4:        0.9311969            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5:        0.9311911            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  6:        0.9311852            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  7:        0.9311982            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  8:        0.9311924            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9:        0.9311865            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10:        0.9311995            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11:        0.9311937            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12:        0.9311878            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13:        0.9312008            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14:        0.9311950            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15:        0.9311891            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16:        0.9312021            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17:        0.9311963            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18:        0.9311904            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19:        0.9312034            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20:        0.9311975            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21:        0.9311917            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22:        0.9313516            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23:        0.9312452            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24:        0.9309298            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25:        0.9320525            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26:        0.9312274            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27:        0.9302203            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28:        0.9324562            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29:        0.9314500            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30:        0.9304467            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31:        0.9317873            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32:        0.9316802            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33:        0.9315731            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34:        0.9318108            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35:        0.9317037            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36:        0.9315967            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37:        0.9318343            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38:        0.9317272            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39:        0.9316202            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40:        0.9318578            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41:        0.9317508            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42:        0.9316438            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43:        0.9318812            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44:        0.9317743            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45:        0.9316673            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46:        0.9319047            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47:        0.9317977            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48:        0.9316908            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49:        0.9319281            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50:        0.9318212            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51:        0.9317143            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52:        0.9319515            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53:        0.9318447            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54:        0.9317378            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55:        0.9319749            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56:        0.9318681            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57:        0.9317613            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     intersecting_pct dominant_pct</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- visualize the degree of mixed treatment problem ---#</span></span></span>
-<span class="r-in"><span><span class="va">machine_alignment</span><span class="op">$</span><span class="va">g_overlap</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'machine_alignment' not found</span>
+<span class="r-in"><span><span class="va">machine_alignment</span><span class="op">$</span><span class="va">g_overlap</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (`geom_bar()`).</span>
+<span class="r-plt img"><img src="check_alignment-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </div>

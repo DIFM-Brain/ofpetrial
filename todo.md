@@ -9,7 +9,7 @@
 + [ ] available form options in the website 
 + [x] cut off ab-lines outside of the field boundary with a bit of buffer around the field
 + [x] make harvest ab-line (Taro)
-+ [ ] let them specify the full sequence (everything is a special case of this except randomized ones) (Taro)
++ [x] let them specify the full sequence (everything is a special case of this except randomized ones) (Taro)
 + [ ] base_rate, conversion, dictionary (Brittani)
 + [ ] rate option (original unit, or equivalent) (Brittani)
 + [ ] check examples
@@ -19,20 +19,23 @@
 + [ ] what is stratification by MSU?
 + [ ] explain parameters well in the prep functions
 + [ ] use past trial design plots and change according to the past trial rates
-+ [ ] add harvester abline in writing files
++ [x] add harvester abline in writing files
 + [ ] add explanations of how sequencing work in rate assignment
++ [x] visualize with focus on ab-line
++ [x] transform utm of ab-lines and harvest ab-lines when writing
++ [x] check plot width is the multiple of machine width
 
 
 # Problems
 
-1. when field is not straight and plot widths are different, rates transitions do not align well
-2. harvester ab-line for two-input case
-3. what is the white space around the experiment part of the field in readme?
++ [ ] when field is not straight and plot widths are different, rates transitions do not align well
++ [x] harvester ab-line for two-input case
++ [x] what is the white space around the experiment part of the field in readme?
 
 # Vignette
 
 + full demo
-+ ab-line options
++ [ ] ab-line options
   -  input: as-applied shape file, ab-line file, or angle
   -  lock, free, none 
 +[x] trial design options

@@ -34,8 +34,8 @@ topo_rast <-
 checks <-
   check_ortho_with_chars(
     td = td_single_input,
-    sp_data_list = list(yield_sf, ssurgo_sf, temp),
-    vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(temp))
+    sp_data_list = list(yield_sf, ssurgo_sf, topo_rast),
+    vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(topo_rast))
   )
 
 checks$summary_data[[1]]

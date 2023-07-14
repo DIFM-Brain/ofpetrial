@@ -12,6 +12,8 @@ write_trial_files(td, folder_path = NA, zip = FALSE, zip_name = NA)
 \item{folder_path}{(character) path to the folder in which the files will be saved}
 
 \item{zip}{(logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.}
+
+\item{zip_name}{(character) name of the zip file created when zip = TRUE.}
 }
 \value{
 nothing

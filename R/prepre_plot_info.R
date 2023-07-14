@@ -22,7 +22,7 @@
 #' input_name <- c("seed", "NH3")
 #' machine_width <- c(12, 9)
 #' section_num <- c(12, 1)
-#' plot_width <- c(9.5, 36)
+#' plot_width <- c(12, 36)
 #' harvester_width <- 12
 #' prep_plot_md(input_name, machine_width, section_num, harvester_width, plot_width)
 #'
@@ -66,6 +66,14 @@ prep_plot_md <- function(input_name,
     ) %>%
     dplyr::mutate(plot_width = ifelse(is.na(plot_width), proposed_plot_width, plot_width))
 
+  for (i in 1:nrow(plot_data)) {
+    temp <- plot_data[i, ]
+      if ((temp$plot_width %% temp$section_width) != 0) {
+        stop(paste0(
+          "Plot width provided is not a multiple of the machine (section) width for ", temp$input_name,".\n"
+        ))
+     }
+  }
 
   #++++++++++++++++++++++++++++++++++++
   #+ Check and notify the mixed treatment problems (with potential suggestions)
@@ -154,7 +162,7 @@ prep_plot_md <- function(input_name,
 #' input_name <- c("seed", "NH3")
 #' machine_width <- c(12, 9)
 #' section_num <- c(12, 1)
-#' plot_width <- c(9.5, 36)
+#' plot_width <- c(12, 36)
 #' harvester_width <- 12
 #' prep_plot_fd(input_name, machine_width, section_num, harvester_width, plot_width)
 #'
@@ -197,7 +205,15 @@ prep_plot_fd <- function(input_name,
         find_plotwidth(section_width, harvester_width, max_plot_width)
     ) %>%
     dplyr::mutate(plot_width = ifelse(is.na(plot_width), proposed_plot_width, plot_width))
-
+  
+  for (i in 1:nrow(plot_data)) {
+    temp <- plot_data[i, ]
+      if ((temp$plot_width %% temp$section_width) != 0) {
+        stop(paste0(
+          "Plot width provided is not a multiple of the machine (section) width for ", temp$input_name,".\n"
+        ))
+     }
+  }
 
   #++++++++++++++++++++++++++++++++++++
   #+ Check and notify the mixed treatment problems (with potential suggestions)
@@ -326,6 +342,9 @@ prep_plot_ms <- function(input_name,
   if (is.na(plot_width)) {
     plot_width <- proposed_plot_width
   } else {
+    if (plot_width %% section_width != 0) {
+      stop("Plot width provided is not a multiple of the machine (section) width.")
+    }
     warning_message <- NULL
     if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
       warning_message <-
@@ -434,6 +453,10 @@ prep_plot_fs <- function(input_name,
   if (is.na(plot_width)) {
     plot_width <- proposed_plot_width
   } else {
+    if (plot_width %% section_width != 0) {
+      stop("Plot width provided is not a multiple of the machine (section) width.")
+    }
+
     warning_message <- NULL
     if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
       warning_message <-

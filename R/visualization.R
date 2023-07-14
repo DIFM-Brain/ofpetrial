@@ -2,21 +2,42 @@
 #' Visualize various aspects of a trial design
 #'
 #' Create plots of experiment rates, plot layout, plot_id, strip_id, and block_id, which can be specified by the `type` argument.
-#' 
+#'
 #' @param td (tibble) experiment plots made by make_exp_plots()
-#' @param type (character) type of plots to create. Available options are "rates", "layout", "plot_id", "strip_id", and "block_id"
+#' @param type (character) type of plots to create. Available options are "rates", "layout", "plot_id", "strip_id", "block_id", "ab_line"
 #' @param input_index (numeric) a vector of length 1 or 2. 1 means the 1st input of the td, 2 means the second input of the td, and c(1, 2) means both of the inputs, which is the DEFAULT
 #' @param text_size (numeric) the size of plot ID, strip ID, and block ID numbers printed in the plots
 #' @param abline (logical) If TRUE, ab-lines are displayed as well. Default = TRUE. This applies only ton type = "rates" and type = "layout".
-#' @returns plot as a ggplot object 
+#' @returns plot as a ggplot object
 #' @import ggplot2
 #' @export
+#' @examples
+#' #--- load trial design ---#
+#' data(td_two_input)
+#' viz(td_two_input)
+#' viz(td_two_input, type = "ab_line")
+
 viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE) {
   #--- select rows ---#
   if (nrow(td) == 1) {
     input_index <- 1
   }
 
+  #--- determine the stack orientation ---#
+    field_bbox <- 
+      td$field_sf[[1]] %>%
+      sf::st_bbox()
+    
+    x_length <- field_bbox["xmax"]- field_bbox["xmin"]
+    y_length <- field_bbox["ymax"]- field_bbox["ymin"]
+
+    if (x_length > y_length) {
+      stack_field_orientation <- "vertical"
+    } else {
+      stack_field_orientation <- "horizontal"
+    }
+
+  #--- prepare data to be used across different types ---#
   td_rows <-
     td[input_index, ] %>%
     dplyr::rowwise()
@@ -82,8 +103,14 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       dplyr::mutate(g_fig = list(
         if (abline == TRUE) {
           g_tr +
-            geom_sf(data = ab_lines, aes(color = "ab-line")) +
-            scale_color_manual(name = "", values = c("ab-line" = "red"))
+            geom_sf(data = ab_lines, aes(color = "applicator/planter ab-line")) +
+            geom_sf(data = harvest_ab_lines, aes(color = "harvester ab-line")) +
+            scale_color_manual(
+              name = "",
+              values = c(
+                "applicator/planter ab-line" = "red", "harvester ab-line" = "blue"
+              )
+            )
         } else {
           g_tr
         }
@@ -102,11 +129,52 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       dplyr::mutate(g_fig = list(
         if (abline == TRUE) {
           g_exp +
-            geom_sf(data = ab_lines, aes(color = "ab-line")) +
-            scale_color_manual(name = "", values = c("ab-line" = "red"))
+            geom_sf(data = ab_lines, aes(color = "applicator/planter ab-line")) +
+            geom_sf(data = harvest_ab_lines, aes(color = "harvester ab-line")) +
+            scale_color_manual(
+              name = "",
+              values = c(
+                "applicator/planter ab-line" = "red", "harvester ab-line" = "blue"
+              )
+            )
         } else {
           g_exp
         }
+      ))
+  } else if (type == "ab_line") {
+
+    #--- determine the stack orientation ---#
+    line_bbox <-
+      td_rows$ab_lines[[1]] %>%
+      sf::st_bbox()
+
+    x_length <- line_bbox["xmax"] - line_bbox["xmin"]
+    y_length <- line_bbox["ymax"] - line_bbox["ymin"]
+
+    if (x_length > y_length) {
+      stack_ab_orientation <- "vertical"
+    } else {
+      stack_ab_orientation <- "horizontal"
+    }
+
+    gg_td <-
+      td_rows %>%
+      dplyr::mutate(g_ab = list(
+        ggplot() +
+          geom_sf(data = dplyr::filter(trial_design, strip_id %in% 1:3)) +
+          geom_sf(data = ab_lines, color = "red") +
+          theme_void() +
+          ggtitle(paste0("Applicator/Planter ab-line\n", "(", input_name, ")"))
+      )) %>%
+      dplyr::mutate(g_h_ab = list(
+        ggplot() +
+          geom_sf(data = dplyr::filter(trial_design, strip_id %in% 1:3)) +
+          geom_sf(data = harvest_ab_lines, color = "blue") +
+          theme_void() +
+          ggtitle("Harvester ab-line")
+      )) %>%
+      dplyr::mutate(g_fig = list(
+        ggpubr::ggarrange(g_ab, g_h_ab, ncol = ifelse(stack_ab_orientation == "vertical", 1, 2))
       ))
   } else {
     stop("The type you specified is not one of the allowed options.")

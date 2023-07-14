@@ -37,6 +37,7 @@ usethis::use_package("tibble")
 usethis::use_package("tidyr")
 usethis::use_package("ggpubr")
 usethis::use_package("ggExtra")
+usethis::use_package("zip")
 usethis::use_pipe() # can use %>% after this
 
 #++++++++++++++++++++++++++++++++++++
@@ -49,10 +50,11 @@ usethis::use_build_ignore(c("dev_notes.md", "checklist.md", "notes.md", "organiz
 #++++++++++++++++++++++++++++++++++++
 usethis::use_readme_rmd()
 usethis::use_news_md()
-usethis::use_vignette("1-trial-design-options")
-usethis::use_vignette("2-ab-line")
-usethis::use_vignette("3-change-rates-manually")
+usethis::use_vignette("V1-trial-design-options")
+usethis::use_vignette("V2-ab-line")
+usethis::use_vignette("V3-change-rates-manually")
 usethis::use_vignette("V4-diagnose-td")
+usethis::use_vignette("V5-understanding-structure")
 
 
 usethis::use_vignette("random-vs-orthogonal")

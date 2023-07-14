@@ -16,12 +16,15 @@ a tibble
 Check the alignment of harvester and applicator/planter for mixed treatment problems where multiple input rates are associated with yield monitor data
 }
 \examples{
+#--- load trial design ---#
+data(td_single_input)
+
 #--- check the alignment of harvester and applicator/planter ---#
-machine_alignment <- check_alignment(td)
+machine_alignment <- check_alignment(td_single_input)
 
 #--- check the degree of mixed treatment problem ---#
 machine_alignment$overlap_data
 
 #--- visualize the degree of mixed treatment problem ---#
-machine_alignment$g_overlap[[2]]
+machine_alignment$g_overlap[[1]]
 }

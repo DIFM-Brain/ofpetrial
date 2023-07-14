@@ -38,7 +38,8 @@ Imports:
     tibble,
     ggpubr,
     ggExtra,
-    terra
+    terra,
+    zip
 Suggests: 
     knitr,
     rmarkdown

@@ -9,7 +9,7 @@ viz(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE)
 \arguments{
 \item{td}{(tibble) experiment plots made by make_exp_plots()}
 
-\item{type}{(character) type of plots to create. Available options are "rates", "layout", "plot_id", "strip_id", and "block_id"}
+\item{type}{(character) type of plots to create. Available options are "rates", "layout", "plot_id", "strip_id", "block_id", "ab_line"}
 
 \item{input_index}{(numeric) a vector of length 1 or 2. 1 means the 1st input of the td, 2 means the second input of the td, and c(1, 2) means both of the inputs, which is the DEFAULT}
 
@@ -22,4 +22,10 @@ plot as a ggplot object
 }
 \description{
 Create plots of experiment rates, plot layout, plot_id, strip_id, and block_id, which can be specified by the `type` argument.
+}
+\examples{
+#--- load trial design ---#
+data(td_two_input)
+viz(td_two_input)
+viz(td_two_input, type = "ab_line")
 }

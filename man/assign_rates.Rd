@@ -28,7 +28,7 @@ rate_info
 
 #--- assign rates ---#
 td <- assign_rates(exp_data, rate_info)
- 
-#--- visualization of the assigned rates ---# 
+
+#--- visualization of the assigned rates ---#
 viz(td)
 }

@@ -43,7 +43,7 @@ exp_data <-
     abline_type = "free"
   )
 
-viz(exp_data, type = "layout", abline = FALSE)
+viz(exp_data, type = "layout")
 ```
 
 # Latin Square ("ls")

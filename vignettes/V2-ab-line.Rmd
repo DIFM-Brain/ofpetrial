@@ -78,7 +78,7 @@ The sample data `as-applied-simple1.shp` is a soybean planting map from a trial 
 
 ```{r plot-yield-data}
 aa <- system.file("extdata", "as-applied-simple1.shp", package = "ofpetrial") %>%
-  sf::st_read() 
+  sf::st_read()
 plot(aa$geometry, pch = 1, cex = .1)
 ```
 
@@ -105,9 +105,9 @@ viz(exp_plots_aa, type = "layout")
 
 
 ```{r view-results-from-yield}
-      ggplot() +
-        geom_sf(data = exp_plots_aa$exp_plots[[1]], fill = NA) +
-        geom_sf(data = aa, color = "blue", size = 0.25) +
-        theme_void() 
+ggplot() +
+  geom_sf(data = exp_plots_aa$exp_plots[[1]], fill = NA) +
+  geom_sf(data = aa, color = "blue", size = 0.25) +
+  theme_void()
 ```
 

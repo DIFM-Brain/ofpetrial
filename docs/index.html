@@ -68,6 +68,9 @@
     <li>
       <a href="articles/V4-diagnose-td.html">Diagnose Trial Designs</a>
     </li>
+    <li>
+      <a href="articles/V5-understanding-structure.html">Understanding the structure of objects created by the `ofpetrial` package</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -128,20 +131,20 @@
 <span><span class="co">#&gt; 1          79.248</span></span>
 <span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="reference/prep_plot_ms.html">prep_plot_ms</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
-<span>    machine_width <span class="op">=</span> <span class="fu">measurements</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/measurements/man/conv_unit.html" class="external-link">conv_unit</a></span><span class="op">(</span><span class="fl">60</span>, <span class="st">"ft"</span>, <span class="st">"m"</span><span class="op">)</span>,</span>
+<span>    machine_width <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    harvester_width <span class="op">=</span> <span class="fu">measurements</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/measurements/man/conv_unit.html" class="external-link">conv_unit</a></span><span class="op">(</span><span class="fl">30</span>, <span class="st">"ft"</span>, <span class="st">"m"</span><span class="op">)</span>,</span>
-<span>    plot_width <span class="op">=</span> <span class="fu">measurements</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/measurements/man/conv_unit.html" class="external-link">conv_unit</a></span><span class="op">(</span><span class="fl">60</span>, <span class="st">"ft"</span>, <span class="st">"m"</span><span class="op">)</span></span>
+<span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    plot_width <span class="op">=</span> <span class="fl">45</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; For NH3, the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use 90 as the plot width.</span></span>
 <span></span>
 <span><span class="va">n_plot_info</span></span>
 <span><span class="co">#&gt;   input_name machine_width section_num section_width harvester_width</span></span>
-<span><span class="co">#&gt; 1        NH3        18.288           1        18.288           9.144</span></span>
+<span><span class="co">#&gt; 1        NH3        13.716           1        13.716           9.144</span></span>
 <span><span class="co">#&gt;   plot_width headland_length side_length min_plot_length</span></span>
-<span><span class="co">#&gt; 1     18.288          36.576      18.288          73.152</span></span>
+<span><span class="co">#&gt; 1     13.716          27.432      13.716          73.152</span></span>
 <span><span class="co">#&gt;   max_plot_length</span></span>
 <span><span class="co">#&gt; 1          79.248</span></span></code></pre></div>
 <p>Now that plot and machine specifications for the inputs are ready, we can create experiment plots based on them using <code><a href="reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
@@ -159,62 +162,62 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 351 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 365 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352997.6 ymin: 4331460 xmax: 353367.4 ymax: 4332198</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353006.7 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353008.1 4331536,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353009.5 4331613,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353010.8 4331689,...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353012.2 4331765,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353013.5 4331841,...</span></span>
-<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353014.9 4331917,...</span></span>
-<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353016.3 4331993,...</span></span>
-<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353018 4332089, 3...</span></span>
-<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353015.9 4331460,...</span></span>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352998.9 4331536,...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.3 4331612,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.7 4331688,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003 4331765, 3...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.7 4331858,...</span></span>
+<span><span class="co">#&gt; 7        1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
+<span><span class="co">#&gt; 8        2        2       1_1 POLYGON ((353008.1 4331536,...</span></span>
+<span><span class="co">#&gt; 9        3        2       1_1 POLYGON ((353009.5 4331613,...</span></span>
+<span><span class="co">#&gt; 10       4        2       1_1 POLYGON ((353010.8 4331689,...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 171 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 243 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352997.6 ymin: 4331460 xmax: 353358.3 ymax: 4332197</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353372 ymax: 4332198</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353015.9 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353017.2 4331536,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353018.6 4331613,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353020 4331689, 3...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353021.3 4331765,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353022.7 4331841,...</span></span>
-<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353024.1 4331917,...</span></span>
-<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353025.4 4331994,...</span></span>
-<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353027.1 4332089,...</span></span>
-<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353034.2 4331461,...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353002.2 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353003.5 4331536,...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353004.9 4331612,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353006.2 4331688,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353007.6 4331765,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353009 4331841, 3...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353010.3 4331917,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353011.7 4331993,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353013.4 4332089,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353015.9 4331460,...</span></span></code></pre></div>
 <p><code>exp_data$exp_plots</code> is a list and you can access the individual experiment plots (an <code>sf</code> object) like this.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 351 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 365 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352997.6 ymin: 4331460 xmax: 353367.4 ymax: 4332198</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353006.7 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353008.1 4331536,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353009.5 4331613,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353010.8 4331689,...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353012.2 4331765,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353013.5 4331841,...</span></span>
-<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353014.9 4331917,...</span></span>
-<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353016.3 4331993,...</span></span>
-<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353018 4332089, 3...</span></span>
-<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353015.9 4331460,...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352998.9 4331536,...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.3 4331612,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353001.7 4331688,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003 4331765, 3...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.7 4331858,...</span></span>
+<span><span class="co">#&gt; 7        1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
+<span><span class="co">#&gt; 8        2        2       1_1 POLYGON ((353008.1 4331536,...</span></span>
+<span><span class="co">#&gt; 9        3        2       1_1 POLYGON ((353009.5 4331613,...</span></span>
+<span><span class="co">#&gt; 10       4        2       1_1 POLYGON ((353010.8 4331689,...</span></span></code></pre></div>
 <p>We can visualize the layout of the experiment plots using <code>viz_layout()</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>

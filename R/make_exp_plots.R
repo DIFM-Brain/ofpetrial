@@ -269,16 +269,9 @@ make_exp_plots <- function(input_plot_info,
       )) %>%
       #--- make harvester ab-lines ---#
       dplyr::mutate(harvest_ab_lines = list(
-        harvest_ab_lines <- make_ablines(
-          ab_sf = ab_sf,
-          ablines_data = ablines_data,
-          base_ab_lines_data = base_ab_lines_data,
-          plot_width = plot_width,
-          machine_width = harvester_width,
-          abline_type = "free",
-          field_sf = field_sf
-        )
-      ))
+        trial_data_first$harvest_ab_lines[[1]]
+      )) %>%
+      dplyr::select(-exp_data)
 
 
     trial_data_e <- rbind(trial_data_first, trial_data_second)
@@ -335,17 +328,9 @@ make_exp_plots <- function(input_plot_info,
           field_sf = field_sf
         )
       )) %>%
-      #--- make harvester ab-lines ---#
+      #--- assign harvester ab-lines ---#
       dplyr::mutate(harvest_ab_lines = list(
-        harvest_ab_lines <- make_ablines(
-          ab_sf = ab_sf,
-          ablines_data = ablines_data,
-          base_ab_lines_data = base_ab_lines_data,
-          plot_width = plot_width,
-          machine_width = harvester_width,
-          abline_type = "free",
-          field_sf = field_sf
-        )
+        trial_data_first$harvest_ab_lines[[1]]
       ))
 
     trial_data_e <- rbind(trial_data_first, trial_data_second)
@@ -761,7 +746,8 @@ make_ablines <- function(ab_sf,
         dplyr::select(ab_id, x) %>%
         unique(by = "ab_id") %>%
         sf::st_as_sf() %>%
-        dplyr::ungroup()
+        dplyr::ungroup() %>%
+        dplyr::slice(1)
     } else {
       #--- ab-line re-centering ---#
       ab_lines <-
@@ -779,7 +765,8 @@ make_ablines <- function(ab_sf,
         purrr::pluck("ab_recentered") %>%
         purrr::reduce(c) %>%
         sf::st_as_sf() %>%
-        dplyr::mutate(ab_id = seq_len(nrow(.)))
+        dplyr::mutate(ab_id = seq_len(nrow(.))) %>%
+        dplyr::slice(1)
     }
 
     # ggplot() +

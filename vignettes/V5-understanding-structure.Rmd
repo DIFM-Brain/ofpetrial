@@ -1,0 +1,155 @@
+---
+title: "Understanding the structure of objects created by the `ofpetrial` package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{V5-understanding-structure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ofpetrial)
+```
+
+The `ofpetrial` package does not offer any package-specific object class. Rather, it uses the `tibble` (`tbl_df`, `tbl`, `data.frame`) object from the `tibble` package extensively because it is easy to handle list-columns with `tibble`. A list-columnd is just like a regular variable except it is a list. For example, take a look at the experiment plots made by `make_exp_plots()`.
+
+```{r}
+seed_plot_info <-
+  prep_plot_fs(
+    input_name = "seed",
+    machine_width = 60,
+    section_num = 24,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+n_plot_info <-
+  prep_plot_fs(
+    input_name = "NH3",
+    machine_width = 45,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 45
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = list(seed_plot_info, n_plot_info),
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+```
+
+As you can see from below, there are four list-columns: `headland`, `exp_plots`, `ab_lines`, `harvest_ab_lines`.
+
+```{r}
+dplyr::glimpse(exp_data)
+```
+
+Let's take a look at `exp_plots`. You can access them just like you access a regular variable using $ (or any other methods to pull them).
+
+```{r}
+class(exp_data$exp_plots)
+
+exp_data$exp_plots
+```
+
+As you can see, it is a list of two `sf` objects of experiment plots. Since, it is a list, you can access the `sf` itself like this.
+
+```{r}
+exp_data$exp_plots[[1]]
+```
+
+Let's now assign rates to `exp_plots` of `exp_data`.
+
+```{r}
+#--- prepare rate information ---#
+seed_rate_info <-
+  prep_rates_s(
+    plot_info = seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
+    min_rate = 16000,
+    max_rate = 40000,
+    num_rates = 5,
+    design_type = "jcls"
+  )
+
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+    rank_seq_ws = c(5, 4, 3, 2, 1)
+  )
+
+#--- assign rates ---#
+td <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+```
+
+As you can see, `td` has a very similar structure and sets of variables (e.g., `input_name` and `exp_plots` were inherited from `exp_data`). This is not surprising because we just assigned rates to the experiment plots with `assign_rates()`.
+
+```{r}
+dplyr::glimpse(td)
+```
+
+A trial design (experiment plots with rates assigned) has a name of `trial_design`, which is also a list-column.
+
+```{r}
+#--- check the class ---#
+class(td$trial_design)
+
+td$trial_design
+```
+
+Since the individual trial designs are just `sf`, you can of course wrangle them direclty if you would like to. 
+
+```{r}
+#--- get the trial design sf for the first input ---#
+(
+td_for_input_1 <- td$trial_design[[1]]
+)
+
+#--- change the rates to all 0 ---#
+(
+td_for_input_1 <- dplyr::mutate(td_for_input_1, rate = 0)
+)
+```
+
+Note that this does not alter `tiral_design` in `td` of course. So, if you want this to be reflected in `td`, you need to assign it back. A series of functions to change rates (`change_rates_by_plot`, `change_rates_by_block`, `change_rates_by_strip`) are designed to work directly work on `td` to avoid this tedious procedure. However, if you want to work directly on the trial design part, it is definitely possible. 
+
+Many other functions return a tibble with list-columns. For example, `check_alignment()` checks whether the trial design would have a mixed treatment problem.
+
+```{r}
+check <- check_alignment(exp_data)
+
+dplyr::glimpse(check)
+```
+
+As you can see, its output has four list-columns and there are three different types of objects stored in them.
+
++ `overlap_data`: list of `data.frame`s
++ `harvester_path`: list of `sf`s
++ `g_path_alignment` and `g_overlap`: list of `ggplot`s
+
+Let's access the second of `harvester_path`.
+```{r}
+check$harvester_path[[2]]
+```
+
+
+
+
+
