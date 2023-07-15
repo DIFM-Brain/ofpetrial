@@ -70,6 +70,9 @@
     <li>
       <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
+    <li>
+      <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -103,7 +106,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
-<p>Suppose you have created a trial design is made using
+<p>Suppose you have created a trial design applying
 <code><a href="../reference/assign_rates.html">assign_rates()</a></code> to experiment plots made by
 <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>, but you are not quite satisfied with it
 and would like to change rates here and there. You can easily do so
@@ -269,6 +272,27 @@ rate will be assigned to all the strips specified in
 <span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p>The <code><a href="../reference/change_rate_by_strip.html">change_rate_by_strip()</a></code> function can be useful when
+you want to “remove” some plots from the experiment. For example, take a
+look at this trial design.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_curved</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_curved</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p>Notice that there is a three-plot strip at the east end of the field.
+Suppose, you can “remove” it from experiments (there is nothing wrong
+with keeping them as part of the experiment). You can do so by assining
+the rate for the non-experimental part of field (which is 180) to the
+strip.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rate_by_strip.html">change_rate_by_strip</a></span><span class="op">(</span></span>
+<span>  <span class="va">td_curved</span>,</span>
+<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>  strip_ids <span class="op">=</span><span class="fl">31</span> ,</span>
+<span>  new_rates <span class="op">=</span> <span class="fl">180</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="by-block">By block<a class="anchor" aria-label="anchor" href="#by-block"></a>
@@ -276,12 +300,18 @@ rate will be assigned to all the strips specified in
 <p>By default, experiment plots made using <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>
 are not assigned block IDs. You can do so using
 <code><a href="../reference/add_blocks.html">add_blocks()</a></code>.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_blocks.html">add_blocks</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
-<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<p>Let’s set the rate for block of <code>block_id == 1</code> at 0.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/change_rate_by_block.html">change_rate_by_block</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, input_name <span class="op">=</span> <span class="st">"NH3"</span>, block_ids <span class="op">=</span> <span class="fl">1</span>, new_rates <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 </div>
   </div>

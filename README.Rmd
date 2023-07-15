@@ -36,11 +36,11 @@ Here, we demonstrate how to use the `ofpetrial` package to create two-input on-f
 
 ### Create experimental plots
 
-We start with specifying plot and machine information for inputs using `prep_plot_fs()`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
+We start with specifying plot and machine information for inputs using `prep_plot_f()`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
 
 ```{r}
 seed_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "seed",
     machine_width = 60,
     section_num = 24,
@@ -51,7 +51,7 @@ seed_plot_info <-
 seed_plot_info
 
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,
@@ -134,7 +134,7 @@ We can now use `assign_rates()` to assign rates to experiment plots (see [this v
 trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
 ```
 
-Here is the visualization of the trial design done by `viz_td()`.
+Here is the visualization of the trial design done by `viz`.
 
 ```{r, dpi = 600}
 viz(trial_design)
@@ -154,7 +154,7 @@ Let's check if the seed and NH3 rates has very little correlationl.
 )
 ```
 
-Great, the correlation coefficient is merely `r round(cor_inputs, digits = 2)`.
+The correlation coefficient is `r round(cor_inputs, digits = 2)`.
 
 ### Write the trial design files for implementation
 

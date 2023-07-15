@@ -27,7 +27,7 @@ library(ggplot2)
 library(dplyr)
 ```
 
-Suppose you have created a trial design is made using `assign_rates()` to experiment plots made by `make_exp_plots()`, but you are not quite satisfied with it and would like to change rates here and there. You can easily do so manually. This vignette demonstrates such operations. 
+Suppose you have created a trial design applying `assign_rates()` to experiment plots made by `make_exp_plots()`, but you are not quite satisfied with it and would like to change rates here and there. You can easily do so manually. This vignette demonstrates such operations. 
 
 # Data Preparation 
 
@@ -167,6 +167,25 @@ change_rate_by_strip(
 viz(abline = FALSE)
 ```
 
+The `change_rate_by_strip()` function can be useful when you want to "remove" some plots from the experiment. For example, take a look at this trial design.
+
+```{r}
+data(td_curved)
+viz(td_curved, abline = FALSE)
+```
+
+Notice that there is a three-plot strip at the east end of the field. Suppose, you can "remove" it from experiments (there is nothing wrong with keeping them as part of the experiment). You can do so by assining the rate for the non-experimental part of field (which is `r td_curved$gc_rate`) to the strip. 
+
+```{r}
+change_rate_by_strip(
+  td_curved,
+  input_name = "NH3",
+  strip_ids =31 ,
+  new_rates = 180
+) %>%
+viz(abline = FALSE)
+```
+
 ## By block
 
 By default, experiment plots made using `make_exp_plots()` are not assigned block IDs. You can do so using `add_blocks()`.
@@ -175,4 +194,12 @@ By default, experiment plots made using `make_exp_plots()` are not assigned bloc
 td_with_blocks <- add_blocks(td)
 
 viz(td_with_blocks, type = "block_id")
+```
+
+Let's set the rate for block of `block_id == 1` at 0.
+
+```{r}
+td_with_blocks <- change_rate_by_block(td_with_blocks, input_name = "NH3", block_ids = 1, new_rates = 0)
+
+viz(td_with_blocks)
 ```

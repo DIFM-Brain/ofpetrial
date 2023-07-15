@@ -31,6 +31,9 @@
     <loc>/articles/V5-understanding-structure.html</loc>
   </url>
   <url>
+    <loc>/articles/V6-non-regular-field.html</loc>
+  </url>
+  <url>
     <loc>/articles/ab-line.html</loc>
   </url>
   <url>
@@ -146,6 +149,9 @@
   </url>
   <url>
     <loc>/reference/rate_info.html</loc>
+  </url>
+  <url>
+    <loc>/reference/td_curved.html</loc>
   </url>
   <url>
     <loc>/reference/td_single_input.html</loc>

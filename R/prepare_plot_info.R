@@ -112,7 +112,7 @@ prep_plot_m <- function(input_name,
   return(plot_data)
 }
 
-#' Prepare plot information for a single-input experiment (feet)
+#' Prepare plot information for a single-input experiment (length in feet)
 #'
 #' Prepare plot information for a single-input experiment case. All the length values need to be specified in feet.
 #'

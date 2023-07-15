@@ -37,3 +37,4 @@ reference:
       - rate_info
       - td_single_input
       - td_two_input
+      - td_curved

@@ -1,0 +1,75 @@
+---
+title: "Non-regular fields"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{V6-non-regular-field}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 6
+)
+```
+
+```{r setup}
+library(ofpetrial)
+```
+
+# When the field is curved
+
+When the field is curved, `make_exp_plots()` makes no effort to keep the length of plots across strips the same. Rather, it will find the best plot width within [`min_plot_width`, `max_plot_width`] that makes the most use of the available space. Also, `make_exp_plots()` does not try to start strips so that the bottom line of their first plots are lined up to be stratight. Consequently, when the field is curved, experiment plots will look like this.
+
+```{r}
+n_plot_info <-
+  prep_plot_f(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-irregular1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-irregular1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+viz(exp_data, type = "layout", abline = FALSE)
+```
+
+In this kind of spatial arrangement of experiment plots, some blocks can be shaped not so rectangular. 5 by 5 blocks look like this for this field.
+
+```{r, echo = FALSE}
+n_rate_info <-
+  prep_rate(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "rb",
+  )
+
+td_rb <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+
+viz(td_rb, type = "rates", abline = FALSE)
+
+add_blocks(td_rb) %>% viz(type = "block_id")
+```
+
+
+# Field with ditches
+
+More often than not, fields have ditches (or parts where crops cannot be grown). The `make_exp_plots()` function avoids such areas automatically in creating experiment plots. 
+

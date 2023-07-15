@@ -52,6 +52,9 @@
     <li>
       <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
+    <li>
+      <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -157,10 +160,11 @@
 <span class="r-in"><span>  rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">25000</span>, <span class="fl">30000</span>, <span class="fl">35000</span>, <span class="fl">40000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name design_type gc_rate unit  rates     min_rate max_rate num_rates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> seed       <span style="color: #BB0000;">NA</span>            <span style="text-decoration: underline;">30</span>000 seeds <span style="color: #949494;">&lt;dbl [5]&gt;</span> <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>               5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: rank_seq_ws &lt;list&gt;, rank_seq_as &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name desig…¹ gc_rate unit  rates min_r…² max_r…³ num_r…⁴ rank_…⁵ rank_…⁶</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> seed       <span style="color: #BB0000;">NA</span>        <span style="text-decoration: underline;">30</span>000 seeds &lt;dbl&gt; <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>            5 <span style="color: #949494;">&lt;NULL&gt;</span>  <span style="color: #949494;">&lt;NULL&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​design_type, ²​min_rate, ³​max_rate,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​num_rates, ⁵​rank_seq_ws, ⁶​rank_seq_as</span></span>
 </code></pre></div>
     </div>
   </div>

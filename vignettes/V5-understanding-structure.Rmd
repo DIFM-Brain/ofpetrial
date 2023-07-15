@@ -16,13 +16,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(ofpetrial)
-```
+The `ofpetrial` package does not offer any package-specific object classes. Rather, it uses the `tibble` (`tbl_df`, `tbl`, `data.frame`) object from the `tibble` package extensively. 
 
-The `ofpetrial` package does not offer any package-specific object class. Rather, it uses the `tibble` (`tbl_df`, `tbl`, `data.frame`) object from the `tibble` package extensively because it is easy to handle list-columns with `tibble`. A list-columnd is just like a regular variable except it is a list. For example, take a look at the experiment plots made by `make_exp_plots()`.
+Let's first create a plot information using `prep_plot_f()`.
 
 ```{r}
+library(ofpetrial)
+
 seed_plot_info <-
   prep_plot_f(
     input_name = "seed",
@@ -32,6 +32,27 @@ seed_plot_info <-
     plot_width = 30
   )
 
+#--- check the class ---#
+class(seed_plot_info)
+
+#--- check the structure ---#
+dplyr::glimpse(seed_plot_info)
+```
+
+It can be easily mutated since it is a `tibble` (and also a `data.frame`). For example, you can change the plot width like below.
+
+```{r}
+#--- replace ---#
+seed_plot_info$plot_width <- 60
+
+#--- check ---#
+seed_plot_info$plot_width
+```
+
+Let's now create experiment plots using `make_exp_plots()` to a two-input case.
+
+```{r}
+#--- create plot information for another input ---#
 n_plot_info <-
   prep_plot_f(
     input_name = "NH3",
@@ -41,6 +62,7 @@ n_plot_info <-
     plot_width = 45
   )
 
+#--- create experiment plots ---#
 exp_data <-
   make_exp_plots(
     input_plot_info = list(seed_plot_info, n_plot_info),
@@ -48,19 +70,16 @@ exp_data <-
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
-```
 
-As you can see from below, there are four list-columns: `headland`, `exp_plots`, `ab_lines`, `harvest_ab_lines`.
-
-```{r}
+#--- glimpse ---#
 dplyr::glimpse(exp_data)
 ```
 
-Let's take a look at `exp_plots`. You can access them just like you access a regular variable using $ (or any other methods to pull them).
+As you can see from below, there are four columns of type `list`: `headland`, `exp_plots`, `ab_lines`, `harvest_ab_lines`. They are called list-columns, which are just like a regular variable except it is a list. List-columns are extremely handy when you would like to store things like vectors or `data.frame` as a cell value in a dataset (`exp_data` here). 
+
+Let's take a look at `exp_plots` variable of `exp_data`. You can access them just like you access a regular variable using $ (or any other methods to pull them).
 
 ```{r}
-class(exp_data$exp_plots)
-
 exp_data$exp_plots
 ```
 
@@ -70,7 +89,7 @@ As you can see, it is a list of two `sf` objects of experiment plots. Since, it 
 exp_data$exp_plots[[1]]
 ```
 
-Let's now assign rates to `exp_plots` of `exp_data`.
+Let's now assign rates to the experiemnt plots (`exp_plots`) in `exp_data`.
 
 ```{r}
 #--- prepare rate information ---#
@@ -128,7 +147,7 @@ td_for_input_1 <- dplyr::mutate(td_for_input_1, rate = 0)
 )
 ```
 
-Note that this does not alter `tiral_design` in `td` of course. So, if you want this to be reflected in `td`, you need to assign it back. A series of functions to change rates (`change_rates_by_plot`, `change_rates_by_block`, `change_rates_by_strip`) are designed to work directly work on `td` to avoid this tedious procedure. However, if you want to work directly on the trial design part, it is definitely possible. 
+Note that this does not alter `tiral_design` in `td`. So, if you want this to be reflected in `td`, you need to assign it back. A series of functions to change rates (`change_rates_by_plot`, `change_rates_by_block`, `change_rates_by_strip`) are designed to work directly on `td` to avoid this tedious procedure. However, if you want to work directly on the trial design part, it is definitely possible. 
 
 Many other functions return a tibble with list-columns. For example, `check_alignment()` checks whether the trial design would have a mixed treatment problem.
 

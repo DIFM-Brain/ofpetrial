@@ -70,6 +70,9 @@
     <li>
       <a href="../articles/V5-understanding-structure.html">Understanding the structure of objects</a>
     </li>
+    <li>
+      <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -99,17 +102,16 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>ofpetrial</code> package does not offer any
-package-specific object class. Rather, it uses the <code>tibble</code>
+package-specific object classes. Rather, it uses the <code>tibble</code>
 (<code>tbl_df</code>, <code>tbl</code>, <code>data.frame</code>) object
-from the <code>tibble</code> package extensively because it is easy to
-handle list-columns with <code>tibble</code>. A list-columnd is just
-like a regular variable except it is a list. For example, take a look at
-the experiment plots made by <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">seed_plot_info</span> <span class="op">&lt;-</span></span>
+from the <code>tibble</code> package extensively.</p>
+<p>Let’s first create a plot information using
+<code><a href="../reference/prep_plot_f.html">prep_plot_f()</a></code>.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">seed_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
@@ -118,6 +120,38 @@ the experiment plots made by <code><a href="../reference/make_exp_plots.html">ma
 <span>    plot_width <span class="op">=</span> <span class="fl">30</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
+<span><span class="co">#--- check the class ---#</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">seed_plot_info</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "tbl_df"     "tbl"        "data.frame"</span></span>
+<span></span>
+<span><span class="co">#--- check the structure ---#</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">seed_plot_info</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 1</span></span>
+<span><span class="co">#&gt; Columns: 10</span></span>
+<span><span class="co">#&gt; $ input_name      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed"</span></span>
+<span><span class="co">#&gt; $ machine_width   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18.288</span></span>
+<span><span class="co">#&gt; $ section_num     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 24</span></span>
+<span><span class="co">#&gt; $ section_width   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.762</span></span>
+<span><span class="co">#&gt; $ harvester_width <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144</span></span>
+<span><span class="co">#&gt; $ plot_width      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144</span></span>
+<span><span class="co">#&gt; $ headland_length <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 36.576</span></span>
+<span><span class="co">#&gt; $ side_length     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144</span></span>
+<span><span class="co">#&gt; $ min_plot_length <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 73.152</span></span>
+<span><span class="co">#&gt; $ max_plot_length <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 91.44</span></span></code></pre></div>
+<p>It can be easily mutated since it is a <code>tibble</code> (and also
+a <code>data.frame</code>). For example, you can change the plot width
+like below.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#--- replace ---#</span></span>
+<span><span class="va">seed_plot_info</span><span class="op">$</span><span class="va">plot_width</span> <span class="op">&lt;-</span> <span class="fl">60</span></span>
+<span></span>
+<span><span class="co">#--- check ---#</span></span>
+<span><span class="va">seed_plot_info</span><span class="op">$</span><span class="va">plot_width</span></span>
+<span><span class="co">#&gt; [1] 60</span></span></code></pre></div>
+<p>Let’s now create experiment plots using <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>
+to a two-input case.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">#--- create plot information for another input ---#</span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
@@ -127,98 +161,101 @@ the experiment plots made by <code><a href="../reference/make_exp_plots.html">ma
 <span>    plot_width <span class="op">=</span> <span class="fl">45</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
+<span><span class="co">#--- create experiment plots ---#</span></span>
 <span><span class="va">exp_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
 <span>    input_plot_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_plot_info</span>, <span class="va">n_plot_info</span><span class="op">)</span>,</span>
 <span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>As you can see from below, there are four list-columns:
-<code>headland</code>, <code>exp_plots</code>, <code>ab_lines</code>,
-<code>harvest_ab_lines</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="co">#--- glimpse ---#</span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 9</span></span>
 <span><span class="co">#&gt; $ input_name       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed", "NH3"</span></span>
 <span><span class="co">#&gt; $ harvester_width  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144, 9.144</span></span>
-<span><span class="co">#&gt; $ plot_width       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144, 13.716</span></span>
+<span><span class="co">#&gt; $ plot_width       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 60.000, 13.716</span></span>
 <span><span class="co">#&gt; $ field_sf         <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> MULTIPOLYGON (((352970.3 43..., MULTIPOLYGON (((35297…</span></span>
 <span><span class="co">#&gt; $ headland         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 1]&gt;], [&lt;sf[1 x 1]&gt;]</span></span>
-<span><span class="co">#&gt; $ exp_plots        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[365 x 4]&gt;], [&lt;sf[243 x 4]&gt;]</span></span>
+<span><span class="co">#&gt; $ exp_plots        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[54 x 4]&gt;], [&lt;sf[243 x 4]&gt;]</span></span>
 <span><span class="co">#&gt; $ ab_lines         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 2]&gt;], [&lt;sf[1 x 2]&gt;]</span></span>
 <span><span class="co">#&gt; $ harvest_ab_lines <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 2]&gt;], [&lt;sf[1 x 2]&gt;]</span></span>
 <span><span class="co">#&gt; $ abline_type      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "free", "free"</span></span></code></pre></div>
-<p>Let’s take a look at <code>exp_plots</code>. You can access them just
-like you access a regular variable using $ (or any other methods to pull
-them).</p>
+<p>As you can see from below, there are four columns of type
+<code>list</code>: <code>headland</code>, <code>exp_plots</code>,
+<code>ab_lines</code>, <code>harvest_ab_lines</code>. They are called
+list-columns, which are just like a regular variable except it is a
+list. List-columns are extremely handy when you would like to store
+things like vectors or <code>data.frame</code> as a cell value in a
+dataset (<code>exp_data</code> here).</p>
+<p>Let’s take a look at <code>exp_plots</code> variable of
+<code>exp_data</code>. You can access them just like you access a
+regular variable using $ (or any other methods to pull them).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "list"</span></span>
-<span></span>
-<span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span></span>
+<code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 365 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 54 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352981.3 ymin: 4331460 xmax: 353354.5 ymax: 4332197</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352999.1 4331542,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.5 4331624,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353002 4331706, 3...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003.5 4331788,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.9 4331870,...</span></span>
-<span><span class="co">#&gt; 7        1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
-<span><span class="co">#&gt; 8        2        2       1_1 POLYGON ((353008.2 4331541,...</span></span>
-<span><span class="co">#&gt; 9        3        2       1_1 POLYGON ((353009.6 4331621,...</span></span>
-<span><span class="co">#&gt; 10       4        2       1_1 POLYGON ((353011.1 4331702,...</span></span>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353041.3 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353042.8 4331541,...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353044.2 4331621,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353045.6 4331702,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353047.1 4331782,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353048.5 4331863,...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353049.9 4331943,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353051.4 4332024,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353052.8 4332105,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353101.4 4331462,...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; Simple feature collection with 243 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353372 ymax: 4332198</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352995 ymin: 4331460 xmax: 353378.6 ymax: 4332198</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353002.2 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353003.6 4331540,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353005 4331621, 3...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353006.5 4331702,...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353007.9 4331782,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353009.4 4331863,...</span></span>
-<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353010.8 4331943,...</span></span>
-<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353012.2 4332024,...</span></span>
-<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353013.7 4332104,...</span></span>
-<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353015.9 4331460,...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353008.7 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353010.2 4331541,...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353011.6 4331621,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353013.1 4331702,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353014.5 4331782,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353015.9 4331863,...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353017.4 4331943,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353018.8 4332024,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353020.3 4332105,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353022.5 4331461,...</span></span></code></pre></div>
 <p>As you can see, it is a list of two <code>sf</code> objects of
 experiment plots. Since, it is a list, you can access the
 <code>sf</code> itself like this.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 365 features and 3 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 54 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 352981.3 ymin: 4331460 xmax: 353354.5 ymax: 4332197</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    plot_id strip_id poly_line                       geometry</span></span>
-<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((352997.6 4331460,...</span></span>
-<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((352999.1 4331542,...</span></span>
-<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353000.5 4331624,...</span></span>
-<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353002 4331706, 3...</span></span>
-<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353003.5 4331788,...</span></span>
-<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353004.9 4331870,...</span></span>
-<span><span class="co">#&gt; 7        1        2       1_1 POLYGON ((353006.7 4331460,...</span></span>
-<span><span class="co">#&gt; 8        2        2       1_1 POLYGON ((353008.2 4331541,...</span></span>
-<span><span class="co">#&gt; 9        3        2       1_1 POLYGON ((353009.6 4331621,...</span></span>
-<span><span class="co">#&gt; 10       4        2       1_1 POLYGON ((353011.1 4331702,...</span></span></code></pre></div>
-<p>Let’s now assign rates to <code>exp_plots</code> of
-<code>exp_data</code>.</p>
+<span><span class="co">#&gt; 1        1        1       1_1 POLYGON ((353041.3 4331460,...</span></span>
+<span><span class="co">#&gt; 2        2        1       1_1 POLYGON ((353042.8 4331541,...</span></span>
+<span><span class="co">#&gt; 3        3        1       1_1 POLYGON ((353044.2 4331621,...</span></span>
+<span><span class="co">#&gt; 4        4        1       1_1 POLYGON ((353045.6 4331702,...</span></span>
+<span><span class="co">#&gt; 5        5        1       1_1 POLYGON ((353047.1 4331782,...</span></span>
+<span><span class="co">#&gt; 6        6        1       1_1 POLYGON ((353048.5 4331863,...</span></span>
+<span><span class="co">#&gt; 7        7        1       1_1 POLYGON ((353049.9 4331943,...</span></span>
+<span><span class="co">#&gt; 8        8        1       1_1 POLYGON ((353051.4 4332024,...</span></span>
+<span><span class="co">#&gt; 9        9        1       1_1 POLYGON ((353052.8 4332105,...</span></span>
+<span><span class="co">#&gt; 10       1        2       1_1 POLYGON ((353101.4 4331462,...</span></span></code></pre></div>
+<p>Let’s now assign rates to the experiemnt plots
+(<code>exp_plots</code>) in <code>exp_data</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#--- prepare rate information ---#</span></span>
 <span><span class="va">seed_rate_info</span> <span class="op">&lt;-</span></span>
@@ -254,11 +291,12 @@ because we just assigned rates to the experiment plots with
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
-<span><span class="co">#&gt; Columns: 11</span></span>
+<span><span class="co">#&gt; Columns: 12</span></span>
 <span><span class="co">#&gt; $ input_name       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed", "NH3"</span></span>
 <span><span class="co">#&gt; $ input_type       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> "S", "N"</span></span>
-<span><span class="co">#&gt; $ exp_plots        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[365 x 4]&gt;], [&lt;sf[243 x 4]&gt;]</span></span>
-<span><span class="co">#&gt; $ trial_design     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[366 x 5]&gt;], [&lt;sf[244 x 5]&gt;]</span></span>
+<span><span class="co">#&gt; $ exp_plots        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[54 x 4]&gt;], [&lt;sf[243 x 4]&gt;]</span></span>
+<span><span class="co">#&gt; $ trial_design     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[55 x 5]&gt;], [&lt;sf[244 x 5]&gt;]</span></span>
+<span><span class="co">#&gt; $ gc_rate          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 32000, 180</span></span>
 <span><span class="co">#&gt; $ design_type      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "jcls", "ls"</span></span>
 <span><span class="co">#&gt; $ unit             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed", "lb"</span></span>
 <span><span class="co">#&gt; $ abline_type      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "free", "free"</span></span>
@@ -275,23 +313,23 @@ because we just assigned rates to the experiment plots with
 <span></span>
 <span><span class="va">td</span><span class="op">$</span><span class="va">trial_design</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 366 features and 4 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 55 features and 4 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span></span>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;     rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1  40000        1       1 experiment POLYGON ((-16.70047 39.1199...</span></span>
-<span><span class="co">#&gt; 2  32000        1       2 experiment POLYGON ((-16.70047 39.1206...</span></span>
-<span><span class="co">#&gt; 3  21333        1       3 experiment POLYGON ((-16.70047 39.1213...</span></span>
-<span><span class="co">#&gt; 4  16000        1       4 experiment POLYGON ((-16.70047 39.1221...</span></span>
-<span><span class="co">#&gt; 5  26667        1       5 experiment POLYGON ((-16.70047 39.1228...</span></span>
-<span><span class="co">#&gt; 6  40000        1       6 experiment POLYGON ((-16.70048 39.1236...</span></span>
-<span><span class="co">#&gt; 7  16000        2       1 experiment POLYGON ((-16.70037 39.1199...</span></span>
-<span><span class="co">#&gt; 8  26667        2       2 experiment POLYGON ((-16.70037 39.1206...</span></span>
-<span><span class="co">#&gt; 9  40000        2       3 experiment POLYGON ((-16.70037 39.1213...</span></span>
-<span><span class="co">#&gt; 10 32000        2       4 experiment POLYGON ((-16.70037 39.1220...</span></span>
+<span><span class="co">#&gt; 1  16000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2  26667        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3  40000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4  32000        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5  21333        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6  16000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7  26667        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8  40000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9  32000        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 10 32000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; Simple feature collection with 244 features and 4 fields</span></span>
@@ -301,16 +339,16 @@ because we just assigned rates to the experiment plots with
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1   220        1       1 experiment POLYGON ((-16.70042 39.1199...</span></span>
-<span><span class="co">#&gt; 2   180        1       2 experiment POLYGON ((-16.70042 39.1206...</span></span>
-<span><span class="co">#&gt; 3   140        1       3 experiment POLYGON ((-16.70042 39.1213...</span></span>
-<span><span class="co">#&gt; 4   100        1       4 experiment POLYGON ((-16.70042 39.1220...</span></span>
-<span><span class="co">#&gt; 5   260        1       5 experiment POLYGON ((-16.70042 39.1228...</span></span>
-<span><span class="co">#&gt; 6   220        1       6 experiment POLYGON ((-16.70042 39.1235...</span></span>
-<span><span class="co">#&gt; 7   180        1       7 experiment POLYGON ((-16.70042 39.1242...</span></span>
-<span><span class="co">#&gt; 8   140        1       8 experiment POLYGON ((-16.70042 39.1249...</span></span>
-<span><span class="co">#&gt; 9   100        1       9 experiment POLYGON ((-16.70043 39.1257...</span></span>
-<span><span class="co">#&gt; 10  100        2       1 experiment POLYGON ((-16.70026 39.1199...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1   140        1       1 experiment POLYGON ((-16.70034 39.1199...</span></span>
+<span><span class="co">#&gt; 2   100        1       2 experiment POLYGON ((-16.70034 39.1206...</span></span>
+<span><span class="co">#&gt; 3   260        1       3 experiment POLYGON ((-16.70034 39.1213...</span></span>
+<span><span class="co">#&gt; 4   220        1       4 experiment POLYGON ((-16.70035 39.1220...</span></span>
+<span><span class="co">#&gt; 5   180        1       5 experiment POLYGON ((-16.70035 39.1228...</span></span>
+<span><span class="co">#&gt; 6   140        1       6 experiment POLYGON ((-16.70035 39.1235...</span></span>
+<span><span class="co">#&gt; 7   100        1       7 experiment POLYGON ((-16.70035 39.1242...</span></span>
+<span><span class="co">#&gt; 8   260        1       8 experiment POLYGON ((-16.70035 39.125,...</span></span>
+<span><span class="co">#&gt; 9   220        1       9 experiment POLYGON ((-16.70035 39.1257...</span></span>
+<span><span class="co">#&gt; 10  220        2       1 experiment POLYGON ((-16.70018 39.1199...</span></span></code></pre></div>
 <p>Since the individual trial designs are just <code>sf</code>, you can
 of course wrangle them direclty if you would like to.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -318,53 +356,53 @@ of course wrangle them direclty if you would like to.</p>
 <span><span class="op">(</span></span>
 <span><span class="va">td_for_input_1</span> <span class="op">&lt;-</span> <span class="va">td</span><span class="op">$</span><span class="va">trial_design</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Simple feature collection with 366 features and 4 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 55 features and 4 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span></span>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;     rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1  40000        1       1 experiment POLYGON ((-16.70047 39.1199...</span></span>
-<span><span class="co">#&gt; 2  32000        1       2 experiment POLYGON ((-16.70047 39.1206...</span></span>
-<span><span class="co">#&gt; 3  21333        1       3 experiment POLYGON ((-16.70047 39.1213...</span></span>
-<span><span class="co">#&gt; 4  16000        1       4 experiment POLYGON ((-16.70047 39.1221...</span></span>
-<span><span class="co">#&gt; 5  26667        1       5 experiment POLYGON ((-16.70047 39.1228...</span></span>
-<span><span class="co">#&gt; 6  40000        1       6 experiment POLYGON ((-16.70048 39.1236...</span></span>
-<span><span class="co">#&gt; 7  16000        2       1 experiment POLYGON ((-16.70037 39.1199...</span></span>
-<span><span class="co">#&gt; 8  26667        2       2 experiment POLYGON ((-16.70037 39.1206...</span></span>
-<span><span class="co">#&gt; 9  40000        2       3 experiment POLYGON ((-16.70037 39.1213...</span></span>
-<span><span class="co">#&gt; 10 32000        2       4 experiment POLYGON ((-16.70037 39.1220...</span></span>
+<span><span class="co">#&gt; 1  16000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2  26667        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3  40000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4  32000        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5  21333        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6  16000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7  26667        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8  40000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9  32000        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 10 32000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
 <span></span>
 <span><span class="co">#--- change the rates to all 0 ---#</span></span>
 <span><span class="op">(</span></span>
 <span><span class="va">td_for_input_1</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">td_for_input_1</span>, rate <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Simple feature collection with 366 features and 4 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 55 features and 4 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span></span>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1     0        1       1 experiment POLYGON ((-16.70047 39.1199...</span></span>
-<span><span class="co">#&gt; 2     0        1       2 experiment POLYGON ((-16.70047 39.1206...</span></span>
-<span><span class="co">#&gt; 3     0        1       3 experiment POLYGON ((-16.70047 39.1213...</span></span>
-<span><span class="co">#&gt; 4     0        1       4 experiment POLYGON ((-16.70047 39.1221...</span></span>
-<span><span class="co">#&gt; 5     0        1       5 experiment POLYGON ((-16.70047 39.1228...</span></span>
-<span><span class="co">#&gt; 6     0        1       6 experiment POLYGON ((-16.70048 39.1236...</span></span>
-<span><span class="co">#&gt; 7     0        2       1 experiment POLYGON ((-16.70037 39.1199...</span></span>
-<span><span class="co">#&gt; 8     0        2       2 experiment POLYGON ((-16.70037 39.1206...</span></span>
-<span><span class="co">#&gt; 9     0        2       3 experiment POLYGON ((-16.70037 39.1213...</span></span>
-<span><span class="co">#&gt; 10    0        2       4 experiment POLYGON ((-16.70037 39.1220...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1     0        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2     0        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3     0        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4     0        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5     0        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6     0        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7     0        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8     0        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9     0        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 10    0        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span></code></pre></div>
 <p>Note that this does not alter <code>tiral_design</code> in
-<code>td</code> of course. So, if you want this to be reflected in
+<code>td</code>. So, if you want this to be reflected in
 <code>td</code>, you need to assign it back. A series of functions to
 change rates (<code>change_rates_by_plot</code>,
 <code>change_rates_by_block</code>, <code>change_rates_by_strip</code>)
-are designed to work directly work on <code>td</code> to avoid this
-tedious procedure. However, if you want to work directly on the trial
-design part, it is definitely possible.</p>
+are designed to work directly on <code>td</code> to avoid this tedious
+procedure. However, if you want to work directly on the trial design
+part, it is definitely possible.</p>
 <p>Many other functions return a tibble with list-columns. For example,
 <code><a href="../reference/check_alignment.html">check_alignment()</a></code> checks whether the trial design would
 have a mixed treatment problem.</p>
@@ -375,10 +413,10 @@ have a mixed treatment problem.</p>
 <span><span class="co">#&gt; Rows: 2</span></span>
 <span><span class="co">#&gt; Columns: 6</span></span>
 <span><span class="co">#&gt; $ input_name       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed", "NH3"</span></span>
-<span><span class="co">#&gt; $ harvest_ab_line  <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> LINESTRING (352992 4331403,..., LINESTRING (352992 43…</span></span>
-<span><span class="co">#&gt; $ overlap_data     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.table[41 x 7]&gt;], [&lt;data.table[41 x 7]&gt;]</span></span>
-<span><span class="co">#&gt; $ harvester_path   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[45 x 3]&gt;], [&lt;sf[45 x 3]&gt;]</span></span>
-<span><span class="co">#&gt; $ g_path_alignment <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [NULL, &lt;environment: 0x1295896a0&gt;, &lt;enviro…</span></span>
+<span><span class="co">#&gt; $ harvest_ab_line  <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> LINESTRING (352984.9 433140..., LINESTRING (352984.9 …</span></span>
+<span><span class="co">#&gt; $ overlap_data     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.table[40 x 7]&gt;], [&lt;data.table[41 x 7]&gt;]</span></span>
+<span><span class="co">#&gt; $ harvester_path   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[46 x 3]&gt;], [&lt;sf[46 x 3]&gt;]</span></span>
+<span><span class="co">#&gt; $ g_path_alignment <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [NULL, &lt;environment: 0x1516ad9d8&gt;, &lt;enviro…</span></span>
 <span><span class="co">#&gt; $ g_overlap        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [3.0000000, 4.0000000, 5.0000000, 6.0000000, 7.00000…</span></span></code></pre></div>
 <p>As you can see, its output has four list-columns and there are three
 different types of objects stored in them.</p>
@@ -394,23 +432,23 @@ different types of objects stored in them.</p>
 <p>Let’s access the second of <code>harvester_path</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">check</span><span class="op">$</span><span class="va">harvester_path</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 45 features and 2 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 46 features and 2 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: 352970.3 ymin: 4331423 xmax: 353395.2 ymax: 4332235</span></span>
 <span><span class="co">#&gt; Projected CRS: WGS 84 / UTM zone 28N</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
-<span><span class="co">#&gt;    ha_strip_id                       geometry  ha_area</span></span>
-<span><span class="co">#&gt; 40           1 POLYGON ((352978.6 4331423,... 5790.435</span></span>
-<span><span class="co">#&gt; 41           2 POLYGON ((352987.8 4331423,... 7300.628</span></span>
-<span><span class="co">#&gt; 42           3 POLYGON ((352996.9 4331423,... 7300.696</span></span>
-<span><span class="co">#&gt; 43           4 POLYGON ((353006.1 4331424,... 7300.765</span></span>
-<span><span class="co">#&gt; 44           5 POLYGON ((353015.2 4331424,... 7300.834</span></span>
-<span><span class="co">#&gt; 45           6 POLYGON ((353024.4 4331424,... 7300.902</span></span>
-<span><span class="co">#&gt; 46           7 POLYGON ((353033.5 4331425,... 7300.971</span></span>
-<span><span class="co">#&gt; 47           8 POLYGON ((353042.7 4331425,... 7301.040</span></span>
-<span><span class="co">#&gt; 48           9 POLYGON ((353051.8 4331425,... 7301.108</span></span>
-<span><span class="co">#&gt; 49          10 POLYGON ((353061 4331426, 3... 7301.177</span></span></code></pre></div>
+<span><span class="co">#&gt;    ha_strip_id                       geometry   ha_area</span></span>
+<span><span class="co">#&gt; 39           1 POLYGON ((352971.5 4331423,...  260.9636</span></span>
+<span><span class="co">#&gt; 40           2 POLYGON ((352980.6 4331423,... 7129.4717</span></span>
+<span><span class="co">#&gt; 41           3 POLYGON ((352989.8 4331423,... 7300.6428</span></span>
+<span><span class="co">#&gt; 42           4 POLYGON ((352998.9 4331424,... 7300.7114</span></span>
+<span><span class="co">#&gt; 43           5 POLYGON ((353008.1 4331424,... 7300.7801</span></span>
+<span><span class="co">#&gt; 44           6 POLYGON ((353017.2 4331424,... 7300.8488</span></span>
+<span><span class="co">#&gt; 45           7 POLYGON ((353026.4 4331424,... 7300.9174</span></span>
+<span><span class="co">#&gt; 46           8 POLYGON ((353035.5 4331425,... 7300.9861</span></span>
+<span><span class="co">#&gt; 47           9 POLYGON ((353044.7 4331425,... 7301.0548</span></span>
+<span><span class="co">#&gt; 48          10 POLYGON ((353053.8 4331425,... 7301.1234</span></span></code></pre></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

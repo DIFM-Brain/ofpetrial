@@ -27,13 +27,13 @@ two-input on-farm experiment trial designs.
 ### Create experimental plots
 
 We start with specifying plot and machine information for inputs using
-`prep_plot_fs()`, which simply creates a data.frame of the specified
+`prep_plot_f()`, which simply creates a data.frame of the specified
 information with some internal unit conversion of length (feet to
 meter).
 
 ``` r
 seed_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "seed",
     machine_width = 60,
     section_num = 24,
@@ -43,13 +43,17 @@ seed_plot_info <-
 #> 
 
 seed_plot_info
-#>   input_name machine_width section_num section_width harvester_width
-#> 1       seed        18.288          24         0.762           9.144
-#>   plot_width headland_length side_length min_plot_length max_plot_length
-#> 1      9.144          36.576       9.144          73.152           91.44
+#> # A tibble: 1 × 10
+#>   input…¹ machi…² secti…³ secti…⁴ harve…⁵ plot_…⁶ headl…⁷ side_…⁸ min_p…⁹
+#>   <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 seed       18.3      24   0.762    9.14    9.14    36.6    9.14    73.2
+#> # … with 1 more variable: max_plot_length <dbl>, and abbreviated
+#> #   variable names ¹​input_name, ²​machine_width, ³​section_num,
+#> #   ⁴​section_width, ⁵​harvester_width, ⁶​plot_width, ⁷​headland_length,
+#> #   ⁸​side_length, ⁹​min_plot_length
 
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,
@@ -59,10 +63,14 @@ n_plot_info <-
 #> 
 
 n_plot_info
-#>   input_name machine_width section_num section_width harvester_width
-#> 1        NH3         9.144           1         9.144           9.144
-#>   plot_width headland_length side_length min_plot_length max_plot_length
-#> 1      9.144          18.288       9.144          73.152           91.44
+#> # A tibble: 1 × 10
+#>   input…¹ machi…² secti…³ secti…⁴ harve…⁵ plot_…⁶ headl…⁷ side_…⁸ min_p…⁹
+#>   <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 NH3        9.14       1    9.14    9.14    9.14    18.3    9.14    73.2
+#> # … with 1 more variable: max_plot_length <dbl>, and abbreviated
+#> #   variable names ¹​input_name, ²​machine_width, ³​section_num,
+#> #   ⁴​section_width, ⁵​harvester_width, ⁶​plot_width, ⁷​headland_length,
+#> #   ⁸​side_length, ⁹​min_plot_length
 ```
 
 Now that plot and machine specifications for the inputs are ready, we
@@ -180,12 +188,13 @@ seed_rate_info <-
 #> Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates
 
 seed_rate_info
-#>   input_name design_type gc_rate unit
-#> 1       seed        jcls   32000 seed
-#>                                         rates_data rank_seq_ws
-#> 1 16000, 21333, 26667, 32000, 40000, 1, 2, 3, 4, 5        NULL
-#>   rank_seq_as
-#> 1        NULL
+#> # A tibble: 1 × 12
+#>   input_n…¹ desig…² gc_rate unit  rates…³ rank_…⁴ rank_…⁵ plot_i…⁶ rates 
+#>   <chr>     <chr>     <dbl> <chr> <list>  <list>  <list>  <list>   <list>
+#> 1 seed      jcls      32000 seed  <dt>    <NULL>  <NULL>  <tibble> <NULL>
+#> # … with 3 more variables: min_rate <dbl>, max_rate <dbl>,
+#> #   num_rates <dbl>, and abbreviated variable names ¹​input_name,
+#> #   ²​design_type, ³​rates_data, ⁴​rank_seq_ws, ⁵​rank_seq_as, ⁶​plot_info
 
 n_rate_info <-
   prep_rates_s(
@@ -198,10 +207,13 @@ n_rate_info <-
   )
 
 n_rate_info
-#>   input_name design_type gc_rate unit
-#> 1        NH3          ls     180   lb
-#>                               rates_data   rank_seq_ws rank_seq_as
-#> 1 100, 140, 180, 220, 260, 1, 2, 3, 4, 5 5, 4, 3, 2, 1        NULL
+#> # A tibble: 1 × 12
+#>   input_name desig…¹ gc_rate unit  rates…² rank_…³ rank_…⁴ plot_i…⁵ rates
+#>   <chr>      <chr>     <dbl> <chr> <list>  <list>  <list>  <list>   <lis>
+#> 1 NH3        ls          180 lb    <dt>    <dbl>   <NULL>  <tibble> <dbl>
+#> # … with 3 more variables: min_rate <lgl>, max_rate <lgl>,
+#> #   num_rates <dbl>, and abbreviated variable names ¹​design_type,
+#> #   ²​rates_data, ³​rank_seq_ws, ⁴​rank_seq_as, ⁵​plot_info
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots (see
@@ -213,9 +225,10 @@ for changing rates manually.).
 
 ``` r
 trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+#> Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates
 ```
 
-Here is the visualization of the trial design done by `viz_td()`.
+Here is the visualization of the trial design done by `viz`.
 
 ``` r
 viz(trial_design)
@@ -240,10 +253,10 @@ Let’s check if the seed and NH3 rates has very little correlationl.
   cor_inputs <- check_ortho_inputs(trial_design)
 )
 #> Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.
-#> [1] -0.06303213
+#> [1] -0.3475009
 ```
 
-Great, the correlation coefficient is merely -0.06.
+The correlation coefficient is -0.35.
 
 ### Write the trial design files for implementation
 

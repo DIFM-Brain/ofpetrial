@@ -122,4 +122,40 @@ object.size(td_two_input)
 
 usethis::use_data(td_two_input, overwrite = TRUE)
 
+#!===========================================================
+#! Trial design for a curved field
+#!===========================================================
+n_plot_info <-
+  prep_plot_f(
+    input_name = "NH3",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
+  )
 
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-irregular1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-irregular1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+n_rate_info <-
+  prep_rate(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+  )
+
+td_curved <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+
+usethis::use_data(td_curved, overwrite = TRUE)
