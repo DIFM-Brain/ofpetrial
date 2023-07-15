@@ -3,18 +3,12 @@ template:
     ganalytics: G-B09QYRX8XQ
 
 reference:
-  - title: Prepare plot information
-    desc: Prepare information necessary to create experiment plots
+  - title: Prepare plot and rate information 
+    desc: Prepare information necessary to create a trial design
     contents:
-      - prep_plot_md
-      - prep_plot_fd
-      - prep_plot_ms
-      - prep_plot_fs
-  - title: Prepare rate information
-    desc: Prepare information necessary to assign rates to experiment plots
-    contents:
-      - prep_rates_s
-      - prep_rates_d
+      - prep_plot_m
+      - prep_plot_f
+      - prep_rate
   - title: Generate trial designs
     contents:
       - make_exp_plots

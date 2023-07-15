@@ -1,9 +1,9 @@
 #' Assign rates to the plots of experimental plots
 #'
-#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single().
+#' This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rateingle().
 #'
 #' @param exp_data experiment plots created by make_exp_plots()
-#' @param rate_info rate information created by prep_rates_single()
+#' @param rate_info rate information created by prep_rate()
 #' @returns trial design as sf (experiment plots with rates assigned)
 #' @import data.table
 #' @export
@@ -52,6 +52,18 @@ assign_rates <- function(exp_data, rate_info) {
   trial_design <-
     input_trial_data %>%
     dplyr::rowwise() %>%
+    #--- create rates data  ---#
+    dplyr::mutate(rates_data = list(
+      find_rates_data(
+        gc_rate = gc_rate,
+        unit = unit,
+        rates = rates,
+        min_rate = min_rate,
+        max_rate = max_rate,
+        num_rates = num_rates,
+        design_type = design_type
+      )
+    )) %>%
     dplyr::mutate(experiment_design = list(
       assign_rates_by_input(
         exp_sf = exp_plots,
@@ -476,4 +488,89 @@ get_rank_for_rb <- function(num_rates, data) {
   }
 
   return(rate_rank_ls)
+}
+
+find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA) {
+  #* +++++++++++++++++++++++++++++++++++
+  #* Debug
+  #* +++++++++++++++++++++++++++++++++++
+  # gc_rate <- 180
+  # unit <- "lb"
+  # rates <- c(100, 140, 180, 220, 260)
+  # design_type <- "ls"
+  # min_rate <- NA
+  # max_rate <- NA
+  # num_rates <- 5
+  # design_type <- NA
+  # rank_seq_ws <- NULL
+  # rank_seq_as <- NULL
+  #* +++++++++++++++++++++++++++++++++++
+  #* Main
+  #* +++++++++++++++++++++++++++++++++++
+
+  if (is.na(design_type)) {
+    #--- if design_type not specified, use jcls ---#
+    design_type <- "jcls"
+  } else {
+    design_type <- design_type
+  }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+Specify the trial rates
+  #++++++++++++++++++++++++++++++++++++
+  if (!is.null(rates)) {
+    rates_ls <- rates
+  } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
+    #--- if min_rate, max_rate, and num_rates are specified ---#
+    cat("Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates")
+    rates_ls <-
+      get_rates(
+        min_rate,
+        max_rate,
+        gc_rate,
+        num_rates
+      )
+  } else {
+    cat("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
+  }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Order (rank) rates based on design type
+  #++++++++++++++++++++++++++++++++++++
+  if (design_type %in% c("ls", "jcls", "strip", "rb")) {
+    rates_data <-
+      data.table(
+        rate = rates_ls,
+        rate_rank = 1:length(rates_ls)
+      )
+  } else if (design_type == "sparse") {
+    if (!gc_rate %in% rates_ls) {
+      return(print(
+        "Error: You specified the trial rates directly using the rates argument, but they do not include gc_rate. For the sparse design, please include gc_rate in the rates."
+      ))
+    } else {
+      rates_ls <- rates_ls[!rates_ls %in% gc_rate]
+      rates_data <-
+        data.table(
+          rate = append(gc_rate, rates_ls),
+          rate_rank = 1:(length(rates_ls) + 1)
+        )
+    }
+  } else if (design_type == "ejca") {
+    if (length(rates_ls) %% 2 == 1) {
+      stop(
+        "Error: You cannot have an odd number of rates for the ejca design. Please either specify rates directly with even numbers of rates or specify an even number for num_rates along with min_rate and max_rate."
+      )
+    } else {
+      rates_data <-
+        data.table(
+          rate = rates_ls,
+          rate_rank = 1:length(rates_ls)
+        )
+    }
+  } else {
+    stop("Error: design_type you specified does not match any of the design type options available.")
+  }
+
+  return(rates_data)
 }

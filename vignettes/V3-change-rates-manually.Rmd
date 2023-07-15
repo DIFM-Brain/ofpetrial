@@ -35,7 +35,7 @@ Let's first create a trial design for a single input case.
 
 ```{r}
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,
@@ -53,7 +53,7 @@ exp_data <-
   )
 
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",

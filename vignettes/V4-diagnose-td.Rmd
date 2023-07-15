@@ -34,7 +34,7 @@ Let's first create experiment plots where plot width is specified as 90 feet, wh
 
 ```{r}
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 45,
     section_num = 1,
@@ -75,7 +75,7 @@ Now, let's make the plot width 45 feet.
 
 ```{r}
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 45,
     section_num = 1,
@@ -117,7 +117,7 @@ We first create experiment plots. Note that the `plot_width` of both inputs are 
 
 ```{r}
 seed_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "seed",
     machine_width = 60,
     section_num = 24,
@@ -126,14 +126,13 @@ seed_plot_info <-
   )
 
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,
     harvester_width = 30,
     plot_width = 30
   )
-
 
 exp_data <-
   make_exp_plots(
@@ -148,7 +147,7 @@ Now, we assign rates for both inputs using the same `rank_seq_ws` and `rank_seq_
 
 ```{r}
 seed_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
@@ -161,7 +160,7 @@ seed_rate_info <-
   )
 
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -195,7 +194,7 @@ Now, let's change the width of the plots for NH3 to 60 feet, which is twice as w
 #+ change the plot width for NH3
 #++++++++++++++++++++++++++++++++++++
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 60,
     section_num = 1,
@@ -237,7 +236,7 @@ Now, let's think about a case where the randomized block design is used for both
 
 ```{r}
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,
@@ -258,7 +257,7 @@ Now, we assign rates for both inputs using the randomized block design (`rb`). S
 
 ```{r}
 seed_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
@@ -269,7 +268,7 @@ seed_rate_info <-
   )
 
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",

@@ -9,13 +9,13 @@ assign_rates(exp_data, rate_info)
 \arguments{
 \item{exp_data}{experiment plots created by make_exp_plots()}
 
-\item{rate_info}{rate information created by prep_rates_single()}
+\item{rate_info}{rate information created by prep_rate()}
 }
 \value{
 trial design as sf (experiment plots with rates assigned)
 }
 \description{
-This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rates_single().
+This functions assign input rates for the plots created by make_exp_plots() according to the rate designs specified by the user in rate_info, which can be created by prep_rateingle().
 }
 \examples{
 #--- load experiment plots made by make_exp_plots() ---#

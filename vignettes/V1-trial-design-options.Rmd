@@ -22,7 +22,7 @@ library(ofpetrial)
 library(patchwork)
 
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,
@@ -50,7 +50,7 @@ By default, here is what `design_type = "ls"` produces.
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -90,7 +90,7 @@ Let's try few examples.
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -111,7 +111,7 @@ viz(td_ls_1, type = "rates", abline = FALSE)
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -136,7 +136,7 @@ You can design a strip trial using `design_type = "strip"`. You can specify the 
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -165,7 +165,7 @@ Let's provide a vector of length `r max(exp_data$exp_plots[[1]]$strip_id)` to `r
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -187,7 +187,7 @@ viz(td_strip, type = "rates", abline = FALSE)
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -218,7 +218,7 @@ Jump-conscious Latin Square (`design_type = "jcls`) is merely a special type of 
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -241,7 +241,7 @@ This design alternate high-rate strip and low-rate strip, thus avoiding sudden c
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -262,7 +262,7 @@ viz(td_ejca, type = "rates", abline = FALSE)
 
 ```{r}
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",

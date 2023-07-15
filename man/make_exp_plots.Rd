@@ -28,7 +28,7 @@ Make experimental plots/strips inside the field boundary, harvester ab-line, and
 }
 \examples{
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 30,
     section_num = 1,

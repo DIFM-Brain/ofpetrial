@@ -102,8 +102,8 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#--- pacakges ---#</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.6.17</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; terra 1.7.39</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#--- file names ---#</span></span>
@@ -125,7 +125,7 @@ mixed treatment problems of a trial design.</p>
 fertilizer and three times as wide as the harvesters.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -148,11 +148,10 @@ fertilizer and three times as wide as the harvesters.</p>
 <span>  <span class="va">machine_alignment_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_alignment.html">check_alignment</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
-<span><span class="co">#&gt;   input_name                     harvest_ab_line overl…¹ harve…² g_pat…³ g_ove…⁴</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NH3        (353001.2 4331404, 353012.7 433204… &lt;dt&gt;    &lt;sf&gt;    <span style="color: #949494;">&lt;gg&gt;</span>    <span style="color: #949494;">&lt;gg&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​overlap_data, ²​harvester_path,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ³​g_path_alignment, ⁴​g_overlap</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   input_name                      harvest_ab_line overlap_data  harvester_path</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NH3        (353001.2 4331404, 353012.7 4332047) <span style="color: #949494;">&lt;dt [39 × 7]&gt;</span> <span style="color: #949494;">&lt;sf [45 × 3]&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: g_path_alignment &lt;list&gt;, g_overlap &lt;list&gt;</span></span></span></code></pre></div>
 <p>One of the elements of the resulting output is
 <code>g_path_alignment</code>, which is a <code>ggplot</code> figure of
 the path of the harvester (red) and applicator (blue).</p>
@@ -176,7 +175,7 @@ strips have value of 100%.</p>
 <p>Now, let’s make the plot width 45 feet.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">45</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -233,7 +232,7 @@ where the two input rates are highly correlated. Here is an example.</p>
 <code>plot_width</code> of both inputs are the same.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seed_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">24</span>,</span>
@@ -243,7 +242,7 @@ where the two input rates are highly correlated. Here is an example.</p>
 <span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -251,7 +250,6 @@ where the two input rates are highly correlated. Here is an example.</p>
 <span>    plot_width <span class="op">=</span> <span class="fl">30</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span></span>
 <span></span>
 <span><span class="va">exp_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
@@ -264,7 +262,7 @@ where the two input rates are highly correlated. Here is an example.</p>
 <code>rank_seq_ws</code> and <code>rank_seq_as</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seed_rate_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">seed_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">32000</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"seed"</span>,</span>
@@ -275,10 +273,10 @@ where the two input rates are highly correlated. Here is an example.</p>
 <span>    rank_seq_ws <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    rank_seq_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
+<span><span class="co">#&gt; Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
 <span></span>
 <span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">180</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
@@ -288,7 +286,8 @@ where the two input rates are highly correlated. Here is an example.</p>
 <span>    rank_seq_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">td_two_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">td_two_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates</span></span></code></pre></div>
 <p>Here is the visualization of the assigned rates for both inputs. It
 is easy to see that both input have exactly the same pattern because of
 the same <code>rank_seq_ws</code> and <code>plot_width</code>.</p>
@@ -311,7 +310,7 @@ assign rates to the new experiment plots.</p>
 <span><span class="co">#+ change the plot width for NH3</span></span>
 <span><span class="co">#++++++++++++++++++++++++++++++++++++</span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -334,7 +333,8 @@ assign rates to the new experiment plots.</p>
 <span><span class="co">#++++++++++++++++++++++++++++++++++++</span></span>
 <span><span class="co">#+ Assign rates again with the same rate information</span></span>
 <span><span class="co">#++++++++++++++++++++++++++++++++++++</span></span>
-<span><span class="va">td_two_input_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">td_two_input_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_two_input_2</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
@@ -350,7 +350,7 @@ used for both inputs<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup>
 inputs just like the first case.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_fs.html">prep_plot_fs</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -371,7 +371,7 @@ design (<code>rb</code>). Since rates are randomly assigned by block for
 both inputs, some cases introduce a higher correlation than others.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seed_rate_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">seed_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">32000</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"seed"</span>,</span>
@@ -380,10 +380,10 @@ both inputs, some cases introduce a higher correlation than others.</p>
 <span>    num_rates <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>    design_type <span class="op">=</span> <span class="st">"rb"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
+<span><span class="co">#&gt; Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
 <span></span>
 <span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_rates_s.html">prep_rates_s</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">180</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
@@ -447,7 +447,7 @@ data)</li>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">yield_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"yield-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `yield-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpTZdSrT/temp_libpath244145f0b918/ofpetrial/extdata/yield-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpn0TpEk/temp_libpath101d215cac4bd/ofpetrial/extdata/yield-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 16822 features and 34 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -467,7 +467,7 @@ data)</li>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ssurgo-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mukey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">mukey</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ssurgo-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpTZdSrT/temp_libpath244145f0b918/ofpetrial/extdata/ssurgo-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpn0TpEk/temp_libpath101d215cac4bd/ofpetrial/extdata/ssurgo-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 11 features and 9 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
@@ -505,7 +505,11 @@ data)</li>
 <span>    sp_data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">yield_sf</span>, <span class="va">ssurgo_sf</span>, <span class="va">topo_rast</span><span class="op">)</span>,</span>
 <span>    vars_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Yld_Vol_Dr"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mukey"</span>, <span class="st">"clay"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Computation failed in `stat_bin()`</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `checks = purrr::pmap(list(trial_design, spatial_data,</span></span>
+<span><span class="co">#&gt;   variable), summarize_chars)`.</span></span>
+<span><span class="co">#&gt; Caused by warning:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Computation failed in `stat_bin()`</span></span>
 <span><span class="co">#&gt; Caused by error in `abs()`:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> non-numeric argument to mathematical function</span></span></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">

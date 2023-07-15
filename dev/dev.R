@@ -12,6 +12,11 @@ devtools::run_examples(pkg = here::here())
 readLines("./_pkgdown.yml")
 
 #!===========================================================
+#! Create datasets for examples
+#!===========================================================
+source("dev/generate_datasets.R")
+
+#!===========================================================
 #! Build website
 #!===========================================================
 #--- build pkgdown website ---#
@@ -43,7 +48,7 @@ usethis::use_pipe() # can use %>% after this
 #++++++++++++++++++++++++++++++++++++
 #+ Folders, files to ignore
 #++++++++++++++++++++++++++++++++++++
-usethis::use_build_ignore(c("dev_notes.md", "checklist.md", "notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html", "debug", "random-vs-orthogonal.Rmd", "test", "dev", "_pkgdown.yml"))
+usethis::use_build_ignore(c("dev_notes.md", "checklist.md", "notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html", "debug", "random-vs-orthogonal.Rmd", "test", "dev", "_pkgdown.yml", "R_retired"))
 
 #++++++++++++++++++++++++++++++++++++
 #+ Vignette and other documents

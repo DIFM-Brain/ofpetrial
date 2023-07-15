@@ -16,3 +16,4 @@
 ^test$
 ^dev$
 ^_pkgdown\.yml$
+^R_retired$

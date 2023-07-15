@@ -11,7 +11,7 @@
 #' @import sf
 #' @examples
 #' n_plot_info <-
-#'   prep_plot_fs(
+#'   prep_plot_f(
 #'     input_name = "NH3",
 #'     machine_width = 30,
 #'     section_num = 1,
@@ -39,7 +39,7 @@ make_exp_plots <- function(input_plot_info,
   # !===========================================================
   # ! Check and modify input_plot_info if necessary
   # !===========================================================
-  if (class(input_plot_info) == "list") {
+  if ("list" %in% class(input_plot_info)) {
     input_plot_info <- rbindlist(input_plot_info)
 
     check_length_consistency <-

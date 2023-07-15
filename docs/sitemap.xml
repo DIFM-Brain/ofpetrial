@@ -118,16 +118,25 @@
     <loc>/reference/plot_info.html</loc>
   </url>
   <url>
+    <loc>/reference/prep_plot_f.html</loc>
+  </url>
+  <url>
     <loc>/reference/prep_plot_fd.html</loc>
   </url>
   <url>
     <loc>/reference/prep_plot_fs.html</loc>
   </url>
   <url>
+    <loc>/reference/prep_plot_m.html</loc>
+  </url>
+  <url>
     <loc>/reference/prep_plot_md.html</loc>
   </url>
   <url>
     <loc>/reference/prep_plot_ms.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_rate.html</loc>
   </url>
   <url>
     <loc>/reference/prep_rates_d.html</loc>

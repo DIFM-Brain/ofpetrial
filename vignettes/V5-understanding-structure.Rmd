@@ -24,7 +24,7 @@ The `ofpetrial` package does not offer any package-specific object class. Rather
 
 ```{r}
 seed_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "seed",
     machine_width = 60,
     section_num = 24,
@@ -33,7 +33,7 @@ seed_plot_info <-
   )
 
 n_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "NH3",
     machine_width = 45,
     section_num = 1,
@@ -75,7 +75,7 @@ Let's now assign rates to `exp_plots` of `exp_data`.
 ```{r}
 #--- prepare rate information ---#
 seed_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
@@ -86,7 +86,7 @@ seed_rate_info <-
   )
 
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",

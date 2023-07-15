@@ -30,7 +30,7 @@ The following example uses a seeding trial to demonstrate the three options for 
 
 ```{r ab-line-example1}
 input_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "seed",
     machine_width = 60,
     section_num = 24,
@@ -85,7 +85,7 @@ plot(aa$geometry, pch = 1, cex = .1)
 
 ```{r ab-line-from-yield}
 input_plot_info <-
-  prep_plot_fs(
+  prep_plot_f(
     input_name = "seed",
     machine_width = 60,
     section_num = 1,

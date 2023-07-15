@@ -81,7 +81,7 @@ exp_data$exp_plots
 #! Assign rates
 #!===========================================================
 seed_rate_info <-
-  prep_rates_s(
+  prep_rate(
     seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
@@ -92,7 +92,7 @@ seed_rate_info <-
   )
 
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
