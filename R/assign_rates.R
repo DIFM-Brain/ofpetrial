@@ -277,7 +277,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
     assigned_rates_data <-
       rep(
         start_rank_as,
-        ceiling(max_strip_id / num_rates) + 1
+        ceiling(max_strip_id / length(start_rank_as)) + 1
       ) %>%
       .[1:(max_strip_id + 1)] %>%
       data.table(rate_rank = .) %>%

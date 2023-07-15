@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 The `ofpetrial` package offers various trial design types. This vignette provides examples of availabl design types. Let's first  prepare experiment plots to which we assign rates using various trial design options.
 
-```{r}
+```{r, warning = FALSE, message = FALSE}
 library(ofpetrial)
 library(patchwork)
 
@@ -69,7 +69,7 @@ viz(td_ls_d, abline = FALSE)
 
 However, you can customize the spatial pattern of input rate when `design_type = "ls"` using the `rank_seq_ws` and `rank_seq_as` options. To do so, it is important to understand how `plot_id` and `strip_id` are assigned to each of the plots. Here are their maps.
 
-```{r}
+```{r, fig.height = 8}
 viz(td_ls_d, type = "strip_id") | viz(td_ls_d, type = "plot_id")
 ```
 
@@ -132,6 +132,8 @@ viz(td_ls_2, type = "rates", abline = FALSE)
 
 # Strip trial ("strip")
 
+You can design a strip trial using `design_type = "strip"`. You can specify the spatial pattern of strip rates using the `rank_seq_as` option. The code below repeats 100 (rank 1), 280 (rank 4), 220 (rank 3), and 160 (rank 2). Since the strip trial has a single rate per strip, `rank_seq_ws` is not available unlike `design_type = "ls"`.
+
 ```{r}
 n_rate_info <-
   prep_rates_s(
@@ -148,9 +150,36 @@ td_strip <-
     exp_data = exp_data,
     rate_info = n_rate_info
   )
+
+viz(td_strip, type = "rates", abline = FALSE)
 ```
 
+For the strip trial, you can specify the full sequence unlike the other design options. We have a total of `r max(exp_data$exp_plots[[1]]$strip_id)` strips in this experiment.
+
 ```{r}
+#--- total number of strips ---#
+max(exp_data$exp_plots[[1]]$strip_id)
+```
+
+Let's provide a vector of length `r max(exp_data$exp_plots[[1]]$strip_id)` to `rank_seq_as`.
+
+```{r}
+n_rate_info <-
+  prep_rates_s(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 160, 220, 280),
+    rank_seq_as = c(1, 4, 3, 2, 2, 3, 4, 1, 3, 2, 1, 4, 2, 3, 1, 4, 4, 2, 3),
+    design_type = "strip",
+  )
+
+td_strip <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+
 viz(td_strip, type = "rates", abline = FALSE)
 ```
 
@@ -171,13 +200,21 @@ td_rb <-
     exp_data = exp_data,
     rate_info = n_rate_info
   )
-```
 
-```{r}
 viz(td_rb, type = "rates", abline = FALSE)
 ```
 
+When `design_type = "rb"`, blocks are created internally when `assign_rates()` is run. Here is what blocks look like.
+
+```{r}
+add_blocks(td_rb) %>% viz(type = "block_id")
+```
+
+Since there are five distinctive rates, each block consists of five by five plots. In each of the block, the five rates are randomly assigned in a way that each of the rates appear exactly five times.
+
 # Jump-conscious Latin Square ("jcls")
+
+Jump-conscious Latin Square (`design_type = "jcls`) is merely a special type of Latin Square design. Indeed, you can create exactly the same design by specifying `rank_seq_as` and `rank_seq_ws` appropriately. JCLS ensures that the jumps in rate from plot to plot in the direction of the applicator/planter less than equal to rate rank of 2. For exmaple, input rate never goes from 100 to 220 or 260 in JCLS.  
 
 ```{r}
 n_rate_info <-
@@ -194,13 +231,13 @@ td_jcls <-
     exp_data = exp_data,
     rate_info = n_rate_info
   )
-```
 
-```{r}
 viz(td_jcls, type = "rates", abline = FALSE)
 ```
 
 # Extra Jump-conscious Alternate ("ejca")
+
+This design alternate high-rate strip and low-rate strip, thus avoiding sudden changes in input rates so that machines can handle them.
 
 ```{r}
 n_rate_info <-
@@ -217,9 +254,7 @@ td_ejca <-
     exp_data = exp_data,
     rate_info = n_rate_info
   )
-```
 
-```{r}
 viz(td_ejca, type = "rates", abline = FALSE)
 ```
 
