@@ -4,6 +4,8 @@
 # ofpetrial: Design On-farm Precision Experiments
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `ofpetrial` package allows the user to design agronomic input
@@ -44,13 +46,11 @@ seed_plot_info <-
 
 seed_plot_info
 #> # A tibble: 1 × 10
-#>   input…¹ machi…² secti…³ secti…⁴ harve…⁵ plot_…⁶ headl…⁷ side_…⁸ min_p…⁹
-#>   <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 seed       18.3      24   0.762    9.14    9.14    36.6    9.14    73.2
-#> # … with 1 more variable: max_plot_length <dbl>, and abbreviated
-#> #   variable names ¹​input_name, ²​machine_width, ³​section_num,
-#> #   ⁴​section_width, ⁵​harvester_width, ⁶​plot_width, ⁷​headland_length,
-#> #   ⁸​side_length, ⁹​min_plot_length
+#>   input_name machine_width section_num sectio…¹ harve…² plot_…³ headl…⁴ side_…⁵ min_p…⁶ max_p…⁷
+#>   <chr>              <dbl>       <dbl>    <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 seed                18.3          24    0.762    9.14    9.14    36.6    9.14    73.2    91.4
+#> # … with abbreviated variable names ¹​section_width, ²​harvester_width, ³​plot_width,
+#> #   ⁴​headland_length, ⁵​side_length, ⁶​min_plot_length, ⁷​max_plot_length
 
 n_plot_info <-
   prep_plot_f(
@@ -64,13 +64,11 @@ n_plot_info <-
 
 n_plot_info
 #> # A tibble: 1 × 10
-#>   input…¹ machi…² secti…³ secti…⁴ harve…⁵ plot_…⁶ headl…⁷ side_…⁸ min_p…⁹
-#>   <chr>     <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 NH3        9.14       1    9.14    9.14    9.14    18.3    9.14    73.2
-#> # … with 1 more variable: max_plot_length <dbl>, and abbreviated
-#> #   variable names ¹​input_name, ²​machine_width, ³​section_num,
-#> #   ⁴​section_width, ⁵​harvester_width, ⁶​plot_width, ⁷​headland_length,
-#> #   ⁸​side_length, ⁹​min_plot_length
+#>   input_name machine_width section_num sectio…¹ harve…² plot_…³ headl…⁴ side_…⁵ min_p…⁶ max_p…⁷
+#>   <chr>              <dbl>       <dbl>    <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 NH3                 9.14           1     9.14    9.14    9.14    18.3    9.14    73.2    91.4
+#> # … with abbreviated variable names ¹​section_width, ²​harvester_width, ³​plot_width,
+#> #   ⁴​headland_length, ⁵​side_length, ⁶​min_plot_length, ⁷​max_plot_length
 ```
 
 Now that plot and machine specifications for the inputs are ready, we
@@ -169,14 +167,14 @@ viz(exp_data, type = "layout")
 
 Let’s now assign input rates to the experimental plots we just created.
 Before doing so, we need to prepare rate information for both inputs
-using `prep_rates_s()`.
+using `prep_rates()`.
 
 ``` r
 #!===========================================================
 # ! Assign rates
 # !===========================================================
 seed_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = seed_plot_info,
     gc_rate = 32000,
     unit = "seed",
@@ -185,19 +183,17 @@ seed_rate_info <-
     num_rates = 5,
     design_type = "jcls"
   )
-#> Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates
+#> Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates
 
 seed_rate_info
-#> # A tibble: 1 × 12
-#>   input_n…¹ desig…² gc_rate unit  rates…³ rank_…⁴ rank_…⁵ plot_i…⁶ rates 
-#>   <chr>     <chr>     <dbl> <chr> <list>  <list>  <list>  <list>   <list>
-#> 1 seed      jcls      32000 seed  <dt>    <NULL>  <NULL>  <tibble> <NULL>
-#> # … with 3 more variables: min_rate <dbl>, max_rate <dbl>,
-#> #   num_rates <dbl>, and abbreviated variable names ¹​input_name,
-#> #   ²​design_type, ³​rates_data, ⁴​rank_seq_ws, ⁵​rank_seq_as, ⁶​plot_info
+#> # A tibble: 1 × 10
+#>   input_name design_type gc_rate unit  rates  min_rate max_rate num_rates rank_seq_ws rank_se…¹
+#>   <chr>      <chr>         <dbl> <chr> <list>    <dbl>    <dbl>     <dbl> <list>      <list>   
+#> 1 seed       jcls          32000 seed  <NULL>    16000    40000         5 <NULL>      <NULL>   
+#> # … with abbreviated variable name ¹​rank_seq_as
 
 n_rate_info <-
-  prep_rates_s(
+  prep_rate(
     plot_info = n_plot_info,
     gc_rate = 180,
     unit = "lb",
@@ -207,13 +203,11 @@ n_rate_info <-
   )
 
 n_rate_info
-#> # A tibble: 1 × 12
-#>   input_name desig…¹ gc_rate unit  rates…² rank_…³ rank_…⁴ plot_i…⁵ rates
-#>   <chr>      <chr>     <dbl> <chr> <list>  <list>  <list>  <list>   <lis>
-#> 1 NH3        ls          180 lb    <dt>    <dbl>   <NULL>  <tibble> <dbl>
-#> # … with 3 more variables: min_rate <lgl>, max_rate <lgl>,
-#> #   num_rates <dbl>, and abbreviated variable names ¹​design_type,
-#> #   ²​rates_data, ³​rank_seq_ws, ⁴​rank_seq_as, ⁵​plot_info
+#> # A tibble: 1 × 10
+#>   input_name design_type gc_rate unit  rates     min_rate max_rate num_rates rank_seq…¹ rank_…²
+#>   <chr>      <chr>         <dbl> <chr> <list>    <lgl>    <lgl>        <dbl> <list>     <list> 
+#> 1 NH3        ls              180 lb    <dbl [5]> NA       NA               5 <dbl [5]>  <NULL> 
+#> # … with abbreviated variable names ¹​rank_seq_ws, ²​rank_seq_as
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots (see
@@ -253,10 +247,10 @@ Let’s check if the seed and NH3 rates has very little correlationl.
   cor_inputs <- check_ortho_inputs(trial_design)
 )
 #> Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.
-#> [1] -0.3475009
+#> [1] 0.3405442
 ```
 
-The correlation coefficient is -0.35.
+The correlation coefficient is 0.34.
 
 ### Write the trial design files for implementation
 
