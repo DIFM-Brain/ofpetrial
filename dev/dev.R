@@ -26,6 +26,12 @@ pkgdown::build_site()
 # ! One-time operation
 # !===========================================================
 #++++++++++++++++++++++++++++++++++++
+#+ Add buttons
+#++++++++++++++++++++++++++++++++++++
+#--- R CMD check ---#
+usethis::use_github_action_check_standard()
+
+#++++++++++++++++++++++++++++++++++++
 #+ packages to use
 #++++++++++++++++++++++++++++++++++++
 usethis::use_package("data.table")

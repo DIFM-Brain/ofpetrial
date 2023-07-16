@@ -2,7 +2,7 @@
 title: "Trial AB-line Types and Options"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ab-line}
+  %\VignetteIndexEntry{Trial AB-line Types and Options}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

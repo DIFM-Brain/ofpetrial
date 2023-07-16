@@ -2,7 +2,7 @@
 title: "Diagnose Trial Designs"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{V4-diagnose-td}
+  %\VignetteIndexEntry{Diagnose Trial Designs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

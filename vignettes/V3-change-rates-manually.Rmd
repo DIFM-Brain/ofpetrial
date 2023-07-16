@@ -2,7 +2,7 @@
 title: "Change Trial Rates Manually"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{chante-rates-manually}
+  %\VignetteIndexEntry{Change Trial Rates Manually}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

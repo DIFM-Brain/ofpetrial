@@ -97,7 +97,7 @@
 <div class="page-header"><h1 id="ofpetrial-design-on-farm-precision-experiments">ofpetrial: Design On-farm Precision Experiments<a class="anchor" aria-label="anchor" href="#ofpetrial-design-on-farm-precision-experiments"></a>
 </h1></div>
 <!-- badges: start -->
-<!-- badges: end -->
+
 <p>The <code>ofpetrial</code> package allows the user to design agronomic input experiments in a reproducible manner without using ArcGIS or QGIS.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -128,13 +128,11 @@
 <span></span>
 <span><span class="va">seed_plot_info</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 10</span></span>
-<span><span class="co">#&gt;   input…¹ machi…² secti…³ secti…⁴ harve…⁵ plot_…⁶ headl…⁷ side_…⁸ min_p…⁹</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 seed       18.3      24   0.762    9.14    9.14    36.6    9.14    73.2</span></span>
-<span><span class="co">#&gt; # … with 1 more variable: max_plot_length &lt;dbl&gt;, and abbreviated</span></span>
-<span><span class="co">#&gt; #   variable names ¹​input_name, ²​machine_width, ³​section_num,</span></span>
-<span><span class="co">#&gt; #   ⁴​section_width, ⁵​harvester_width, ⁶​plot_width, ⁷​headland_length,</span></span>
-<span><span class="co">#&gt; #   ⁸​side_length, ⁹​min_plot_length</span></span>
+<span><span class="co">#&gt;   input_name machine_width section_num sectio…¹ harve…² plot_…³ headl…⁴ side_…⁵ min_p…⁶ max_p…⁷</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 seed                18.3          24    0.762    9.14    9.14    36.6    9.14    73.2    91.4</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​section_width, ²​harvester_width, ³​plot_width,</span></span>
+<span><span class="co">#&gt; #   ⁴​headland_length, ⁵​side_length, ⁶​min_plot_length, ⁷​max_plot_length</span></span>
 <span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
@@ -148,13 +146,11 @@
 <span></span>
 <span><span class="va">n_plot_info</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 10</span></span>
-<span><span class="co">#&gt;   input…¹ machi…² secti…³ secti…⁴ harve…⁵ plot_…⁶ headl…⁷ side_…⁸ min_p…⁹</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 NH3        9.14       1    9.14    9.14    9.14    18.3    9.14    73.2</span></span>
-<span><span class="co">#&gt; # … with 1 more variable: max_plot_length &lt;dbl&gt;, and abbreviated</span></span>
-<span><span class="co">#&gt; #   variable names ¹​input_name, ²​machine_width, ³​section_num,</span></span>
-<span><span class="co">#&gt; #   ⁴​section_width, ⁵​harvester_width, ⁶​plot_width, ⁷​headland_length,</span></span>
-<span><span class="co">#&gt; #   ⁸​side_length, ⁹​min_plot_length</span></span></code></pre></div>
+<span><span class="co">#&gt;   input_name machine_width section_num sectio…¹ harve…² plot_…³ headl…⁴ side_…⁵ min_p…⁶ max_p…⁷</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;              &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 NH3                 9.14           1     9.14    9.14    9.14    18.3    9.14    73.2    91.4</span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​section_width, ²​harvester_width, ³​plot_width,</span></span>
+<span><span class="co">#&gt; #   ⁴​headland_length, ⁵​side_length, ⁶​min_plot_length, ⁷​max_plot_length</span></span></code></pre></div>
 <p>Now that plot and machine specifications for the inputs are ready, we can create experiment plots based on them using <code><a href="reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_plot_info</span>, <span class="va">n_plot_info</span><span class="op">)</span></span>
@@ -234,13 +230,13 @@
 <div class="section level3">
 <h3 id="assign-rates">Assign rates<a class="anchor" aria-label="anchor" href="#assign-rates"></a>
 </h3>
-<p>Let’s now assign input rates to the experimental plots we just created. Before doing so, we need to prepare rate information for both inputs using <code>prep_rates_s()</code>.</p>
+<p>Let’s now assign input rates to the experimental plots we just created. Before doing so, we need to prepare rate information for both inputs using <code>prep_rates()</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#!===========================================================</span></span>
 <span><span class="co"># ! Assign rates</span></span>
 <span><span class="co"># !===========================================================</span></span>
 <span><span class="va">seed_rate_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">prep_rates_s</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">seed_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">32000</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"seed"</span>,</span>
@@ -249,19 +245,17 @@
 <span>    num_rates <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>    design_type <span class="op">=</span> <span class="st">"jcls"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
+<span><span class="co">#&gt; Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates</span></span>
 <span></span>
 <span><span class="va">seed_rate_info</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 12</span></span>
-<span><span class="co">#&gt;   input_n…¹ desig…² gc_rate unit  rates…³ rank_…⁴ rank_…⁵ plot_i…⁶ rates </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;  &lt;list&gt;  &lt;list&gt;  &lt;list&gt;   &lt;list&gt;</span></span>
-<span><span class="co">#&gt; 1 seed      jcls      32000 seed  &lt;dt&gt;    &lt;NULL&gt;  &lt;NULL&gt;  &lt;tibble&gt; &lt;NULL&gt;</span></span>
-<span><span class="co">#&gt; # … with 3 more variables: min_rate &lt;dbl&gt;, max_rate &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   num_rates &lt;dbl&gt;, and abbreviated variable names ¹​input_name,</span></span>
-<span><span class="co">#&gt; #   ²​design_type, ³​rates_data, ⁴​rank_seq_ws, ⁵​rank_seq_as, ⁶​plot_info</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span><span class="co">#&gt;   input_name design_type gc_rate unit  rates  min_rate max_rate num_rates rank_seq_ws rank_se…¹</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;list&gt;      &lt;list&gt;   </span></span>
+<span><span class="co">#&gt; 1 seed       jcls          32000 seed  &lt;NULL&gt;    16000    40000         5 &lt;NULL&gt;      &lt;NULL&gt;   </span></span>
+<span><span class="co">#&gt; # … with abbreviated variable name ¹​rank_seq_as</span></span>
 <span></span>
 <span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu">prep_rates_s</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
 <span>    gc_rate <span class="op">=</span> <span class="fl">180</span>,</span>
 <span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
@@ -271,13 +265,11 @@
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">n_rate_info</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 12</span></span>
-<span><span class="co">#&gt;   input_name desig…¹ gc_rate unit  rates…² rank_…³ rank_…⁴ plot_i…⁵ rates</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;  &lt;list&gt;  &lt;list&gt;  &lt;list&gt;   &lt;lis&gt;</span></span>
-<span><span class="co">#&gt; 1 NH3        ls          180 lb    &lt;dt&gt;    &lt;dbl&gt;   &lt;NULL&gt;  &lt;tibble&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; # … with 3 more variables: min_rate &lt;lgl&gt;, max_rate &lt;lgl&gt;,</span></span>
-<span><span class="co">#&gt; #   num_rates &lt;dbl&gt;, and abbreviated variable names ¹​design_type,</span></span>
-<span><span class="co">#&gt; #   ²​rates_data, ³​rank_seq_ws, ⁴​rank_seq_as, ⁵​plot_info</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 1 × 10</span></span>
+<span><span class="co">#&gt;   input_name design_type gc_rate unit  rates     min_rate max_rate num_rates rank_seq…¹ rank_…²</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;      &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt; &lt;list&gt;    &lt;lgl&gt;    &lt;lgl&gt;        &lt;dbl&gt; &lt;list&gt;     &lt;list&gt; </span></span>
+<span><span class="co">#&gt; 1 NH3        ls              180 lb    &lt;dbl [5]&gt; NA       NA               5 &lt;dbl [5]&gt;  &lt;NULL&gt; </span></span>
+<span><span class="co">#&gt; # … with abbreviated variable names ¹​rank_seq_ws, ²​rank_seq_as</span></span></code></pre></div>
 <p>We can now use <code><a href="reference/assign_rates.html">assign_rates()</a></code> to assign rates to experiment plots (see <a href="https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html" class="external-link">this vignette</a> for other design options and <a href="https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html" class="external-link">this vignette</a> for changing rates manually.).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trial_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span>
@@ -298,8 +290,8 @@
 <span>  <span class="va">cor_inputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/check_ortho_inputs.html">check_ortho_inputs</a></span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.</span></span>
-<span><span class="co">#&gt; [1] -0.3475009</span></span></code></pre></div>
-<p>The correlation coefficient is -0.35.</p>
+<span><span class="co">#&gt; [1] 0.3405442</span></span></code></pre></div>
+<p>The correlation coefficient is 0.34.</p>
 </div>
 <div class="section level3">
 <h3 id="write-the-trial-design-files-for-implementation">Write the trial design files for implementation<a class="anchor" aria-label="anchor" href="#write-the-trial-design-files-for-implementation"></a>
@@ -344,7 +336,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </div>
 </div>

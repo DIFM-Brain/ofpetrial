@@ -2,7 +2,7 @@
 title: "Trial Design Options"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{trial-design-options}
+  %\VignetteIndexEntry{Trial Design Options}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

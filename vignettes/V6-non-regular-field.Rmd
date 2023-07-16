@@ -2,7 +2,7 @@
 title: "Non-regular fields"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{V6-non-regular-field}
+  %\VignetteIndexEntry{Non-regular fields}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
