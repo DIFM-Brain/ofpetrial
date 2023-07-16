@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_plot_info.R
 \name{prep_plot_f}
 \alias{prep_plot_f}
-\title{Prepare plot information for a single-input experiment (feet)}
+\title{Prepare plot information for a single-input experiment (length in feet)}
 \usage{
 prep_plot_f(
   input_name,

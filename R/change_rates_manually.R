@@ -65,7 +65,7 @@ add_blocks <- function(td) {
 #' new_rates <- c(180, 180)
 #'
 #' td_modified <- change_rate_by_block(td_with_blocks, "NH3", block_ids, new_rates)
-#' 
+#'
 #' #--- visualize ---#
 #' viz(td_modified)
 change_rate_by_block <- function(td, input_name, block_ids, new_rates) {
@@ -78,10 +78,9 @@ change_rate_by_block <- function(td, input_name, block_ids, new_rates) {
   headland_rate <- dplyr::filter(temp_design, type != "experiment") %>% dplyr::pull(rate)
 
   for (i in seq_len(length(block_ids))) {
-    temp_design <- 
+    temp_design <-
       temp_design %>%
       dplyr::mutate(rate = ifelse(block_id == block_ids[i], new_rates[i], rate))
-      
   }
 
   temp_design <- dplyr::mutate(temp_design, rate = ifelse(type == "experiment", rate, headland_rate))
@@ -133,7 +132,7 @@ change_rate_by_strip <- function(td, input_name, strip_ids, new_rates) {
   } else if (num_rates == 1) {
     temp_design <- dplyr::mutate(temp_design, rate = ifelse(strip_id %in% strip_ids, new_rates, rate))
   } else {
-    stop('Inconsistent numbers of strip_ids and new_rates. If new_rates has more than one values, then its length must be the same as the length of strip_ids.')
+    stop("Inconsistent numbers of strip_ids and new_rates. If new_rates has more than one values, then its length must be the same as the length of strip_ids.")
   }
 
   temp_design <- dplyr::mutate(temp_design, rate = ifelse(type == "experiment", rate, headland_rate))

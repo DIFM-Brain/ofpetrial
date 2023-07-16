@@ -29,7 +29,7 @@
 + [ ] two N fertilizers (total N)
 + [x] discrete example? cover crop?
 + [ ] check the orthogonality with past trial design
-+ [ ] improve the creation of headland (difference of field and experiment)
++ [a] improve the creation of headland (difference of field and experiment)
 
 
 

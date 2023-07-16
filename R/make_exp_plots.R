@@ -65,7 +65,9 @@ make_exp_plots <- function(input_plot_info,
   #++++++++++++++++++++++++++++++++++++
   boundary_class <- class(boundary_data)
   if ("sf" %in% boundary_class) {
-    field_sf <- boundary_data
+    field_sf <-
+      boundary_data %>%
+      make_sf_utm()
   } else if ("character" %in% boundary_class) {
     field_sf <-
       sf::st_read(boundary_data, quiet = TRUE) %>%

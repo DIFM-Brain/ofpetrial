@@ -2,6 +2,24 @@
 # ! Create datasets
 # !===========================================================
 
+#* First, overwrite make_sf_utm() for only when creating datasets. This version replace degree (circle) to an ASCII character in the wkt of sf objects in UTM. This cannot be part of the R package as this would create a warning in R CMD check. 
+
+make_sf_utm <- function(data_sf) {
+  return_sf <- data_sf %>%
+    # st_set_4326() %>%
+    sf::st_make_valid() %>%
+    sf::st_transform(4326) %>%
+    st_transform_utm()
+
+  #--- important ---#
+  #* This avoids R CMD check warning of the use of non-ASCII character observed in the wkt of sf in UTM
+  st_crs(return_sf)$wkt <- gsub("°|º", "", st_crs(return_sf)$wkt)
+
+  return(return_sf)
+}
+
+source("R/make_exp_plots.R")
+
 #++++++++++++++++++++++++++++++++++++
 #+ plot info
 #++++++++++++++++++++++++++++++++++++
@@ -29,6 +47,8 @@ exp_data <-
   )
 
 usethis::use_data(exp_data, overwrite = TRUE)
+
+# exp_data$field_sf %>% st_crs() %>% .$wkt %>% grepl("[^ -~]", .)
 
 #++++++++++++++++++++++++++++++++++++
 #+ rate information
@@ -159,3 +179,10 @@ td_curved <-
   )
 
 usethis::use_data(td_curved, overwrite = TRUE)
+
+
+
+
+
+
+

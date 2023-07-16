@@ -13,16 +13,15 @@
 #' #--- check correlation ---#
 #' check_ortho_inputs(td_two_input)
 check_ortho_inputs <- function(td) {
-
-  #*+++++++++++++++++++++++++++++++++++
+  #* +++++++++++++++++++++++++++++++++++
   #* Debug
-  #*+++++++++++++++++++++++++++++++++++
+  #* +++++++++++++++++++++++++++++++++++
   # data(td_two_input)
   # td <- td_two_input
 
-  #*+++++++++++++++++++++++++++++++++++
+  #* +++++++++++++++++++++++++++++++++++
   #* Main
-  #*+++++++++++++++++++++++++++++++++++
+  #* +++++++++++++++++++++++++++++++++++
   if (nrow(td) > 1) {
     message("Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.")
     td_1 <- td$trial_design[[1]] %>% dplyr::filter(type == "experiment")
@@ -38,7 +37,7 @@ check_ortho_inputs <- function(td) {
     )
 
     cor_input <-
-      cov.wt(
+      stats::cov.wt(
         interesected_data[, c("rate", "rate.1")],
         wt = interesected_data[, "area"],
         cor = TRUE
@@ -74,7 +73,6 @@ check_ortho_inputs <- function(td) {
 #' #--- visualize the degree of mixed treatment problem ---#
 #' machine_alignment$g_overlap[[1]]
 check_alignment <- function(td) {
-
   #++++++++++++++++++++++++++++++++++++
   #+ Debug helper
   #++++++++++++++++++++++++++++++++++++
@@ -276,7 +274,7 @@ summarize_indiv_char <- function(joined_data, var) {
   if (var_class %in% c("numeric", "integer")) {
     cor_temp <-
       data.table(joined_data)[, ..var_with_rate] %>%
-      cor(use = "complete.obs")
+      stats::cor(use = "complete.obs")
 
     sum_data <- data.frame(var = var, cor_with_rate = cor_temp[1, 2])
 
@@ -294,7 +292,7 @@ summarize_indiv_char <- function(joined_data, var) {
   } else if (var_class %in% c("character", "factor")) {
     sum_data <-
       data.table(joined_data)[, ..var_with_rate] %>%
-      .[, .(rate_mean = mean(rate), rate_sd = sd(rate)), by = var] %>%
+      .[, .(rate_mean = mean(rate), rate_sd = stats::sd(rate)), by = var] %>%
       as.data.frame()
 
     setnames(joined_data, var, "var")
@@ -308,7 +306,7 @@ summarize_indiv_char <- function(joined_data, var) {
 
     g_hist_var <-
       ggplot(joined_data) +
-      geom_bar(aes(x = {{ var }})) +
+      geom_bar(aes(x = var)) +
       ylab("Count") +
       theme_bw()
 

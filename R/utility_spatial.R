@@ -1,6 +1,3 @@
-#!===========================================================
-# ! Expansion on sf operations
-# !===========================================================
 #++++++++++++++++++++++++++++++++++++
 #+ Shift an sf by the user-specified shift (x, y)
 #++++++++++++++++++++++++++++++++++++
@@ -251,7 +248,6 @@ utm_zone <- function(long) {
 #+ Move points inward
 #++++++++++++++++++++++++++++++++++++
 move_points_inward <- function(line, dist, ab_xy_nml) {
-
   #--- in case the intersected line is multi-linestring ---#
   temp_lines <- sf::st_cast(line, "LINESTRING")
   line <- temp_lines[[length(temp_lines)]]
@@ -283,7 +279,6 @@ move_points_inward <- function(line, dist, ab_xy_nml) {
 #+ Get plot data
 #++++++++++++++++++++++++++++++++++++
 get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
-
   #* +++++++++++++++++++++++++++++++++++
   #* For debugging
   #* +++++++++++++++++++++++++++++++++++
@@ -445,7 +440,6 @@ create_plots_in_strip <- function(plot_data,
 #++++++++++++++++++++++++++++++++++++
 
 prepare_ablines <- function(ab_line, field, plot_width) {
-
   # ab_line <- ab_sf
   rotate_mat_p90 <- matrix(
     c(

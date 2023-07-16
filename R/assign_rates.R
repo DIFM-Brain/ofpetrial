@@ -26,7 +26,7 @@ assign_rates <- function(exp_data, rate_info) {
     input_trial_data <-
       rate_info %>%
       dplyr::left_join(exp_data, ., by = "input_name")
-  } else if (class(rate_info) == "list") {
+  } else if ("list" %in% class(rate_info)) {
     input_trial_data <-
       data.table::rbindlist(rate_info) %>%
       dplyr::left_join(exp_data, ., by = "input_name")
@@ -218,7 +218,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       .[, `:=`(block_id = NULL, block_row = NULL, block_col = NULL)] %>%
       sf::st_as_sf()
   } else if (design_type == "jcls") {
-
     #--- get the rate rank sequence within a strip---#
     if (!is.null(rank_seq_ws)) {
       message(
