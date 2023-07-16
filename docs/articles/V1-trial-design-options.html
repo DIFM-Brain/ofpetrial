@@ -108,7 +108,6 @@ prepare experiment plots to which we assign rates using various trial
 design options.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
@@ -152,7 +151,6 @@ produces.</p>
 <span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
@@ -162,9 +160,11 @@ produces.</p>
 understand how <code>plot_id</code> and <code>strip_id</code> are
 assigned to each of the plots. Here are their maps.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, type <span class="op">=</span> <span class="st">"strip_id"</span><span class="op">)</span> <span class="op">|</span> <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, type <span class="op">=</span> <span class="st">"plot_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span>
-<span><span class="co">#&gt; Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">ggpubr</span><span class="fu">::</span><span class="fu"><a href="https://rpkgs.datanovia.com/ggpubr/reference/ggarrange.html" class="external-link">ggarrange</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, type <span class="op">=</span> <span class="st">"strip_id"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, type <span class="op">=</span> <span class="st">"plot_id"</span><span class="op">)</span>,</span>
+<span>  ncol <span class="op">=</span> <span class="fl">2</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>As you can see, <code>plot_id</code> is the unique numeric identifier
 assigned to each of the plots <strong>within</strong> a strip. So, there
@@ -313,8 +313,7 @@ experiment.</p>
 when <code><a href="../reference/assign_rates.html">assign_rates()</a></code> is run. Here is what blocks look
 like.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/add_blocks.html">add_blocks</a></span><span class="op">(</span><span class="va">td_rb</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/add_blocks.html">add_blocks</a></span><span class="op">(</span><span class="va">td_rb</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>Since there are five distinctive rates, each block consists of five
 by five plots. In each of the block, the five rates are randomly

@@ -11,7 +11,9 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.height = 6
+  fig.height = 6,
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
@@ -19,7 +21,6 @@ The `ofpetrial` package offers various trial design types. This vignette provide
 
 ```{r, warning = FALSE, message = FALSE}
 library(ofpetrial)
-library(patchwork)
 
 n_plot_info <-
   prep_plot_f(
@@ -70,7 +71,11 @@ viz(td_ls_d, abline = FALSE)
 However, you can customize the spatial pattern of input rate when `design_type = "ls"` using the `rank_seq_ws` and `rank_seq_as` options. To do so, it is important to understand how `plot_id` and `strip_id` are assigned to each of the plots. Here are their maps.
 
 ```{r, fig.height = 8}
-viz(td_ls_d, type = "strip_id") | viz(td_ls_d, type = "plot_id")
+ggpubr::ggarrange(
+  viz(td_ls_d, type = "strip_id"),
+  viz(td_ls_d, type = "plot_id"),
+  ncol = 2
+)
 ```
 
 As you can see, `plot_id` is the unique numeric identifier assigned to each of the plots **within** a strip. So, there are multiple plots with the same `plot_id` values, but a combination of `strip_id` and `plot_id` uniquely identifies a plot.
