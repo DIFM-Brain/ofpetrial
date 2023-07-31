@@ -1,0 +1,126 @@
+---
+title: "Example Work Flow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example Work Flow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 6
+)
+```
+
+```{r setup}
+library(ofpetrial)
+```
+
+# Single-input Nitrogen Experiment
+
+# Two-input Seed and Nitrogen Experiment
+
+# Pivot Bio Experiment
+
+# Precision Nitrogen Project (PNP) at University of Nebraska Lincoln
+
+Three types
+
+Two strips 
++ Grower's business-as-usual flat-rate (say, 200 lbs/acre of N)
++ Model-based variale-rate (how does this work?)
++ N-reponse block
+
+```{r}
+n_plot_info <-
+  prep_plot_f(
+    input_name = "NH3",
+    machine_width = 60,
+    section_num = 1,
+    harvester_width = 30,
+    headland_length = 30,
+    plot_width = 60,
+    min_plot_length = 60,
+    max_plot_length = 100
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+viz(exp_data, type = "layout")
+```
+
+```{r}
+n_rate_info <-
+  prep_rate(
+    plot_info = n_plot_info,
+    gc_rate = 240,
+    unit = "lb",
+    rates = 240,
+    design_type = "strip"
+  )
+
+td <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+
+viz(td, type = "rates")
+```
+
+```{r}
+td <-
+  change_rates(
+    td,
+    strip_ids = c(3, 6),
+    new_rates = 180
+  )
+
+viz(td, type = "rates")
+```
+
+```{r}
+td <-
+  td %>%
+  change_rates(
+    strip_ids = 8:12,
+    plot_ids = 5:9,
+    new_rates = c(100, 140, 180, 220, 260),
+    rate_by = "strip"
+  ) %>%
+  change_rates(
+    strip_ids = 8:12,
+    plot_ids = 15:19,
+    new_rates = c(140, 260, 100, 180, 220),
+    rate_by = "strip"
+  ) %>%
+  change_rates(
+    strip_ids = 8:12,
+    plot_ids = 25:29,
+    new_rates = c(220, 100, 260, 220, 180),
+    rate_by = "strip"
+  )
+
+viz(td, type = "rates")
+```
+
+```{r}
+td <-
+  change_rates(
+    td,
+    strip_ids = c(15, 16),
+    new_rates = 180
+  )
+
+viz(td, type = "rates")
+```
+

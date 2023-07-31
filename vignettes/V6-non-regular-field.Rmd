@@ -42,7 +42,7 @@ exp_data <-
     abline_type = "free"
   )
 
-viz(exp_data, type = "layout", abline = FALSE)
+viz(exp_data, type = "layout")
 ```
 
 In this kind of spatial arrangement of experiment plots, some blocks can be shaped not so rectangular. 5 by 5 blocks look like this for this field.
@@ -63,7 +63,7 @@ td_rb <-
     rate_info = n_rate_info
   )
 
-viz(td_rb, type = "rates", abline = FALSE)
+viz(td_rb, type = "rates")
 
 add_blocks(td_rb) %>% viz(type = "block_id")
 ```

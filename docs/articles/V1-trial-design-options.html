@@ -56,6 +56,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/V0-example-work-flows.html">Example Work Flow</a>
+    </li>
+    <li>
       <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
     </li>
     <li>
@@ -127,7 +130,7 @@ design options.</p>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
 <p>We will be assigning rates to the experimental plots using various
 trial design types below.</p>
@@ -152,7 +155,7 @@ produces.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_d</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>However, you can customize the spatial pattern of input rate when
 <code>design_type = "ls"</code> using the <code>rank_seq_ws</code> and
@@ -224,7 +227,7 @@ rank of its plots look like this.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_1</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_1</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span><span class="op">$</span><span class="va">rank_seq_ws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
@@ -236,7 +239,7 @@ rank of its plots look like this.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_2</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ls_2</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -266,7 +269,7 @@ Since the strip trial has a single rate per strip,
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_strip</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_strip</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>For the strip trial, you can specify the full sequence unlike the
 other design options. We have a total of 19 strips in this
@@ -285,7 +288,7 @@ experiment.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_strip</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_strip</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -307,7 +310,7 @@ experiment.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_rb</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_rb</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>When <code>design_type = "rb"</code>, blocks are created internally
 when <code><a href="../reference/assign_rates.html">assign_rates()</a></code> is run. Here is what blocks look
@@ -345,7 +348,7 @@ than equal to rate rank of 2. For exmaple, input rate never goes from
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_jcls</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_jcls</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -370,7 +373,7 @@ them.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ejca</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ejca</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -392,7 +395,7 @@ them.</p>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_sparse</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_sparse</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
   </div>

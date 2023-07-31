@@ -40,7 +40,7 @@ exp_data <-
     abline_type = "free"
   )
 
-viz(exp_data, type = "layout", abline = FALSE)
+viz(exp_data, type = "layout")
 ```
 
 We will be assigning rates to the experimental plots using various trial design types below.
@@ -65,7 +65,7 @@ td_ls_d <-
     rate_info = n_rate_info
   )
 
-viz(td_ls_d, abline = FALSE)
+viz(td_ls_d)
 ```
 
 However, you can customize the spatial pattern of input rate when `design_type = "ls"` using the `rank_seq_ws` and `rank_seq_as` options. To do so, it is important to understand how `plot_id` and `strip_id` are assigned to each of the plots. Here are their maps.
@@ -103,7 +103,7 @@ td_ls_1 <-
     rate_info = n_rate_info
   )
 
-viz(td_ls_1, type = "rates", abline = FALSE)
+viz(td_ls_1, type = "rates")
 ```
 
 ```{r}
@@ -116,7 +116,7 @@ td_ls_2 <-
     rate_info = n_rate_info
   )
 
-viz(td_ls_2, type = "rates", abline = FALSE)
+viz(td_ls_2, type = "rates")
 ```
 
 # Strip trial ("strip")
@@ -140,7 +140,7 @@ td_strip <-
     rate_info = n_rate_info
   )
 
-viz(td_strip, type = "rates", abline = FALSE)
+viz(td_strip, type = "rates")
 ```
 
 For the strip trial, you can specify the full sequence unlike the other design options. We have a total of `r max(exp_data$exp_plots[[1]]$strip_id)` strips in this experiment.
@@ -161,7 +161,7 @@ td_strip <-
     rate_info = n_rate_info
   )
 
-viz(td_strip, type = "rates", abline = FALSE)
+viz(td_strip, type = "rates")
 ```
 
 # Randomized Block ("rb")
@@ -182,7 +182,7 @@ td_rb <-
     rate_info = n_rate_info
   )
 
-viz(td_rb, type = "rates", abline = FALSE)
+viz(td_rb, type = "rates")
 ```
 
 When `design_type = "rb"`, blocks are created internally when `assign_rates()` is run. Here is what blocks look like.
@@ -213,7 +213,7 @@ td_jcls <-
     rate_info = n_rate_info
   )
 
-viz(td_jcls, type = "rates", abline = FALSE)
+viz(td_jcls, type = "rates")
 ```
 
 # Extra Jump-conscious Alternate ("ejca")
@@ -236,7 +236,7 @@ td_ejca <-
     rate_info = n_rate_info
   )
 
-viz(td_ejca, type = "rates", abline = FALSE)
+viz(td_ejca, type = "rates")
 ```
 
 # Sparse ("sparse")
@@ -259,6 +259,6 @@ td_sparse <-
 ```
 
 ```{r}
-viz(td_sparse, type = "rates", abline = FALSE)
+viz(td_sparse, type = "rates")
 ```
 

@@ -13,14 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # ofpetrial: Design On-farm Precision Experiments
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The `ofpetrial` package allows the user to design agronomic input experiments in a reproducible manner without using ArcGIS or QGIS.  
+The `ofpetrial` package allows the user to design agronomic input experiments in a reproducible manner without using ArcGIS or QGIS. The vignette for this package is [here](https://difm-brain.github.io/ofpetrial/).
 
 ## Installation
 
@@ -28,12 +27,15 @@ You can install the development version of ofpetrial from [Github](https://githu
 
 ```{r, eval = FALSE}
 devtools::install_github("DIFM-Brain/ofpetrial")
-library(ofpetrial)
 ```
 
 ## Example
 
 Here, we demonstrate how to use the `ofpetrial` package to create two-input on-farm experiment trial designs.
+
+```{r}
+library(ofpetrial)
+```
 
 ### Create experimental plots
 
@@ -92,7 +94,7 @@ exp_data$exp_plots[[1]]
 We can visualize the layout of the experiment plots using `viz_layout()`.
 
 ```{r, dpi = 600}
-viz(exp_data, type = "layout")
+viz(exp_data, type = "layout", abline = TRUE)
 ```
 
 ### Assign rates
@@ -147,7 +149,7 @@ Along with the spatial pattern of the input rates, the applicator/planter ab-lin
 
 The `ofpetrial` package offers several functions to check the soundness of a trial design (see [this vignette](https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html) for more details and examples). 
 
-Let's check if the seed and NH3 rates has very little correlationl. 
+Here, let's check the correlation between the seed and NH3 rates. 
 
 ```{r}
 (

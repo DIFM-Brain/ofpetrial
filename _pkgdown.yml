@@ -15,10 +15,8 @@ reference:
       - assign_rates
   - title: Modify input rates
     contents:
+      - change_rates
       - add_blocks
-      - change_rate_by_plot
-      - change_rate_by_block
-      - change_rate_by_strip
   - title: Diagnose trial design
     contents:
       - check_ortho_inputs

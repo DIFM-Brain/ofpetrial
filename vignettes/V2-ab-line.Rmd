@@ -46,7 +46,7 @@ exp_plots_free <-
     abline_type = "free"
   )
 
-viz(exp_plots_free, type = "layout")
+viz(exp_plots_free, type = "layout", abline = TRUE)
 ```
 
 ```{r ab-line-example2}
@@ -58,7 +58,7 @@ exp_plots_lock <-
     abline_type = "lock"
   )
 
-viz(exp_plots_lock, type = "layout")
+viz(exp_plots_lock, type = "layout", abline = TRUE)
 ```
 
 ```{r ab-line-example3}
@@ -101,7 +101,7 @@ exp_plots_aa <-
     abline_type = "lock"
   )
 
-viz(exp_plots_aa, type = "layout")
+viz(exp_plots_aa, type = "layout", abline = TRUE)
 ```
 
 

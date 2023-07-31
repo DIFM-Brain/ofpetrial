@@ -30,7 +30,8 @@
 + [x] discrete example? cover crop?
 + [ ] check the orthogonality with past trial design
 + [a] improve the creation of headland (difference of field and experiment)
-
++ [ ] what to do with blocks?
++ [ ] distribution of input rate in check 
 
 
 # Problems
@@ -54,3 +55,6 @@
 + [x] modify rates
 + [ ] key parameters in make_plots
 + [ ] how rate conversion works with explanation on base_rate
++ [ ] add more real examples to explain workflows
+  + [ ] go through the process we indeed went through for a DIFM experiment with iterative processes (change side_length, check map, change side_length, etc) (single input and two input)
+  + [ ] create the design Laura uses for her CIG grant (manual)

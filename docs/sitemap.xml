@@ -16,6 +16,9 @@
     <loc>/articles/3-change-rates-manually.html</loc>
   </url>
   <url>
+    <loc>/articles/V0-example-work-flows.html</loc>
+  </url>
+  <url>
     <loc>/articles/V1-trial-design-options.html</loc>
   </url>
   <url>
@@ -80,6 +83,9 @@
   </url>
   <url>
     <loc>/reference/change_rate_by_strip.html</loc>
+  </url>
+  <url>
+    <loc>/reference/change_rates.html</loc>
   </url>
   <url>
     <loc>/reference/check_alignment.html</loc>

@@ -61,6 +61,7 @@ usethis::use_build_ignore(c("dev_notes.md", "checklist.md", "notes.md", "organiz
 #++++++++++++++++++++++++++++++++++++
 usethis::use_readme_rmd()
 usethis::use_news_md()
+usethis::use_vignette("V0-example-work-flows")
 usethis::use_vignette("V1-trial-design-options")
 usethis::use_vignette("V2-ab-line")
 usethis::use_vignette("V3-change-rates-manually")

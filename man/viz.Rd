@@ -4,7 +4,7 @@
 \alias{viz}
 \title{Visualize various aspects of a trial design}
 \usage{
-viz(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE)
+viz(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = FALSE)
 }
 \arguments{
 \item{td}{(tibble) experiment plots made by make_exp_plots()}
@@ -15,7 +15,7 @@ viz(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE)
 
 \item{text_size}{(numeric) the size of plot ID, strip ID, and block ID numbers printed in the plots}
 
-\item{abline}{(logical) If TRUE, ab-lines are displayed as well. Default = TRUE. This applies only ton type = "rates" and type = "layout".}
+\item{abline}{(logical) If TRUE, ab-lines are displayed as well. Default = FALSE. This applies only ton type = "rates" and type = "layout".}
 }
 \value{
 plot as a ggplot object

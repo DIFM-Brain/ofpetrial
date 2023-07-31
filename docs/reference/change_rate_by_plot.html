@@ -38,6 +38,9 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/V0-example-work-flows.html">Example Work Flow</a>
+    </li>
+    <li>
       <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
     </li>
     <li>
@@ -78,7 +81,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">change_rate_by_plot</span><span class="op">(</span><span class="va">td</span>, <span class="va">input_name</span>, <span class="va">strip_ids</span>, <span class="va">plot_ids</span>, <span class="va">new_rate</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">change_rate_by_plot</span><span class="op">(</span></span>
+<span>  <span class="va">td</span>,</span>
+<span>  <span class="va">input_name</span>,</span>
+<span>  <span class="va">strip_ids</span>,</span>
+<span>  <span class="va">plot_ids</span>,</span>
+<span>  <span class="va">new_rates</span>,</span>
+<span>  rate_by <span class="op">=</span> <span class="st">"all"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -99,7 +109,7 @@
 <dd><p>(numeric) vector of plot_ids</p></dd>
 
 
-<dt>new_rate</dt>
+<dt>new_rates</dt>
 <dd><p>(numeric) scalar number that is assigned to all the plots specified using strip_ids and plot_ids</p></dd>
 
 </dl></div>
@@ -118,9 +128,9 @@
 <span class="r-in"><span><span class="co">#--- change rates of some strips ---#</span></span></span>
 <span class="r-in"><span><span class="va">strip_ids</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span></span></span>
 <span class="r-in"><span><span class="va">plot_ids</span> <span class="op">&lt;-</span> <span class="fl">5</span><span class="op">:</span><span class="fl">10</span></span></span>
-<span class="r-in"><span><span class="va">new_rate</span> <span class="op">&lt;-</span> <span class="fl">200</span></span></span>
+<span class="r-in"><span><span class="va">new_rates</span> <span class="op">&lt;-</span> <span class="fl">200</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">td_modified</span> <span class="op">&lt;-</span> <span class="fu">change_rate_by_plot</span><span class="op">(</span><span class="va">td_single_input</span>, <span class="st">"NH3"</span>, <span class="va">strip_ids</span>, <span class="va">plot_ids</span>, <span class="va">new_rate</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">td_modified</span> <span class="op">&lt;-</span> <span class="fu">change_rate_by_plot</span><span class="op">(</span><span class="va">td_single_input</span>, <span class="st">"NH3"</span>, <span class="va">strip_ids</span>, <span class="va">plot_ids</span>, <span class="va">new_rates</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#--- visualize ---#</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="viz.html">viz</a></span><span class="op">(</span><span class="va">td_modified</span><span class="op">)</span></span></span>

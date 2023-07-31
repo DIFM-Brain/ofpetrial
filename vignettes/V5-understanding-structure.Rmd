@@ -49,7 +49,7 @@ seed_plot_info$plot_width <- 60
 seed_plot_info$plot_width
 ```
 
-Let's now create experiment plots using `make_exp_plots()` to a two-input case.
+Let's now create experiment plots using `make_exp_plots()` for a two-input case.
 
 ```{r}
 #--- create plot information for another input ---#
@@ -77,7 +77,7 @@ dplyr::glimpse(exp_data)
 
 As you can see from below, there are four columns of type `list`: `headland`, `exp_plots`, `ab_lines`, `harvest_ab_lines`. They are called list-columns, which are just like a regular variable except it is a list. List-columns are extremely handy when you would like to store things like vectors or `data.frame` as a cell value in a dataset (`exp_data` here). 
 
-Let's take a look at `exp_plots` variable of `exp_data`. You can access them just like you access a regular variable using $ (or any other methods to pull them).
+Let's take a look at `exp_plots` variable of `exp_data`. You can access them just like you access a regular variable using $ (or any other methods to pull a variable from a `tibble`).
 
 ```{r}
 exp_data$exp_plots
@@ -147,7 +147,7 @@ td_for_input_1 <- dplyr::mutate(td_for_input_1, rate = 0)
 )
 ```
 
-Note that this does not alter `tiral_design` in `td`. So, if you want this to be reflected in `td`, you need to assign it back. A series of functions to change rates (`change_rates_by_plot`, `change_rates_by_block`, `change_rates_by_strip`) are designed to work directly on `td` to avoid this tedious procedure. However, if you want to work directly on the trial design part, it is definitely possible. 
+Note that this does not alter `tiral_design` in `td`. So, if you want this to be reflected in `td`, you need to assign it back. The `change_rates()` function is designed to work directly on `td` to avoid this tedious procedure when modifying rates (see [this vignette](https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html)). If you really want to or must work directly on the `trial_design` part, we just showed that it is definitely possible. 
 
 Many other functions return a tibble with list-columns. For example, `check_alignment()` checks whether the trial design would have a mixed treatment problem.
 

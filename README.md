@@ -9,7 +9,9 @@
 <!-- badges: end -->
 
 The `ofpetrial` package allows the user to design agronomic input
-experiments in a reproducible manner without using ArcGIS or QGIS.
+experiments in a reproducible manner without using ArcGIS or QGIS. The
+vignette for this package is
+[here](https://difm-brain.github.io/ofpetrial/).
 
 ## Installation
 
@@ -18,13 +20,16 @@ You can install the development version of ofpetrial from
 
 ``` r
 devtools::install_github("DIFM-Brain/ofpetrial")
-library(ofpetrial)
 ```
 
 ## Example
 
 Here, we demonstrate how to use the `ofpetrial` package to create
 two-input on-farm experiment trial designs.
+
+``` r
+library(ofpetrial)
+```
 
 ### Create experimental plots
 
@@ -42,15 +47,17 @@ seed_plot_info <-
     harvester_width = 30,
     plot_width = 30
   )
-#> 
 
 seed_plot_info
 #> # A tibble: 1 × 10
-#>   input_name machine_width section_num sectio…¹ harve…² plot_…³ headl…⁴ side_…⁵ min_p…⁶ max_p…⁷
-#>   <chr>              <dbl>       <dbl>    <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 seed                18.3          24    0.762    9.14    9.14    36.6    9.14    73.2    91.4
-#> # … with abbreviated variable names ¹​section_width, ²​harvester_width, ³​plot_width,
-#> #   ⁴​headland_length, ⁵​side_length, ⁶​min_plot_length, ⁷​max_plot_length
+#>   input_name machine…¹ secti…² secti…³ harve…⁴ plot_…⁵
+#>   <chr>          <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 seed            18.3      24   0.762    9.14    9.14
+#> # … with 4 more variables: headland_length <dbl>,
+#> #   side_length <dbl>, min_plot_length <dbl>,
+#> #   max_plot_length <dbl>, and abbreviated variable
+#> #   names ¹​machine_width, ²​section_num,
+#> #   ³​section_width, ⁴​harvester_width, ⁵​plot_width
 
 n_plot_info <-
   prep_plot_f(
@@ -60,15 +67,17 @@ n_plot_info <-
     harvester_width = 30,
     plot_width = 30
   )
-#> 
 
 n_plot_info
 #> # A tibble: 1 × 10
-#>   input_name machine_width section_num sectio…¹ harve…² plot_…³ headl…⁴ side_…⁵ min_p…⁶ max_p…⁷
-#>   <chr>              <dbl>       <dbl>    <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 NH3                 9.14           1     9.14    9.14    9.14    18.3    9.14    73.2    91.4
-#> # … with abbreviated variable names ¹​section_width, ²​harvester_width, ³​plot_width,
-#> #   ⁴​headland_length, ⁵​side_length, ⁶​min_plot_length, ⁷​max_plot_length
+#>   input_name machine…¹ secti…² secti…³ harve…⁴ plot_…⁵
+#>   <chr>          <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+#> 1 NH3             9.14       1    9.14    9.14    9.14
+#> # … with 4 more variables: headland_length <dbl>,
+#> #   side_length <dbl>, min_plot_length <dbl>,
+#> #   max_plot_length <dbl>, and abbreviated variable
+#> #   names ¹​machine_width, ²​section_num,
+#> #   ³​section_width, ⁴​harvester_width, ⁵​plot_width
 ```
 
 Now that plot and machine specifications for the inputs are ready, we
@@ -98,17 +107,28 @@ exp_data$exp_plots
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
-#>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((352997.6 4331460,...
-#> 2        2        1       1_1 POLYGON ((352999 4331540, 3...
-#> 3        3        1       1_1 POLYGON ((353000.5 4331621,...
-#> 4        4        1       1_1 POLYGON ((353001.9 4331702,...
-#> 5        5        1       1_1 POLYGON ((353003.3 4331782,...
-#> 6        6        1       1_1 POLYGON ((353004.8 4331863,...
-#> 7        7        1       1_1 POLYGON ((353006.2 4331943,...
-#> 8        8        1       1_1 POLYGON ((353007.7 4332024,...
-#> 9        9        1       1_1 POLYGON ((353009.1 4332104,...
-#> 10       1        2       1_1 POLYGON ((353006.7 4331460,...
+#>    plot_id strip_id poly_line
+#> 1        1        1       1_1
+#> 2        2        1       1_1
+#> 3        3        1       1_1
+#> 4        4        1       1_1
+#> 5        5        1       1_1
+#> 6        6        1       1_1
+#> 7        7        1       1_1
+#> 8        8        1       1_1
+#> 9        9        1       1_1
+#> 10       1        2       1_1
+#>                          geometry
+#> 1  POLYGON ((352997.6 4331460,...
+#> 2  POLYGON ((352999 4331540, 3...
+#> 3  POLYGON ((353000.5 4331621,...
+#> 4  POLYGON ((353001.9 4331702,...
+#> 5  POLYGON ((353003.3 4331782,...
+#> 6  POLYGON ((353004.8 4331863,...
+#> 7  POLYGON ((353006.2 4331943,...
+#> 8  POLYGON ((353007.7 4332024,...
+#> 9  POLYGON ((353009.1 4332104,...
+#> 10 POLYGON ((353006.7 4331460,...
 #> 
 #> [[2]]
 #> Simple feature collection with 369 features and 3 fields
@@ -117,17 +137,28 @@ exp_data$exp_plots
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
-#>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((352997.6 4331460,...
-#> 2        2        1       1_1 POLYGON ((352999 4331540, 3...
-#> 3        3        1       1_1 POLYGON ((353000.5 4331621,...
-#> 4        4        1       1_1 POLYGON ((353001.9 4331702,...
-#> 5        5        1       1_1 POLYGON ((353003.3 4331782,...
-#> 6        6        1       1_1 POLYGON ((353004.8 4331863,...
-#> 7        7        1       1_1 POLYGON ((353006.2 4331943,...
-#> 8        8        1       1_1 POLYGON ((353007.7 4332024,...
-#> 9        9        1       1_1 POLYGON ((353009.1 4332104,...
-#> 10       1        2       1_1 POLYGON ((353006.7 4331460,...
+#>    plot_id strip_id poly_line
+#> 1        1        1       1_1
+#> 2        2        1       1_1
+#> 3        3        1       1_1
+#> 4        4        1       1_1
+#> 5        5        1       1_1
+#> 6        6        1       1_1
+#> 7        7        1       1_1
+#> 8        8        1       1_1
+#> 9        9        1       1_1
+#> 10       1        2       1_1
+#>                          geometry
+#> 1  POLYGON ((352997.6 4331460,...
+#> 2  POLYGON ((352999 4331540, 3...
+#> 3  POLYGON ((353000.5 4331621,...
+#> 4  POLYGON ((353001.9 4331702,...
+#> 5  POLYGON ((353003.3 4331782,...
+#> 6  POLYGON ((353004.8 4331863,...
+#> 7  POLYGON ((353006.2 4331943,...
+#> 8  POLYGON ((353007.7 4332024,...
+#> 9  POLYGON ((353009.1 4332104,...
+#> 10 POLYGON ((353006.7 4331460,...
 ```
 
 `exp_data$exp_plots` is a list and you can access the individual
@@ -141,27 +172,38 @@ exp_data$exp_plots[[1]]
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
-#>    plot_id strip_id poly_line                       geometry
-#> 1        1        1       1_1 POLYGON ((352997.6 4331460,...
-#> 2        2        1       1_1 POLYGON ((352999 4331540, 3...
-#> 3        3        1       1_1 POLYGON ((353000.5 4331621,...
-#> 4        4        1       1_1 POLYGON ((353001.9 4331702,...
-#> 5        5        1       1_1 POLYGON ((353003.3 4331782,...
-#> 6        6        1       1_1 POLYGON ((353004.8 4331863,...
-#> 7        7        1       1_1 POLYGON ((353006.2 4331943,...
-#> 8        8        1       1_1 POLYGON ((353007.7 4332024,...
-#> 9        9        1       1_1 POLYGON ((353009.1 4332104,...
-#> 10       1        2       1_1 POLYGON ((353006.7 4331460,...
+#>    plot_id strip_id poly_line
+#> 1        1        1       1_1
+#> 2        2        1       1_1
+#> 3        3        1       1_1
+#> 4        4        1       1_1
+#> 5        5        1       1_1
+#> 6        6        1       1_1
+#> 7        7        1       1_1
+#> 8        8        1       1_1
+#> 9        9        1       1_1
+#> 10       1        2       1_1
+#>                          geometry
+#> 1  POLYGON ((352997.6 4331460,...
+#> 2  POLYGON ((352999 4331540, 3...
+#> 3  POLYGON ((353000.5 4331621,...
+#> 4  POLYGON ((353001.9 4331702,...
+#> 5  POLYGON ((353003.3 4331782,...
+#> 6  POLYGON ((353004.8 4331863,...
+#> 7  POLYGON ((353006.2 4331943,...
+#> 8  POLYGON ((353007.7 4332024,...
+#> 9  POLYGON ((353009.1 4332104,...
+#> 10 POLYGON ((353006.7 4331460,...
 ```
 
 We can visualize the layout of the experiment plots using
 `viz_layout()`.
 
 ``` r
-viz(exp_data, type = "layout")
+viz(exp_data, type = "layout", abline = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 ### Assign rates
 
@@ -187,10 +229,13 @@ seed_rate_info <-
 
 seed_rate_info
 #> # A tibble: 1 × 10
-#>   input_name design_type gc_rate unit  rates  min_rate max_rate num_rates rank_seq_ws rank_se…¹
-#>   <chr>      <chr>         <dbl> <chr> <list>    <dbl>    <dbl>     <dbl> <list>      <list>   
-#> 1 seed       jcls          32000 seed  <NULL>    16000    40000         5 <NULL>      <NULL>   
-#> # … with abbreviated variable name ¹​rank_seq_as
+#>   input…¹ desig…² gc_rate unit  rates  min_r…³ max_r…⁴
+#>   <chr>   <chr>     <dbl> <chr> <list>   <dbl>   <dbl>
+#> 1 seed    jcls      32000 seed  <NULL>   16000   40000
+#> # … with 3 more variables: num_rates <dbl>,
+#> #   rank_seq_ws <list>, rank_seq_as <list>, and
+#> #   abbreviated variable names ¹​input_name,
+#> #   ²​design_type, ³​min_rate, ⁴​max_rate
 
 n_rate_info <-
   prep_rate(
@@ -204,10 +249,13 @@ n_rate_info <-
 
 n_rate_info
 #> # A tibble: 1 × 10
-#>   input_name design_type gc_rate unit  rates     min_rate max_rate num_rates rank_seq…¹ rank_…²
-#>   <chr>      <chr>         <dbl> <chr> <list>    <lgl>    <lgl>        <dbl> <list>     <list> 
-#> 1 NH3        ls              180 lb    <dbl [5]> NA       NA               5 <dbl [5]>  <NULL> 
-#> # … with abbreviated variable names ¹​rank_seq_ws, ²​rank_seq_as
+#>   input_…¹ desig…² gc_rate unit  rates min_r…³ max_r…⁴
+#>   <chr>    <chr>     <dbl> <chr> <lis> <lgl>   <lgl>  
+#> 1 NH3      ls          180 lb    <dbl> NA      NA     
+#> # … with 3 more variables: num_rates <dbl>,
+#> #   rank_seq_ws <list>, rank_seq_as <list>, and
+#> #   abbreviated variable names ¹​input_name,
+#> #   ²​design_type, ³​min_rate, ⁴​max_rate
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots (see
@@ -228,7 +276,7 @@ Here is the visualization of the trial design done by `viz`.
 viz(trial_design)
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by default.
@@ -240,17 +288,16 @@ of a trial design (see [this
 vignette](https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html)
 for more details and examples).
 
-Let’s check if the seed and NH3 rates has very little correlationl.
+Here, let’s check the correlation between the seed and NH3 rates.
 
 ``` r
 (
   cor_inputs <- check_ortho_inputs(trial_design)
 )
-#> Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.
-#> [1] 0.3405442
+#> [1] 0.4980795
 ```
 
-The correlation coefficient is 0.34.
+The correlation coefficient is 0.5.
 
 ### Write the trial design files for implementation
 

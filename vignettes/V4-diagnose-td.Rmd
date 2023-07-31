@@ -176,7 +176,7 @@ td_two_input <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_i
 Here is the visualization of the assigned rates for both inputs. It is easy to see that both input have exactly the same pattern because of the same `rank_seq_ws` and `plot_width`.
 
 ```{r}
-viz(td_two_input, abline = FALSE)
+viz(td_two_input)
 ```
 
 You can check the correlation of the two inputs using `check_ortho_inputs()` like this.
@@ -220,7 +220,7 @@ td_two_input_2 <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate
 ```
 
 ```{r}
-viz(td_two_input_2, abline = FALSE)
+viz(td_two_input_2)
 ```
 
 Now, there are two plots of different rates of seed in a single plot of NH3. Consequently, their correlation is very low now. 
@@ -325,7 +325,7 @@ data(td_single_input)
 Here is the visualization of the trial desing.
 
 ```{r}
-viz(td_single_input, abline = FALSE)
+viz(td_single_input)
 ```
 
 Here, we have three sets of spatial data we want to check.

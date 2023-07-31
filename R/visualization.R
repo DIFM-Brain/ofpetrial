@@ -7,7 +7,7 @@
 #' @param type (character) type of plots to create. Available options are "rates", "layout", "plot_id", "strip_id", "block_id", "ab_line"
 #' @param input_index (numeric) a vector of length 1 or 2. 1 means the 1st input of the td, 2 means the second input of the td, and c(1, 2) means both of the inputs, which is the DEFAULT
 #' @param text_size (numeric) the size of plot ID, strip ID, and block ID numbers printed in the plots
-#' @param abline (logical) If TRUE, ab-lines are displayed as well. Default = TRUE. This applies only ton type = "rates" and type = "layout".
+#' @param abline (logical) If TRUE, ab-lines are displayed as well. Default = FALSE. This applies only ton type = "rates" and type = "layout".
 #' @returns plot as a ggplot object
 #' @import ggplot2
 #' @export
@@ -17,7 +17,7 @@
 #' viz(td_two_input)
 #' viz(td_two_input, type = "plot_id")
 #'
-viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = TRUE) {
+viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = FALSE) {
   #--- select rows ---#
   if (nrow(td) == 1) {
     input_index <- 1
@@ -95,7 +95,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       dplyr::mutate(g_tr = list(
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +
-          geom_sf(data = trial_design, aes(fill = factor(rate)), color = NA) +
+          geom_sf(data = trial_design, aes(fill = factor(rate)), color = "black") +
           scale_fill_viridis_d(name = paste0(input_name, " (", unit, ")")) +
           theme_void() +
           ggtitle(

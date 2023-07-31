@@ -56,6 +56,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/V0-example-work-flows.html">Example Work Flow</a>
+    </li>
+    <li>
       <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
     </li>
     <li>
@@ -153,7 +156,7 @@ manually. This vignette demonstrates such operations.</p>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>Here is what the trial design looks like.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level2">
@@ -197,121 +200,158 @@ are multiple plots with the same <code>plot_id</code> values, but a
 combination of <code>strip_id</code> and <code>plot_id</code> uniquely
 identifies a plot.</p>
 <div class="section level3">
-<h3 id="by-plot">By plot<a class="anchor" aria-label="anchor" href="#by-plot"></a>
+<h3 id="re-assign-a-single-rate-to-all-the-specified-plots">Re-assign a single rate to all the specified plots<a class="anchor" aria-label="anchor" href="#re-assign-a-single-rate-to-all-the-specified-plots"></a>
 </h3>
-<p>You can use <code><a href="../reference/change_rate_by_plot.html">change_rate_by_plot()</a></code> to change rates. The
-code below change the rate asscociated the plot with
+<p>You can use <code><a href="../reference/change_rates.html">change_rates()</a></code> to change rates. The code
+below change the rate asscociated the plot with
 <code>strip_id = 1</code> and <code>plot_id = 1</code> (left bottom
 cell) to 0.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">modified_td</span> <span class="op">&lt;-</span> </span>
-<span>  <span class="fu"><a href="../reference/change_rate_by_plot.html">change_rate_by_plot</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">modified_td</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
 <span>    <span class="va">td</span>,</span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    strip_ids <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    plot_ids <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    new_rate <span class="op">=</span> <span class="fl">0</span></span>
+<span>    new_rates <span class="op">=</span> <span class="fl">0</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">modified_td</span>, type <span class="op">=</span> <span class="st">"rates"</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">modified_td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>You can change rates of multiple plots with the same
 <code>plot_id</code> across multiple <code>strip_id</code>s.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rate_by_plot.html">change_rate_by_plot</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
 <span>  <span class="va">td</span>,</span>
 <span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>  strip_ids <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  plot_ids <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  new_rate <span class="op">=</span> <span class="fl">0</span></span>
+<span>  new_rates <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>When you give vectors of values to <code>stip_ids</code> and
 <code>plot_ids</code>, the plots with all the possible combinations of
 <code>strip_id</code>-<code>plot_id</code> are going to have a new
 rate.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rate_by_plot.html">change_rate_by_plot</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
 <span>  <span class="va">td</span>,</span>
 <span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>  strip_ids <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,</span>
 <span>  plot_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span>, <span class="fl">9</span>, <span class="fl">14</span>, <span class="fl">19</span>, <span class="fl">24</span><span class="op">)</span>,</span>
-<span>  new_rate <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="by-strip">By strip<a class="anchor" aria-label="anchor" href="#by-strip"></a>
-</h3>
-<p><code><a href="../reference/change_rate_by_strip.html">change_rate_by_strip()</a></code> lets you change the rate of all
-the plot in the strips you specified. When you supply vectoros of equal
-length to <code>strip_ids</code> and <code>new_rates</code>, then
-<strong>n</strong>th element of <code>strip_ids</code> is matched with
-<strong>n</strong>th element of <code>new_rates</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rate_by_strip.html">change_rate_by_strip</a></span><span class="op">(</span></span>
-<span>  <span class="va">td</span>,</span>
-<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
-<span>  strip_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">7</span>, <span class="fl">10</span>, <span class="fl">13</span>, <span class="fl">16</span>, <span class="fl">19</span><span class="op">)</span>,</span>
-<span>  new_rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">270</span>, length <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p>If you supply a single value to <code>new_rates</code> while
-supplying more than one values to <code>strip_ids</code>, the single
-rate will be assigned to all the strips specified in
-<code>strip_ids</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rate_by_strip.html">change_rate_by_strip</a></span><span class="op">(</span></span>
-<span>  <span class="va">td</span>,</span>
-<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
-<span>  strip_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">7</span>, <span class="fl">10</span>, <span class="fl">13</span>, <span class="fl">16</span>, <span class="fl">19</span><span class="op">)</span>,</span>
 <span>  new_rates <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p>If you do not provide any <code>plot_ids</code>, then all the plots
+in the strips specified by <code>strip_ids</code> will be altered.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>  <span class="va">td</span>,</span>
+<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>  strip_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">7</span>, <span class="fl">10</span>, <span class="fl">13</span>, <span class="fl">16</span><span class="op">)</span>,</span>
+<span>  new_rates <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+</div>
+<div class="section level3">
+<h3 id="re-assign-multiple-rates-by-strip">Re-assign multiple rates by strip<a class="anchor" aria-label="anchor" href="#re-assign-multiple-rates-by-strip"></a>
+</h3>
+<p>You can also change the rate of multiple plots across multiple strips
+by strip using the <code>rate_by = "strip"</code> option. In this case,
+<strong>n</strong>th element of <code>new_rates</code> will be assigned
+to <strong>n</strong>th strip in <code>strip_ids</code>.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>  <span class="va">td</span>,</span>
+<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>  strip_ids <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">7</span>,</span>
+<span>  plot_ids <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span>
+<span>  new_rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">300</span>, <span class="fl">0</span>, <span class="fl">300</span>, <span class="fl">0</span>, <span class="fl">300</span><span class="op">)</span>,</span>
+<span>  rate_by <span class="op">=</span> <span class="st">"strip"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
-<p>The <code><a href="../reference/change_rate_by_strip.html">change_rate_by_strip()</a></code> function can be useful when
-you want to “remove” some plots from the experiment. For example, take a
-look at this trial design.</p>
+<p>If you leave <code>plot_ids</code> unspecified, all the plots in the
+strips specified by <code>strip_ids</code> will be assigned new rates.
+That is, rates are re-assigned by strip.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_curved</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_curved</span>, abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>  <span class="va">td</span>,</span>
+<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>  strip_ids <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">7</span>,</span>
+<span>  new_rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">300</span>, <span class="fl">150</span>, <span class="fl">200</span>, <span class="fl">100</span>, <span class="fl">300</span><span class="op">)</span>,</span>
+<span>  rate_by <span class="op">=</span> <span class="st">"strip"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p>The <code>rate_by = "strip"</code> can be useful when you want to
+“remove” some plots from the experiment. For example, take a look at
+this trial design.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_curved</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_curved</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>Notice that there is a three-plot strip at the east end of the field.
 Suppose, you can “remove” it from experiments (there is nothing wrong
 with keeping them as part of the experiment). You can do so by assining
 the rate for the non-experimental part of field (which is 180) to the
 strip.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rate_by_strip.html">change_rate_by_strip</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
 <span>  <span class="va">td_curved</span>,</span>
 <span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
-<span>  strip_ids <span class="op">=</span><span class="fl">31</span> ,</span>
-<span>  new_rates <span class="op">=</span> <span class="fl">180</span></span>
+<span>  strip_ids <span class="op">=</span> <span class="fl">31</span>,</span>
+<span>  new_rates <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>  rate_by <span class="op">=</span> <span class="st">"strip"</span></span>
 <span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 <div class="section level3">
-<h3 id="by-block">By block<a class="anchor" aria-label="anchor" href="#by-block"></a>
+<h3 id="re-assign-multiple-rates-by-plot">Re-assign multiple rates by plot<a class="anchor" aria-label="anchor" href="#re-assign-multiple-rates-by-plot"></a>
 </h3>
-<p>By default, experiment plots made using <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>
-are not assigned block IDs. You can do so using
-<code><a href="../reference/add_blocks.html">add_blocks()</a></code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_blocks.html">add_blocks</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
-<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
-<p>Let’s set the rate for block of <code>block_id == 1</code> at 0.</p>
+<p>You can assign new rates plot by plot at one time using the
+<code>rate_by = "plot"</code> option. For this option, you are asked to
+provide a matrix of rates where rows and columns of the matrix
+represents <code>plot_id</code>s and <code>strip_id</code>s,
+respectively. For example, suppose you have
+<code>plot_ids = c(2, 4, 6)</code> and
+<code>strip_ids = c(1, 3, 5, 7)</code>. Further suppose, you have
+specified <code>new_rates</code> like below.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">td_with_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/change_rate_by_block.html">change_rate_by_block</a></span><span class="op">(</span><span class="va">td_with_blocks</span>, input_name <span class="op">=</span> <span class="st">"NH3"</span>, block_ids <span class="op">=</span> <span class="fl">1</span>, new_rates <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="op">(</span></span>
+<span>  <span class="va">new_rates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span> <span class="op">*</span> <span class="fl">20</span>, nrow <span class="op">=</span> <span class="fl">3</span>, ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;      [,1] [,2] [,3] [,4]</span></span>
+<span><span class="co">#&gt; [1,]   20   80  140  200</span></span>
+<span><span class="co">#&gt; [2,]   40  100  160  220</span></span>
+<span><span class="co">#&gt; [3,]   60  120  180  240</span></span></code></pre></div>
+<p>Then, the plot with <code>plot_id</code> = 2 (1st element of
+<code>plot_ids</code>) and <code>strip_id</code> = 1 (1st element of
+<code>strip_ids</code>) will get the value stored in
+<code>new_rates[1, 1]</code> (1st row and 1st column of the matrix of
+rates).</p>
+<p>The code below assign randomized rates to the 5-plot by 5-plot block
+at the left lower corner of the field.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">new_rates_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">140</span>, <span class="fl">180</span>, <span class="fl">220</span>, <span class="fl">260</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_with_blocks</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<span><span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>  <span class="va">td</span>,</span>
+<span>  input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>  strip_ids <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>  plot_ids <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,</span>
+<span>  new_rates <span class="op">=</span> <span class="va">new_rates_mat</span>,</span>
+<span>  rate_by <span class="op">=</span> <span class="st">"plot"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>abline <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
+<p>If you would like, you could repeat this to other blocks of plots to
+generate a randomized block design. Of course, it is much easier to just
+use the “rb” option in <code><a href="../reference/assign_rates.html">assign_rates()</a></code>.</p>
 </div>
 </div>
   </div>
