@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+test/*
+debug/*
+*.DS_Store
+inst
+*.gitignore
+.Rhistory

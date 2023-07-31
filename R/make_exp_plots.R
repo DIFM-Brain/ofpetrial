@@ -368,13 +368,17 @@ make_exp_plots <- function(input_plot_info,
     dplyr::select(
       trial_data_eh,
       input_name,
-      harvester_width,
-      plot_width,
       field_sf,
       headland,
       exp_plots,
       ab_lines,
-      harvest_ab_lines
+      harvest_ab_lines,
+      plot_width,
+      harvester_width,
+      machine_width,
+      section_num,
+      headland_length,
+      side_length
     ) %>%
     dplyr::mutate(abline_type = abline_type) %>%
     dplyr::ungroup()
