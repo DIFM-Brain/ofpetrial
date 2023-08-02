@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -9,5 +9,5 @@ articles:
   V4-diagnose-td: V4-diagnose-td.html
   V5-understanding-structure: V5-understanding-structure.html
   V6-non-regular-field: V6-non-regular-field.html
-last_built: 2023-07-17T03:50Z
+last_built: 2023-08-02T14:52Z
 

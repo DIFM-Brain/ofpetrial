@@ -108,6 +108,20 @@
 <p>Load the <code>ofpetrial</code> package</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
+<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::last' by 'dplyr::last' when</span></span>
+<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::between' by 'dplyr::between'</span></span>
+<span><span class="co">#&gt; when loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <p>The AB-line is the driving direction of a machine. In practice, a
 farmer uploads AB-lines into the machine and can choose between these
@@ -194,7 +208,7 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <code class="sourceCode R"><span><span class="va">aa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `as-applied-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmp9y1QrX/temp_libpath889dbb0b6c5/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpxJBFeW/temp_libpath144d95adbe0e9/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 10404 features and 32 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -221,11 +235,13 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"lock"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in acos(vec_ip_d): NaNs produced</span></span>
-<span><span class="co">#&gt; Warning: `cols` is now required when using `unnest()`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `cols = c(data)`.</span></span>
-<span><span class="co">#&gt; Warning in st_centroid.sf(past_aa_input[which.min(st_distance(past_aa_input, :</span></span>
-<span><span class="co">#&gt; st_centroid assumes attributes are constant over geometries of x</span></span>
+<span><span class="co">#&gt; Warning: There were 2 warnings in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `ab_sf = list(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
+<span><span class="co">#&gt; Caused by warning in `acos()`:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> NaNs produced</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_aa</span>, type <span class="op">=</span> <span class="st">"layout"</span>, abline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V2-ab-line_files/figure-html/ab-line-from-yield-1.png" width="700"></p>
