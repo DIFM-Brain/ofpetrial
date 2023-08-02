@@ -3,7 +3,7 @@ template:
     ganalytics: G-B09QYRX8XQ
 
 reference:
-  - title: Prepare plot and rate information 
+  - title: Prepare plot and rate information
     desc: Prepare information necessary to create a trial design
     contents:
       - prep_plot_m
@@ -28,6 +28,7 @@ reference:
   - title: Write out files
     contents:
       - write_trial_files
+      - make_trial_report
   - title: Data
     contents:
       - plot_info
