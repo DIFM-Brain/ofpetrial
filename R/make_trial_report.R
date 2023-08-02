@@ -123,8 +123,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
     }
     ) %>%
-    gsub("_temp-folder-_", temp_folder, .) %>%
-    gsub("machine-table", machine_table, .) %>%
+    gsub("_temp-folder-here_", temp_folder, .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
     gsub("_length-unit_", ifelse(units == "metric", "meter", "foot"), .) %>%
     gsub("_land-unit_", land_unit, .) %>%
@@ -144,12 +143,12 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   # purl(td_file_name, output = td_r_file_name)
 
   #--- render ---#
-  render(td_file_name, envir = parent.frame())
+  render(td_file_name)
 
-  unlink(paste0(folder_path, "ofpe_temp_folder"), recursive = TRUE)
+  unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
 
   viewer <- getOption("viewer")
-  viewer(paste0(folder_path, "trial_design_report.html"))
+  viewer(file.path(folder_path, "trial_design_report.html"))
 }
 
 # !==================-=========================================
