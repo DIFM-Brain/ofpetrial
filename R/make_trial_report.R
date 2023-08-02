@@ -30,7 +30,7 @@
 #')
 #'}
 
-make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
+make_trial_report <- function(td, land_unit, units, trial_name, folder_path = getwd()){
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
     mutate(trial_name = trial_name) %>%
@@ -107,6 +107,12 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
   }
 
+  temp_folder <- file.path(folder_path, "ofpe_temp_folder")
+  dir.create(temp_folder)
+
+  saveRDS(all_trial_info, file.path(temp_folder, "all_trial_info.rds"))
+  saveRDS(machine_table, file.path(temp_folder, "machine_table.rds"))
+
   #/*=================================================*/
   #' # Rmd
   #/*=================================================*/
@@ -117,8 +123,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
     }
     ) %>%
-    gsub("_temp-folder-here_", temp_folder, .) %>%
-    gsub("_all-trial-info_", all_trial_info, .) %>%
+    gsub("_temp-folder-_", temp_folder, .) %>%
     gsub("machine-table", machine_table, .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
     gsub("_length-unit_", ifelse(units == "metric", "meter", "foot"), .) %>%
@@ -130,7 +135,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
   #/*=================================================*/
   #' # Wrapping up
   #/*=================================================*/
-  td_file_name <- paste0(folder_path, "trial_design_report.Rmd")
+  td_file_name <- file.path(folder_path, "trial_design_report.Rmd")
 
   writeLines(td_rmd, con = td_file_name)
 
@@ -141,7 +146,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
   #--- render ---#
   render(td_file_name, envir = parent.frame())
 
-  unlink("mydir", recursive = TRUE)
+  unlink(paste0(folder_path, "ofpe_temp_folder"), recursive = TRUE)
 
   viewer <- getOption("viewer")
   viewer(paste0(folder_path, "trial_design_report.html"))
