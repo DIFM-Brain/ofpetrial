@@ -23,7 +23,7 @@
 #' td_single_input
 #'
 #' #--- create report ---#
-#' td <- assign_rates(exp_data, rate_info)
+#' td <- make_trial_report(td_single_input, "acres", "imperial", "Test Trial", folder_path)
 #'
 make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
   source("R/assign_rates.R")
