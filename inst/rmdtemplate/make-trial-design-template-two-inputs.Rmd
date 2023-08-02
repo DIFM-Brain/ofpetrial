@@ -47,8 +47,8 @@ knitr::opts_chunk$set(
 
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE}
 temp_folder = "_temp-folder_"
-all_trial_info = readRDS(paste0(temp_folder, "all_trial_info.rds"))
-machine_table = readRDS(paste0(temp_folder, "machine_table.rds"))
+all_trial_info = readRDS(file.path(temp_folder, "all_trial_info.rds"))
+machine_table = readRDS(file.path(temp_folder, "machine_table.rds"))
 
 # === packages ===#
 # library(bookdown)
