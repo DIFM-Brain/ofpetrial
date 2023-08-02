@@ -21,7 +21,6 @@
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
 #' td_single_input
-#'
 #' \dontrun{
 #' make_trial_report(td_single_input,
 #'  "acres",
@@ -30,6 +29,7 @@
 #'  folder_path
 #')
 #'}
+
 make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
@@ -118,6 +118,8 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
     }
     ) %>%
     gsub("_temp-folder-here_", temp_folder, .) %>%
+    gsub("_all-trial-info_", all_trial_info, .) %>%
+    gsub("machine-table", machine_table, .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
     gsub("_length-unit_", ifelse(units == "metric", "meter", "foot"), .) %>%
     gsub("_land-unit_", land_unit, .) %>%
@@ -128,17 +130,21 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
   #/*=================================================*/
   #' # Wrapping up
   #/*=================================================*/
-  td_file_name <- paste0(temp_folder, "trial_design_report.Rmd")
+  td_file_name <- paste0(folder_path, "trial_design_report.Rmd")
 
   writeLines(td_rmd, con = td_file_name)
 
-  td_r_file_name <- paste0(temp_folder, "for_debug.R")
+  # td_r_file_name <- paste0(folder_path, "for_debug.R")
 
-  purl(td_file_name, output = td_r_file_name)
+  # purl(td_file_name, output = td_r_file_name)
 
   #--- render ---#
-  render(td_file_name)
+  render(td_file_name, envir = parent.frame())
 
+  unlink("mydir", recursive = TRUE)
+
+  viewer <- getOption("viewer")
+  viewer(paste0(folder_path, "trial_design_report.html"))
 }
 
 # !==================-=========================================

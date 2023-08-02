@@ -46,6 +46,9 @@ knitr::opts_chunk$set(
 ```
 
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE}
+
+all_trial_info = "_all-trial-info_"
+machine_table = "_machine-table_"
 # === packages ===#
 # library(bookdown)
 # library(pracma)
