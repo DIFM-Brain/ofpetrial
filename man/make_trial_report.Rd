@@ -28,9 +28,14 @@ This function creates a report describing the trial design created by the user w
 data(td_single_input)
 td_single_input
 
-#--- create report ---#
-td <- make_trial_report(td_single_input, "acres", "imperial", "Test Trial", folder_path)
-
+\dontrun{
+make_trial_report(td_single_input,
+ "acres",
+ "imperial",
+ "Test Trial",
+ folder_path
+)
+}
 # Rmd
 # Wrapping up
 }

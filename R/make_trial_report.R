@@ -22,9 +22,14 @@
 #' data(td_single_input)
 #' td_single_input
 #'
-#' #--- create report ---#
-#' td <- make_trial_report(td_single_input, "acres", "imperial", "Test Trial", folder_path)
-#'
+#' \dontrun{
+#' make_trial_report(td_single_input,
+#'  "acres",
+#'  "imperial",
+#'  "Test Trial",
+#'  folder_path
+#')
+#'}
 make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
