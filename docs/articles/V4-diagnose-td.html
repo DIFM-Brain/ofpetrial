@@ -108,8 +108,22 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#--- pacakges ---#</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/terra/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.6.17</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
+<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::last' by 'dplyr::last' when</span></span>
+<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::between' by 'dplyr::between'</span></span>
+<span><span class="co">#&gt; when loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; terra 1.7.39</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#--- file names ---#</span></span>
@@ -154,11 +168,10 @@ fertilizer and three times as wide as the harvesters.</p>
 <span>  <span class="va">machine_alignment_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_alignment.html">check_alignment</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
-<span><span class="co">#&gt;   input_name                     harvest_ab_line overl…¹ harve…² g_pat…³ g_ove…⁴</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NH3        (353001.2 4331404, 353012.7 433204… &lt;dt&gt;    &lt;sf&gt;    <span style="color: #949494;">&lt;gg&gt;</span>    <span style="color: #949494;">&lt;gg&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​overlap_data, ²​harvester_path,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ³​g_path_alignment, ⁴​g_overlap</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   input_name                      harvest_ab_line overlap_data  harvester_path</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NH3        (353001.2 4331404, 353012.7 4332047) <span style="color: #949494;">&lt;dt [39 × 7]&gt;</span> <span style="color: #949494;">&lt;sf [45 × 3]&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: g_path_alignment &lt;list&gt;, g_overlap &lt;list&gt;</span></span></span></code></pre></div>
 <p>One of the elements of the resulting output is
 <code>g_path_alignment</code>, which is a <code>ggplot</code> figure of
 the path of the harvester (red) and applicator (blue).</p>
@@ -454,7 +467,7 @@ data)</li>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">yield_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"yield-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `yield-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmp9y1QrX/temp_libpath889dbb0b6c5/ofpetrial/extdata/yield-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpxJBFeW/temp_libpath144d95adbe0e9/ofpetrial/extdata/yield-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 16822 features and 34 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -474,7 +487,7 @@ data)</li>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ssurgo-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mukey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">mukey</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ssurgo-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmp9y1QrX/temp_libpath889dbb0b6c5/ofpetrial/extdata/ssurgo-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpxJBFeW/temp_libpath144d95adbe0e9/ofpetrial/extdata/ssurgo-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 11 features and 9 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
@@ -512,7 +525,11 @@ data)</li>
 <span>    sp_data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">yield_sf</span>, <span class="va">ssurgo_sf</span>, <span class="va">topo_rast</span><span class="op">)</span>,</span>
 <span>    vars_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Yld_Vol_Dr"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mukey"</span>, <span class="st">"clay"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Computation failed in `stat_bin()`</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `checks = purrr::pmap(list(trial_design, spatial_data,</span></span>
+<span><span class="co">#&gt;   variable), summarize_chars)`.</span></span>
+<span><span class="co">#&gt; Caused by warning:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Computation failed in `stat_bin()`</span></span>
 <span><span class="co">#&gt; Caused by error in `abs()`:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> non-numeric argument to mathematical function</span></span></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">

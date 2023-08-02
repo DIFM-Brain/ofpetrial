@@ -21,8 +21,8 @@
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
 #' td_single_input
-#'
 #' \dontrun{
+<<<<<<< HEAD
 #' make_trial_report(
 #'   td_single_input,
 #'   "acres",
@@ -32,6 +32,17 @@
 #' )
 #' }
 make_trial_report <- function(td, land_unit, units, trial_name, folder_path) {
+=======
+#' make_trial_report(td_single_input,
+#'  "acres",
+#'  "imperial",
+#'  "Test Trial",
+#'  folder_path
+#')
+#'}
+
+make_trial_report <- function(td, land_unit, units, trial_name, folder_path = getwd()){
+>>>>>>> TrialDesign/main
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
     mutate(trial_name = trial_name) %>%
@@ -121,7 +132,17 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path) {
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
   }
 
+<<<<<<< HEAD
   # /*=================================================*/
+=======
+  temp_folder <- file.path(folder_path, "ofpe_temp_folder")
+  dir.create(temp_folder)
+
+  saveRDS(all_trial_info, file.path(temp_folder, "all_trial_info.rds"))
+  saveRDS(machine_table, file.path(temp_folder, "machine_table.rds"))
+
+  #/*=================================================*/
+>>>>>>> TrialDesign/main
   #' # Rmd
   # /*=================================================*/
   td_rmd <-
@@ -140,17 +161,30 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path) {
 
   # /*=================================================*/
   #' # Wrapping up
+<<<<<<< HEAD
   # /*=================================================*/
   td_file_name <- paste0(temp_folder, "trial_design_report.Rmd")
+=======
+  #/*=================================================*/
+  td_file_name <- file.path(folder_path, "trial_design_report.Rmd")
+>>>>>>> TrialDesign/main
 
   writeLines(td_rmd, con = td_file_name)
 
-  td_r_file_name <- paste0(temp_folder, "for_debug.R")
+  # td_r_file_name <- paste0(folder_path, "for_debug.R")
 
-  purl(td_file_name, output = td_r_file_name)
+  # purl(td_file_name, output = td_r_file_name)
 
   #--- render ---#
   render(td_file_name)
+<<<<<<< HEAD
+=======
+
+  unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
+
+  viewer <- getOption("viewer")
+  viewer(file.path(folder_path, "trial_design_report.html"))
+>>>>>>> TrialDesign/main
 }
 
 # !==================-=========================================

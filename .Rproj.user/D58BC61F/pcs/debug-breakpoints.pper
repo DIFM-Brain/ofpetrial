@@ -1,5 +1,36 @@
 {
     "debugBreakpointsState": {
-        "breakpoints": []
+        "breakpoints": [
+            {
+                "id": 1,
+                "path": "~/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/CommonFiles/functions_for_trial_design.R",
+                "line_number": 1737,
+                "function_steps": "",
+                "function_name": "trial_text_rate_num",
+                "state": 2,
+                "editor_state": 2,
+                "editor_line_number": 1737,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": false,
+                "type": 0,
+                "is_package_breakpoint": false,
+                "package_name": ""
+            },
+            {
+                "id": 11,
+                "path": "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Working on Report Funtion Two Inputs.R",
+                "line_number": 201,
+                "function_steps": "",
+                "function_name": "text_plant_apply",
+                "state": 2,
+                "editor_state": 2,
+                "editor_line_number": 201,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": true,
+                "type": 0,
+                "is_package_breakpoint": false,
+                "package_name": ""
+            }
+        ]
     }
 }

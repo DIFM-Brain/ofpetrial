@@ -176,15 +176,19 @@ for a two-input case.</p>
 <span><span class="co">#--- glimpse ---#</span></span>
 <span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">exp_data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
-<span><span class="co">#&gt; Columns: 9</span></span>
+<span><span class="co">#&gt; Columns: 13</span></span>
 <span><span class="co">#&gt; $ input_name       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed", "NH3"</span></span>
-<span><span class="co">#&gt; $ harvester_width  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144, 9.144</span></span>
-<span><span class="co">#&gt; $ plot_width       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 60.000, 13.716</span></span>
 <span><span class="co">#&gt; $ field_sf         <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> MULTIPOLYGON (((352970.3 43..., MULTIPOLYGON (((35297…</span></span>
 <span><span class="co">#&gt; $ headland         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 1]&gt;], [&lt;sf[1 x 1]&gt;]</span></span>
 <span><span class="co">#&gt; $ exp_plots        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[54 x 4]&gt;], [&lt;sf[243 x 4]&gt;]</span></span>
 <span><span class="co">#&gt; $ ab_lines         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 2]&gt;], [&lt;sf[1 x 2]&gt;]</span></span>
 <span><span class="co">#&gt; $ harvest_ab_lines <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 2]&gt;], [&lt;sf[1 x 2]&gt;]</span></span>
+<span><span class="co">#&gt; $ plot_width       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 60.000, 13.716</span></span>
+<span><span class="co">#&gt; $ harvester_width  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144, 9.144</span></span>
+<span><span class="co">#&gt; $ machine_width    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18.288, 13.716</span></span>
+<span><span class="co">#&gt; $ section_num      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 24, 1</span></span>
+<span><span class="co">#&gt; $ headland_length  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 36.576, 36.576</span></span>
+<span><span class="co">#&gt; $ side_length      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 13.716, 13.716</span></span>
 <span><span class="co">#&gt; $ abline_type      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "free", "free"</span></span></code></pre></div>
 <p>As you can see from below, there are four columns of type
 <code>list</code>: <code>headland</code>, <code>exp_plots</code>,
@@ -295,7 +299,7 @@ because we just assigned rates to the experiment plots with
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
-<span><span class="co">#&gt; Columns: 12</span></span>
+<span><span class="co">#&gt; Columns: 17</span></span>
 <span><span class="co">#&gt; $ input_name       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "seed", "NH3"</span></span>
 <span><span class="co">#&gt; $ input_type       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> "S", "N"</span></span>
 <span><span class="co">#&gt; $ exp_plots        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[54 x 4]&gt;], [&lt;sf[243 x 4]&gt;]</span></span>
@@ -307,7 +311,12 @@ because we just assigned rates to the experiment plots with
 <span><span class="co">#&gt; $ ab_lines         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 2]&gt;], [&lt;sf[1 x 2]&gt;]</span></span>
 <span><span class="co">#&gt; $ harvest_ab_lines <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[1 x 2]&gt;], [&lt;sf[1 x 2]&gt;]</span></span>
 <span><span class="co">#&gt; $ field_sf         <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> MULTIPOLYGON (((352970.3 43..., MULTIPOLYGON (((35297…</span></span>
-<span><span class="co">#&gt; $ harvester_width  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144, 9.144</span></span></code></pre></div>
+<span><span class="co">#&gt; $ harvester_width  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9.144, 9.144</span></span>
+<span><span class="co">#&gt; $ machine_width    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18.288, 13.716</span></span>
+<span><span class="co">#&gt; $ plot_width       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 60.000, 13.716</span></span>
+<span><span class="co">#&gt; $ section_num      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 24, 1</span></span>
+<span><span class="co">#&gt; $ headland_length  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 36.576, 36.576</span></span>
+<span><span class="co">#&gt; $ side_length      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 13.716, 13.716</span></span></code></pre></div>
 <p>A trial design (experiment plots with rates assigned) has a name of
 <code>trial_design</code>, which is also a list-column.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -324,15 +333,15 @@ because we just assigned rates to the experiment plots with
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;     rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1  16000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
-<span><span class="co">#&gt; 2  26667        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
-<span><span class="co">#&gt; 3  40000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
-<span><span class="co">#&gt; 4  32000        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
-<span><span class="co">#&gt; 5  21333        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
-<span><span class="co">#&gt; 6  16000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
-<span><span class="co">#&gt; 7  26667        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
-<span><span class="co">#&gt; 8  40000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
-<span><span class="co">#&gt; 9  32000        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 1  26667        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2  40000        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3  32000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4  21333        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5  16000        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6  26667        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7  40000        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8  32000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9  21333        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
 <span><span class="co">#&gt; 10 40000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
@@ -343,16 +352,16 @@ because we just assigned rates to the experiment plots with
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1   100        1       1 experiment POLYGON ((-16.70034 39.1199...</span></span>
-<span><span class="co">#&gt; 2   260        1       2 experiment POLYGON ((-16.70034 39.1206...</span></span>
-<span><span class="co">#&gt; 3   220        1       3 experiment POLYGON ((-16.70034 39.1213...</span></span>
-<span><span class="co">#&gt; 4   180        1       4 experiment POLYGON ((-16.70035 39.1220...</span></span>
-<span><span class="co">#&gt; 5   140        1       5 experiment POLYGON ((-16.70035 39.1228...</span></span>
-<span><span class="co">#&gt; 6   100        1       6 experiment POLYGON ((-16.70035 39.1235...</span></span>
-<span><span class="co">#&gt; 7   260        1       7 experiment POLYGON ((-16.70035 39.1242...</span></span>
-<span><span class="co">#&gt; 8   220        1       8 experiment POLYGON ((-16.70035 39.125,...</span></span>
-<span><span class="co">#&gt; 9   180        1       9 experiment POLYGON ((-16.70035 39.1257...</span></span>
-<span><span class="co">#&gt; 10  140        2       1 experiment POLYGON ((-16.70018 39.1199...</span></span></code></pre></div>
+<span><span class="co">#&gt; 1   220        1       1 experiment POLYGON ((-16.70034 39.1199...</span></span>
+<span><span class="co">#&gt; 2   180        1       2 experiment POLYGON ((-16.70034 39.1206...</span></span>
+<span><span class="co">#&gt; 3   140        1       3 experiment POLYGON ((-16.70034 39.1213...</span></span>
+<span><span class="co">#&gt; 4   100        1       4 experiment POLYGON ((-16.70035 39.1220...</span></span>
+<span><span class="co">#&gt; 5   260        1       5 experiment POLYGON ((-16.70035 39.1228...</span></span>
+<span><span class="co">#&gt; 6   220        1       6 experiment POLYGON ((-16.70035 39.1235...</span></span>
+<span><span class="co">#&gt; 7   180        1       7 experiment POLYGON ((-16.70035 39.1242...</span></span>
+<span><span class="co">#&gt; 8   140        1       8 experiment POLYGON ((-16.70035 39.125,...</span></span>
+<span><span class="co">#&gt; 9   100        1       9 experiment POLYGON ((-16.70035 39.1257...</span></span>
+<span><span class="co">#&gt; 10  260        2       1 experiment POLYGON ((-16.70018 39.1199...</span></span></code></pre></div>
 <p>Since the individual trial designs are just <code>sf</code>, you can
 of course wrangle them direclty if you would like to.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -367,15 +376,15 @@ of course wrangle them direclty if you would like to.</p>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;     rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1  16000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
-<span><span class="co">#&gt; 2  26667        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
-<span><span class="co">#&gt; 3  40000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
-<span><span class="co">#&gt; 4  32000        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
-<span><span class="co">#&gt; 5  21333        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
-<span><span class="co">#&gt; 6  16000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
-<span><span class="co">#&gt; 7  26667        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
-<span><span class="co">#&gt; 8  40000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
-<span><span class="co">#&gt; 9  32000        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 1  26667        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2  40000        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3  32000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4  21333        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5  16000        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6  26667        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7  40000        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8  32000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9  21333        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
 <span><span class="co">#&gt; 10 40000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
 <span></span>
 <span><span class="co">#--- change the rates to all 0 ---#</span></span>
@@ -421,7 +430,7 @@ have a mixed treatment problem.</p>
 <span><span class="co">#&gt; $ harvest_ab_line  <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> LINESTRING (352984.9 433140..., LINESTRING (352984.9 …</span></span>
 <span><span class="co">#&gt; $ overlap_data     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.table[40 x 7]&gt;], [&lt;data.table[41 x 7]&gt;]</span></span>
 <span><span class="co">#&gt; $ harvester_path   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[46 x 3]&gt;], [&lt;sf[46 x 3]&gt;]</span></span>
-<span><span class="co">#&gt; $ g_path_alignment <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [NULL, &lt;environment: 0x11e7259f8&gt;, &lt;enviro…</span></span>
+<span><span class="co">#&gt; $ g_path_alignment <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [NULL, &lt;environment: 0x12f8e3698&gt;, &lt;enviro…</span></span>
 <span><span class="co">#&gt; $ g_overlap        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [3.0000000, 4.0000000, 5.0000000, 6.0000000, 7.00000…</span></span></code></pre></div>
 <p>As you can see, its output has four list-columns and there are three
 different types of objects stored in them.</p>
