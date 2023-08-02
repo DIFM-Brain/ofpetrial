@@ -26,22 +26,6 @@
 #' td <- make_trial_report(td_single_input, "acres", "imperial", "Test Trial", folder_path)
 #'
 make_trial_report <- function(td, land_unit, units, trial_name, folder_path){
-  source("R/assign_rates.R")
-  source("R/change_rates.R")
-  source("R/data.R")
-  source("R/diagnose.R")
-  source("R/globals.R")
-  source("R/make_exp_plots.R")
-  source("R/prepare_plot_info.R")
-  source("R/prepare_rate_info.R")
-  source("R/utility_spatial.R")
-  source("R/utility.R")
-  source("R/utils-pipe.R")
-  source("R/visualization.R")
-  source("R/write_trial_files.R")
-
-  library(rmarkdown)
-
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
     mutate(trial_name = trial_name) %>%
