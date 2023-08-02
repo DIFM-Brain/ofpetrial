@@ -80,13 +80,19 @@ library(zip)
 source("https://raw.githubusercontent.com/brittanikedge/DIFM/main/Functions.R")
 
 # need to add new functions that are specifically for the report
-source(paste0("_commonfiles-here_", "prepare.R"))
-source(paste0("_commonfiles-here_", "functions_for_execution.R"))
-source(paste0("_commonfiles-here_", "functions_for_analysis.R"))
-source(paste0("_commonfiles-here_", "functions_for_organization.R"))
-source(paste0("_commonfiles-here_", "functions_for_processing.R"))
-source(paste0("_commonfiles-here_", "functions_for_trial_design.R"))
-
+  source("R/assign_rates.R")
+  source("R/change_rates.R")
+  source("R/data.R")
+  source("R/diagnose.R")
+  source("R/globals.R")
+  source("R/make_exp_plots.R")
+  source("R/prepare_plot_info.R")
+  source("R/prepare_rate_info.R")
+  source("R/utility_spatial.R")
+  source("R/utility.R")
+  source("R/utils-pipe.R")
+  source("R/visualization.R")
+  source("R/write_trial_files.R")
 ```
 
 ```{r map-layout, message=FALSE, warning=FALSE, include=FALSE}
@@ -120,27 +126,6 @@ mutate(rep_table = list(
 
 rep_table$rep_table[[1]] %>%
       kable(caption = paste0("Replicates of each ", rep_table$input_name[[1]], " Target Rate"))
-
-```
-
-```{r message=FALSE, warning=FALSE, include=FALSE}
-machine_table <- data.table(width = c(input_plot_info_df$harvester_width[1], input_plot_info_df$machine_width),
-           machine_type = c("harvester", ifelse(input_plot_info_df$input_name == "seed", "planter", "applicator")),
-           ab_line = list(td_ls_1$harvest_ab_lines[[1]][1,], td_ls_1$ab_lines[[1]])) %>%
-  mutate(number_in_plot = input_plot_info_df$plot_width/width) %>%
-  mutate(height = max(width)/4) %>%
-  .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
-  setorder(., cols = "machine_type") %>%
-  mutate(machine_id = row_number()) %>%
-  rowwise() %>%
-  # mutate(ab_line = list(st_transform_utm(ab_line))) %>%
-  mutate(trial_plot = list(get_plot(trial_design = td_ls_1$trial_design[[1]], ab_lines = td_ls_1$ab_lines[[1]][1,]))) %>%
-  mutate(move_vec = list(get_move_vec(ab_line))) %>%
-  mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
-  mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
-  mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
-  mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-  mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
 
 ```
 
@@ -201,7 +186,7 @@ After the applying the input to put the trial in the ground, the â€œas-appliedâ€
 
 ### Step 5. Harvest 
 
-When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r machine_table[nrow(machine_table), ]$number_in_plot` `r conv_unit(machine_table[nrow(machine_table), ]$width, "m", "ft")`-_length-unit_ harvester swaths will lie neatly within each `r conv_unit(trial_data_r$input_plot_width[[1]], "m", "ft")`-_length-unit_ trial plot.   
+When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r machine_table[nrow(machine_table), ]$number_in_plot` `r if(units == "metric"){machine_table[nrow(machine_table), ]$width}else{conv_unit(machine_table[nrow(machine_table), ]$width, "m", "ft")}`-_length-unit_ harvester swaths will lie neatly within each `r if(units == "metric"){trial_data_r$input_plot_width[[1]]}else{conv_unit(trial_data_r$input_plot_width[[1]], "m", "ft")}`-_length-unit_ trial plot.   
 
 ```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
