@@ -107,11 +107,10 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
   }
 
-  temp_folder <- file.path(folder_path, "ofpe_temp_folder")
-  dir.create(temp_folder)
+  dir.create(file.path(folder_path, "ofpe_temp_folder"))
 
-  saveRDS(all_trial_info, file.path(temp_folder, "all_trial_info.rds"))
-  saveRDS(machine_table, file.path(temp_folder, "machine_table.rds"))
+  saveRDS(all_trial_info, file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"))
+  saveRDS(machine_table, file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"))
 
   #/*=================================================*/
   #' # Rmd
@@ -123,7 +122,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
     }
     ) %>%
-    gsub("_temp-folder-here_", temp_folder, .) %>%
+    gsub("_temp-folder-here_", file.path(folder_path, "ofpe_temp_folder"), .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
     gsub("_length-unit_", ifelse(units == "metric", "meter", "foot"), .) %>%
     gsub("_land-unit_", land_unit, .) %>%
@@ -137,10 +136,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   td_file_name <- file.path(folder_path, "trial_design_report.Rmd")
 
   writeLines(td_rmd, con = td_file_name)
-
-  # td_r_file_name <- paste0(folder_path, "for_debug.R")
-
-  # purl(td_file_name, output = td_r_file_name)
 
   #--- render ---#
   render(td_file_name)
