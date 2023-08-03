@@ -122,7 +122,8 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
     }
     ) %>%
-    gsub("_temp-folder-here_", file.path(folder_path, "ofpe_temp_folder"), .) %>%
+    gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
+    gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
     gsub("_length-unit_", ifelse(units == "metric", "meter", "foot"), .) %>%
     gsub("_land-unit_", land_unit, .) %>%
