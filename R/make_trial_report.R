@@ -16,7 +16,7 @@
 #' @import stringr
 #' @import measurements
 #' @import tmap
-#' @export
+#' @import english
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
@@ -243,7 +243,7 @@ trial_text_ablines <- function(machine_table){
   }
 }
 
-trial_text_machine_sizes_and_plot_width() <- function(machine_table, all_trial_info, units){
+trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, units){
   if (units == "metric"){
 
     if (nrow(machine_table) > 2){

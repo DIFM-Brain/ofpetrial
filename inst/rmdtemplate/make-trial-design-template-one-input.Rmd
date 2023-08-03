@@ -74,21 +74,17 @@ machine_table = readRDS(file.path("_machine-table-here_"))
 # library(zip)
 ```
 
-```{r map-layout, message=FALSE, warning=FALSE, include=FALSE}
-tm_layout_to_add <- tm_layout(
-  legend.outside = "TRUE",
-  frame = FALSE,
-  legend.title.size = 2,
-  legend.text.size = 1.5
-)
-```
-
 ## Description of Field Trial Design
 
 Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, units)`  Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(machine_table)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate.  The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)` rate is shown in Table \@ref(tab:rep-table).  Inside the circumference of the field there are _headland-size_-_length-unit_ headlands and _sideland-size_-_length-unit_ sidelands, which are not part of the field trial.
 
 ```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
-all_trial_info$map_design[[1]]
+all_trial_info$map_design[[1]] + tm_layout(
+  legend.outside = "TRUE",
+  frame = FALSE,
+  legend.title.size = 2,
+  legend.text.size = 1.5
+)
 ```
 
 
@@ -116,7 +112,12 @@ Because areas near the border of the field are used to turn machinery around and
 
 ```{r headland-map, echo = FALSE, fig.cap = "Map of Field Borders", fig.height = 6, include = TRUE}
 
-all_trial_info$map_headlands[[1]]
+all_trial_info$map_headlands[[1]] + tm_layout(
+  legend.outside = "TRUE",
+  frame = FALSE,
+  legend.title.size = 2,
+  legend.text.size = 1.5
+)
 ```
 
 ### Step 2.  Center the `r trial_text_machinery_names_cap(machine_table)` on Machine’s AB-line Provided
@@ -165,7 +166,7 @@ After the applying the input to put the trial in the ground, the “as-applied�
 
 ### Step 5. Harvest 
 
-When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r english(machine_table[nrow(machine_table), ]$number_in_plot)` `r if(units == "metric"){machine_table[nrow(machine_table), ]$width}else{conv_unit(machine_table[nrow(machine_table), ]$width, "m", "ft")}`-_length-unit_ harvester swaths will lie neatly within each `r text_plot_width(all_trial_info, units)`   
+When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r as.character(english(machine_table[nrow(machine_table), ]$number_in_plot))` `r if(units == "metric"){machine_table[nrow(machine_table), ]$width}else{conv_unit(machine_table[nrow(machine_table), ]$width, "m", "ft")}`-_length-unit_ harvester swaths will lie neatly within each `r text_plot_width(all_trial_info, units)`   
 
 ```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
