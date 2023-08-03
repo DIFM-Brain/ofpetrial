@@ -139,9 +139,9 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   writeLines(td_rmd, con = td_file_name)
 
   #--- render ---#
-  render(td_file_name)
+  render(input = td_file_name, output_file = file.path(folder_path, "trial_design_report.html"))
 
-  unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
+  # unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
 
   viewer <- getOption("viewer")
   viewer(file.path(folder_path, "trial_design_report.html"))
@@ -213,10 +213,10 @@ trial_text_machinery_names_lower <- function(machine_table){
 }
 
 text_plant_apply <- function(machine_table){
-  if (nrow(all_trial_info) > 1){
-    paste0(ifelse(all_trial_info$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(all_trial_info$input_name[[2]] == "seed", "plant", "apply"))
+  if (nrow(machine_table) > 2){
+    paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(machine_table$input_name[[2]] == "seed", "plant", "apply"))
   }else{
-    paste0(ifelse(all_trial_info$input_name[[1]] == "seed", "plant", "apply"))
+    paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"))
   }
 }
 
