@@ -37,11 +37,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     rowwise() %>%
     mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     mutate(plot_number = get_plot_number(trial_design)) %>%
-    mutate(plot_width =   if (units == "Imperial"){
-      plot_width = conv_unit(plot_width, "m", "ft")
-    }else{
-      plot_width = plot_width
-    }) %>%
     mutate(plot_length = list(get_plot_length(trial_design, plot_width))) %>%
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
@@ -248,7 +243,7 @@ trial_text_ablines <- function(machine_table){
   }
 }
 
-trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, units){
+trial_text_machine_sizes_and_plot_width() <- function(machine_table, all_trial_info, units){
   if (units == "metric"){
 
     if (nrow(machine_table) > 2){
@@ -319,6 +314,31 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
 
 }
 
+text_plot_width <- function(all_trial_info, units){
+  if(nrow(all_trial_info) == 1){
+    if(units == "metric"){
+      paste0(all_trial_info$plot_width[[1]], "-meter plots.")
+    }else{
+      paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots.")
+    }
+
+  }else{
+    if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
+      if(units == "metric"){
+        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
+      }else{
+        paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
+      }
+
+    }else{
+      if(units == "metric"){
+        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots.")
+      }else{
+        paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots.")
+      }
+    }
+  }
+}
 
 get_field_size <- function(trial_design, land_unit){
   trial_design %>%
