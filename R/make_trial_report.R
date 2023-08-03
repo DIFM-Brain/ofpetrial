@@ -141,7 +141,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   #--- render ---#
   render(input = td_file_name, output_file = file.path(folder_path, "trial_design_report.html"))
 
-  # unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
+  unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
 
   viewer <- getOption("viewer")
   viewer(file.path(folder_path, "trial_design_report.html"))
