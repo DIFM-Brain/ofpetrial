@@ -30,6 +30,21 @@
                 "type": 0,
                 "is_package_breakpoint": false,
                 "package_name": ""
+            },
+            {
+                "id": 12,
+                "path": "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Function for Trial Report.R",
+                "line_number": 105,
+                "function_steps": "",
+                "function_name": "toplevel",
+                "state": 1,
+                "editor_state": 1,
+                "editor_line_number": 105,
+                "is_pending_debug_completion": false,
+                "needs_updated_steps": true,
+                "type": 1,
+                "is_package_breakpoint": false,
+                "package_name": ""
             }
         ]
     }

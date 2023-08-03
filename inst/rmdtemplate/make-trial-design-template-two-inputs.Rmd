@@ -124,7 +124,7 @@ all_trial_info$map_headlands[[1]]
 
 ### Step 2.  Center the `r trial_text_machinery_names_cap(machine_table)` on Machine’s AB-line Provided
 
-One the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription would be loaded.  Then the operator should center the machinery on the corresponding AB-line labeled “ab-lines-farmer-applicator” or “ab-lines-farmer-applicator” provided in the trial design files.  Figure \@ref(fig:machine-alignment) shows the `r trial_text_machinery_names_lower(machine_table)` inside a trial plot along with the respective AB-line. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes(machine_table, units)` and `r text_plot_width(all_trial_info, units)`. 
+One the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription would be loaded.  Then the operator should center the machinery on the corresponding AB-line labeled “ab-lines-farmer-applicator” or “ab-lines-farmer-applicator” provided in the trial design files.  Figure \@ref(fig:machine-alignment) shows the `r trial_text_machinery_names_lower(machine_table)` inside a trial plot along with the respective AB-line. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, units)` 
 
 ```{r machine-alignment, echo=FALSE, fig.cap="Alignment of Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -168,7 +168,7 @@ After the applying the input to put the trial in the ground, the “as-applied�
 
 ### Step 5. Harvest 
 
-When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r machine_table[nrow(machine_table), ]$number_in_plot` `r conv_unit(machine_table[nrow(machine_table), ]$width, "m", "ft")`-_length-unit_ harvester swaths will lie neatly within each `r conv_unit(td$input_plot_width[[1]], "m", "ft")`-_length-unit_ trial plot.   
+When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r english(machine_table[nrow(machine_table), ]$number_in_plot)` `r conv_unit(machine_table[nrow(machine_table), ]$width, "m", "ft")`-_length-unit_ harvester swaths will lie neatly within each `r conv_unit(td$input_plot_width[[1]], "m", "ft")`-_length-unit_ trial plot.   
 
 ```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()

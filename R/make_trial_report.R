@@ -160,7 +160,7 @@ text_plot_num_length <- function(all_trial_info, units){
       paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
              all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long.")
     }else{
-      paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " feet wide and between " ,
+      paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and between " ,
              all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long.")
     }
 
@@ -170,7 +170,7 @@ text_plot_num_length <- function(all_trial_info, units){
         paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
                all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long.")
       }else{
-        paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " feet wide and between " ,
+        paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and between " ,
                all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long.")
       }
     }else{
@@ -180,8 +180,8 @@ text_plot_num_length <- function(all_trial_info, units){
                "The plots are between " ,
                all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " meters long.")
       }else{
-        paste0(all_trial_info$plot_number[[1]], " rectangular ",  all_trial_info$input_name[[1]], " plots, each ", all_trial_info$plot_width[[1]], " feet wide and ",
-               all_trial_info$plot_number[[2]], " rectangular ",  all_trial_info$input_name[[2]], " plots, each ", all_trial_info$plot_width[[2]], " feet wide.",
+        paste0(all_trial_info$plot_number[[1]], " rectangular ",  all_trial_info$input_name[[1]], " plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and ",
+               all_trial_info$plot_number[[2]], " rectangular ",  all_trial_info$input_name[[2]], " plots, each ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), " feet wide.",
                "The plots are between " ,
                all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long.")
       }
@@ -192,13 +192,14 @@ text_plot_num_length <- function(all_trial_info, units){
 
 text_rate_number <- function(all_trial_info){
   if(nrow(all_trial_info) == 1){
-    paste0(all_trial_info$rate_number," targeted ", all_trial_info$input_name, " rates.")
+    paste0(as.character(english(all_trial_info$rate_number))
+," targeted ", all_trial_info$input_name, " rates.")
   }else{
 
     if(all_trial_info$rate_number[[1]] == all_trial_info$rate_number[[2]]){
-      paste0(all_trial_info$rate_number[[1]]," targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
+      paste0(as.character(english(all_trial_info$rate_number[[1]]))," targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
     }else{
-      paste0(all_trial_info$rate_number[[1]]," targeted ", all_trial_info$input_name[[1]], " rates and ", all_trial_info$rate_number[[2]], " targeted ",all_trial_info$input_name[[2]], " rates.")
+      paste0(as.character(english(all_trial_info$rate_number[[1]]))," targeted ", all_trial_info$input_name[[1]], " rates and ", as.character(english(all_trial_info$rate_number[[2]])), " targeted ",all_trial_info$input_name[[2]], " rates.")
     }
 
   }
@@ -247,67 +248,77 @@ trial_text_ablines <- function(machine_table){
   }
 }
 
-trial_text_machine_sizes <- function(machine_table, units){
+trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, units){
   if (units == "metric"){
 
     if (nrow(machine_table) > 2){
+      if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
+        paste0(machine_table$width[[1]],
+               "-meter ",
+               machine_table$machine_type[[1]],
+               ", ",
+               machine_table$width[[2]],
+               "-meter ",
+               machine_table$machine_type[[2]],
+               ", and ",
+               all_trial_info$plot_width[[1]], "-meter plots.")
+
+      }else{
+        paste0(machine_table$width[[1]],
+               "-meter ",
+               machine_table$machine_type[[1]],
+               ", ",
+               machine_table$width[[2]],
+               "-meter ",
+               machine_table$machine_type[[2]],
+               ", and ",
+               all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ",
+               all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots.")
+
+      }
+
+    }else{
       paste0(machine_table$width[[1]],
              "-meter ",
              machine_table$machine_type[[1]],
              " and ",
-             machine_table$width[[2]],
-             "-meter ",
-             machine_table$machine_type[[2]])
-    }else{
-      paste0(machine_table$width[[1]],
-             "-meter ",
-             machine_table$machine_type[[1]])
+             paste0(all_trial_info$plot_width[[1]], "-meter plots."))
     }
 
   }else{
 
     if (nrow(machine_table) > 2){
+      if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
+        paste0(conv_unit(machine_table$width[[1]], "m", "ft"),"-foot ",
+               machine_table$machine_type[[1]],
+               ", ",
+               conv_unit(machine_table$width[[2]], "m", "ft"), "-foot ",
+               machine_table$machine_type[[2]],
+               ", and ",
+               conv_unit(all_trial_info$plot_width[[1]], "m","ft"), "-foot ",
+               all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
+      }else{
+        paste0(conv_unit(machine_table$width[[1]], "m", "ft"), "-foot ",
+               machine_table$machine_type[[1]],
+               ", ",
+               conv_unit(machine_table$width[[2]], "m", "ft"),"-foot ",
+               machine_table$machine_type[[2]],
+               " and ",
+               conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ",
+               conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots.")
+      }
+
+    }else{
       paste0(conv_unit(machine_table$width[[1]], "m", "ft"),
              "-foot ",
              machine_table$machine_type[[1]],
              " and ",
-             conv_unit(machine_table$width[[2]], "m", "ft"),
-             "-foot ",
-             machine_table$machine_type[[2]])
-    }else{
-      paste0(conv_unit(machine_table$width[[1]], "m", "ft"),
-             "-foot ",
-             machine_table$machine_type[[1]])
+             conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots.")
     }
   }
 
 }
 
-text_plot_width <- function(all_trial_info, units){
-  if(nrow(all_trial_info) == 1){
-    if(units == "metric"){
-      paste0(all_trial_info$plot_width[[1]], "-meter plots.")
-    }else{
-      paste0(all_trial_info$plot_width[[1]], "-foot plots.")
-    }
-
-  }else{
-    if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
-      if(units == "metric"){
-        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
-      }else{
-        paste0(all_trial_info$plot_width[[1]], "-foot ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
-      }
-
-    }else{
-      if(units == "metric"){
-        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots.")
-      }else{
-        paste0(all_trial_info$plot_width[[1]], "-foot ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-foot ", all_trial_info$input_name[[2]], " plots.")
-      }
-    }
-  }
-}
 
 get_field_size <- function(trial_design, land_unit){
   trial_design %>%
