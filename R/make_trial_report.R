@@ -437,7 +437,7 @@ get_plot_number <- function(trial_design){
 
 get_plot_length <- function(trial_design, plot_width){
   trial_design %>%
-    mutate(area = conv_unit(as.numeric(st_area(.)), "m2", "ft2")/plot_width) %>%
+    mutate(area = as.numeric(st_area(.))/plot_width) %>%
     pull(area) %>%
     quantile(., c(0.1, 0.9)) %>%
     round(.)
