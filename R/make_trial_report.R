@@ -38,10 +38,12 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     mutate(plot_number = get_plot_number(trial_design)) %>%
     mutate(plot_length = list(get_plot_length(trial_design, plot_width))) %>%
+    mutate(num_harv_pass_in_plot = plot_width/harvester_width) %>%
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
     mutate(headland_size = if(units == "metric"){headland_length}else{conv_unit(headland_length, "m", "feet")}) %>%
     mutate(sideland_size = if(units == "metric"){side_length}else{conv_unit(side_length, "m", "feet")}) %>%
+    mutate(plot = list(get_plot(trial_design, ab_lines, input_name))) %>%
     mutate(map_design = list(
       tm_shape(trial_design) +
         tm_polygons(
@@ -67,14 +69,13 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     machine_table <- data.table(width = c(td$harvester_width[1], td$machine_width),
                                 machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
                                 ab_line = list(td$harvest_ab_lines[[1]][1,], td$ab_lines[[1]])) %>%
-      mutate(number_in_plot = td$plot_width/width) %>%
+      mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
       mutate(height = max(width)/4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
-      # mutate(ab_line = list(st_transform_utm(ab_line))) %>%
-      mutate(trial_plot = list(get_plot(trial_design = td$trial_design[[1]], ab_lines = td$ab_lines[[1]][1,]))) %>%
+      mutate(trial_plot = list(all_trial_info$plot[[1]])) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
@@ -86,14 +87,13 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     machine_table <- data.table(width = c(td$harvester_width[1], td$machine_width),
                                 machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
                                 ab_line = list(td$harvest_ab_lines[[1]][1,], td$ab_lines[[1]], td$ab_lines[[2]])) %>%
-      mutate(number_in_plot = td$plot_width/width) %>%
+      mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
       mutate(height = max(width)/4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
-      # mutate(ab_line = list(st_transform_utm(ab_line))) %>%
-      mutate(trial_plot = list(get_plot(trial_design = td$trial_design[[1]], ab_lines = td$ab_lines[[1]][1,]))) %>%
+      mutate(trial_plot = list(rbind(all_trial_info$plot[[1]], all_trial_info$plot[[2]]))) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
@@ -495,20 +495,20 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
   return(cent)
 }
 
-get_plot <- function(trial_design, ab_lines){
-  design <- trial_design %>%
-    mutate(plot_id = row_number()) %>%
-    filter(type == "experiment")
+get_plot <- function(trial_design, ab_lines, input_name){
+    design <- trial_design %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "experiment")
 
-  first_plot <- trial_design[1,] %>%
-    mutate(plot_id = st_intersection(st_transform_utm(design), ab_lines) %>%
-             pull(plot_id) %>%
-             min(.))
+    first_plot <- trial_design[1,] %>%
+      mutate(plot_id = st_intersection(st_transform_utm(design), ab_lines) %>%
+               pull(plot_id) %>%
+               min(.))
 
-  plot <- design %>%
-    filter(plot_id == first_plot$plot_id) %>%
-    st_transform_utm(.)
-
+    plot <- design %>%
+      filter(plot_id == first_plot$plot_id) %>%
+      st_transform_utm(.) %>%
+      mutate(input = input_name)
 
   return(plot)
 }
