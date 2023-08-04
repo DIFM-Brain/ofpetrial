@@ -340,6 +340,87 @@ text_plot_width <- function(all_trial_info, units){
   }
 }
 
+text_harvester_passes <- function(all_trial_info){
+  if(nrow(all_trial_info) > 1){
+    if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
+
+      if(units == "metric"){
+        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+               " ",
+               all_trial_info$harvester_width[[1]],
+               "-meter harvester swath",
+               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
+               " will lie neatly within each ",
+               text_plot_width(all_trial_info, units))
+      }else{
+        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+               " ",
+               conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
+               "-foot harvester swath",
+               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
+               " will lie neatly within each ",
+               text_plot_width(all_trial_info, units))
+      }
+
+    }else{
+
+      if(units == "metric"){
+        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+               " ",
+               all_trial_info$harvester_width[[1]],
+               "-meter harvester swath",
+               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
+               " and ",
+               as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
+               " ",
+               all_trial_info$harvester_width[[2]],
+               "-meter harvester swath",
+               if(all_trial_info$num_harv_pass_in_plot[[2]] > 1){"s"}else{""},
+               " will lie neatly within each ",
+               text_plot_width(all_trial_info, units),
+               ", respectively")
+      }else{
+        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+               " ",
+               conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
+               "-foot harvester swath",
+               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
+               " and ",
+               as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
+               " ",
+               conv_unit(all_trial_info$harvester_width[[2]], "m", "ft"),
+               "-foot harvester swath",
+               if(all_trial_info$num_harv_pass_in_plot[[2]] > 1){"s"}else{""},
+               " will lie neatly within each ",
+               text_plot_width(all_trial_info, units),
+               ", respectively")
+      }
+
+    }
+  }else{
+
+    if(units == "metric"){
+      paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+             " ",
+             all_trial_info$harvester_width[[1]],
+             "-meter harvester swath",
+             if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
+             " will lie neatly within each ",
+             text_plot_width(all_trial_info, units))
+    }else{
+      paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+             " ",
+             conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
+             "-foot harvester swath",
+             if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
+             " will lie neatly within each ",
+             text_plot_width(all_trial_info, units))
+    }
+
+  }
+}
+
+
 get_field_size <- function(trial_design, land_unit){
   trial_design %>%
     mutate(area = as.numeric(st_area(.))) %>%
