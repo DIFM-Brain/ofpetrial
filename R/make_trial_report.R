@@ -340,7 +340,7 @@ text_plot_width <- function(all_trial_info, units){
   }
 }
 
-text_harvester_passes <- function(all_trial_info){
+text_harvester_passes <- function(all_trial_info, units){
   if(nrow(all_trial_info) > 1){
     if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
 
@@ -419,7 +419,6 @@ text_harvester_passes <- function(all_trial_info){
 
   }
 }
-
 
 get_field_size <- function(trial_design, land_unit){
   trial_design %>%
