@@ -22,17 +22,6 @@
 #' data(td_single_input)
 #' td_single_input
 #' \dontrun{
-<<<<<<< HEAD
-#' make_trial_report(
-#'   td_single_input,
-#'   "acres",
-#'   "imperial",
-#'   "Test Trial",
-#'   folder_path
-#' )
-#' }
-make_trial_report <- function(td, land_unit, units, trial_name, folder_path) {
-=======
 #' make_trial_report(td_single_input,
 #'  "acres",
 #'  "imperial",
@@ -42,7 +31,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path) {
 #'}
 
 make_trial_report <- function(td, land_unit, units, trial_name, folder_path = getwd()){
->>>>>>> TrialDesign/main
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
     mutate(trial_name = trial_name) %>%
@@ -132,9 +120,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
   }
 
-<<<<<<< HEAD
-  # /*=================================================*/
-=======
   temp_folder <- file.path(folder_path, "ofpe_temp_folder")
   dir.create(temp_folder)
 
@@ -142,7 +127,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   saveRDS(machine_table, file.path(temp_folder, "machine_table.rds"))
 
   #/*=================================================*/
->>>>>>> TrialDesign/main
   #' # Rmd
   # /*=================================================*/
   td_rmd <-
@@ -161,13 +145,8 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
 
   # /*=================================================*/
   #' # Wrapping up
-<<<<<<< HEAD
-  # /*=================================================*/
-  td_file_name <- paste0(temp_folder, "trial_design_report.Rmd")
-=======
   #/*=================================================*/
   td_file_name <- file.path(folder_path, "trial_design_report.Rmd")
->>>>>>> TrialDesign/main
 
   writeLines(td_rmd, con = td_file_name)
 
@@ -177,14 +156,11 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
 
   #--- render ---#
   render(td_file_name)
-<<<<<<< HEAD
-=======
 
   unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
 
   viewer <- getOption("viewer")
   viewer(file.path(folder_path, "trial_design_report.html"))
->>>>>>> TrialDesign/main
 }
 
 # !==================-=========================================
