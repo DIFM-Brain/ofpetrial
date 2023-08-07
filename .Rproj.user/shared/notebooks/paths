@@ -21,7 +21,6 @@
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/CommonFiles/functions_for_trial_design.R="C314ACFB"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/CommonFiles/make-trial-design-template.Rmd="BCE76985"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/designscript.R="E22276BB"
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Figure Creation for Report.R="A82119DB"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Purdue DIFM Github/difm/TrialDesign/CommonFiles/functions_for_trial_design.R="49D490B4"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Purdue DIFM Github/difm/TrialDesign/CommonFiles/make-trial-design-template.Rmd="2478BCFA"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Purdue DIFM Github/difm/designscript.R="6FD06034"
@@ -30,15 +29,11 @@
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Function for Trial Report.R="EE561F5A"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Working on Report Funtion Two Inputs.R="E446F50B"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Working on Report Funtion.R="632304B7"
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/make-trial-design-template-for-package.Rmd="460E8FC5"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/make-trial-design-template-one-input.Rmd="E083DA6D"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/make-trial-design-template-two-inputs.Rmd="1D54BB42"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/trial-report-function.R="2BA21052"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/trial_design_report.Rmd="7EFB49D8"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sample Boundaries and AB-line/Wendte Snider/Moving files.R="FD326B19"
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Working on Conversions.R="C13B02D4"
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Working on Report Funtion.R="E71C91E5"
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/make-trial-design-template-for-package.Rmd="5A3AB30B"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/DESCRIPTION="6883BC8B"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/NAMESPACE="AC8045B3"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/assign_rates.R="05047008"
@@ -63,10 +58,12 @@
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/inst/rmdtemplate/make-trial-design-template-two-inputs.Rmd="7AB4CBBC"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/man/make_trial_report.Rd="59CDA359"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/man/write_trial_files.Rd="6E370187"
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/organize.R="B5C16B51"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/structure.rmd="16B909E8"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/test.R="909E79EE"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/todo.md="13607DD3"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/vignettes/V1-trial-design-options.Rmd="48219013"
+<<<<<<< HEAD
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/vignettes/ab-line.Rmd="3B9E1036"
+>>>>>>> TrialDesign/main
+=======
 >>>>>>> TrialDesign/main
