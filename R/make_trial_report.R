@@ -22,15 +22,16 @@
 #' data(td_single_input)
 #' td_single_input
 #' \dontrun{
-#' make_trial_report(td_single_input,
-#'  "acres",
-#'  "imperial",
-#'  "Test Trial",
-#'  folder_path
-#')
-#'}
-
-make_trial_report <- function(td, land_unit, units, trial_name, folder_path = getwd()){
+#' make_trial_report(
+#'   td_single_input,
+#'   "acre",
+#'   "imperial",
+#'   "Test Trial",
+#'   folder_path
+#' )
+#' }
+#'
+make_trial_report <- function(td, land_unit, units, trial_name, folder_path = getwd()) {
   all_trial_info <- td %>%
     mutate(land_unit = land_unit) %>%
     mutate(trial_name = trial_name) %>%
@@ -38,11 +39,19 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     mutate(plot_number = get_plot_number(trial_design)) %>%
     mutate(plot_length = list(get_plot_length(trial_design, plot_width))) %>%
-    mutate(num_harv_pass_in_plot = plot_width/harvester_width) %>%
+    mutate(num_harv_pass_in_plot = plot_width / harvester_width) %>%
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
-    mutate(headland_size = if(units == "metric"){headland_length}else{conv_unit(headland_length, "m", "feet")}) %>%
-    mutate(sideland_size = if(units == "metric"){side_length}else{conv_unit(side_length, "m", "feet")}) %>%
+    mutate(headland_size = if (units == "metric") {
+      headland_length
+    } else {
+      conv_unit(headland_length, "m", "feet")
+    }) %>%
+    mutate(sideland_size = if (units == "metric") {
+      side_length
+    } else {
+      conv_unit(side_length, "m", "feet")
+    }) %>%
     mutate(plot = list(get_plot(trial_design, ab_lines, input_name))) %>%
     mutate(map_design = list(
       tm_shape(trial_design) +
@@ -63,15 +72,18 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
         tm_polygons(
           col = "type",
           title = "Type of Field Area",
-          palette= c('red', 'grey')
-        )))
+          palette = c("red", "grey")
+        )
+    ))
 
-  if (nrow(td) == 1){
-    machine_table <- data.table(width = c(td$harvester_width[1], td$machine_width),
-                                machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
-                                ab_line = list(td$harvest_ab_lines[[1]][1,], td$ab_lines[[1]])) %>%
+  if (nrow(td) == 1) {
+    machine_table <- data.table(
+      width = c(td$harvester_width[1], td$machine_width),
+      machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
+      ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]])
+    ) %>%
       mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
-      mutate(height = max(width)/4) %>%
+      mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
@@ -83,13 +95,14 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
-
-  }else{
-    machine_table <- data.table(width = c(td$harvester_width[1], td$machine_width),
-                                machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
-                                ab_line = list(td$harvest_ab_lines[[1]][1,], td$ab_lines[[1]], td$ab_lines[[2]])) %>%
+  } else {
+    machine_table <- data.table(
+      width = c(td$harvester_width[1], td$machine_width),
+      machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
+      ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]], td$ab_lines[[2]])
+    ) %>%
       mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
-      mutate(height = max(width)/4) %>%
+      mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
@@ -108,7 +121,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   saveRDS(all_trial_info, file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"))
   saveRDS(machine_table, file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"))
 
-  #/*=================================================*/
+  # /*=================================================*/
   #' # Rmd
   # /*=================================================*/
   td_rmd <-
@@ -116,8 +129,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       system.file("rmdtemplate", "make-trial-design-template-one-input.Rmd", package = "ofpetrial")
     } else {
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
-    }
-    ) %>%
+    }) %>%
     gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
     gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
@@ -129,7 +141,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
 
   # /*=================================================*/
   #' # Wrapping up
-  #/*=================================================*/
+  # /*=================================================*/
   td_file_name <- file.path(folder_path, "trial_design_report.Rmd")
 
   writeLines(td_rmd, con = td_file_name)
@@ -150,51 +162,63 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
 #* Creating text for trial design report
 #* +++++++++++++++++++++++++++++++++++
 
-text_plot_num_length <- function(all_trial_info, units){
-  if(nrow(all_trial_info) == 1){
-    if(units == "metric"){
-      paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
-             all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long.")
-    }else{
-      paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and between " ,
-             all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long.")
+text_plot_num_length <- function(all_trial_info, units) {
+  if (nrow(all_trial_info) == 1) {
+    if (units == "metric") {
+      paste0(
+        all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
+        all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long."
+      )
+    } else {
+      paste0(
+        all_trial_info$plot_number[[1]], " rectangular plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and between ",
+        all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long."
+      )
     }
-
-  }else{
-    if(all_trial_info$plot_number[[1]] == all_trial_info$plot_number[[2]]){
-      if(units == "metric"){
-        paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
-               all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long.")
-      }else{
-        paste0(all_trial_info$plot_number[[1]], " rectangular plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and between " ,
-               all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long.")
+  } else {
+    if (all_trial_info$plot_number[[1]] == all_trial_info$plot_number[[2]]) {
+      if (units == "metric") {
+        paste0(
+          all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
+          all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long."
+        )
+      } else {
+        paste0(
+          all_trial_info$plot_number[[1]], " rectangular plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and between ",
+          all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long."
+        )
       }
-    }else{
-      if(units == "metric"){
-        paste0(all_trial_info$plot_number[[1]], " rectangular ",  all_trial_info$input_name[[1]], " plots, each ", all_trial_info$plot_width[[1]], " meters wide and ",
-               all_trial_info$plot_number[[2]], " rectangular ",  all_trial_info$input_name[[2]], " plots, each ", all_trial_info$plot_width[[2]], " meters wide.",
-               "The plots are between " ,
-               all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " meters long.")
-      }else{
-        paste0(all_trial_info$plot_number[[1]], " rectangular ",  all_trial_info$input_name[[1]], " plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and ",
-               all_trial_info$plot_number[[2]], " rectangular ",  all_trial_info$input_name[[2]], " plots, each ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), " feet wide.",
-               "The plots are between " ,
-               all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long.")
+    } else {
+      if (units == "metric") {
+        paste0(
+          all_trial_info$plot_number[[1]], " rectangular ", all_trial_info$input_name[[1]], " plots, each ", all_trial_info$plot_width[[1]], " meters wide and ",
+          all_trial_info$plot_number[[2]], " rectangular ", all_trial_info$input_name[[2]], " plots, each ", all_trial_info$plot_width[[2]], " meters wide.",
+          "The plots are between ",
+          all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " meters long."
+        )
+      } else {
+        paste0(
+          all_trial_info$plot_number[[1]], " rectangular ", all_trial_info$input_name[[1]], " plots, each ", conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), " feet wide and ",
+          all_trial_info$plot_number[[2]], " rectangular ", all_trial_info$input_name[[2]], " plots, each ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), " feet wide.",
+          "The plots are between ",
+          all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], " feet long."
+        )
       }
     }
   }
 }
 
-text_rate_number <- function(all_trial_info){
-  if(nrow(all_trial_info) == 1){
-    paste0(as.character(english(all_trial_info$rate_number))
-," targeted ", all_trial_info$input_name, " rates.")
-  }else{
-
-    if(all_trial_info$rate_number[[1]] == all_trial_info$rate_number[[2]]){
-      paste0(as.character(english(all_trial_info$rate_number[[1]]))," targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
-    }else{
-      paste0(as.character(english(all_trial_info$rate_number[[1]]))," targeted ", all_trial_info$input_name[[1]], " rates and ", as.character(english(all_trial_info$rate_number[[2]])), " targeted ",all_trial_info$input_name[[2]], " rates.")
+text_rate_number <- function(all_trial_info) {
+  if (nrow(all_trial_info) == 1) {
+    paste0(
+      as.character(english(all_trial_info$rate_number)),
+      " targeted ", all_trial_info$input_name, " rates."
+    )
+  } else {
+    if (all_trial_info$rate_number[[1]] == all_trial_info$rate_number[[2]]) {
+      paste0(as.character(english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
+    } else {
+      paste0(as.character(english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " rates and ", as.character(english(all_trial_info$rate_number[[2]])), " targeted ", all_trial_info$input_name[[2]], " rates.")
     }
   }
 }
@@ -207,10 +231,10 @@ trial_text_machinery_names_lower <- function(machine_table) {
   }
 }
 
-text_plant_apply <- function(machine_table){
-  if (nrow(machine_table) > 2){
+text_plant_apply <- function(machine_table) {
+  if (nrow(machine_table) > 2) {
     paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(machine_table$input_name[[2]] == "seed", "plant", "apply"))
-  }else{
+  } else {
     paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"))
   }
 }
@@ -244,72 +268,77 @@ trial_text_ablines <- function(machine_table) {
   }
 }
 
-trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, units){
-  if (units == "metric"){
-
-    if (nrow(machine_table) > 2){
-      if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
-        paste0(machine_table$width[[1]],
-               "-meter ",
-               machine_table$machine_type[[1]],
-               ", ",
-               machine_table$width[[2]],
-               "-meter ",
-               machine_table$machine_type[[2]],
-               ", and ",
-               all_trial_info$plot_width[[1]], "-meter plots.")
-
-      }else{
-        paste0(machine_table$width[[1]],
-               "-meter ",
-               machine_table$machine_type[[1]],
-               ", ",
-               machine_table$width[[2]],
-               "-meter ",
-               machine_table$machine_type[[2]],
-               ", and ",
-               all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ",
-               all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots.")
-
+trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, units) {
+  if (units == "metric") {
+    if (nrow(machine_table) > 2) {
+      if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
+        paste0(
+          machine_table$width[[1]],
+          "-meter ",
+          machine_table$machine_type[[1]],
+          ", ",
+          machine_table$width[[2]],
+          "-meter ",
+          machine_table$machine_type[[2]],
+          ", and ",
+          all_trial_info$plot_width[[1]], "-meter plots."
+        )
+      } else {
+        paste0(
+          machine_table$width[[1]],
+          "-meter ",
+          machine_table$machine_type[[1]],
+          ", ",
+          machine_table$width[[2]],
+          "-meter ",
+          machine_table$machine_type[[2]],
+          ", and ",
+          all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ",
+          all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots."
+        )
       }
-
-    }else{
-      paste0(machine_table$width[[1]],
-             "-meter ",
-             machine_table$machine_type[[1]],
-             " and ",
-             paste0(all_trial_info$plot_width[[1]], "-meter plots."))
+    } else {
+      paste0(
+        machine_table$width[[1]],
+        "-meter ",
+        machine_table$machine_type[[1]],
+        " and ",
+        paste0(all_trial_info$plot_width[[1]], "-meter plots.")
+      )
     }
-
-  }else{
-
-    if (nrow(machine_table) > 2){
-      if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
-        paste0(conv_unit(machine_table$width[[1]], "m", "ft"),"-foot ",
-               machine_table$machine_type[[1]],
-               ", ",
-               conv_unit(machine_table$width[[2]], "m", "ft"), "-foot ",
-               machine_table$machine_type[[2]],
-               ", and ",
-               conv_unit(all_trial_info$plot_width[[1]], "m","ft"), "-foot ",
-               all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
-      }else{
-        paste0(conv_unit(machine_table$width[[1]], "m", "ft"), "-foot ",
-               machine_table$machine_type[[1]],
-               ", ",
-               conv_unit(machine_table$width[[2]], "m", "ft"),"-foot ",
-               machine_table$machine_type[[2]],
-               " and ",
-               conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ",
-               conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots.")
+  } else {
+    if (nrow(machine_table) > 2) {
+      if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
+        paste0(
+          conv_unit(machine_table$width[[1]], "m", "ft"), "-foot ",
+          machine_table$machine_type[[1]],
+          ", ",
+          conv_unit(machine_table$width[[2]], "m", "ft"), "-foot ",
+          machine_table$machine_type[[2]],
+          ", and ",
+          conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ",
+          all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots."
+        )
+      } else {
+        paste0(
+          conv_unit(machine_table$width[[1]], "m", "ft"), "-foot ",
+          machine_table$machine_type[[1]],
+          ", ",
+          conv_unit(machine_table$width[[2]], "m", "ft"), "-foot ",
+          machine_table$machine_type[[2]],
+          " and ",
+          conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ",
+          conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots."
+        )
       }
-
-    }else{
-      paste0(conv_unit(machine_table$width[[1]], "m", "ft"),
-             "-foot ",
-             machine_table$machine_type[[1]],
-             " and ",
-             conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots.")
+    } else {
+      paste0(
+        conv_unit(machine_table$width[[1]], "m", "ft"),
+        "-foot ",
+        machine_table$machine_type[[1]],
+        " and ",
+        conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots."
+      )
     }
   }
 }
@@ -318,107 +347,145 @@ text_plot_width <- function(all_trial_info, units) {
   if (nrow(all_trial_info) == 1) {
     if (units == "metric") {
       paste0(all_trial_info$plot_width[[1]], "-meter plots.")
-    }else{
+    } else {
       paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots.")
     }
   } else {
     if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
       if (units == "metric") {
         paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
-      }else{
+      } else {
         paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
       }
     } else {
       if (units == "metric") {
         paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots.")
-      }else{
+      } else {
         paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots.")
       }
     }
   }
 }
 
-text_harvester_passes <- function(all_trial_info, units){
-  if(nrow(all_trial_info) > 1){
-    if(all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]){
-
-      if(units == "metric"){
-        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
-               " ",
-               all_trial_info$harvester_width[[1]],
-               "-meter harvester swath",
-               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
-               " will lie neatly within each ",
-               text_plot_width(all_trial_info, units))
-      }else{
-        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
-               " ",
-               conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
-               "-foot harvester swath",
-               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
-               " will lie neatly within each ",
-               text_plot_width(all_trial_info, units))
+text_harvester_passes <- function(all_trial_info, units) {
+  if (nrow(all_trial_info) > 1) {
+    if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
+      if (units == "metric") {
+        paste0(
+          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          " ",
+          all_trial_info$harvester_width[[1]],
+          "-meter harvester swath",
+          if (all_trial_info$num_harv_pass_in_plot[[1]] > 1) {
+            "s"
+          } else {
+            ""
+          },
+          " will lie neatly within each ",
+          text_plot_width(all_trial_info, units)
+        )
+      } else {
+        paste0(
+          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          " ",
+          conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
+          "-foot harvester swath",
+          if (all_trial_info$num_harv_pass_in_plot[[1]] > 1) {
+            "s"
+          } else {
+            ""
+          },
+          " will lie neatly within each ",
+          text_plot_width(all_trial_info, units)
+        )
       }
-
-    }else{
-
-      if(units == "metric"){
-        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
-               " ",
-               all_trial_info$harvester_width[[1]],
-               "-meter harvester swath",
-               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
-               " and ",
-               as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
-               " ",
-               all_trial_info$harvester_width[[2]],
-               "-meter harvester swath",
-               if(all_trial_info$num_harv_pass_in_plot[[2]] > 1){"s"}else{""},
-               " will lie neatly within each ",
-               text_plot_width(all_trial_info, units),
-               ", respectively")
-      }else{
-        paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
-               " ",
-               conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
-               "-foot harvester swath",
-               if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
-               " and ",
-               as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
-               " ",
-               conv_unit(all_trial_info$harvester_width[[2]], "m", "ft"),
-               "-foot harvester swath",
-               if(all_trial_info$num_harv_pass_in_plot[[2]] > 1){"s"}else{""},
-               " will lie neatly within each ",
-               text_plot_width(all_trial_info, units),
-               ", respectively")
+    } else {
+      if (units == "metric") {
+        paste0(
+          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          " ",
+          all_trial_info$harvester_width[[1]],
+          "-meter harvester swath",
+          if (all_trial_info$num_harv_pass_in_plot[[1]] > 1) {
+            "s"
+          } else {
+            ""
+          },
+          " and ",
+          as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
+          " ",
+          all_trial_info$harvester_width[[2]],
+          "-meter harvester swath",
+          if (all_trial_info$num_harv_pass_in_plot[[2]] > 1) {
+            "s"
+          } else {
+            ""
+          },
+          " will lie neatly within each ",
+          text_plot_width(all_trial_info, units),
+          ", respectively"
+        )
+      } else {
+        paste0(
+          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          " ",
+          conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
+          "-foot harvester swath",
+          if (all_trial_info$num_harv_pass_in_plot[[1]] > 1) {
+            "s"
+          } else {
+            ""
+          },
+          " and ",
+          as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
+          " ",
+          conv_unit(all_trial_info$harvester_width[[2]], "m", "ft"),
+          "-foot harvester swath",
+          if (all_trial_info$num_harv_pass_in_plot[[2]] > 1) {
+            "s"
+          } else {
+            ""
+          },
+          " will lie neatly within each ",
+          text_plot_width(all_trial_info, units),
+          ", respectively"
+        )
       }
-
     }
-  }else{
-
-    if(units == "metric"){
-      paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
-             " ",
-             all_trial_info$harvester_width[[1]],
-             "-meter harvester swath",
-             if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
-             " will lie neatly within each ",
-             text_plot_width(all_trial_info, units))
-    }else{
-      paste0(as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
-             " ",
-             conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
-             "-foot harvester swath",
-             if(all_trial_info$num_harv_pass_in_plot[[1]] > 1){"s"}else{""},
-             " will lie neatly within each ",
-             text_plot_width(all_trial_info, units))
+  } else {
+    if (units == "metric") {
+      paste0(
+        as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+        " ",
+        all_trial_info$harvester_width[[1]],
+        "-meter harvester swath",
+        if (all_trial_info$num_harv_pass_in_plot[[1]] > 1) {
+          "s"
+        } else {
+          ""
+        },
+        " will lie neatly within each ",
+        text_plot_width(all_trial_info, units)
+      )
+    } else {
+      paste0(
+        as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+        " ",
+        conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
+        "-foot harvester swath",
+        if (all_trial_info$num_harv_pass_in_plot[[1]] > 1) {
+          "s"
+        } else {
+          ""
+        },
+        " will lie neatly within each ",
+        text_plot_width(all_trial_info, units)
+      )
     }
-
   }
 }
 
-get_field_size <- function(trial_design, land_unit){
+get_field_size <- function(trial_design, land_unit) {
   trial_design %>%
     mutate(area = as.numeric(st_area(.))) %>%
     pull(area) %>%
@@ -435,7 +502,7 @@ get_plot_number <- function(trial_design) {
 
 get_plot_length <- function(trial_design, plot_width) {
   trial_design %>%
-    mutate(area = as.numeric(st_area(.))/plot_width) %>%
+    mutate(area = as.numeric(st_area(.)) / plot_width) %>%
     pull(area) %>%
     quantile(., c(0.1, 0.9)) %>%
     round(.)
@@ -577,20 +644,20 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
   return(cent)
 }
 
-get_plot <- function(trial_design, ab_lines, input_name){
-    design <- trial_design %>%
-      mutate(plot_id = row_number()) %>%
-      filter(type == "experiment")
+get_plot <- function(trial_design, ab_lines, input_name) {
+  design <- trial_design %>%
+    mutate(plot_id = row_number()) %>%
+    filter(type == "experiment")
 
-    first_plot <- trial_design[1,] %>%
-      mutate(plot_id = st_intersection(st_transform_utm(design), ab_lines) %>%
-               pull(plot_id) %>%
-               min(.))
+  first_plot <- trial_design[1, ] %>%
+    mutate(plot_id = st_intersection(st_transform_utm(design), ab_lines) %>%
+      pull(plot_id) %>%
+      min(.))
 
-    plot <- design %>%
-      filter(plot_id == first_plot$plot_id) %>%
-      st_transform_utm(.) %>%
-      mutate(input = input_name)
+  plot <- design %>%
+    filter(plot_id == first_plot$plot_id) %>%
+    st_transform_utm(.) %>%
+    mutate(input = input_name)
 
   return(plot)
 }

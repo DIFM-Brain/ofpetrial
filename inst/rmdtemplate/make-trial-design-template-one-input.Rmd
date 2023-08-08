@@ -40,14 +40,14 @@ knitr::opts_chunk$set(
   warning = FALSE,
   cache.lazy = FALSE,
   message = FALSE,
-  fig.width = 12, 
+  fig.width = 12,
   fig.height = 12
 )
 ```
 
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE}
-all_trial_info = readRDS(file.path("_all-trial-info-here_"))
-machine_table = readRDS(file.path("_machine-table-here_"))
+all_trial_info <- readRDS(file.path("_all-trial-info-here_"))
+machine_table <- readRDS(file.path("_machine-table-here_"))
 # === packages ===#
 # library(bookdown)
 # library(pracma)
@@ -90,18 +90,20 @@ all_trial_info$map_design[[1]] + tm_layout(
 
 ```{r rep-table, echo=FALSE, include = TRUE}
 rep_table <- all_trial_info %>%
-    rowwise() %>%
-mutate(rep_table = list(
-  trial_design %>% group_by(rate) %>% 
-  summarise(Replicates = n(),
-            .groups = 'drop') %>%
-  data.frame() %>%
-  dplyr::select(rate, Replicates) %>%
-  dplyr::rename("Target Rate" = "rate")))
+  rowwise() %>%
+  mutate(rep_table = list(
+    trial_design %>% group_by(rate) %>%
+      summarise(
+        Replicates = n(),
+        .groups = "drop"
+      ) %>%
+      data.frame() %>%
+      dplyr::select(rate, Replicates) %>%
+      dplyr::rename("Target Rate" = "rate")
+  ))
 
 rep_table$rep_table[[1]] %>%
-      kable(caption = paste0("Replicates of each ", rep_table$input_name[[1]], " Target Rate"))
-
+  kable(caption = paste0("Replicates of each ", rep_table$input_name[[1]], " Target Rate"))
 ```
 
 ## Steps in a Field Trial 
@@ -128,10 +130,10 @@ One the trial design is made, its shapefile should be uploaded into the applicat
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
-for (i in 1:(nrow(machine_table)-1)){
-    ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
-    poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
-    label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+for (i in 1:(nrow(machine_table) - 1)) {
+  ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
 }
 
 tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[[1]])) +
@@ -139,25 +141,31 @@ tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[
   eval(parse(text = paste0(ab_maps, collapse = " + "))) +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
-  tm_add_legend(type = "line",
-                labels = c("Planter AB-line", "Applicator AB-line"),
-                col = c("#009E73", "#0072B2"),
-                lty = c("dashed", "solid"),
-                title = "AB-Lines") +
-  tm_add_legend(type = "symbol",
-                labels = c("Planter", "Applicator"),
-                col = c("#009E73", "#0072B2"),
-                shape = 0,
-                title = "Machine Polygons") +
-  tm_add_legend(type = "symbol",
-                labels = c("Trial Plot"),
-                col = c("black"),
-                shape = 0) +
-  tm_layout(legend.outside = TRUE,
-            frame = FALSE,
-            bg.color = "grey85")
-  
-
+  tm_add_legend(
+    type = "line",
+    labels = c("Planter AB-line", "Applicator AB-line"),
+    col = c("#009E73", "#0072B2"),
+    lty = c("dashed", "solid"),
+    title = "AB-Lines"
+  ) +
+  tm_add_legend(
+    type = "symbol",
+    labels = c("Planter", "Applicator"),
+    col = c("#009E73", "#0072B2"),
+    shape = 0,
+    title = "Machine Polygons"
+  ) +
+  tm_add_legend(
+    type = "symbol",
+    labels = c("Trial Plot"),
+    col = c("black"),
+    shape = 0
+  ) +
+  tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85"
+  )
 ```
 
 ### Step 4. Uploading As-applied Data to Farmer’s DIFM Database 
@@ -172,10 +180,10 @@ When the trial design is created, the downloaded files also include a shapefile 
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
-for (i in 1:nrow(machine_table)){
-    ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
-    poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
-    label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+for (i in 1:nrow(machine_table)) {
+  ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
 }
 
 tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[[1]])) +
@@ -183,23 +191,31 @@ tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[
   eval(parse(text = paste0(ab_maps, collapse = " + "))) +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
-  tm_add_legend(type = "line",
-                labels = c("Harvester AB-line", "Planter AB-line", "Applicator AB-line"),
-                col = c("#E69F00", "#009E73", "#0072B2"),
-                lty = c("dashed", "dashed", "solid"),
-                title = "AB-Lines") +
-  tm_add_legend(type = "symbol",
-                labels = c("Harvester", "Planter", "Applicator"),
-                col = c("#E69F00", "#009E73", "#0072B2"),
-                shape = 0,
-                title = "Machine Polygons") +
-  tm_add_legend(type = "symbol",
-                labels = c("Trial Plot"),
-                col = c("black"),
-                shape = 0) +
-  tm_layout(legend.outside = TRUE,
-            frame = FALSE,
-            bg.color = "grey85")
+  tm_add_legend(
+    type = "line",
+    labels = c("Harvester AB-line", "Planter AB-line", "Applicator AB-line"),
+    col = c("#E69F00", "#009E73", "#0072B2"),
+    lty = c("dashed", "dashed", "solid"),
+    title = "AB-Lines"
+  ) +
+  tm_add_legend(
+    type = "symbol",
+    labels = c("Harvester", "Planter", "Applicator"),
+    col = c("#E69F00", "#009E73", "#0072B2"),
+    shape = 0,
+    title = "Machine Polygons"
+  ) +
+  tm_add_legend(
+    type = "symbol",
+    labels = c("Trial Plot"),
+    col = c("black"),
+    shape = 0
+  ) +
+  tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85"
+  )
 ```
 
 ### Step 6.  Uploading Raw Yield Data into Farmer’s DIFM Database 
