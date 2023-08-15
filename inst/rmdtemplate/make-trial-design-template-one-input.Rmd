@@ -186,8 +186,7 @@ for (i in 1:nrow(machine_table)) {
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
 }
 
-tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[[1]])) +
-  tm_borders(col = "black") +
+machine_table$map_plot[[1]] +
   eval(parse(text = paste0(ab_maps, collapse = " + "))) +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
@@ -205,12 +204,7 @@ tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[
     shape = 0,
     title = "Machine Polygons"
   ) +
-  tm_add_legend(
-    type = "symbol",
-    labels = c("Trial Plot"),
-    col = c("black"),
-    shape = 0
-  ) +
+  machine_table$plot_legend[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,

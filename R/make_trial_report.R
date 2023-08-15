@@ -42,6 +42,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     mutate(num_harv_pass_in_plot = plot_width / harvester_width) %>%
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
+    mutate(machines_in_plot = ceiling(plot_width/machine_width)) %>%
     mutate(headland_size = if (units == "metric") {
       headland_length
     } else {
@@ -52,7 +53,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     } else {
       conv_unit(side_length, "m", "feet")
     }) %>%
-    mutate(plot = list(get_plot(trial_design, ab_lines, input_name))) %>%
     mutate(map_design = list(
       tm_shape(trial_design) +
         tm_polygons(
@@ -76,44 +76,51 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
         )
     ))
 
+  plots = get_plots(all_trial_info)
+
   if (nrow(td) == 1) {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
       machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]])
     ) %>%
-      mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
       mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
-      mutate(trial_plot = list(all_trial_info$plot[[1]])) %>%
+      mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), all_trial_info$machines_in_plot)) %>%
+      mutate(trial_plot = list(plots)) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
+      mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
+      mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
+
   } else {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
       machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]], td$ab_lines[[2]])
     ) %>%
-      mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
+      mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), all_trial_info$machines_in_plot)) %>%
       mutate(height = max(width) / 4) %>%
-      .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
+      .[, machine_type := factor(machine_type, levels = c("planter", "applicator", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
-      mutate(trial_plot = list(rbind(all_trial_info$plot[[1]], all_trial_info$plot[[2]]))) %>%
+      mutate(trial_plot = list(plots)) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
+      mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
+      mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
   dir.create(file.path(folder_path, "ofpe_temp_folder"))
@@ -644,22 +651,58 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
   return(cent)
 }
 
-get_plot <- function(trial_design, ab_lines, input_name) {
-  design <- trial_design %>%
-    mutate(plot_id = row_number()) %>%
-    filter(type == "experiment")
+get_plots <- function(all_trial_info){
+  if (length(all_trial_info$plot_width %>% unique()) == 1){
+    design <- all_trial_info$trial_design[[1]] %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "Trial Area")
 
-  first_plot <- trial_design[1, ] %>%
-    mutate(plot_id = st_intersection(st_transform_utm(design), ab_lines) %>%
-      pull(plot_id) %>%
-      min(.))
+    first_plot <- all_trial_info$trial_design[[1]][1, ] %>%
+      mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
+               pull(plot_id) %>%
+               min(.))
 
-  plot <- design %>%
-    filter(plot_id == first_plot$plot_id) %>%
-    st_transform_utm(.) %>%
-    mutate(input = input_name)
+    plots <- design %>%
+      filter(plot_id == first_plot$plot_id) %>%
+      st_transform_utm(.) %>%
+      mutate(input_name = input_name) %>%
+      dplyr::select(rate, strip_id, plot_id, type, input_name)
 
-  return(plot)
+  }else{
+    max_input <- all_trial_info %>%
+      filter(plot_width == max(all_trial_info$plot_width))
+
+    min_input <- all_trial_info %>%
+      filter(plot_width != max(all_trial_info$plot_width))
+
+    design1 <- max_input$trial_design[[1]] %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "Trial Area")
+
+    design2 <- min_input$trial_design[[1]] %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "Trial Area")
+
+    plot1 <- design %>%
+      filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
+               pull(plot_id) %>%
+               min(.)) %>%
+      st_transform_utm(.) %>%
+      mutate(input_name = max_input$input_name) %>%
+      dplyr::select(rate, strip_id, plot_id, type, input_name)
+
+    plot2 = st_intersection(st_transform_utm(design2), plot1) %>%
+      mutate(area = st_area(.)) %>%
+      filter(area >= median(area)) %>%
+      st_transform_utm(.) %>%
+      mutate(input_name = min_input$input_name) %>%
+      dplyr::select(rate, strip_id, plot_id, type, input_name)
+
+    plots = rbind(plot1, plot2)
+
+  }
+
+  return(plots)
 }
 
 tmap_abline <- function(ab_line, machine_type, trial_plot) {
@@ -688,8 +731,78 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#0072B2"
     } else {
       "#E69F00"
-    }) +
+    }, lwd = 3) +
     tm_fill(col = "white")
+}
+
+# test_plot <- machine_table$trial_plot[[1]]
+tmap_plot <- function(trial_plot) {
+  if (trial_plot %>%
+    mutate(area = as.numeric(st_area(.))) %>%
+    pull(area) %>%
+    unique(.) %>%
+    length() == 1){
+
+    map <- tm_shape(trial_plot, bbox = st_bbox(trial_plot)) +
+      tm_borders(col = "black")
+  }else{
+    plots <- trial_plot %>%
+        mutate(area = as.numeric(st_area(.))) %>%
+        arrange(desc(area))
+
+    map_small_plots <- list()
+    for (i in 2:nrow(plots)) {
+      map_small_plots[[i]] <- paste0("tm_shape(plots[", i, ",], bbox = st_bbox(plots)) +
+        tm_borders(col = \"gray\", lwd = 2, lty = \"dashed\")")
+
+    }
+
+
+    map <- tm_shape(plots[1,], bbox = st_bbox(plots)) +
+      tm_borders(col = "black", lwd = 5) +
+      tm_fill(col = "white") +
+      eval(parse(text = paste0(map_small_plots, collapse = " + ")))
+
+  }
+
+  return(map)
+}
+
+# trial_plot <- machine_table$trial_plot[[1]]
+tmap_plot_legend <- function(trial_plot) {
+  if (trial_plot %>%
+      mutate(area = as.numeric(st_area(.))) %>%
+      pull(area) %>%
+      unique(.) %>%
+      length() == 1){
+
+    legend = tm_add_legend(
+      type = "symbol",
+      labels = c("Trial Plot"),
+      col = c("black"),
+      shape = 0
+    )
+  }else{
+    plots <- trial_plot %>%
+      mutate(area = as.numeric(st_area(.))) %>%
+      arrange(desc(area)) %>%
+      pull(input_name) %>%
+      unique()
+
+    legend = tm_add_legend(
+      type = "symbol",
+      labels = c(paste0(str_to_title(plots[1]), " Trial Plot")),
+      col = c("black"),
+      shape = 0
+    ) +
+      tm_add_legend(
+        type = "symbol",
+        labels = c(paste0(str_to_title(plots[2]), " Trial Plot")),
+        col = c("gray"),
+        shape = 0
+      )
+  }
+  return(legend)
 }
 
 tmap_label <- function(center, machine_type, trial_plot) {
