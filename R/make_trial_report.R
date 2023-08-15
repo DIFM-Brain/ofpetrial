@@ -805,6 +805,7 @@ tmap_plot_legend <- function(trial_plot) {
       length() == 1){
 
     legend = tm_add_legend(
+      title = "Trial Plots",
       type = "symbol",
       labels = c("Trial Plot"),
       col = c("black"),
@@ -819,19 +820,13 @@ tmap_plot_legend <- function(trial_plot) {
       unique()
 
     legend = tm_add_legend(
+      title = "Trial Plots",
       type = "symbol",
-      labels = c(paste0(str_to_title(plots[1]), " Trial Plot")),
-      col = c("black"),
+      labels = c(paste0(str_to_title(plots[1]), " Trial Plot"), paste0(str_to_title(plots[2]), " Trial Plot")),
+      col = c("black", "gray"),
       shape = 0,
       size = 2
-    ) +
-      tm_add_legend(
-        type = "symbol",
-        labels = c(paste0(str_to_title(plots[2]), " Trial Plot")),
-        col = c("gray"),
-        shape = 0,
-        size = 2
-      )
+    )
   }
   return(legend)
 }

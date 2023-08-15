@@ -105,7 +105,9 @@ machine_table$map_plot[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
@@ -176,20 +178,24 @@ machine_table$map_plot[[1]] +
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
-    title = "AB-Lines"
+    title = "AB-Lines",
+    size = 2
   ) +
   tm_add_legend(
     type = "symbol",
     labels = na.omit(labels_polygons),
     col = na.omit(colors),
     shape = 0,
-    title = "Machine Polygons"
+    title = "Machine Polygons",
+    size = 2
   ) +
   machine_table$plot_legend[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
@@ -238,7 +244,9 @@ machine_table$map_plot[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
@@ -277,20 +285,24 @@ machine_table$map_plot[[1]] +
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
-    title = "AB-Lines"
+    title = "AB-Lines",
+    size = 2
   ) +
   tm_add_legend(
     type = "symbol",
     labels = na.omit(labels_polygons),
     col = na.omit(colors),
     shape = 0,
-    title = "Machine Polygons"
+    title = "Machine Polygons",
+    size = 2
   ) +
   machine_table$plot_legend[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
@@ -336,7 +348,9 @@ machine_table$map_plot[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 

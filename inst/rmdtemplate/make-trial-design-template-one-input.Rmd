@@ -168,7 +168,9 @@ machine_table$map_plot[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
@@ -222,7 +224,9 @@ machine_table$map_plot[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
@@ -268,7 +272,9 @@ machine_table$map_plot[[1]] +
   tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
-    bg.color = "grey85"
+    bg.color = "grey85",
+  legend.title.size = 2,
+  legend.text.size = 1.5
   )
 ```
 
