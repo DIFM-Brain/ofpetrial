@@ -808,7 +808,8 @@ tmap_plot_legend <- function(trial_plot) {
       type = "symbol",
       labels = c("Trial Plot"),
       col = c("black"),
-      shape = 0
+      shape = 0,
+      size = 2
     )
   }else{
     plots <- trial_plot %>%
@@ -821,13 +822,15 @@ tmap_plot_legend <- function(trial_plot) {
       type = "symbol",
       labels = c(paste0(str_to_title(plots[1]), " Trial Plot")),
       col = c("black"),
-      shape = 0
+      shape = 0,
+      size = 2
     ) +
       tm_add_legend(
         type = "symbol",
         labels = c(paste0(str_to_title(plots[2]), " Trial Plot")),
         col = c("gray"),
-        shape = 0
+        shape = 0,
+        size = 2
       )
   }
   return(legend)
