@@ -238,11 +238,11 @@ trial_text_machinery_names_lower <- function(machine_table) {
   }
 }
 
-text_plant_apply <- function(machine_table) {
-  if (nrow(machine_table) > 2) {
-    paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(machine_table$input_name[[2]] == "seed", "plant", "apply"))
+text_plant_apply <- function(all_trial_info) {
+  if (nrow(all_trial_info) > 1) {
+    paste0(ifelse(all_trial_info$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(all_trial_info$input_name[[2]] == "seed", "plant", "apply"))
   } else {
-    paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"))
+    paste0(ifelse(all_trial_info$input_name[[1]] == "seed", "plant", "apply"))
   }
 }
 
