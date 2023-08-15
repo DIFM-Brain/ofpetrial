@@ -122,68 +122,26 @@ all_trial_info$map_headlands[[1]] + tm_layout(
 )
 ```
 
-### Step 2.  Center the `r trial_text_machinery_names_cap(machine_table)` on Machine’s AB-line Provided
+### Step 2.  Center the `r str_to_title(machine_table$machine_type[[1]])` on the AB-line Provided
 
-One the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription would be loaded.  Then the operator should center the machinery on the corresponding AB-line labeled “ab-lines-farmer-applicator” or “ab-lines-farmer-planter” provided in the trial design files.  Figure \@ref(fig:machine-alignment) shows the `r trial_text_machinery_names_lower(machine_table)` inside a trial plot along with the respective AB-line. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, units)`
+Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]]` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. 
 
-```{r machine-alignment, echo=FALSE, fig.cap="Alignment of Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
+colors <- vector()
+labels_ablines <- vector()
+labels_polygons <- vector()
+
 for (i in 1:(nrow(machine_table) - 1)) {
   ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-}
+  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"#009E73"}else{"#E69F00"}
+  labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
+  labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
 
-tm_shape(machine_table$trial_plot[[1]], bbox = st_bbox(machine_table$trial_plot[[1]])) +
-  tm_borders(col = "black") +
-  eval(parse(text = paste0(ab_maps, collapse = " + "))) +
-  eval(parse(text = paste0(poly_maps, collapse = " + "))) +
-  eval(parse(text = paste0(label_maps, collapse = " + "))) +
-  tm_add_legend(
-    type = "line",
-    labels = c("Planter AB-line", "Applicator AB-line"),
-    col = c("#009E73", "#0072B2"),
-    lty = c("dashed", "solid"),
-    title = "AB-Lines"
-  ) +
-  tm_add_legend(
-    type = "symbol",
-    labels = c("Planter", "Applicator"),
-    col = c("#009E73", "#0072B2"),
-    shape = 0,
-    title = "Machine Polygons"
-  ) +
-  tm_add_legend(
-    type = "symbol",
-    labels = c("Trial Plot"),
-    col = c("black"),
-    shape = 0
-  ) +
-  tm_layout(
-    legend.outside = TRUE,
-    frame = FALSE,
-    bg.color = "grey85"
-  )
-```
-
-### Step 4. Uploading As-applied Data to Farmer’s DIFM Database 
-
-After the applying the input to put the trial in the ground, the “as-applied” data should be downloaded from the application monitor and uploaded into the farmer’s DIFM database.   
-
-### Step 5. Harvest 
-
-When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. If the harvester is correctly centered, then the `r text_harvester_passes(all_trial_info, units)`
-
-```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
-ab_maps <- list()
-poly_maps <- list()
-label_maps <- list()
-for (i in 1:nrow(machine_table)) {
-  ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
-  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
-  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
 }
 
 machine_table$map_plot[[1]] +
@@ -192,15 +150,15 @@ machine_table$map_plot[[1]] +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
   tm_add_legend(
     type = "line",
-    labels = c("Harvester AB-line", "Planter AB-line", "Applicator AB-line"),
-    col = c("#E69F00", "#009E73", "#0072B2"),
-    lty = c("dashed", "dashed", "solid"),
+    labels = na.omit(labels_ablines),
+    col = na.omit(colors),
+    lty = c("dashed"),
     title = "AB-Lines"
   ) +
   tm_add_legend(
     type = "symbol",
-    labels = c("Harvester", "Planter", "Applicator"),
-    col = c("#E69F00", "#009E73", "#0072B2"),
+    labels = na.omit(labels_polygons),
+    col = na.omit(colors),
     shape = 0,
     title = "Machine Polygons"
   ) +
@@ -212,12 +170,108 @@ machine_table$map_plot[[1]] +
   )
 ```
 
-### Step 6.  Uploading Raw Yield Data into Farmer’s DIFM Database 
+### Step 3. Uploading As-applied Data to Farmer’s Database 
 
-After the harvest, the raw yield data should be downloaded from the yield monitor and uploaded into the farmer’s DIFM database. 
+After the applying the input to put the trial in the ground, the “as-applied” data should be downloaded from the application monitor and uploaded into the farmer’s database.   
 
-### Step 7.  Uploading Field Characteristics Spatial Data into Farmer’s DIFM Database 
+### Step 4. Harvest 
+
+When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line inside a trial plot.
+
+```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Harvester inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+ab_maps <- list()
+poly_maps <- list()
+label_maps <- list()
+colors <- vector()
+labels_ablines <- vector()
+labels_polygons <- vector()
+
+for (i in nrow(machine_table)) {
+  ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"#009E73"}else{"#E69F00"}
+  labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
+  labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
+
+}
+
+machine_table$map_plot[[1]] +
+  eval(parse(text = paste0(ab_maps, collapse = " + "))) +
+  eval(parse(text = paste0(poly_maps, collapse = " + "))) +
+  eval(parse(text = paste0(label_maps, collapse = " + "))) +
+  tm_add_legend(
+    type = "line",
+    labels = na.omit(labels_ablines),
+    col = na.omit(colors),
+    lty = c("dashed"),
+    title = "AB-Lines"
+  ) +
+  tm_add_legend(
+    type = "symbol",
+    labels = na.omit(labels_polygons),
+    col = na.omit(colors),
+    shape = 0,
+    title = "Machine Polygons"
+  ) +
+  machine_table$plot_legend[[1]] +
+  tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85"
+  )
+```
+
+### Alignment of all Machines in the Trial Plots
+
+Figure \@ref(fig:machine-alignment-all) shows all of the machinery inside a trial plot, showing the proper alignment of the machine passes based on the widths provided in the trial design function. While the AB-lines are not included in this figure for clarity, we can see where they are by following the arrow of the machines. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, units)` If the harvester is correctly centered, then the `r text_harvester_passes(all_trial_info, units)`
+
+```{r machine-alignment-all, echo=FALSE, fig.cap="Alignment of all Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+ab_maps <- list()
+poly_maps <- list()
+label_maps <- list()
+colors <- vector()
+polygons <- vector()
+
+for (i in 1:nrow(machine_table)) {
+  # ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
+  poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
+  label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
+  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"#009E73"}else{"#E69F00"}
+  polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
+}
+
+machine_table$map_plot[[1]] +
+  # eval(parse(text = paste0(ab_maps, collapse = " + "))) +
+  eval(parse(text = paste0(poly_maps, collapse = " + "))) +
+  eval(parse(text = paste0(label_maps, collapse = " + "))) +
+  # tm_add_legend(
+  #   type = "line",
+  #   labels = c("Harvester AB-line", "Planter AB-line", "Applicator AB-line"),
+  #   col = c("#E69F00", "#009E73", "#0072B2"),
+  #   lty = c("dashed", "dashed", "solid"),
+  #   title = "AB-Lines"
+  # ) +
+  tm_add_legend(
+    type = "symbol",
+    labels = polygons,
+    col = colors,
+    shape = 0,
+    title = "Machine Polygons"
+  ) +
+  machine_table$plot_legend[[1]] +
+  tm_layout(
+    legend.outside = TRUE,
+    frame = FALSE,
+    bg.color = "grey85"
+  )
+```
+
+### Step 5.  Uploading Raw Yield Data into Farmer’s Database 
+
+After the harvest, the raw yield data should be downloaded from the yield monitor and uploaded into the farmer’s database. 
+
+### Step 6.  Uploading Field Characteristics Spatial Data into Farmer’s Database 
 
 Once a boundary file is uploaded into the DIFM system, various spatial “characteristics” data will be automatically uploaded from public sources.  For example, data for virtually all agricultural fields in the USA can be downloaded from the USDA Natural Resources Conservation Service’s Web Soil Survey webpage (https://websoilsurvey.nrcs.usda.gov/app/) provides public access to the Soil Survey Geographic (SSURGO) Database, which contains soil maps.  Other data, such as elevation data and infrared satellite imagery are accessible through public sources. 
 
-If you have any questions or would like to sign up as an official DIFM farmer or crop consultant, contact our DIFM Trial Supervisor Bob Dunker by email at redunker@illinois.edu.

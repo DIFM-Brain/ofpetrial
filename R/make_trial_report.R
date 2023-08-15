@@ -133,9 +133,9 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   # /*=================================================*/
   td_rmd <-
     readLines(if (nrow(all_trial_info) > 1) {
-      system.file("rmdtemplate", "make-trial-design-template-one-input.Rmd", package = "ofpetrial")
-    } else {
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
+    } else {
+      system.file("rmdtemplate", "make-trial-design-template-one-input.Rmd", package = "ofpetrial")
     }) %>%
     gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
     gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%

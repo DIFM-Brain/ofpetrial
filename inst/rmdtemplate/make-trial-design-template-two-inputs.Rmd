@@ -145,9 +145,9 @@ all_trial_info$map_headlands[[1]] + tm_layout(
 )
 ```
 
-### Step 2.  Center the `r str_to_title(machine_table$machine_type[[1]])` on the AB-line Provided
+### Step 2.  Center the `r str_to_title(machine_table$machine_type[[1]])` on the AB-line Provided and Implement Trial
 
-Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r ifelse(machine_table$machine_type[[1]] == "seed", "planter", "applicator")` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", ifelse(machine_table$machine_type[[1]] == "seed", "planter", "applicator"))` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r ifelse(machine_table$machine_type[[1]] == "seed", "planter", "applicator")` inside a trial plot along with its respective AB-line. 
+Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]])` inside a trial plot along with its respective AB-line. 
 
 ```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -193,9 +193,9 @@ machine_table$map_plot[[1]] +
   )
 ```
 
-### Step 3.  Center the `r str_to_title(machine_table$machine_type[[2]])` on the AB-line Provided
+### Step 3.  Center the `r str_to_title(machine_table$machine_type[[2]])` on the AB-line Provided and Implement Trial
 
-Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r ifelse(machine_table$machine_type[[2]] == "seed", "planter", "applicator")` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", ifelse(machine_table$machine_type[[2]] == "seed", "planter", "applicator"))` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r ifelse(machine_table$machine_type[[2]] == "seed", "planter", "applicator")` inside a trial plot along with its respective AB-line.
+As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line.
 
 ```{r machine-alignment-2, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[2]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -240,9 +240,9 @@ machine_table$map_plot[[1]] +
   )
 ```
 
-### Step 4. Uploading As-applied Data to Farmer’s DIFM Database 
+### Step 4. Uploading As-applied Data to Farmer’s Database 
 
-After the applying the input to put the trial in the ground, the “as-applied” data should be downloaded from the application monitor and uploaded into the farmer’s DIFM database.   
+After the applying the input to put the trial in the ground, the “as-applied” data should be downloaded from the application monitor and uploaded into the farmer’s database.   
 
 ### Step 5. Harvest 
 
@@ -342,7 +342,7 @@ machine_table$map_plot[[1]] +
 
 After the harvest, the raw yield data should be downloaded from the yield monitor and uploaded into the farmer’s database. 
 
-### Step 7.  Uploading Field Characteristics Spatial Data into Farmer’s  Database 
+### Step 7.  Uploading Field Characteristics Spatial Data into Farmer’s Database 
 
 Once a boundary file is uploaded into the DIFM system, various spatial “characteristics” data will be automatically uploaded from public sources.  For example, data for virtually all agricultural fields in the USA can be downloaded from the USDA Natural Resources Conservation Service’s Web Soil Survey webpage (https://websoilsurvey.nrcs.usda.gov/app/) provides public access to the Soil Survey Geographic (SSURGO) Database, which contains soil maps.  Other data, such as elevation data and infrared satellite imagery are accessible through public sources. 
 
