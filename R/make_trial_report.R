@@ -17,6 +17,7 @@
 #' @import measurements
 #' @import tmap
 #' @import english
+#' @import geometry
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
@@ -268,7 +269,7 @@ trial_text_ablines <- function(machine_table) {
       "The AB-lines for the ",
       machine_table$machine_type[[1]], " and ", machine_table$machine_type[[2]],
       " are ",
-      ifelse(identical(machine_table$ab_line[[1]], machine_table$ab_line[[2]]) == TRUE, "identical due to the machinery specifications.", "not identical due to the difference in machine specifications.")
+      ifelse(geometry::dot(machine_table$move_vec[[1]], machine_table$move_vec[[2]]) == 1, "identical due to the machinery specifications.", "not identical due to the difference in machine specifications.")
     )
   } else {
     ""
@@ -616,7 +617,10 @@ get_move_vec <- function(ab_line) {
       dy = Y - lag(Y, n = 1)
     )
 
-  return(c(lags$dx[2], lags$dy[2]))
+  lag_vec <- c(lags$dx[2], lags$dy[2])
+  move_vec <- lag_vec / sqrt(sum(lag_vec^2))
+
+  return(move_vec)
 }
 
 find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, machine_width, height) {
