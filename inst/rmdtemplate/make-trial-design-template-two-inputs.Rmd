@@ -147,7 +147,7 @@ all_trial_info$map_headlands[[1]] + tm_layout(
 
 ### Step 2.  Center the `r str_to_title(machine_table$machine_type[[1]])` on the AB-line Provided and Implement Trial
 
-Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. 
+Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(1, units)`
 
 ```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -195,7 +195,7 @@ machine_table$map_plot[[1]] +
 
 ### Step 3.  Center the `r str_to_title(machine_table$machine_type[[2]])` on the AB-line Provided and Implement Trial
 
-As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line.
+As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(2, units)`
 
 ```{r machine-alignment-2, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[2]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -246,7 +246,7 @@ After the applying the input to put the trial in the ground, the â€œas-appliedâ€
 
 ### Step 5. Harvest 
 
-When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line along with all other machinery inside a trial plot. 
+When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line inside a trial plot. 
 
 ```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Harvester inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
