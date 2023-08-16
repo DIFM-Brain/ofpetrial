@@ -834,7 +834,7 @@ tmap_plot_legend <- function(trial_plot) {
 tmap_label <- function(center, machine_type, trial_plot) {
   labels <- list()
   for (i in 1:nrow(center)) {
-    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"P\"}else if(machine_type == \"applicator\"){\"A\"}else{\"H\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\")")
+    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.75)")
   }
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 

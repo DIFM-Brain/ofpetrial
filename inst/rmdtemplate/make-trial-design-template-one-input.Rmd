@@ -284,5 +284,5 @@ After the harvest, the raw yield data should be downloaded from the yield monito
 
 ### Step 6.  Uploading Field Characteristics Spatial Data into Farmer’s Database 
 
-Once a boundary file is uploaded into the DIFM system, various spatial “characteristics” data will be automatically uploaded from public sources.  For example, data for virtually all agricultural fields in the USA can be downloaded from the USDA Natural Resources Conservation Service’s Web Soil Survey webpage (https://websoilsurvey.nrcs.usda.gov/app/) provides public access to the Soil Survey Geographic (SSURGO) Database, which contains soil maps.  Other data, such as elevation data and infrared satellite imagery are accessible through public sources. 
+With a boundary file, various spatial “characteristics” data can uploaded from public sources.  For example, data for virtually all agricultural fields in the USA can be downloaded from the USDA Natural Resources Conservation Service’s Web Soil Survey webpage (https://websoilsurvey.nrcs.usda.gov/app/) provides public access to the Soil Survey Geographic (SSURGO) Database, which contains soil maps.  Other data, such as elevation data, weather data, and infrared satellite imagery are accessible through public sources. 
 
