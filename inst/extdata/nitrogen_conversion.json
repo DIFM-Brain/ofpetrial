@@ -21,17 +21,17 @@
   },
   {
     "type": "urea",
-    "unit": "lbs",
+    "unit": "lb",
     "conv_factor": ".46"
   },
   {
     "type": "ammonium_nitrate",
-    "unit": "lbs",
+    "unit": "lb",
     "conv_factor": ".34"
   },
   {
     "type": "NH3",
-    "unit": "lbs",
+    "unit": "lb",
     "conv_factor": ".82"
   },
   {
@@ -41,7 +41,7 @@
   },
   {
     "type": "cover",
-    "unit": "lbs",
+    "unit": "lb",
     "conv_factor": "1"
   },
   {

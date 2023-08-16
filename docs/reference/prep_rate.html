@@ -91,7 +91,8 @@
 <span>  num_rates <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  design_type <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  rank_seq_ws <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  rank_seq_as <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  rank_seq_as <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  base_rate <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -136,6 +137,10 @@
 <dt>rank_seq_as</dt>
 <dd><p>(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.</p></dd>
 
+
+<dt>base_rate</dt>
+<dd><p>(integer) optional base application information created by add_base_rate</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -162,11 +167,14 @@
 <span class="r-in"><span>  unit <span class="op">=</span> <span class="st">"seeds"</span>,</span></span>
 <span class="r-in"><span>  rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">25000</span>, <span class="fl">30000</span>, <span class="fl">35000</span>, <span class="fl">40000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name design_type gc_rate unit  rates     min_rate max_rate num_rates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> seed       <span style="color: #BB0000;">NA</span>            <span style="text-decoration: underline;">30</span>000 seeds <span style="color: #949494;">&lt;dbl [5]&gt;</span> <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>               5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: rank_seq_ws &lt;list&gt;, rank_seq_as &lt;list&gt;</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `unit`.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Please ensure that the applicator is compatible with applying seed in .</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name design_type gc_rate unit  target_rate_original target_rate_equiv</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> seed       <span style="color: #BB0000;">NA</span>            <span style="text-decoration: underline;">30</span>000 seeds <span style="color: #949494;">&lt;dbl [5]&gt;</span>            <span style="color: #949494;">&lt;dbl [5]&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: total_equiv &lt;list&gt;, min_rate &lt;lgl&gt;, max_rate &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   num_rates &lt;dbl&gt;, rank_seq_ws &lt;list&gt;, rank_seq_as &lt;list&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

@@ -82,7 +82,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   }
 
   #conversions
-  warning(paste0("Please ensure that the applicator is compatible with applying ", input_trial_data$input_name, " in ", input_trial_data$unit, "."))
+  warning(paste0("Please ensure that the applicator is compatible with applying ", input_trial_data$input_name, " in ", unit, "."))
 
   if (is.null(base_rate) == FALSE){
     base_rate_original <- base_rate$base_rate
@@ -138,8 +138,8 @@ convert_rates <- function(
     new_unit = "gallons"
     reporting_unit = "metric"
   }else if(unit == "kg"){
-    rate = conv_unit(rate, "kg", "lbs")
-    new_unit = "lbs"
+    rate = conv_unit(rate, "kg", "lb")
+    new_unit = "lb"
     reporting_unit = "metric"
   }else{
     rate = rate
