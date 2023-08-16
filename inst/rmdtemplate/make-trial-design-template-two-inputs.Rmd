@@ -99,6 +99,8 @@ ncol = 2
 )
 ```
 
+Figure \@ref(fig:trial-plot) displays the trial plots for the two inputs, with `r text_plot_width(all_trial_info, units)`.
+
 ```{r trial-plot, echo=FALSE, fig.cap="Map of Trial Plots", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 machine_table$map_plot[[1]] +
   machine_table$plot_legend[[1]] +

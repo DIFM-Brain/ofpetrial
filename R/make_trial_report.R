@@ -356,7 +356,7 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
 }
 
 text_sections_used <- function(index, units) {
-  if(machine_table$sections_used[[1]] > 1){
+  if(machine_table$sections_used[[index]] > 1){
     if(units == "metric"){
       paste0("Although the ", machine_table$machine_type[[index]], " is ",  machine_table$width[[index]],
              " meters wide, the plots are are ",
