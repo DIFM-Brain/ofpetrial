@@ -164,7 +164,7 @@ convert_rates <- function(
       conv_table[., "conv_factor"]
   }
   if(is.numeric(conv_factor_n) == FALSE){
-    message("There is no combination of your specific input form and unit for conversion into target nutrient rate. We will assume the conversion is 1, and the target rates will be in your given unit.")
+    message("There is no combination of your specific input name and unit for conversion into target nutrient rate. We will assume the conversion is 1, and the target rates will be in your given unit.")
     conv_factor_n <- 1
   }
 
