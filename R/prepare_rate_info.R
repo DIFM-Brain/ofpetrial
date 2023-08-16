@@ -157,7 +157,7 @@ convert_rates <- function(
     .[, form_unit := paste(type, unit, sep = "_")] %>%
     as.data.frame()
 
-  if (form == "N_equiv") {
+  if (input_name == "N_equiv") {
     conv_factor_n <- 1
   } else {
     conv_factor_n <- which(conv_table[, "form_unit"] %in% paste(input_name, new_unit, sep = "_")) %>%
