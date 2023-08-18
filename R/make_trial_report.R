@@ -97,8 +97,10 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
+      mutate(sections_poly = list(make_section_polygon(width, machine_poly, sections_used, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
+      mutate(map_sections = list(tmap_sections(sections_poly, trial_plot))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot(trial_plot))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
@@ -121,8 +123,10 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
+      mutate(sections_poly = list(make_section_polygon(width, machine_poly, sections_used, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
+      mutate(map_sections = list(tmap_sections(sections_poly, trial_plot))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot(trial_plot))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
@@ -633,6 +637,43 @@ make_machine_polygon <- function(width, height, center, move_vec, crs) {
   return(polygon_sf)
 }
 
+# machine_poly <- machine_table$machine_poly[[1]]
+# sections_used <- machine_table$sections_used[[1]]
+# move_vec <- machine_table$move_vec[[1]]
+# width <- machine_table$width[[1]]
+# crs <- st_crs(machine_table$trial_plot[[1]])
+make_section_polygon <- function(width, machine_poly, sections_used, move_vec, crs) {
+  if(sections_used > 1){
+    perp_move_vec <- rotate_vec(move_vec, 90)
+    width_section <- width/sections_used
+
+    polys <- list()
+    for (i in 1:sections_used) {
+      coords <- st_coordinates(machine_poly)[c(2, 3, 11, 12, 2), 1:2]
+
+      first_top <- coords[2,] + perp_move_vec * width_section * (i - 1)
+      first_bottom <- coords[1,] + perp_move_vec * width_section * (i - 1)
+      next_top <- coords[2,] + perp_move_vec * width_section * i
+      next_bottom <- coords[1,] + perp_move_vec * width_section * i
+
+      polys[[i]] <- list(
+        rbind(first_bottom,
+              first_top,
+              next_top,
+              next_bottom,
+              first_bottom)) %>%
+        st_polygon() %>%
+        st_sfc(crs = crs) %>%
+        st_sf()
+    }
+    polygon_sf <- do.call(rbind, polys)
+    }else{
+      polygon_sf <- NULL
+    }
+
+  return(polygon_sf)
+}
+
 get_move_vec <- function(ab_line) {
   lags <- st_coordinates(ab_line) %>%
     data.frame() %>%
@@ -711,7 +752,7 @@ get_plots <- function(all_trial_info){
       mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
-    plot1 <- design %>%
+    plot1 <- design1 %>%
       filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
                pull(plot_id) %>%
                min(.)) %>%
@@ -761,6 +802,17 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#E69F00"
     }, lwd = 3) +
     tm_fill(col = "white")
+}
+
+# section_poly <- polygon_sf
+# trial_plot <- machine_table$trial_plot[[1]]
+tmap_sections <- function(section_poly, trial_plot) {
+  if(is.null(section_poly) == FALSE){
+    tm_shape(section_poly, bbox = st_bbox(trial_plot)) +
+      tm_borders(col = "grey18", lwd = 2, lty = "dotted")
+  }else{
+    ""
+  }
 }
 
 # test_plot <- machine_table$trial_plot[[1]]
