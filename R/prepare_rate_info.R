@@ -12,6 +12,7 @@
 #' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See for more details.
 #' @param rank_seq_ws (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.
 #' @param rank_seq_as (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.
+#' @param base_rate (integer) optional base application information created by add_base_rate
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export
@@ -31,7 +32,7 @@
 #'   unit = "seeds",
 #'   rates = c(20000, 25000, 30000, 35000, 40000)
 #' )
-prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL) {
+prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL, base_rate = NULL) {
   #* +++++++++++++++++++++++++++++++++++
   #* Main
   #* +++++++++++++++++++++++++++++++++++
@@ -80,10 +81,37 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
     stop("Error: design_type you specified does not match any of the design type options available.")
   }
 
+  #conversions
+  warning(paste0("Please ensure that the applicator is compatible with applying ", input_trial_data$input_name, " in ", unit, "."))
+
+  if (is.null(base_rate) == FALSE){
+    base_rate_original <- base_rate$base_rate
+    base_rate_equiv <- convert_rates(base_rate$base_input_name, base_rate$base_unit, base_rate$base_rate)
+  }else{
+    base_rate_equiv = 0
+  }
+
+  target_rate_original <- rates
+
+  # try to convert if the input is anything other than seed
+  # if the combination of input and inut is not found, the conversion factor is simply 1
+  if(input_trial_data$input_name != "seed"){
+    target_rate_equiv <- convert_rates(input_trial_data$input_name, unit, rates)
+  }else{
+    target_rate_equiv <- target_rate_original
+  }
+
+  # creating final data set
   input_trial_data$design_type <- design_type
   input_trial_data$gc_rate <- gc_rate
   input_trial_data$unit <- unit
-  input_trial_data$rates <- list(rates)
+  input_trial_data$target_rate_original <- list(target_rate_original)
+  input_trial_data$target_rate_equiv <- list(target_rate_equiv)
+  if (is.null(base_rate) == FALSE){
+    input_trial_data$base_rate_original <- base_rate_original
+    input_trial_data$base_rate_equiv <- base_rate_equiv
+  }
+  input_trial_data$total_equiv <- list(target_rate_original + base_rate_equiv)
   input_trial_data$min_rate <- min_rate
   input_trial_data$max_rate <- max_rate
   input_trial_data$num_rates <- num_rates
@@ -92,5 +120,66 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
 
   return(input_trial_data)
 }
+
+# !==================-=========================================
+# ! Helper internal functions
+# !===========================================================
+
+convert_rates <- function(
+    input_name,
+    unit,
+    rate,
+    conversion_type = "to_n_equiv"
+) {
+
+  # change rates to the imperial form for the table
+  if(unit == "liters"){
+    rate = conv_unit(rate, "l", "us_gal")
+    new_unit = "gallons"
+    reporting_unit = "metric"
+  }else if(unit == "kg"){
+    rate = conv_unit(rate, "kg", "lb")
+    new_unit = "lb"
+    reporting_unit = "metric"
+  }else{
+    rate = rate
+    new_unit = unit
+    reporting_unit = "imperial"
+  }
+
+  conv_table <-
+    fromJSON(
+      system.file("extdata", "nitrogen_conversion.json", package = "ofpetrial"),
+      flatten = TRUE
+    ) %>%
+    data.table() %>%
+    .[, conv_factor := as.numeric(conv_factor)] %>%
+    .[, form_unit := paste(type, unit, sep = "_")] %>%
+    as.data.frame()
+
+  if (input_name == "N_equiv") {
+    conv_factor_n <- 1
+  } else {
+    conv_factor_n <- which(conv_table[, "form_unit"] %in% paste(input_name, new_unit, sep = "_")) %>%
+      conv_table[., "conv_factor"]
+  }
+  if(is.numeric(conv_factor_n) == FALSE){
+    message("There is no combination of your specific input name and unit for conversion into target nutrient rate. We will assume the conversion is 1, and the target rates will be in your given unit.")
+    conv_factor_n <- 1
+  }
+
+  if (reporting_unit == "metric") {
+    conv_factor_n <- conv_factor_n * conv_unit(1, "lbs", "kg") * conv_unit(1, "hectare", "acre")
+  }
+
+  if (conversion_type == "to_n_equiv") {
+    converted_rate <- (conv_factor_n)*rate
+  } else {
+    converted_rate <- (1/conv_factor_n)*rate
+  }
+
+  return(as.numeric(converted_rate))
+}
+
 
 

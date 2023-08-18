@@ -1,23 +1,10 @@
-<<<<<<< HEAD
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/NAMESPACE="002D0618"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/README.Rmd="B9C11F5A"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/man/assign_rates.Rd="321EA136"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/man/exp_data.Rd="A26C2119"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/man/make_exp_plots.Rd="5B096E4C"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/man/pipe.Rd="4A0C5064"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/man/rate_info.Rd="5A4E35DC"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/man/write_trial_files.Rd="2D839CEA"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/notes.md="0B525EF2"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/structure.rmd="CCAD9C00"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/test.R="EAB5D497"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/todo.md="89E7BE85"
-/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/vignettes/V4-diagnose-td.Rmd="CA1AF60D"
-=======
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_HQ/Codes/Codes_indiv/BK/Getting Machine Size Combinations.R="A51F05BC"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_HQ/Codes/Codes_indiv/ST/Code Archives/find_county.R="7AB6A3B2"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_HQ/Codes/DIFM/Functions/functions_for_execution.R="60308A1C"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_HQ/Codes/DIFM/Functions/prepare.R="B723AA67"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_HQ/Codes/DIFM/Functions/unpack_field_parameters.R="59D0DCF9"
+/Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_HQ/Codes/DIFM/Report/r01_make_report.Rmd="9AD9B94D"
+/Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/DataProcessing/processing.R="1EF163C5"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/CommonFiles/functions_for_trial_design.R="C314ACFB"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/CommonFiles/make-trial-design-template.Rmd="BCE76985"
 /Users/brittaniedge/Library/CloudStorage/Box-Box/DIFM_UIUC_Purdue/TrialDesign/designscript.R="E22276BB"
@@ -27,6 +14,7 @@
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/DIFM_HQ report function for reference.R="F2F3D5AD"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Figure Creation for Report.R="5110382F"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Function for Trial Report.R="EE561F5A"
+/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Working on Conversions.R="7A1819CA"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Working on Report Funtion Two Inputs.R="E446F50B"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/Working on Report Funtion.R="632304B7"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/R Package Work/make-trial-design-template-one-input.Rmd="E083DA6D"
@@ -36,6 +24,7 @@
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/Sample Boundaries and AB-line/Wendte Snider/Moving files.R="FD326B19"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/DESCRIPTION="6883BC8B"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/NAMESPACE="AC8045B3"
+/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/add_base_rate.R="08461AC7"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/assign_rates.R="05047008"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/change_rates.R="1B27C183"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/diagnose.R="9B3BB90A"
@@ -61,9 +50,5 @@
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/structure.rmd="16B909E8"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/test.R="909E79EE"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/todo.md="13607DD3"
+/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/vignettes/V0-example-work-flows.Rmd="BEE9257E"
 /Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/vignettes/V1-trial-design-options.Rmd="48219013"
-<<<<<<< HEAD
-/Users/brittaniedge/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/vignettes/ab-line.Rmd="3B9E1036"
->>>>>>> TrialDesign/main
-=======
->>>>>>> TrialDesign/main

@@ -17,6 +17,7 @@
 #' @import measurements
 #' @import tmap
 #' @import english
+#' @import geometry
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
@@ -42,6 +43,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     mutate(num_harv_pass_in_plot = plot_width / harvester_width) %>%
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
+    mutate(machines_in_plot = plot_width/machine_width) %>%
     mutate(headland_size = if (units == "metric") {
       headland_length
     } else {
@@ -52,7 +54,6 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     } else {
       conv_unit(side_length, "m", "feet")
     }) %>%
-    mutate(plot = list(get_plot(trial_design, ab_lines, input_name))) %>%
     mutate(map_design = list(
       tm_shape(trial_design) +
         tm_polygons(
@@ -76,44 +77,55 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
         )
     ))
 
+  plots = get_plots(all_trial_info)
+
   if (nrow(td) == 1) {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
+      input_name = c("NA", td$input_name),
       machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]])
     ) %>%
-      mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
       mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
-      mutate(trial_plot = list(all_trial_info$plot[[1]])) %>%
+      mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
+      mutate(sections_used = c(1, (1/all_trial_info$machines_in_plot))) %>%
+      mutate(trial_plot = list(plots)) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
+      mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
+      mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
+
   } else {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
+      input_name = c("NA", td$input_name),
       machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]], td$ab_lines[[2]])
     ) %>%
-      mutate(number_in_plot = max(all_trial_info$num_harv_pass_in_plot)) %>%
+      mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
+      mutate(sections_used = c(1, (1/all_trial_info$machines_in_plot))) %>%
       mutate(height = max(width) / 4) %>%
-      .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
+      .[, machine_type := factor(machine_type, levels = c("planter", "applicator", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
-      mutate(trial_plot = list(rbind(all_trial_info$plot[[1]], all_trial_info$plot[[2]]))) %>%
+      mutate(trial_plot = list(plots)) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(map_label = list(tmap_label(center, machine_type, trial_plot)))
+      mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
+      mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
   dir.create(file.path(folder_path, "ofpe_temp_folder"))
@@ -126,9 +138,9 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   # /*=================================================*/
   td_rmd <-
     readLines(if (nrow(all_trial_info) > 1) {
-      system.file("rmdtemplate", "make-trial-design-template-one-input.Rmd", package = "ofpetrial")
-    } else {
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
+    } else {
+      system.file("rmdtemplate", "make-trial-design-template-one-input.Rmd", package = "ofpetrial")
     }) %>%
     gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
     gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
@@ -231,11 +243,11 @@ trial_text_machinery_names_lower <- function(machine_table) {
   }
 }
 
-text_plant_apply <- function(machine_table) {
-  if (nrow(machine_table) > 2) {
-    paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(machine_table$input_name[[2]] == "seed", "plant", "apply"))
+text_plant_apply <- function(all_trial_info) {
+  if (nrow(all_trial_info) > 1) {
+    paste0(ifelse(all_trial_info$input_name[[1]] == "seed", "plant", "apply"), " and ", ifelse(all_trial_info$input_name[[2]] == "seed", "plant", "apply"))
   } else {
-    paste0(ifelse(machine_table$input_name[[1]] == "seed", "plant", "apply"))
+    paste0(ifelse(all_trial_info$input_name[[1]] == "seed", "plant", "apply"))
   }
 }
 
@@ -261,7 +273,7 @@ trial_text_ablines <- function(machine_table) {
       "The AB-lines for the ",
       machine_table$machine_type[[1]], " and ", machine_table$machine_type[[2]],
       " are ",
-      ifelse(identical(machine_table$ab_line[[1]], machine_table$ab_line[[2]]) == TRUE, "identical due to the machinery specifications.", "not identical due to the difference in machine specifications.")
+      ifelse(geometry::dot(machine_table$move_vec[[1]], machine_table$move_vec[[2]]) == 1, "identical due to the machinery specifications.", "not identical due to the difference in machine specifications.")
     )
   } else {
     ""
@@ -343,25 +355,45 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
   }
 }
 
+text_sections_used <- function(index, units) {
+  if(machine_table$sections_used[[index]] > 1){
+    if(units == "metric"){
+      paste0("Although the ", machine_table$machine_type[[index]], " is ",  machine_table$width[[index]],
+             " meters wide, the plots are are ",
+             all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
+             " meters wide, using ",
+             as.character(english(machine_table$sections_used[[index]])),
+             " sections of the machine in the trial plots.")
+    }else{
+      paste0("Although the ", machine_table$machine_type[[index]], " is ",  conv_unit(machine_table$width[[index]], "m", "ft"),
+             " feet wide, the plots are are ",
+             all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
+             " feet wide, using ",
+             as.character(english(machine_table$sections_used[[index]])),
+             " sections of the machine in the trial plots.")
+    }
+    }
+}
+
 text_plot_width <- function(all_trial_info, units) {
   if (nrow(all_trial_info) == 1) {
     if (units == "metric") {
-      paste0(all_trial_info$plot_width[[1]], "-meter plots.")
+      paste0(all_trial_info$plot_width[[1]], "-meter plots")
     } else {
-      paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots.")
+      paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots")
     }
   } else {
     if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
       if (units == "metric") {
-        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
+        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots")
       } else {
-        paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots.")
+        paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots")
       }
     } else {
       if (units == "metric") {
-        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots.")
+        paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots")
       } else {
-        paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots.")
+        paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots")
       }
     }
   }
@@ -609,7 +641,10 @@ get_move_vec <- function(ab_line) {
       dy = Y - lag(Y, n = 1)
     )
 
-  return(c(lags$dx[2], lags$dy[2]))
+  lag_vec <- c(lags$dx[2], lags$dy[2])
+  move_vec <- lag_vec / sqrt(sum(lag_vec^2))
+
+  return(move_vec)
 }
 
 find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, machine_width, height) {
@@ -644,22 +679,58 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
   return(cent)
 }
 
-get_plot <- function(trial_design, ab_lines, input_name) {
-  design <- trial_design %>%
-    mutate(plot_id = row_number()) %>%
-    filter(type == "experiment")
+get_plots <- function(all_trial_info){
+  if (length(all_trial_info$plot_width %>% unique()) == 1){
+    design <- all_trial_info$trial_design[[1]] %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "Trial Area")
 
-  first_plot <- trial_design[1, ] %>%
-    mutate(plot_id = st_intersection(st_transform_utm(design), ab_lines) %>%
-      pull(plot_id) %>%
-      min(.))
+    first_plot <- all_trial_info$trial_design[[1]][1, ] %>%
+      mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
+               pull(plot_id) %>%
+               min(.))
 
-  plot <- design %>%
-    filter(plot_id == first_plot$plot_id) %>%
-    st_transform_utm(.) %>%
-    mutate(input = input_name)
+    plots <- design %>%
+      filter(plot_id == first_plot$plot_id) %>%
+      st_transform_utm(.) %>%
+      mutate(input_name = input_name) %>%
+      dplyr::select(rate, strip_id, plot_id, type, input_name)
 
-  return(plot)
+  }else{
+    max_input <- all_trial_info %>%
+      filter(plot_width == max(all_trial_info$plot_width))
+
+    min_input <- all_trial_info %>%
+      filter(plot_width != max(all_trial_info$plot_width))
+
+    design1 <- max_input$trial_design[[1]] %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "Trial Area")
+
+    design2 <- min_input$trial_design[[1]] %>%
+      mutate(plot_id = row_number()) %>%
+      filter(type == "Trial Area")
+
+    plot1 <- design %>%
+      filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
+               pull(plot_id) %>%
+               min(.)) %>%
+      st_transform_utm(.) %>%
+      mutate(input_name = max_input$input_name) %>%
+      dplyr::select(rate, strip_id, plot_id, type, input_name)
+
+    plot2 = st_intersection(st_transform_utm(design2), plot1) %>%
+      mutate(area = st_area(.)) %>%
+      filter(area >= median(area)) %>%
+      st_transform_utm(.) %>%
+      mutate(input_name = min_input$input_name) %>%
+      dplyr::select(rate, strip_id, plot_id, type, input_name)
+
+    plots = rbind(plot1, plot2)
+
+  }
+
+  return(plots)
 }
 
 tmap_abline <- function(ab_line, machine_type, trial_plot) {
@@ -688,14 +759,82 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#0072B2"
     } else {
       "#E69F00"
-    }) +
+    }, lwd = 3) +
     tm_fill(col = "white")
+}
+
+# test_plot <- machine_table$trial_plot[[1]]
+tmap_plot <- function(trial_plot) {
+  if (trial_plot %>%
+    mutate(area = as.numeric(st_area(.))) %>%
+    pull(area) %>%
+    unique(.) %>%
+    length() == 1){
+
+    map <- tm_shape(trial_plot, bbox = st_bbox(trial_plot)) +
+      tm_borders(col = "black")
+  }else{
+    plots <- trial_plot %>%
+        mutate(area = as.numeric(st_area(.))) %>%
+        arrange(desc(area))
+
+    map_small_plots <- list()
+    for (i in 2:nrow(plots)) {
+      map_small_plots[[i]] <- paste0("tm_shape(plots[", i, ",], bbox = st_bbox(plots)) +
+        tm_borders(col = \"gray\", lwd = 2, lty = \"dashed\")")
+
+    }
+
+
+    map <- tm_shape(plots[1,], bbox = st_bbox(plots)) +
+      tm_borders(col = "black", lwd = 5) +
+      tm_fill(col = "white") +
+      eval(parse(text = paste0(map_small_plots, collapse = " + ")))
+
+  }
+
+  return(map)
+}
+
+# trial_plot <- machine_table$trial_plot[[1]]
+tmap_plot_legend <- function(trial_plot) {
+  if (trial_plot %>%
+      mutate(area = as.numeric(st_area(.))) %>%
+      pull(area) %>%
+      unique(.) %>%
+      length() == 1){
+
+    legend = tm_add_legend(
+      title = "Trial Plots",
+      type = "symbol",
+      labels = c("Trial Plot"),
+      col = c("black"),
+      shape = 0,
+      size = 2
+    )
+  }else{
+    plots <- trial_plot %>%
+      mutate(area = as.numeric(st_area(.))) %>%
+      arrange(desc(area)) %>%
+      pull(input_name) %>%
+      unique()
+
+    legend = tm_add_legend(
+      title = "Trial Plots",
+      type = "symbol",
+      labels = c(paste0(str_to_title(plots[1]), " Trial Plot"), paste0(str_to_title(plots[2]), " Trial Plot")),
+      col = c("black", "gray"),
+      shape = 0,
+      size = 2
+    )
+  }
+  return(legend)
 }
 
 tmap_label <- function(center, machine_type, trial_plot) {
   labels <- list()
   for (i in 1:nrow(center)) {
-    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"P\"}else if(machine_type == \"applicator\"){\"A\"}else{\"H\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\")")
+    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.75)")
   }
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 

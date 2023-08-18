@@ -28,13 +28,15 @@ This function creates a report describing the trial design created by the user w
 data(td_single_input)
 td_single_input
 \dontrun{
-make_trial_report(td_single_input,
- "acres",
- "imperial",
- "Test Trial",
- folder_path
+make_trial_report(
+  td_single_input,
+  "acre",
+  "imperial",
+  "Test Trial",
+  folder_path
 )
 }
+
 # Rmd
 # Wrapping up
 }

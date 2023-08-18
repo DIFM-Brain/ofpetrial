@@ -57,7 +57,7 @@ assign_rates <- function(exp_data, rate_info) {
       find_rates_data(
         gc_rate = gc_rate,
         unit = unit,
-        rates = rates,
+        rates = target_rate_original,
         min_rate = min_rate,
         max_rate = max_rate,
         num_rates = num_rates,
