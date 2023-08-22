@@ -76,7 +76,7 @@ machine_table <- readRDS(file.path("_machine-table-here_"))
 
 ## Description of Field Trial Design
 
-Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, units)`  Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate.  The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)` rate is shown in Table \@ref(tab:rep-table).  Inside the circumference of the field there are _headland-size_-_length-unit_ headlands and _sideland-size_-_length-unit_ sidelands, which are not part of the field trial.
+Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, units)`  Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. 
 
 ```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
 all_trial_info$map_design[[1]] + tm_layout(
@@ -86,7 +86,7 @@ all_trial_info$map_design[[1]] + tm_layout(
   legend.text.size = 1.5
 )
 ```
-
+The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)` rate is shown in Table \@ref(tab:rep-table). Inside the circumference of the field there are _headland-size_-_length-unit_ headlands and _sideland-size_-_length-unit_ sidelands, which are not part of the field trial.
 
 ```{r rep-table, echo=FALSE, include = TRUE}
 rep_table <- all_trial_info %>%
@@ -129,6 +129,7 @@ Once the trial design is made, its shapefile should be uploaded into the applica
 ```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
+section_maps <- list()
 label_maps <- list()
 colors <- vector()
 labels_ablines <- vector()
@@ -144,24 +145,16 @@ for (i in 1:(nrow(machine_table) - 1)) {
 
 }
 
-machine_table$map_plot[[1]] +
+machine_table$map_plot_indiv[[1]] +
   eval(parse(text = paste0(ab_maps, collapse = " + "))) +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
+  machine_table$width_line[[1]] +
   tm_add_legend(
     type = "line",
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
-    title = "AB-Lines",
-    size = 2
-  ) +
-  tm_add_legend(
-    type = "symbol",
-    labels = na.omit(labels_polygons),
-    col = na.omit(colors),
-    shape = 0,
-    title = "Machine Polygons",
     size = 2
   ) +
   machine_table$plot_legend[[1]] +
@@ -209,15 +202,6 @@ machine_table$map_plot[[1]] +
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
-    title = "AB-Lines",
-    size = 2
-  ) +
-  tm_add_legend(
-    type = "symbol",
-    labels = na.omit(labels_polygons),
-    col = na.omit(colors),
-    shape = 0,
-    title = "Machine Polygons",
     size = 2
   ) +
   machine_table$plot_legend[[1]] +
@@ -260,14 +244,6 @@ machine_table$map_plot[[1]] +
   #   lty = c("dashed", "dashed", "solid"),
   #   title = "AB-Lines"
   # ) +
-  tm_add_legend(
-    type = "symbol",
-    labels = polygons,
-    col = colors,
-    shape = 0,
-    title = "Machine Polygons",
-    size = 2
-  ) +
   machine_table$plot_legend[[1]] +
   tm_layout(
     legend.outside = TRUE,
