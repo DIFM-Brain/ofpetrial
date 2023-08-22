@@ -57,7 +57,7 @@ assign_rates <- function(exp_data, rate_info) {
       find_rates_data(
         gc_rate = gc_rate,
         unit = unit,
-        rates = target_rate_original,
+        rates = tgt_rate_original,
         min_rate = min_rate,
         max_rate = max_rate,
         num_rates = num_rates,
@@ -108,9 +108,6 @@ assign_rates <- function(exp_data, rate_info) {
         trial_design
       }
     )) %>%
-    dplyr::select(
-      input_name, input_type, exp_plots, trial_design, gc_rate, design_type, unit, abline_type, ab_lines, harvest_ab_lines, field_sf, harvester_width, machine_width, plot_width, section_num, headland_length, side_length
-    ) %>%
     dplyr::ungroup()
 
   return(trial_design)
