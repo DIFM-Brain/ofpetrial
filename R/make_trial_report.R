@@ -82,7 +82,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
   if (nrow(td) == 1) {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
-      input_name = c("NA", td$input_name),
+      input_name = c(NA, td$input_name),
       machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]])
     ) %>%
@@ -97,18 +97,18 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
-      mutate(sections_poly = list(make_section_polygon(width, machine_poly, sections_used, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(map_sections = list(tmap_sections(sections_poly, trial_plot))) %>%
+      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
 
   } else {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
-      input_name = c("NA", td$input_name),
+      input_name = c(NA, td$input_name),
       machine_type = c("harvester", ifelse(td$input_name == "seed", "planter", "applicator")),
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]], td$ab_lines[[2]])
     ) %>%
@@ -123,16 +123,16 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
-      mutate(sections_poly = list(make_section_polygon(width, machine_poly, sections_used, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(map_sections = list(tmap_sections(sections_poly, trial_plot))) %>%
+      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
-  dir.create(file.path(folder_path, "ofpe_temp_folder"))
+  hdir.create(file.path(folder_path, "ofpe_temp_folder"))
 
   saveRDS(all_trial_info, file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"))
   saveRDS(machine_table, file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"))
@@ -363,14 +363,14 @@ text_sections_used <- function(index, units) {
   if(machine_table$sections_used[[index]] > 1){
     if(units == "metric"){
       paste0("Although the ", machine_table$machine_type[[index]], " is ",  machine_table$width[[index]],
-             " meters wide, the plots are are ",
+             " meters wide, the plots are ",
              all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
              " meters wide, using ",
              as.character(english(machine_table$sections_used[[index]])),
              " sections of the machine in the trial plots.")
     }else{
       paste0("Although the ", machine_table$machine_type[[index]], " is ",  conv_unit(machine_table$width[[index]], "m", "ft"),
-             " feet wide, the plots are are ",
+             " feet wide, the plots are ",
              all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
              " feet wide, using ",
              as.character(english(machine_table$sections_used[[index]])),
@@ -637,11 +637,6 @@ make_machine_polygon <- function(width, height, center, move_vec, crs) {
   return(polygon_sf)
 }
 
-# machine_poly <- machine_table$machine_poly[[1]]
-# sections_used <- machine_table$sections_used[[1]]
-# move_vec <- machine_table$move_vec[[1]]
-# width <- machine_table$width[[1]]
-# crs <- st_crs(machine_table$trial_plot[[1]])
 make_section_polygon <- function(width, machine_poly, sections_used, move_vec, crs) {
   if(sections_used > 1){
     perp_move_vec <- rotate_vec(move_vec, 90)
@@ -672,6 +667,60 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
     }
 
   return(polygon_sf)
+}
+
+# trial_plot <- machine_table$trial_plot[[1]]
+# move_vec <- machine_table$move_vec[[1]]
+# input <- machine_table$input_name[[1]]
+# units <- "imperial"
+make_plot_width_line <- function(trial_plot, move_vec, input, units){
+  if(is.na(input) == FALSE){
+    plot_width <- all_trial_info %>%
+      filter(input_name == input) %>%
+      pull(plot_width)
+
+    trial_plot <- trial_plot %>%
+      filter(input_name == input)
+    coords <- st_coordinates(trial_plot)[, 1:2]
+
+    perp_move_vec <- rotate_vec(move_vec, 90)
+    opp_perp_vec <- rotate_vec(perp_move_vec, 180)
+
+    arrow_ll <- coords[4,] - 1*rotate_vec(opp_perp_vec, 30)
+    arrow_lr <- coords[4,] - 1*rotate_vec(opp_perp_vec, -30)
+
+    arrow_rl <- coords[1,] - 1*rotate_vec(perp_move_vec, 30)
+    arrow_rr <- coords[1,] - 1*rotate_vec(perp_move_vec, -30)
+
+    new_line <- st_linestring(rbind(arrow_rl,
+                                    coords[1,],
+                                    arrow_rr,
+                                    coords[1,],
+                                    coords[4,],
+                                    arrow_ll,
+                                    coords[4,],
+                                    arrow_lr
+    )) %>%
+      st_sfc(crs = st_crs(trial_plot)) %>%
+      st_sf()
+
+    label_center = c((coords[4,] + (plot_width/2)*perp_move_vec) - 1.5*move_vec) %>%
+      st_point() %>%
+      st_sfc(crs = st_crs(trial_plot)) %>%
+      st_sf()
+
+    tm_shape(new_line, bbox = st_bbox(trial_plot)) +
+      tm_lines(col = "black" ,
+               lwd = 3) +
+      tm_shape(label_center %>%
+                 mutate(label = ifelse(units == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet"))),
+               bbox = st_bbox(trial_plot)) +
+      tm_text("label", size = 0.75)
+  }else{
+    NULL
+  }
+
+  return(new_line)
 }
 
 get_move_vec <- function(ab_line) {
@@ -788,7 +837,8 @@ tmap_abline <- function(ab_line, machine_type, trial_plot) {
         "solid"
       } else {
         "dashed"
-      }
+      },
+      lwd = 3
     )
 }
 
@@ -800,8 +850,7 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#0072B2"
     } else {
       "#E69F00"
-    }, lwd = 3) +
-    tm_fill(col = "white")
+    }, lwd = 3)
 }
 
 # section_poly <- polygon_sf
@@ -815,8 +864,8 @@ tmap_sections <- function(section_poly, trial_plot) {
   }
 }
 
-# test_plot <- machine_table$trial_plot[[1]]
-tmap_plot <- function(trial_plot) {
+# trial_plot <- machine_table$trial_plot[[1]]
+tmap_plot_all <- function(trial_plot) {
   if (trial_plot %>%
     mutate(area = as.numeric(st_area(.))) %>%
     pull(area) %>%
@@ -843,6 +892,23 @@ tmap_plot <- function(trial_plot) {
       tm_fill(col = "white") +
       eval(parse(text = paste0(map_small_plots, collapse = " + ")))
 
+  }
+
+  return(map)
+}
+
+# trial_plot <- machine_table$trial_plot
+# input <- machine_table$input_name[[1]]
+tmap_plot_indiv <- function(trial_plot, input) {
+  if(is.na(input) == TRUE){
+    map = NA
+  }else{
+    plots <- trial_plot %>%
+      filter(input_name == input)
+
+    map <- tm_shape(plots, bbox = st_bbox(plots)) +
+      tm_fill(col = "rate", palette = "Greys", title = paste0("Trial Plot ", str_to_title(input), " Rate")) +
+      tm_borders(col = "black")
   }
 
   return(map)
@@ -886,7 +952,7 @@ tmap_plot_legend <- function(trial_plot) {
 tmap_label <- function(center, machine_type, trial_plot) {
   labels <- list()
   for (i in 1:nrow(center)) {
-    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.75)")
+    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.8, bg.color = \"White\")")
   }
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 
