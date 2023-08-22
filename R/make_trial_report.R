@@ -101,7 +101,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
       mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
-      mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
 
@@ -127,12 +127,12 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
       mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
-      mutate(map_plot = list(tmap_plot(trial_plot))) %>%
+      mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
-  hdir.create(file.path(folder_path, "ofpe_temp_folder"))
+  dir.create(file.path(folder_path, "ofpe_temp_folder"))
 
   saveRDS(all_trial_info, file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"))
   saveRDS(machine_table, file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"))
@@ -668,10 +668,10 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 
   return(polygon_sf)
 }
-
-# trial_plot <- machine_table$trial_plot[[1]]
-# move_vec <- machine_table$move_vec[[1]]
-# input <- machine_table$input_name[[1]]
+#
+# trial_plot <- machine_table$trial_plot[[3]]
+# move_vec <- machine_table$move_vec[[3]]
+# input <- machine_table$input_name[[3]]
 # units <- "imperial"
 make_plot_width_line <- function(trial_plot, move_vec, input, units){
   if(is.na(input) == FALSE){
@@ -704,23 +704,21 @@ make_plot_width_line <- function(trial_plot, move_vec, input, units){
       st_sfc(crs = st_crs(trial_plot)) %>%
       st_sf()
 
-    label_center = c((coords[4,] + (plot_width/2)*perp_move_vec) - 1.5*move_vec) %>%
+    label_center = c((coords[4,] + (plot_width/2)*perp_move_vec) - 1*move_vec) %>%
       st_point() %>%
       st_sfc(crs = st_crs(trial_plot)) %>%
       st_sf()
 
     tm_shape(new_line, bbox = st_bbox(trial_plot)) +
       tm_lines(col = "black" ,
-               lwd = 3) +
+               lwd = 2) +
       tm_shape(label_center %>%
                  mutate(label = ifelse(units == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet"))),
                bbox = st_bbox(trial_plot)) +
-      tm_text("label", size = 0.75)
+      tm_text("label", size = 1.5)
   }else{
     NULL
   }
-
-  return(new_line)
 }
 
 get_move_vec <- function(ab_line) {
