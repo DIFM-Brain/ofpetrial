@@ -33,6 +33,7 @@
 + [ ] what to do with blocks?
 + [ ] distribution of input rate in check 
 + [ ] 
++ [ ] rate text in viz add /acre or /ha depending on units. N rate in lb/acre (original)
 
 
 # Problems

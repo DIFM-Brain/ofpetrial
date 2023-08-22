@@ -77,7 +77,6 @@ usethis::use_data(rate_info, overwrite = TRUE)
 #++++++++++++++++++++++++++++++++++++
 #+ trial design (single-input)
 #++++++++++++++++++++++++++++++++++++
-
 td_single_input <-
   assign_rates(
     exp_data = exp_data,
