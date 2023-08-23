@@ -18,6 +18,16 @@
 #' viz(td_two_input, type = "plot_id")
 #'
 viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = FALSE) {
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Debug
+  #++++++++++++++++++++++++++++++++++++
+  # data(td_single_input)
+  # td <- td_single_input 
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Main
+  #++++++++++++++++++++++++++++++++++++
   #--- select rows ---#
   if (nrow(td) == 1) {
     input_index <- 1
@@ -96,7 +106,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +
           geom_sf(data = trial_design, aes(fill = factor(rate)), color = "black") +
-          scale_fill_viridis_d(name = paste0(input_name, " (", unit, ")")) +
+          scale_fill_viridis_d(name = paste0(input_name, " in ", unit)) +
           theme_void() +
           ggtitle(
             paste0(

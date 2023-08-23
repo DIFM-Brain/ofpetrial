@@ -53,15 +53,23 @@ usethis::use_data(exp_data, overwrite = TRUE)
 #++++++++++++++++++++++++++++++++++++
 #+ rate information
 #++++++++++++++++++++++++++++++++++++
+base_info <-
+  add_base_rate(
+    "uan28",
+    "gallons",
+    15
+  )
+
 rate_info <-
   prep_rate(
     plot_info = plot_info,
-    gc_rate = 180,
-    unit = "lb",
-    rates = c(100, 140, 180, 220, 260),
+    gc_rate = 30,
+    unit = "gallons",
+    rates = c(10, 20, 30, 40, 50),
     design_type = "ls",
     rank_seq_ws = c(1, 2, 3, 4, 5),
-    rank_seq_as = c(1, 2, 3, 4, 5)
+    rank_seq_as = c(1, 2, 3, 4, 5),
+    base_rate = base_info
   )
 
 usethis::use_data(rate_info, overwrite = TRUE)
