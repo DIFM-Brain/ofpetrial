@@ -18,6 +18,7 @@
 #' @import tmap
 #' @import english
 #' @import geometry
+#' @import RColorBrewer
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
@@ -102,7 +103,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
-      mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name))) %>%
+      mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
 
   } else {
@@ -128,7 +129,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
-      mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name))) %>%
+      mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
@@ -668,10 +669,10 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 
   return(polygon_sf)
 }
-#
-# trial_plot <- machine_table$trial_plot[[3]]
-# move_vec <- machine_table$move_vec[[3]]
-# input <- machine_table$input_name[[3]]
+
+# trial_plot <- machine_table$trial_plot[[1]]
+# move_vec <- machine_table$move_vec[[1]]
+# input <- machine_table$input_name[[1]]
 # units <- "imperial"
 make_plot_width_line <- function(trial_plot, move_vec, input, units){
   if(is.na(input) == FALSE){
@@ -680,42 +681,58 @@ make_plot_width_line <- function(trial_plot, move_vec, input, units){
       pull(plot_width)
 
     trial_plot <- trial_plot %>%
-      filter(input_name == input)
+      filter(input_name == input) %>%
+      .[1,]
+
     coords <- st_coordinates(trial_plot)[, 1:2]
 
     perp_move_vec <- rotate_vec(move_vec, 90)
     opp_perp_vec <- rotate_vec(perp_move_vec, 180)
 
-    arrow_ll <- coords[4,] - 1*rotate_vec(opp_perp_vec, 30)
-    arrow_lr <- coords[4,] - 1*rotate_vec(opp_perp_vec, -30)
+    #find NW corner
+    point1 <- coords %>%
+      as.data.frame() %>%
+      filter(X < mean(X)) %>%
+      filter(Y > mean(Y)) %>%
+      as.matrix()
 
-    arrow_rl <- coords[1,] - 1*rotate_vec(perp_move_vec, 30)
-    arrow_rr <- coords[1,] - 1*rotate_vec(perp_move_vec, -30)
+    point2 <- point1 + plot_width*perp_move_vec %>%
+      as.matrix()
+
+    arrow_ll <- point1 - 1*rotate_vec(opp_perp_vec, 30)
+    arrow_lr <- point1 - 1*rotate_vec(opp_perp_vec, -30)
+
+    arrow_rl <- point2 - 1*rotate_vec(perp_move_vec, 30)
+    arrow_rr <- point2 - 1*rotate_vec(perp_move_vec, -30)
 
     new_line <- st_linestring(rbind(arrow_rl,
-                                    coords[1,],
+                                    point2,
                                     arrow_rr,
-                                    coords[1,],
-                                    coords[4,],
+                                    point2,
+                                    point1,
                                     arrow_ll,
-                                    coords[4,],
+                                    point1,
                                     arrow_lr
     )) %>%
       st_sfc(crs = st_crs(trial_plot)) %>%
       st_sf()
 
-    label_center = c((coords[4,] + (plot_width/2)*perp_move_vec) - 1*move_vec) %>%
-      st_point() %>%
+    label_line = rbind((point1 - 3.2*move_vec), (point2 - 3.2*move_vec)) %>%
+      st_linestring() %>%
       st_sfc(crs = st_crs(trial_plot)) %>%
-      st_sf()
+      st_sf() %>%
+      mutate(label = ifelse(units == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet")))
 
     tm_shape(new_line, bbox = st_bbox(trial_plot)) +
       tm_lines(col = "black" ,
                lwd = 2) +
-      tm_shape(label_center %>%
-                 mutate(label = ifelse(units == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet"))),
-               bbox = st_bbox(trial_plot)) +
-      tm_text("label", size = 1.5)
+      tm_shape(label_line, bbox = st_bbox(trial_plot)) +
+      tm_text("label",
+              col = "red",
+              size = 1,
+              fontface = "bold",
+              along.lines = T)
+
   }else{
     NULL
   }
@@ -825,17 +842,13 @@ tmap_abline <- function(ab_line, machine_type, trial_plot) {
   tm_shape(ab_line, bbox = st_bbox(trial_plot)) +
     tm_lines(
       col = if (machine_type == "planter") {
-        "#009E73"
+        "lawngreen"
       } else if (machine_type == "applicator") {
         "#0072B2"
       } else {
         "#E69F00"
       },
-      lty = if (machine_type == "applicator") {
-        "solid"
-      } else {
-        "dashed"
-      },
+      lty = "dashed",
       lwd = 3
     )
 }
@@ -843,7 +856,7 @@ tmap_abline <- function(ab_line, machine_type, trial_plot) {
 tmap_machine <- function(machine_poly, machine_type, trial_plot) {
   tm_shape(machine_poly, bbox = st_bbox(trial_plot)) +
     tm_borders(col = if (machine_type == "planter") {
-      "#009E73"
+      "lawngreen"
     } else if (machine_type == "applicator") {
       "#0072B2"
     } else {
@@ -897,15 +910,22 @@ tmap_plot_all <- function(trial_plot) {
 
 # trial_plot <- machine_table$trial_plot
 # input <- machine_table$input_name[[1]]
-tmap_plot_indiv <- function(trial_plot, input) {
+tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
   if(is.na(input) == TRUE){
     map = NA
   }else{
+    n_rates = all_trial_info %>%
+      filter(input_name == input) %>%
+      pull(rates) %>%
+      unlist() %>%
+      length()
+    my_palette = brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
+
     plots <- trial_plot %>%
       filter(input_name == input)
 
     map <- tm_shape(plots, bbox = st_bbox(plots)) +
-      tm_fill(col = "rate", palette = "Greys", title = paste0("Trial Plot ", str_to_title(input), " Rate")) +
+      tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", str_to_title(input), " Rate")) +
       tm_borders(col = "black")
   }
 

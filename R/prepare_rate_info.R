@@ -85,18 +85,19 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   warning(paste0("Please ensure that the applicator is compatible with applying ", input_trial_data$input_name, " in ", unit, "."))
 
   if (is.null(base_rate) == FALSE){
-    base_rate_original <- base_rate$base_rate
-    base_rate_equiv <- convert_rates(base_rate$base_input_name, base_rate$base_unit, base_rate$base_rate)
+    base_rate_original <- base_rate$rate
+    base_rate_equiv <- convert_rates(base_rate$input_name, base_rate$unit, base_rate$rate)
   }else{
-    base_rate_equiv = 0
+    base_rate_original = NA
+    base_rate_equiv = NA
   }
 
-  target_rate_original <- rates
+  target_rate_original <- rates_ls
 
   # try to convert if the input is anything other than seed
   # if the combination of input and inut is not found, the conversion factor is simply 1
   if(input_trial_data$input_name != "seed"){
-    target_rate_equiv <- convert_rates(input_trial_data$input_name, unit, rates)
+    target_rate_equiv <- convert_rates(input_trial_data$input_name, unit, rates_ls)
   }else{
     target_rate_equiv <- target_rate_original
   }
@@ -107,10 +108,8 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   input_trial_data$unit <- unit
   input_trial_data$target_rate_original <- list(target_rate_original)
   input_trial_data$target_rate_equiv <- list(target_rate_equiv)
-  if (is.null(base_rate) == FALSE){
-    input_trial_data$base_rate_original <- base_rate_original
-    input_trial_data$base_rate_equiv <- base_rate_equiv
-  }
+  input_trial_data$base_rate_original <- base_rate_original
+  input_trial_data$base_rate_equiv <- base_rate_equiv
   input_trial_data$total_equiv <- list(target_rate_original + base_rate_equiv)
   input_trial_data$min_rate <- min_rate
   input_trial_data$max_rate <- max_rate
