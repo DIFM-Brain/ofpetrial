@@ -56,11 +56,31 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     } else {
       conv_unit(side_length, "m", "feet")
     }) %>%
+    mutate(rate_data = list(data.table(tgt_rate_original,
+                                       tgt_rate_equiv,
+                                       total_equiv) %>%
+                              rowwise() %>%
+                              mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | " )) %>%
+                              dplyr::rename("rate" = "tgt_rate_original"))) %>%
     mutate(map_design = list(
-      tm_shape(trial_design) +
+      tm_shape(trial_design %>%
+                 merge(rate_data, by = "rate") %>%
+                 mutate(all_units = as.factor(all_units))) +
         tm_polygons(
-          col = "rate",
-          title = input_name,
+          col = "all_units",
+          title = if(input_name == "seed"){
+            if(units == "metric"){
+              "Seeding Rate (ha)"
+              }else{
+              "Seeding Rate (ac)"
+                }
+            }else{
+              if(units == "metric"){
+                paste0(input_name, "Rate (", input_name, " in ", unit, " | ", input_type, " kg equivalent | ", "total ", input_type, " kg)/ha")
+              }else{
+                paste0(input_name, "Rate (", input_name, " in ", unit, " | ", input_type, " lb equivalent | ", "total ", input_type, " lb)/ac")
+              }
+            },
           palette = ifelse(input_name == "seed", "Greens", "Greys")
         )
     )) %>%

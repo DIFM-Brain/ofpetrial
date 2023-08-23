@@ -98,8 +98,7 @@ rep_table <- all_trial_info %>%
         .groups = "drop"
       ) %>%
       data.frame() %>%
-      dplyr::select(rate, Replicates) %>%
-      dplyr::rename("Target Rate" = "rate")
+      dplyr::select(Replicates)
   ))
 
 rep_table$rep_table[[1]] %>%
