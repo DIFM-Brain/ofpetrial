@@ -38,6 +38,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     mutate(land_unit = land_unit) %>%
     mutate(trial_name = trial_name) %>%
     rowwise() %>%
+    mutate(input_type = get_input_type(input_name)) %>%
     mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     mutate(plot_number = get_plot_number(trial_design)) %>%
     mutate(plot_length = list(get_plot_length(trial_design, plot_width))) %>%
@@ -236,6 +237,38 @@ text_rate_number <- function(all_trial_info) {
       paste0(as.character(english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
     } else {
       paste0(as.character(english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " rates and ", as.character(english(all_trial_info$rate_number[[2]])), " targeted ", all_trial_info$input_name[[2]], " rates.")
+    }
+  }
+}
+
+text_base_rate <- function(all_trial_info, units) {
+  if (nrow(all_trial_info) == 1){
+    if (all_trial_info$include_base_rate == TRUE){
+      if(units == "metric"){
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv, " kilograms of ", all_trial_info$input_type, " equivalent.")
+      }else{
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv, " pounds of ", input_type, " equivalent.")
+      }
+    }
+  }else{
+    if (all_trial_info$include_base_rate[[1]] == TRUE & all_trial_info$include_base_rate[[2]] != TRUE){
+      if(units == "metric"){
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " kilograms of ", all_trial_info$input_type[[1]], " equivalent.")
+      }else{
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent.")
+      }
+    }else if(all_trial_info$include_base_rate[[2]] == TRUE & all_trial_info$include_base_rate[[1]] != TRUE){
+      if(units == "metric"){
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[2]], " kilograms of ", all_trial_info$input_type[[2]], " equivalent.")
+      }else{
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[2]], " pounds of ", all_trial_info$input_type[[2]], " equivalent.")
+      }
+    }else{
+      if(units == "metric"){
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " kilograms of ", all_trial_info$input_type[[1]], " equivalent, and ", all_trial_info$base_rate_equiv[[2]], " kilograms of ", all_trial_info$input_type[[2]], " equivalent.")
+      }else{
+        paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent, and ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent.")
+      }
     }
   }
 }
@@ -521,6 +554,16 @@ text_harvester_passes <- function(all_trial_info, units) {
     }
   }
 }
+
+get_input_type <- function(input) {
+    jsonlite::fromJSON(
+      system.file("extdata", "input_type_table.json", package = "ofpetrial"),
+      flatten = TRUE
+    ) %>%
+    as.data.frame() %>%
+    filter(input_name == input) %>%
+    pull(input_type)
+  }
 
 get_field_size <- function(trial_design, land_unit) {
   trial_design %>%

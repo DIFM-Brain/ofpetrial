@@ -50,13 +50,13 @@
     "conv_factor": "1"
   },
   {
-    "type": "forage_pea",
-    "unit": "kg",
-    "conv_factor": "1"
-  },
-  {
     "type": "24-0-0-3 UAN",
     "unit": "gallons",
     "conv_factor": "2.4336"
+  },
+    {
+    "type": "general",
+    "unit": "given",
+    "conv_factor": "1"
   }
  ]
