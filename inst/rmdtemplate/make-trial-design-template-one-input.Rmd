@@ -154,7 +154,7 @@ machine_table$map_plot_indiv[[1]] +
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
-    size = 2
+    lwd = 3
   ) +
   machine_table$plot_legend[[1]] +
   tm_layout(
@@ -201,7 +201,7 @@ machine_table$map_plot[[1]] +
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
-    size = 2
+    lwd = 3
   ) +
   machine_table$plot_legend[[1]] +
   tm_layout(

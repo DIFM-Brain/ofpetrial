@@ -762,7 +762,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, units){
       as.data.frame() %>%
       filter(X < mean(X)) %>%
       filter(Y > mean(Y)) %>%
-      as.matrix()
+      as.matrix(.) - plot_width*move_vec
 
     point2 <- point1 + plot_width*perp_move_vec %>%
       as.matrix()
@@ -929,7 +929,15 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#0072B2"
     } else {
       "#E69F00"
-    }, lwd = 3)
+    }, lwd = 3) +
+    tm_fill(col = if (machine_type == "planter") {
+      "lawngreen"
+    } else if (machine_type == "applicator") {
+      "#0072B2"
+    } else {
+      "#E69F00"
+    },
+    alpha = 1)
 }
 
 # section_poly <- polygon_sf
@@ -992,9 +1000,8 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
     plots <- trial_plot %>%
       filter(input_name == input)
 
-    map <- tm_shape(plots, bbox = st_bbox(plots)) +
-      tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", str_to_title(input), " Rate")) +
-      tm_borders(col = "black")
+    map <- tm_shape(plots %>% mutate(rate = as.factor(rate)), bbox = st_bbox(plots)) +
+      tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", str_to_title(input), " Rate"))
   }
 
   return(map)
