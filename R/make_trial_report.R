@@ -74,16 +74,21 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
               }else{
               "Seeding Rate (ac)"
                 }
+            }else if(include_base_rate == FALSE & input_name != "seed"){
+              if(units == "metric"){
+                paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
+              }else{
+                paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
+              }
             }else{
               if(units == "metric"){
-                paste0(input_name, "Rate (", input_name, " in ", unit, " | ", input_type, " kg equivalent | ", "total ", input_type, " kg)/ha")
+                paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
               }else{
-                paste0(input_name, "Rate (", input_name, " in ", unit, " | ", input_type, " lb equivalent | ", "total ", input_type, " lb)/ac")
+                paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
               }
             },
           palette = ifelse(input_name == "seed", "Greens", "Greys")
-        )
-    )) %>%
+        ))) %>%
     mutate(trial_design = list(trial_design %>%
       mutate(area = as.numeric(st_area(.))) %>%
       mutate(type = case_when(
@@ -1033,7 +1038,7 @@ tmap_plot_legend <- function(trial_plot) {
 tmap_label <- function(center, machine_type, trial_plot) {
   labels <- list()
   for (i in 1:nrow(center)) {
-    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.8, bg.color = \"White\")")
+    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.8)")
   }
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 
