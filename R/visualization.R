@@ -124,13 +124,13 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
             if(unit_system == "metric"){
               paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
             }else{
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
+              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ac) \n", "No base application")
             }
           }else{
             if(unit_system == "metric"){
               paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
             }else{
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
+              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ac) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lb/ac)"))
             }
           }) +
           theme_void() +

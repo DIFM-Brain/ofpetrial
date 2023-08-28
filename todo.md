@@ -10,7 +10,7 @@
 + [x] cut off ab-lines outside of the field boundary with a bit of buffer around the field
 + [x] make harvest ab-line (Taro)
 + [x] let them specify the full sequence (everything is a special case of this except randomized ones) (Taro)
-+ [ ] base_rate, conversion, dictionary (Brittani)
++ [x] base_rate, conversion, dictionary (Brittani)
 + [ ] rate option (original unit, or equivalent) (Brittani)
 + [ ] Don't produce a planter AB-line when they are planting at a different angle. Make this part of vignette. Just make sure it is "none" (Brittani)
 + [x] check examples
@@ -33,7 +33,7 @@
 + [ ] what to do with blocks?
 + [ ] distribution of input rate in check 
 + [ ] 
-+ [ ] rate text in viz add /acre or /ha depending on units. N rate in lb/acre (original)
++ [x] rate text in viz add /acre or /ha depending on units. N rate in lb/acre (original)
 
 
 # Problems
