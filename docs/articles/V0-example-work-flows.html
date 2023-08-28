@@ -143,8 +143,9 @@ of N) + Model-based variale-rate (how does this work?) + N-reponse
 block</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>    unit_system <span class="op">=</span> <span class="st">"imperial"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
@@ -153,7 +154,7 @@ block</p>
 <span>    min_plot_length <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    max_plot_length <span class="op">=</span> <span class="fl">100</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; For NH3, the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of 30 ensures that at least one harvest path within the path of NH3 does not have the problems.</span></span>
 <span></span>
 <span><span class="va">exp_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>

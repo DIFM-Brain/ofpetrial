@@ -81,21 +81,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_trial_report</span><span class="op">(</span><span class="va">td</span>, <span class="va">land_unit</span>, <span class="va">units</span>, <span class="va">trial_name</span>, folder_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_trial_report</span><span class="op">(</span><span class="va">td</span>, <span class="va">trial_name</span>, folder_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>td</dt>
 <dd><p>trial design created by assign_rates()</p></dd>
-
-
-<dt>land_unit</dt>
-<dd><p>unit of land area in report ("acres" or "hectares")</p></dd>
-
-
-<dt>units</dt>
-<dd><p>units for report ("imperial" or "metric")</p></dd>
 
 
 <dt>trial_name</dt>
@@ -118,10 +110,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- load experiment made by assign_rates() ---#</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">td_single_input</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 33</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name                                field_sf headland exp_plots ab_lines</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> NH3        (((352970.3 4331423, 353137 4331428, 3… <span style="color: #949494;">&lt;sf&gt;</span>     <span style="color: #949494;">&lt;sf&gt;</span>      <span style="color: #949494;">&lt;sf&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 34</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name unit_system                    field_sf headland exp_plots ab_lines</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> NH3        imperial    (((352970.3 4331423, 35313… <span style="color: #949494;">&lt;sf&gt;</span>     <span style="color: #949494;">&lt;sf&gt;</span>      <span style="color: #949494;">&lt;sf&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 28 more variables: harvest_ab_lines &lt;list&gt;, plot_width &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   harvester_width &lt;dbl&gt;, machine_width &lt;dbl&gt;, section_num &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   headland_length &lt;dbl&gt;, side_length &lt;dbl&gt;, abline_type &lt;chr&gt;,</span></span>
@@ -132,8 +124,6 @@
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu">make_trial_report</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">td_single_input</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"acre"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"imperial"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"Test Trial"</span>,</span></span>
 <span class="r-in"><span>  <span class="va">folder_path</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

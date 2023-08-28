@@ -11,8 +11,9 @@
 #' @import sf
 #' @examples
 #' n_plot_info <-
-#'   prep_plot_f(
+#'   prep_plot(
 #'     input_name = "NH3",
+#'     unit_system = "imperial",
 #'     machine_width = 30,
 #'     section_num = 1,
 #'     harvester_width = 20,
@@ -50,7 +51,7 @@ make_exp_plots <- function(input_plot_info,
       unlist() %>%
       all(. == 1)
     if (!check_length_consistency) {
-      stop("You specified inconsistent length for at least one of harvester_width, min_plot_length, and max_plot_length. Please make sure they are the same when preparing plot information individually. Or, please use prep_plot_md() or prep_plot_fd() to avoid these inconsistencies.")
+      stop("You specified inconsistent length for at least one of harvester_width, min_plot_length, and max_plot_length. Please make sure they are the same when preparing plot information individually. Or, please use prep_plot() to avoid these inconsistencies.")
     }
 
     input_plot_info$headland_length <- max(input_plot_info$headland_length)

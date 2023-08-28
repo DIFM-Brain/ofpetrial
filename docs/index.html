@@ -118,10 +118,10 @@
 <div class="section level3">
 <h3 id="create-experimental-plots">Create experimental plots<a class="anchor" aria-label="anchor" href="#create-experimental-plots"></a>
 </h3>
-<p>We start with specifying plot and machine information for inputs using <code><a href="reference/prep_plot_f.html">prep_plot_f()</a></code>, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).</p>
+<p>We start with specifying plot and machine information for inputs using <code>prep_plot_f()</code>, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seed_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu">prep_plot_f</span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">24</span>,</span>
@@ -141,7 +141,7 @@
 <span><span class="co">#&gt; #   ³​section_width, ⁴​harvester_width, ⁵​plot_width</span></span>
 <span></span>
 <span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu">prep_plot_f</span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
