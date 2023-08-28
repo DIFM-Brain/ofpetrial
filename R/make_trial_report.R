@@ -3,8 +3,6 @@
 #' This function creates a report describing the trial design created by the user with assign_rates() and includes figures showing machine alignment
 #'
 #' @param td trial design created by assign_rates()
-#' @param land_unit unit of land area in report ("acres" or "hectares")
-#' @param units units for report ("imperial" or "metric")
 #' @param trial_name (character) name of trial to be used in report
 #' @param folder_path (character) path to the folder in which the report will be saved
 #' @returns html document with trial design description and figures to guide trial implementation based on your machinery and plot sizes
@@ -33,9 +31,9 @@
 #' )
 #' }
 #'
-make_trial_report <- function(td, land_unit, units, trial_name, folder_path = getwd()) {
+make_trial_report <- function(td, trial_name, folder_path = getwd()) {
   all_trial_info <- td %>%
-    mutate(land_unit = land_unit) %>%
+    mutate(land_unit = ifelse(unit_system == "metric", "hectare", "acre")) %>%
     mutate(trial_name = trial_name) %>%
     rowwise() %>%
     mutate(input_type = get_input_type(input_name)) %>%
@@ -46,12 +44,12 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
     mutate(machines_in_plot = plot_width/machine_width) %>%
-    mutate(headland_size = if (units == "metric") {
+    mutate(headland_size = if (unit_system == "metric") {
       headland_length
     } else {
       conv_unit(headland_length, "m", "feet")
     }) %>%
-    mutate(sideland_size = if (units == "metric") {
+    mutate(sideland_size = if (unit_system == "metric") {
       side_length
     } else {
       conv_unit(side_length, "m", "feet")
@@ -69,19 +67,19 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
         tm_polygons(
           col = "all_units",
           title = if(input_name == "seed"){
-            if(units == "metric"){
+            if(unit_system == "metric"){
               "Seeding Rate (ha)"
               }else{
               "Seeding Rate (ac)"
                 }
             }else if(include_base_rate == FALSE & input_name != "seed"){
-              if(units == "metric"){
+              if(unit_system == "metric"){
                 paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
               }else{
                 paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
               }
             }else{
-              if(units == "metric"){
+              if(unit_system == "metric"){
                 paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
               }else{
                 paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
@@ -126,7 +124,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
+      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -152,7 +150,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, units))) %>%
+      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -176,7 +174,7 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
     gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
     gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
-    gsub("_length-unit_", ifelse(units == "metric", "meter", "foot"), .) %>%
+    gsub("_length-unit_", ifelse(unit_system == "metric", "meter", "foot"), .) %>%
     gsub("_land-unit_", land_unit, .) %>%
     gsub("_field-size_", all_trial_info$field_size[[1]], .) %>%
     gsub("_headland-size_", all_trial_info$headland_size[[1]], .) %>%
@@ -205,9 +203,9 @@ make_trial_report <- function(td, land_unit, units, trial_name, folder_path = ge
 #* Creating text for trial design report
 #* +++++++++++++++++++++++++++++++++++
 
-text_plot_num_length <- function(all_trial_info, units) {
+text_plot_num_length <- function(all_trial_info, unit_system) {
   if (nrow(all_trial_info) == 1) {
-    if (units == "metric") {
+    if (unit_system == "metric") {
       paste0(
         all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
         all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long."
@@ -220,7 +218,7 @@ text_plot_num_length <- function(all_trial_info, units) {
     }
   } else {
     if (all_trial_info$plot_number[[1]] == all_trial_info$plot_number[[2]]) {
-      if (units == "metric") {
+      if (unit_system == "metric") {
         paste0(
           all_trial_info$plot_number[[1]], " rectangular plots, each ", all_trial_info$plot_width[[1]], " meters wide and between ",
           all_trial_info$plot_length[[1]][1], " and ", all_trial_info$plot_length[[1]][2], "meters long."
@@ -232,7 +230,7 @@ text_plot_num_length <- function(all_trial_info, units) {
         )
       }
     } else {
-      if (units == "metric") {
+      if (unit_system == "metric") {
         paste0(
           all_trial_info$plot_number[[1]], " rectangular ", all_trial_info$input_name[[1]], " plots, each ", all_trial_info$plot_width[[1]], " meters wide and ",
           all_trial_info$plot_number[[2]], " rectangular ", all_trial_info$input_name[[2]], " plots, each ", all_trial_info$plot_width[[2]], " meters wide.",
@@ -266,10 +264,10 @@ text_rate_number <- function(all_trial_info) {
   }
 }
 
-text_base_rate <- function(all_trial_info, units) {
+text_base_rate <- function(all_trial_info, unit_system) {
   if (nrow(all_trial_info) == 1){
     if (all_trial_info$include_base_rate == TRUE){
-      if(units == "metric"){
+      if(unit_system == "metric"){
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv, " kilograms of ", all_trial_info$input_type, " equivalent.")
       }else{
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv, " pounds of ", input_type, " equivalent.")
@@ -277,19 +275,19 @@ text_base_rate <- function(all_trial_info, units) {
     }
   }else{
     if (all_trial_info$include_base_rate[[1]] == TRUE & all_trial_info$include_base_rate[[2]] != TRUE){
-      if(units == "metric"){
+      if(unit_system == "metric"){
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " kilograms of ", all_trial_info$input_type[[1]], " equivalent.")
       }else{
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent.")
       }
     }else if(all_trial_info$include_base_rate[[2]] == TRUE & all_trial_info$include_base_rate[[1]] != TRUE){
-      if(units == "metric"){
+      if(unit_system == "metric"){
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[2]], " kilograms of ", all_trial_info$input_type[[2]], " equivalent.")
       }else{
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[2]], " pounds of ", all_trial_info$input_type[[2]], " equivalent.")
       }
     }else{
-      if(units == "metric"){
+      if(unit_system == "metric"){
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " kilograms of ", all_trial_info$input_type[[1]], " equivalent, and ", all_trial_info$base_rate_equiv[[2]], " kilograms of ", all_trial_info$input_type[[2]], " equivalent.")
       }else{
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent, and ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent.")
@@ -343,8 +341,8 @@ trial_text_ablines <- function(machine_table) {
   }
 }
 
-trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, units) {
-  if (units == "metric") {
+trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_info, unit_system) {
+  if (unit_system == "metric") {
     if (nrow(machine_table) > 2) {
       if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
         paste0(
@@ -418,9 +416,9 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
   }
 }
 
-text_sections_used <- function(index, units) {
+text_sections_used <- function(index, unit_system) {
   if(machine_table$sections_used[[index]] > 1){
-    if(units == "metric"){
+    if(unit_system == "metric"){
       paste0("Although the ", machine_table$machine_type[[index]], " is ",  machine_table$width[[index]],
              " meters wide, the plots are ",
              all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
@@ -438,22 +436,22 @@ text_sections_used <- function(index, units) {
     }
 }
 
-text_plot_width <- function(all_trial_info, units) {
+text_plot_width <- function(all_trial_info, unit_system) {
   if (nrow(all_trial_info) == 1) {
-    if (units == "metric") {
+    if (unit_system == "metric") {
       paste0(all_trial_info$plot_width[[1]], "-meter plots")
     } else {
       paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot plots")
     }
   } else {
     if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
-      if (units == "metric") {
+      if (unit_system == "metric") {
         paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots")
       } else {
         paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " plots")
       }
     } else {
-      if (units == "metric") {
+      if (unit_system == "metric") {
         paste0(all_trial_info$plot_width[[1]], "-meter ", all_trial_info$input_name[[1]], " plots and ", all_trial_info$plot_width[[2]], "-meter ", all_trial_info$input_name[[2]], " plots")
       } else {
         paste0(conv_unit(all_trial_info$plot_width[[1]], "m", "ft"), "-foot ", all_trial_info$input_name[[1]], " plots and ", conv_unit(all_trial_info$plot_width[[2]], "m", "ft"), "-foot ", all_trial_info$input_name[[2]], " plots")
@@ -462,10 +460,10 @@ text_plot_width <- function(all_trial_info, units) {
   }
 }
 
-text_harvester_passes <- function(all_trial_info, units) {
+text_harvester_passes <- function(all_trial_info, unit_system) {
   if (nrow(all_trial_info) > 1) {
     if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
-      if (units == "metric") {
+      if (unit_system == "metric") {
         paste0(
           as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
           " ",
@@ -477,7 +475,7 @@ text_harvester_passes <- function(all_trial_info, units) {
             ""
           },
           " will lie neatly within each ",
-          text_plot_width(all_trial_info, units)
+          text_plot_width(all_trial_info, unit_system)
         )
       } else {
         paste0(
@@ -491,11 +489,11 @@ text_harvester_passes <- function(all_trial_info, units) {
             ""
           },
           " will lie neatly within each ",
-          text_plot_width(all_trial_info, units)
+          text_plot_width(all_trial_info, unit_system)
         )
       }
     } else {
-      if (units == "metric") {
+      if (unit_system == "metric") {
         paste0(
           as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
           " ",
@@ -517,7 +515,7 @@ text_harvester_passes <- function(all_trial_info, units) {
             ""
           },
           " will lie neatly within each ",
-          text_plot_width(all_trial_info, units),
+          text_plot_width(all_trial_info, unit_system),
           ", respectively"
         )
       } else {
@@ -542,13 +540,13 @@ text_harvester_passes <- function(all_trial_info, units) {
             ""
           },
           " will lie neatly within each ",
-          text_plot_width(all_trial_info, units),
+          text_plot_width(all_trial_info, unit_system),
           ", respectively"
         )
       }
     }
   } else {
-    if (units == "metric") {
+    if (unit_system == "metric") {
       paste0(
         as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
         " ",
@@ -560,7 +558,7 @@ text_harvester_passes <- function(all_trial_info, units) {
           ""
         },
         " will lie neatly within each ",
-        text_plot_width(all_trial_info, units)
+        text_plot_width(all_trial_info, unit_system)
       )
     } else {
       paste0(
@@ -574,7 +572,7 @@ text_harvester_passes <- function(all_trial_info, units) {
           ""
         },
         " will lie neatly within each ",
-        text_plot_width(all_trial_info, units)
+        text_plot_width(all_trial_info, unit_system)
       )
     }
   }
@@ -741,8 +739,8 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # trial_plot <- machine_table$trial_plot[[1]]
 # move_vec <- machine_table$move_vec[[1]]
 # input <- machine_table$input_name[[1]]
-# units <- "imperial"
-make_plot_width_line <- function(trial_plot, move_vec, input, units){
+# unit_system <- "imperial"
+make_plot_width_line <- function(trial_plot, move_vec, input, unit_system){
   if(is.na(input) == FALSE){
     plot_width <- all_trial_info %>%
       filter(input_name == input) %>%
@@ -789,7 +787,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, units){
       st_linestring() %>%
       st_sfc(crs = st_crs(trial_plot)) %>%
       st_sf() %>%
-      mutate(label = ifelse(units == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet")))
+      mutate(label = ifelse(unit_system == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet")))
 
     tm_shape(new_line, bbox = st_bbox(trial_plot)) +
       tm_lines(col = "black" ,

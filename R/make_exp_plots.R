@@ -368,6 +368,7 @@ make_exp_plots <- function(input_plot_info,
     dplyr::select(
       trial_data_eh,
       input_name,
+      unit_system,
       field_sf,
       headland,
       exp_plots,

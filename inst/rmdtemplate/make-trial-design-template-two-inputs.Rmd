@@ -79,7 +79,7 @@ machine_table <- readRDS(file.path("_machine-table-here_"))
 
 ## Description of Field Trial Design
 
-Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, units)` Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_base_rate(all_trial_info, units)`
+Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, unit_system)` Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_base_rate(all_trial_info, unit_system)`
 
 ```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
 
@@ -99,7 +99,7 @@ ncol = 1
 )
 ```
 
-Figure \@ref(fig:trial-plot) displays the trial plots for the two inputs, with `r text_plot_width(all_trial_info, units)`.
+Figure \@ref(fig:trial-plot) displays the trial plots for the two inputs, with `r text_plot_width(all_trial_info, unit_system)`.
 
 ```{r trial-plot, echo=FALSE, fig.cap="Map of Trial Plots", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 machine_table$map_plot[[1]] +
@@ -150,7 +150,7 @@ all_trial_info$map_headlands[[1]] + tm_layout(
 
 ### Step 2.  Center the `r str_to_title(machine_table$machine_type[[1]])` on the AB-line Provided and Implement Trial
 
-Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(1, units)`
+Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(1, unit_system)`
 
 ```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -193,7 +193,7 @@ machine_table$map_plot_indiv[[1]] +
 
 ### Step 3.  Center the `r str_to_title(machine_table$machine_type[[2]])` on the AB-line Provided and Implement Trial
 
-As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(2, units)`
+As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(2, unit_system)`
 
 ```{r machine-alignment-2, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[2]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
@@ -282,7 +282,7 @@ machine_table$map_plot[[1]] +
 
 ### Alignment of all Machines in the Trial Plots
 
-Figure \@ref(fig:machine-alignment-all) shows all of the machinery inside a trial plot, showing the proper alignment of the machine passes based on the widths provided in the trial design function. While the AB-lines are not included in this figure for clarity, we can see where they are by following the arrow of the machines. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, units)` If the harvester is correctly centered, then the `r text_harvester_passes(all_trial_info, units)`
+Figure \@ref(fig:machine-alignment-all) shows all of the machinery inside a trial plot, showing the proper alignment of the machine passes based on the widths provided in the trial design function. While the AB-lines are not included in this figure for clarity, we can see where they are by following the arrow of the machines. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, unit_system)` If the harvester is correctly centered, then the `r text_harvester_passes(all_trial_info, unit_system)`
 
 ```{r machine-alignment-all, echo=FALSE, fig.cap="Alignment of all Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
