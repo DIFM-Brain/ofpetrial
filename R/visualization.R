@@ -23,7 +23,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
   #+ Debug
   #++++++++++++++++++++++++++++++++++++
   # data(td_single_input)
-  # td <- td_single_input 
+  # td <- td_single_input
 
   #++++++++++++++++++++++++++++++++++++
   #+ Main
@@ -102,11 +102,37 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
   } else if (type == "rates") {
     gg_td <-
       td_rows %>%
+      dplyr::mutate(rate_data = list(data.table(tgt_rate_original,
+                                         tgt_rate_equiv,
+                                         total_equiv) %>%
+                                rowwise() %>%
+                                mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | " )) %>%
+                                dplyr::rename("rate" = "tgt_rate_original"))) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +
-          geom_sf(data = trial_design, aes(fill = factor(rate)), color = "black") +
-          scale_fill_viridis_d(name = paste0(input_name, " in ", unit)) +
+          geom_sf(data = trial_design %>%
+                    merge(rate_data, by = "rate") %>%
+                    mutate(all_units = as.factor(all_units)), aes(fill = factor(all_units)), color = "black") +
+          scale_fill_viridis_d(name = if(input_name == "seed"){
+            if(unit_system == "metric"){
+              "Seeding Rate (ha)"
+            }else{
+              "Seeding Rate (ac)"
+            }
+          }else if(include_base_rate == FALSE & input_name != "seed"){
+            if(unit_system == "metric"){
+              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
+            }else{
+              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
+            }
+          }else{
+            if(unit_system == "metric"){
+              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
+            }else{
+              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
+            }
+          }) +
           theme_void() +
           ggtitle(
             paste0(
