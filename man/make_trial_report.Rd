@@ -4,14 +4,10 @@
 \alias{make_trial_report}
 \title{Create trial design report}
 \usage{
-make_trial_report(td, land_unit, units, trial_name, folder_path = getwd())
+make_trial_report(td, trial_name, folder_path = getwd())
 }
 \arguments{
 \item{td}{trial design created by assign_rates()}
-
-\item{land_unit}{unit of land area in report ("acres" or "hectares")}
-
-\item{units}{units for report ("imperial" or "metric")}
 
 \item{trial_name}{(character) name of trial to be used in report}
 
@@ -30,8 +26,6 @@ td_single_input
 \dontrun{
 make_trial_report(
   td_single_input,
-  "acre",
-  "imperial",
   "Test Trial",
   folder_path
 )

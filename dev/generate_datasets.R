@@ -2,7 +2,7 @@
 # ! Create datasets
 # !===========================================================
 
-#* First, overwrite make_sf_utm() for only when creating datasets. This version replace degree (circle) to an ASCII character in the wkt of sf objects in UTM. This cannot be part of the R package as this would create a warning in R CMD check. 
+#* First, overwrite make_sf_utm() for only when creating datasets. This version replace degree (circle) to an ASCII character in the wkt of sf objects in UTM. This cannot be part of the R package as this would create a warning in R CMD check.
 
 make_sf_utm <- function(data_sf) {
   return_sf <- data_sf %>%
@@ -24,8 +24,9 @@ source("R/make_exp_plots.R")
 #+ plot info
 #++++++++++++++++++++++++++++++++++++
 plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 20,
@@ -93,8 +94,9 @@ object.size(td_single_input)
 #+ trial design (two-input)
 #++++++++++++++++++++++++++++++++++++
 seed_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "seed",
+    unit_system = "imperial",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -102,8 +104,9 @@ seed_plot_info <-
   )
 
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 45,
     section_num = 1,
     harvester_width = 30,
@@ -154,8 +157,9 @@ usethis::use_data(td_two_input, overwrite = TRUE)
 #! Trial design for a curved field
 #!===========================================================
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 20,

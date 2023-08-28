@@ -24,8 +24,6 @@
 #' \dontrun{
 #' make_trial_report(
 #'   td_single_input,
-#'   "acre",
-#'   "imperial",
 #'   "Test Trial",
 #'   folder_path
 #' )
