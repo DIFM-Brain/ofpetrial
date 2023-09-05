@@ -14,6 +14,11 @@
     "unit": "gallons",
     "conv_factor": "2.9876"
   },
+    {
+    "type": "n_equiv",
+    "unit": "lb",
+    "conv_factor": "1"
+  },
   {
     "type": "uan28_ats",
     "unit": "gallons",
