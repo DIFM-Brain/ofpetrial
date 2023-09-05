@@ -32,21 +32,6 @@
                 "package_name": ""
             },
             {
-                "id": 12,
-                "path": "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/make_trial_report.R",
-                "line_number": 905,
-                "function_steps": "",
-                "function_name": "tmap_abline",
-                "state": 2,
-                "editor_state": 2,
-                "editor_line_number": 905,
-                "is_pending_debug_completion": false,
-                "needs_updated_steps": false,
-                "type": 0,
-                "is_package_breakpoint": true,
-                "package_name": "ofpetrial"
-            },
-            {
                 "id": 13,
                 "path": "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/prepare_rate_info.R",
                 "line_number": 36,

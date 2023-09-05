@@ -577,13 +577,19 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
 }
 
 get_input_type <- function(input) {
-    jsonlite::fromJSON(
+    match <- jsonlite::fromJSON(
       system.file("extdata", "input_type_table.json", package = "ofpetrial"),
       flatten = TRUE
     ) %>%
     as.data.frame() %>%
     filter(input_name == input) %>%
     pull(input_type)
+
+    if(nrow(match == 0)){
+      match = input
+    }
+
+
   }
 
 get_field_size <- function(trial_design, land_unit) {
