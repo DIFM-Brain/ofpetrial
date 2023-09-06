@@ -68,10 +68,12 @@ make_exp_plots <- function(input_plot_info,
   if ("sf" %in% boundary_class) {
     field_sf <-
       boundary_data %>%
+      .[-c(1:ncol(.))] %>%
       make_sf_utm()
   } else if ("character" %in% boundary_class) {
     field_sf <-
       sf::st_read(boundary_data, quiet = TRUE) %>%
+      .[-c(1:ncol(.))] %>%
       make_sf_utm() %>%
       sf::st_combine()
   }
@@ -102,9 +104,13 @@ make_exp_plots <- function(input_plot_info,
     #--- heading sf ---#
     dplyr::mutate(ab_sf = list(
       if ("sf" %in% abline_class) {
-        abline_data %>% make_sf_utm()
+        abline_data %>%
+          .[-c(1:ncol(.))] %>%
+          make_sf_utm()
       } else if ("character" %in% abline_class) {
-        sf::st_read(abline_data, quiet = TRUE) %>% make_sf_utm()
+        sf::st_read(abline_data, quiet = TRUE) %>%
+          .[-c(1:ncol(.))] %>%
+          make_sf_utm()
       }
     )) %>%
     dplyr::mutate(ab_sf = list(

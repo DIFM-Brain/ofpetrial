@@ -30,21 +30,6 @@
                 "type": 0,
                 "is_package_breakpoint": false,
                 "package_name": ""
-            },
-            {
-                "id": 13,
-                "path": "~/Library/Mobile Documents/com~apple~CloudDocs/Documents/ofpe Package/ofpetrial/R/prepare_rate_info.R",
-                "line_number": 36,
-                "function_steps": "",
-                "function_name": "prep_rate",
-                "state": 2,
-                "editor_state": 2,
-                "editor_line_number": 36,
-                "is_pending_debug_completion": false,
-                "needs_updated_steps": false,
-                "type": 0,
-                "is_package_breakpoint": true,
-                "package_name": "ofpetrial"
             }
         ]
     }
