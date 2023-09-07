@@ -323,8 +323,14 @@ get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
         plot_id = seq_len(num_comp_plots),
         plot_length = min_plot_length
       )
-    return(return_data)
+
+    if(num_comp_plots == 0){
+      return_data = NULL
+    }
   }
+
+  return(return_data)
+
 }
 
 # get_plot_data <- function(tot_plot_length, min_plot_length, mean_length) {
@@ -412,25 +418,30 @@ create_plots_in_strip <- function(plot_data,
 
   base_point <- sf::st_geometry(new_center_line)[[1]][1, ]
 
-  return_polygons <-
-    plot_data %>%
-    .[, plot_start := data.table::shift(plot_length, type = "lag")] %>%
-    .[is.na(plot_start), plot_start := 0] %>%
-    .[, start_length := cumsum(plot_start)] %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(geometry = list(
-      make_polygon(
-        base_point = base_point,
-        start_length = start_length,
-        plot_length = plot_length,
-        plot_width = plot_width,
-        ab_xy_nml = ab_xy_nml,
-        ab_xy_nml_p90 = ab_xy_nml_p90
-      )
-    )) %>%
-    data.table() %>%
-    .[, .(plot_id, geometry)] %>%
-    sf::st_as_sf()
+  if(is.null(plot_data) == FALSE){
+    return_polygons <-
+      plot_data %>%
+      .[, plot_start := data.table::shift(plot_length, type = "lag")] %>%
+      .[is.na(plot_start), plot_start := 0] %>%
+      .[, start_length := cumsum(plot_start)] %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(geometry = list(
+        make_polygon(
+          base_point = base_point,
+          start_length = start_length,
+          plot_length = plot_length,
+          plot_width = plot_width,
+          ab_xy_nml = ab_xy_nml,
+          ab_xy_nml_p90 = ab_xy_nml_p90
+        )
+      )) %>%
+      data.table() %>%
+      .[, .(plot_id, geometry)] %>%
+      sf::st_as_sf()
+  }else{
+    return_polygons = NULL
+  }
+
 
   return(return_polygons)
 }
