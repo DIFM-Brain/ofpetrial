@@ -34,7 +34,7 @@
 + [ ] distribution of input rate in check 
 + [ ] 
 + [ ] rate text in viz add /acre or /ha depending on units. N rate in lb/acre (original)
-
++ [ ] more than one inputs of the same type (different form of N, or different cover crops) where each of the inputs do no occupy the same plot
 
 # Problems
 
