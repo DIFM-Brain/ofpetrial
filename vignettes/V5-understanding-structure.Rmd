@@ -18,14 +18,15 @@ knitr::opts_chunk$set(
 
 The `ofpetrial` package does not offer any package-specific object classes. Rather, it uses the `tibble` (`tbl_df`, `tbl`, `data.frame`) object from the `tibble` package extensively. 
 
-Let's first create a plot information using `prep_plot_f()`.
+Let's first create a plot information using `prep_plot()`.
 
 ```{r}
 library(ofpetrial)
 
 seed_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "seed",
+    unit_system = "imperial",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -54,8 +55,9 @@ Let's now create experiment plots using `make_exp_plots()` for a two-input case.
 ```{r}
 #--- create plot information for another input ---#
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 45,
     section_num = 1,
     harvester_width = 30,

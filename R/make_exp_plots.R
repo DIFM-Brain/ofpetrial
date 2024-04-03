@@ -11,8 +11,9 @@
 #' @import sf
 #' @examples
 #' n_plot_info <-
-#'   prep_plot_f(
+#'   prep_plot(
 #'     input_name = "NH3",
+#'     unit_system = "imperial",
 #'     machine_width = 30,
 #'     section_num = 1,
 #'     harvester_width = 20,
@@ -50,7 +51,7 @@ make_exp_plots <- function(input_plot_info,
       unlist() %>%
       all(. == 1)
     if (!check_length_consistency) {
-      stop("You specified inconsistent length for at least one of harvester_width, min_plot_length, and max_plot_length. Please make sure they are the same when preparing plot information individually. Or, please use prep_plot_md() or prep_plot_fd() to avoid these inconsistencies.")
+      stop("You specified inconsistent length for at least one of harvester_width, min_plot_length, and max_plot_length. Please make sure they are the same when preparing plot information individually. Or, please use prep_plot() to avoid these inconsistencies.")
     }
 
     input_plot_info$headland_length <- max(input_plot_info$headland_length)
@@ -67,10 +68,12 @@ make_exp_plots <- function(input_plot_info,
   if ("sf" %in% boundary_class) {
     field_sf <-
       boundary_data %>%
+      .[-c(1:ncol(.))] %>%
       make_sf_utm()
   } else if ("character" %in% boundary_class) {
     field_sf <-
       sf::st_read(boundary_data, quiet = TRUE) %>%
+      .[-c(1:ncol(.))] %>%
       make_sf_utm() %>%
       sf::st_combine()
   }
@@ -101,9 +104,13 @@ make_exp_plots <- function(input_plot_info,
     #--- heading sf ---#
     dplyr::mutate(ab_sf = list(
       if ("sf" %in% abline_class) {
-        abline_data %>% make_sf_utm()
+        abline_data %>%
+          .[-c(1:ncol(.))] %>%
+          make_sf_utm()
       } else if ("character" %in% abline_class) {
-        sf::st_read(abline_data, quiet = TRUE) %>% make_sf_utm()
+        sf::st_read(abline_data, quiet = TRUE) %>%
+          .[-c(1:ncol(.))] %>%
+          make_sf_utm()
       }
     )) %>%
     dplyr::mutate(ab_sf = list(
@@ -368,6 +375,7 @@ make_exp_plots <- function(input_plot_info,
     dplyr::select(
       trial_data_eh,
       input_name,
+      unit_system,
       field_sf,
       headland,
       exp_plots,

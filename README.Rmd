@@ -39,12 +39,13 @@ library(ofpetrial)
 
 ### Create experimental plots
 
-We start with specifying plot and machine information for inputs using `prep_plot_f()`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
+We start with specifying plot and machine information for inputs using `prep_plot`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
 
 ```{r}
 seed_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "seed",
+    unit_system = "imperial",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -54,8 +55,9 @@ seed_plot_info <-
 seed_plot_info
 
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 30,

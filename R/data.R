@@ -6,6 +6,7 @@
 #' A data frame with 1 rows and 10 columns:
 #' \describe{
 #'   \item{input_name}{input name}
+#'   \item{unit_system}{measurement system (metric or imperial)}
 #'   \item{machine_width}{width of the applicator/planter}
 #'   \item{section_num}{number of the sections of the machine}
 #'   \item{section_width}{width of a section of the machine}

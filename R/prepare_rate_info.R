@@ -18,8 +18,9 @@
 #' @export
 #' @examples
 #' plot_info <-
-#'   prep_plot_f(
+#'   prep_plot(
 #'     input_name = "seed",
+#'     unit_system = "imperial",
 #'     machine_width = 60,
 #'     section_num = 24,
 #'     harvester_width = 30,
@@ -88,11 +89,13 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
     base_rate_original <- base_rate$rate
 
     base_rate_equiv <- convert_rates(base_rate$input_name, base_rate$unit, base_rate$rate)
+
+    base_input <- base_rate$input_name
   } else {
     base_rate_equiv <- 0
   }
 
-  tgt_rate_original <- rates
+  tgt_rate_original <- rates_ls
 
   # try to convert if the input is anything other than seed
   # if the combination of input and inut is not found, the conversion factor is simply 1
@@ -110,8 +113,11 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   input_trial_data$tgt_rate_equiv <- list(tgt_rate_equiv)
   if (is.null(base_rate) == FALSE) {
     input_trial_data$include_base_rate <- TRUE
+    input_trial_data$base_input <- base_input
     input_trial_data$base_rate_original <- base_rate_original
     input_trial_data$base_rate_equiv <- base_rate_equiv
+  }else{
+    input_trial_data$include_base_rate <- FALSE
   }
   input_trial_data$total_equiv <- list(tgt_rate_original + base_rate_equiv)
   input_trial_data$min_rate <- min_rate

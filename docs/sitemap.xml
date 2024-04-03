@@ -70,6 +70,9 @@
     <loc>/notes.html</loc>
   </url>
   <url>
+    <loc>/reference/add_base_rate.html</loc>
+  </url>
+  <url>
     <loc>/reference/add_blocks.html</loc>
   </url>
   <url>
@@ -128,6 +131,9 @@
   </url>
   <url>
     <loc>/reference/plot_info.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prep_plot.html</loc>
   </url>
   <url>
     <loc>/reference/prep_plot_f.html</loc>

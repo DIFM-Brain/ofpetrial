@@ -150,8 +150,9 @@ and AB-line with <code>viz_layout</code>, the differences between these
 options are clearer as the AB-line shifts or is not included.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
+<span>    unit_system <span class="op">=</span> <span class="st">"imperial"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">24</span>,</span>
 <span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
@@ -208,7 +209,7 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <code class="sourceCode R"><span><span class="va">aa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `as-applied-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpswRPSM/temp_libpath6dd63fa6f5b3/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpXKb9Gz/temp_libpath1d7137f5683/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 10404 features and 32 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -219,8 +220,9 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <p><img src="V2-ab-line_files/figure-html/plot-yield-data-1.png" width="700"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">input_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"seed"</span>,</span>
+<span>    unit_system <span class="op">=</span> <span class="st">"imperial"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    harvester_width <span class="op">=</span> <span class="fl">60</span>,</span>

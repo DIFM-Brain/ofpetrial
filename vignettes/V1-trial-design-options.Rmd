@@ -23,8 +23,9 @@ The `ofpetrial` package offers various trial design types. This vignette provide
 library(ofpetrial)
 
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 20,

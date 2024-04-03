@@ -6,8 +6,7 @@ reference:
   - title: Prepare plot and rate information
     desc: Prepare information necessary to create a trial design
     contents:
-      - prep_plot_m
-      - prep_plot_f
+      - prep_plot
       - prep_rate
       - add_base_rate
   - title: Generate trial designs

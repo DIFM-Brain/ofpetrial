@@ -28,7 +28,7 @@ assign_rates <- function(exp_data, rate_info) {
       dplyr::left_join(exp_data, ., by = "input_name")
   } else if ("list" %in% class(rate_info)) {
     input_trial_data <-
-      data.table::rbindlist(rate_info) %>%
+      data.table::rbindlist(rate_info, fill = TRUE) %>%
       dplyr::left_join(exp_data, ., by = "input_name")
   }
 

@@ -1,10 +1,10 @@
 
 
 
-# min_rate <- 80
-# max_rate <- 180
-# gc_rate <- 140
-# num_level <- 5
+# min_rate <- 0
+# max_rate <- 100
+# gc_rate <- 0
+# num_levels <- 5
 
 get_rates <- function(min_rate,
                       max_rate,
@@ -17,6 +17,10 @@ get_rates <- function(min_rate,
 
   if (max_rate == gc_rate) {
     # if max_rate equals sq_rate
+
+    rates <- seq(min_rate, max_rate, length = num_levels)
+  } else if (min_rate == gc_rate) {
+    # if min_rate equals sq_rate
 
     rates <- seq(min_rate, max_rate, length = num_levels)
   } else {

@@ -49,8 +49,9 @@ Create data of input rate information for a single input with some checks on the
 }
 \examples{
 plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "seed",
+    unit_system = "imperial",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,

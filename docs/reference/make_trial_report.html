@@ -81,21 +81,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_trial_report</span><span class="op">(</span><span class="va">td</span>, <span class="va">land_unit</span>, <span class="va">units</span>, <span class="va">trial_name</span>, folder_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">make_trial_report</span><span class="op">(</span><span class="va">td</span>, <span class="va">trial_name</span>, folder_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>td</dt>
 <dd><p>trial design created by assign_rates()</p></dd>
-
-
-<dt>land_unit</dt>
-<dd><p>unit of land area in report ("acres" or "hectares")</p></dd>
-
-
-<dt>units</dt>
-<dd><p>units for report ("imperial" or "metric")</p></dd>
 
 
 <dt>trial_name</dt>
@@ -118,19 +110,20 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- load experiment made by assign_rates() ---#</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">td_single_input</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 17</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name input_type exp_plots      trial_design   gc_rate design_type unit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> NH3        <span style="color: #949494;">&lt;chr [1]&gt;</span>  <span style="color: #949494;">&lt;sf [190 × 4]&gt;</span> <span style="color: #949494;">&lt;sf [191 × 5]&gt;</span>     180 ls          lb   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: abline_type &lt;chr&gt;, ab_lines &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   harvest_ab_lines &lt;list&gt;, field_sf &lt;MULTIPOLYGON [m]&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   harvester_width &lt;dbl&gt;, machine_width &lt;dbl&gt;, plot_width &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   section_num &lt;dbl&gt;, headland_length &lt;dbl&gt;, side_length &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 34</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name unit_system                    field_sf headland exp_plots ab_lines</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;MULTIPOLYGON [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> NH3        imperial    (((352970.3 4331423, 35313… <span style="color: #949494;">&lt;sf&gt;</span>     <span style="color: #949494;">&lt;sf&gt;</span>      <span style="color: #949494;">&lt;sf&gt;</span>    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 28 more variables: harvest_ab_lines &lt;list&gt;, plot_width &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   harvester_width &lt;dbl&gt;, machine_width &lt;dbl&gt;, section_num &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   headland_length &lt;dbl&gt;, side_length &lt;dbl&gt;, abline_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   design_type &lt;chr&gt;, gc_rate &lt;dbl&gt;, unit &lt;chr&gt;, tgt_rate_original &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   tgt_rate_equiv &lt;list&gt;, include_base_rate &lt;lgl&gt;, base_input &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   base_rate_original &lt;dbl&gt;, base_rate_equiv &lt;dbl&gt;, total_equiv &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   min_rate &lt;lgl&gt;, max_rate &lt;lgl&gt;, num_rates &lt;dbl&gt;, rank_seq_ws &lt;list&gt;, …</span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="fu">make_trial_report</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">td_single_input</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"acre"</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"imperial"</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"Test Trial"</span>,</span></span>
 <span class="r-in"><span>  <span class="va">folder_path</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

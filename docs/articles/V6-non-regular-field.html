@@ -134,8 +134,9 @@ stratight. Consequently, when the field is curved, experiment plots will
 look like this.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="../reference/prep_plot_f.html">prep_plot_f</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>    unit_system <span class="op">=</span> <span class="st">"imperial"</span>,</span>
 <span>    machine_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    harvester_width <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -150,7 +151,6 @@ look like this.</p>
 <span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-irregular1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; The range of plot width you specified (73.152, 91.44) may be too narrow for this field. Consider expanding the range.</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>

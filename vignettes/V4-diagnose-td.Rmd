@@ -34,8 +34,9 @@ Let's first create experiment plots where plot width is specified as 90 feet, wh
 
 ```{r}
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 45,
     section_num = 1,
     harvester_width = 30,
@@ -75,8 +76,9 @@ Now, let's make the plot width 45 feet.
 
 ```{r}
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 45,
     section_num = 1,
     harvester_width = 30,
@@ -107,7 +109,7 @@ This can be confirmed with the following figure, which shows that a third of har
 machine_alignment_check$g_overlap
 ```
 
-If you see this kind of problem, reconsider changing the plot width, unless it is not avoidable. If you are not sure what the right plot width is, it might be advisable to leave `plot_width` unspecified (`plot_width = NA`) in a `prep_plot_*()` function, in which case, the package will automally suggest an appropriate (may not be optimal) plot width.
+If you see this kind of problem, reconsider changing the plot width, unless it is not avoidable. If you are not sure what the right plot width is, it might be advisable to leave `plot_width` unspecified (`plot_width = NA`) in a `prep_plot()` function, in which case, the package will automatically suggest an appropriate (may not be optimal) plot width.
 
 ## Check the correlation of the input rates for a two-input experiment
 
@@ -117,8 +119,9 @@ We first create experiment plots. Note that the `plot_width` of both inputs are 
 
 ```{r}
 seed_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "seed",
+    unit_system = "imperial",
     machine_width = 60,
     section_num = 24,
     harvester_width = 30,
@@ -126,8 +129,9 @@ seed_plot_info <-
   )
 
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 30,
@@ -194,8 +198,9 @@ Now, let's change the width of the plots for NH3 to 60 feet, which is twice as w
 #+ change the plot width for NH3
 #++++++++++++++++++++++++++++++++++++
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 60,
     section_num = 1,
     harvester_width = 30,
@@ -236,8 +241,9 @@ Now, let's think about a case where the randomized block design is used for both
 
 ```{r}
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 30,
