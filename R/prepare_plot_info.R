@@ -29,17 +29,16 @@
 #' prep_plot(input_name, unit_system, machine_width, section_num, harvester_width)
 #'
 prep_plot <- function(input_name,
-                        unit_system,
-                         machine_width,
-                         section_num,
-                         harvester_width,
-                         plot_width = NA,
-                         headland_length = NA,
-                         side_length = NA,
-                         max_plot_width = measurements::conv_unit(120, "ft", "m"), # 36.4576 meter
-                         min_plot_length = measurements::conv_unit(240, "ft", "m"), # 73.152 feet
-                         max_plot_length = measurements::conv_unit(300, "ft", "m") # 91.440 meter
-) {
+                      unit_system,
+                      machine_width,
+                      section_num,
+                      harvester_width,
+                      plot_width = NA,
+                      headland_length = NA,
+                      side_length = NA,
+                      max_plot_width = NA,
+                      min_plot_length = NA,
+                      max_plot_length = NA) {
 
   #--- dimension check ---#
   fms_ls <- c(length(input_name), length(machine_width), length(section_num), length(plot_width))
@@ -48,6 +47,46 @@ prep_plot <- function(input_name,
   }
 
   section_width <- machine_width / section_num
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Settig plot width and length
+  #++++++++++++++++++++++++++++++++++++
+  if (is.na(max_plot_width)) {
+    max_plot_width <-
+      ifelse(
+        unit_system == "imperial",
+        120,
+        measurements::conv_unit(120, "ft", "m") # 36.4576 meter
+      )
+  }
+  if (is.na(min_plot_length)) {
+    min_plot_length <-
+      ifelse(
+        unit_system == "imperial",
+        240,
+        measurements::conv_unit(240, "ft", "m") # 73.152 meter
+      )
+  }
+  if (is.na(max_plot_length)) {
+    max_plot_length <-
+      ifelse(
+        unit_system == "imperial",
+        300,
+        measurements::conv_unit(300, "ft", "m") # 91.440 meter
+      )
+  }
+  if (is.na(side_length)) {
+    # side length needs to be at least 30 feet
+    side_length <-
+      max(
+        section_width,
+        ifelse(
+          unit_system == "imperial",
+          30,
+          measurements::conv_unit(30, "ft", "m")
+        )
+      )
+  }
 
   #++++++++++++++++++++++++++++++++++++
   #+ Check and notify the mixed treatment problems (with potential suggestions)
@@ -95,12 +134,7 @@ prep_plot <- function(input_name,
   #+ Put together the data
   #++++++++++++++++++++++++++++++++++++
 
-  if(unit_system == "metric"){
-    #--- side distance ---#
-    if (is.na(side_length)) {
-      side_length <- max(section_width, measurements::conv_unit(30, "ft", "m"))
-    }
-
+  if (unit_system == "metric") {
     plot_data <-
       tibble::tibble(
         input_name = input_name,
@@ -115,26 +149,21 @@ prep_plot <- function(input_name,
         min_plot_length = min_plot_length,
         max_plot_length = max_plot_length
       )
-  }else{
-    #--- side distance ---#
-    if (is.na(side_length)) {
-      side_length <- max(section_width, 30)
-    }
-
-      plot_data <-
-    tibble::tibble(
-      input_name = input_name,
-      unit_system = unit_system,
-      machine_width = measurements::conv_unit(machine_width, "ft", "m"),
-      section_num = section_num,
-      section_width = measurements::conv_unit(section_width, "ft", "m"),
-      harvester_width = measurements::conv_unit(harvester_width, "ft", "m"),
-      plot_width = measurements::conv_unit(plot_width, "ft", "m"),
-      headland_length = measurements::conv_unit(headland_length, "ft", "m"),
-      side_length = measurements::conv_unit(side_length, "ft", "m"),
-      min_plot_length = measurements::conv_unit(min_plot_length, "ft", "m"),
-      max_plot_length = measurements::conv_unit(max_plot_length, "ft", "m")
-    )
+  } else {
+    plot_data <-
+      tibble::tibble(
+        input_name = input_name,
+        unit_system = unit_system,
+        machine_width = measurements::conv_unit(machine_width, "ft", "m"),
+        section_num = section_num,
+        section_width = measurements::conv_unit(section_width, "ft", "m"),
+        harvester_width = measurements::conv_unit(harvester_width, "ft", "m"),
+        plot_width = measurements::conv_unit(plot_width, "ft", "m"),
+        headland_length = measurements::conv_unit(headland_length, "ft", "m"),
+        side_length = measurements::conv_unit(side_length, "ft", "m"),
+        min_plot_length = measurements::conv_unit(min_plot_length, "ft", "m"),
+        max_plot_length = measurements::conv_unit(max_plot_length, "ft", "m")
+      )
   }
 
   return(plot_data)

@@ -314,7 +314,7 @@ get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
       )
     return(return_data)
   } else {
-    message("The range of plot width you specified (", min_plot_length, ", ", max_plot_length, ") ", "may be too narrow for this field. Consider expanding the range.")
+    message("The range of plot length you specified (", min_plot_length, ", ", max_plot_length, ") ", "may be too narrow for this field. Consider expanding the range.")
 
     num_comp_plots <- tot_plot_length %/% min_plot_length
 
