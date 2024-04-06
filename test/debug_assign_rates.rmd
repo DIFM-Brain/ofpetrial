@@ -1,0 +1,313 @@
+```{r}
+devtools::load_all()
+```
+
+```{r}
+n_plot_info <-
+  prep_plot(
+    input_name = "NH3",
+    unit_system = "imperial",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
+  )
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "boundary-irregular1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-irregular1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+n_rate_info <-
+  prep_rate(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls",
+  )
+
+td_rb <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+```
+
+
+```{r}
+exp_data <- exp_data
+rate_info <- n_rate_info
+
+if ("data.frame" %in% class(rate_info)) {
+  input_trial_data <-
+    rate_info %>%
+    dplyr::left_join(exp_data, ., by = "input_name")
+} else if ("list" %in% class(rate_info)) {
+  input_trial_data <-
+    data.table::rbindlist(rate_info, fill = TRUE) %>%
+    dplyr::left_join(exp_data, ., by = "input_name")
+}
+
+if (nrow(input_trial_data) > 1) {
+  input_trial_data$push <- c(FALSE, TRUE)
+} else {
+  input_trial_data$push <- FALSE
+}
+
+trial_design <-
+  input_trial_data %>%
+  dplyr::rowwise() %>%
+  #--- create rates data  ---#
+  dplyr::mutate(rates_data = list(
+    find_rates_data(
+      gc_rate = gc_rate,
+      unit = unit,
+      rates = tgt_rate_original,
+      min_rate = min_rate,
+      max_rate = max_rate,
+      num_rates = num_rates,
+      design_type = design_type
+    )
+  ))
+
+exp_sf <- trial_design$exp_plots[[1]]
+exp_plots <- trial_design$exp_plots[[1]]
+rates_data <- trial_design$rates_data[[1]]
+rank_seq_ws <- trial_design$rank_seq_ws[[1]]
+rank_seq_as <- trial_design$rank_seq_as[[1]]
+design_type <- trial_design$design_type[[1]]
+push <- trial_design$push[[1]]
+```
+
+
+```{r}
+data.table::CJ(
+  A = 1:5,
+  B = 1:5
+)
+
+gen_sequence(5, "ejca", push)
+gen_sequence(5, "ejca", TRUE)
+
+get_seq_start(1, basic_seq, strip_id = 1, design_type)
+get_seq_start(1, c(3, 5, 4, 2, 1), strip_id = 1, design_type)
+```
+
+# Second design with equal replications
+
+```{r}
+seed_plot_info <-
+  prep_plot(
+    input_name = "seed",
+    unit_system = "imperial",
+    machine_width = 60,
+    section_num = 24,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+n_plot_info <-
+  prep_plot(
+    input_name = "NH3",
+    unit_system = "imperial",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+input_plot_info <- list(seed_plot_info, n_plot_info)
+
+exp_data <-
+  make_exp_plots(
+    input_plot_info = input_plot_info,
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+seed_rate_info <-
+  prep_rate(
+    plot_info = seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
+    min_rate = 16000,
+    max_rate = 40000,
+    num_rates = 5,
+    design_type = "ls"
+  )
+
+n_rate_info <-
+  prep_rate(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 140, 180, 220, 260),
+    design_type = "ls"
+  )
+
+exp_data <- exp_data
+rate_info <- list(n_rate_info, seed_rate_info)
+
+if ("data.frame" %in% class(rate_info)) {
+  input_trial_data <-
+    rate_info %>%
+    dplyr::left_join(exp_data, ., by = "input_name")
+} else if ("list" %in% class(rate_info)) {
+  input_trial_data <-
+    data.table::rbindlist(rate_info, fill = TRUE) %>%
+    dplyr::left_join(exp_data, ., by = "input_name")
+}
+
+trial_design <-
+  input_trial_data %>%
+  dplyr::rowwise() %>%
+  #--- create rates data  ---#
+  dplyr::mutate(rates_data = list(
+    find_rates_data(
+      gc_rate = gc_rate,
+      unit = unit,
+      rates = tgt_rate_original,
+      min_rate = min_rate,
+      max_rate = max_rate,
+      num_rates = num_rates,
+      design_type = design_type
+    )
+  )) %>%
+  dplyr::mutate(experiment_design = list(
+    assign_rates_by_input(
+      exp_sf = exp_plots,
+      rates_data = rates_data,
+      rank_seq_ws = rank_seq_ws,
+      rank_seq_as = rank_seq_as,
+      design_type = design_type
+    ) 
+  ))
+
+# trial_design <-
+#   assign_rates(
+#     exp_data = exp_data,
+#     rate_info = list(seed_rate_info, n_rate_info)
+#   )
+```
+
+```{r}
+first_design <- trial_design$experiment_design[[1]]
+second_design <- trial_design$experiment_design[[1]]
+rate_table <-
+  data.table(second_design)[, .(strip_id, plot_id)] %>%
+  .[, rate_rank := 0]
+
+num_rates <- 5
+
+strip_num <- max(first_design$strip_id)
+
+comb_table <-
+  data.table::CJ(
+    rate_rank_1 = first_design$rate_rank %>% unique(),
+    rate_rank_2 = 1:5
+  ) %>%
+  .[, cases := 0]
+
+for (i in 1:strip_num) { # loop over the strips
+  working_strip_1st <- dplyr::filter(first_design, strip_id == i)
+  working_strip_2nd <- dplyr::filter(second_design, strip_id == i)
+  num_plots_in_strip <- max(working_strip_1st$plot_id)
+
+  if (i == 1) { # the first strip
+    for (k in 1:num_plots_in_strip) {
+      #--- rate of the first design for the working plot ---#
+      rate_rank_1st <- data.table(working_strip_1st)[plot_id == k, rate_rank]
+
+      if (k == 1) { # for the very first plot
+        rate_rank_2nd <- sample(1:num_rates, 1) # just pick a rate randomly
+      } else {
+        options <-
+          comb_table[rate_rank_2 != rate_rank_2nd & rate_rank_1 == rate_rank_1st, ] %>%
+          .[cases == min(cases), ]
+
+        num_options <- nrow(options)
+        rate_rank_2nd <- options[sample(1:num_options, 1), rate_rank_2]
+      }
+
+      #--- record the chosen rate ---#
+      rate_table[strip_id == i & plot_id == k, rate_rank := rate_rank_2nd]
+
+      #--- update the combination table ---#
+      comb_table <-
+        update_comb_table(
+          comb_table,
+          rate_rank_first = rate_rank_1st,
+          rate_rank_second = rate_rank_2nd
+        )
+    }
+  } else { # after the first strip
+    previous_strip_2nd <- dplyr::filter(second_design, strip_id == (i - 1))
+
+    for (k in 1:num_plots_in_strip) {
+      working_plot_2nd <- dplyr::filter(working_strip_2nd, plot_id == k)
+
+      closest_plot_id_in_the_previous_strip <- previous_strip_2nd[which.min(st_distance(st_centroid(working_plot_2nd), st_centroid(previous_strip_2nd))), ]$plot_id
+
+      rate_rank_2nd_nb <- rate_table[plot_id == closest_plot_id_in_the_previous_strip & strip_id == (i - 1), rate_rank]
+
+      #--- rate for the 1st design of the working plot ---#
+      rate_rank_1st <- data.table(working_strip_1st)[plot_id == k, rate_rank]
+
+      if (k == 1) { # the first plot of the strip
+        options <-
+          comb_table[rate_rank_2 != rate_rank_2nd_nb & rate_rank_1 == rate_rank_1st, ] %>%
+          .[cases == min(cases), ] %>%
+          .[which.max(abs(rate_rank_2 - rate_rank_2nd_nb)), ]
+        num_options <- nrow(options)
+        rate_rank_2nd <- options[sample(1:num_options, 1), rate_rank_2]
+
+      } else {
+        rate_rank_2nd_prev <- rate_table[strip_id == i & plot_id == (k - 1), rate_rank]
+
+        options <-
+          comb_table[rate_rank_2 != rate_rank_2nd_prev & rate_rank_2 != rate_rank_2nd_nb & rate_rank_1 == rate_rank_1st, ] %>%
+          .[cases == min(cases), ] %>%
+          .[which.max(abs(rate_rank_2 - rate_rank_2nd_nb)), ]
+          
+        num_options <- nrow(options)
+        rate_rank_2nd <- options[sample(1:num_options, 1), rate_rank_2]
+      }
+
+      #--- record the chosen rate ---#
+      rate_table[strip_id == i & plot_id == k, rate_rank := rate_rank_2nd]
+
+      #--- update the combination table ---#
+      comb_table <-
+        update_comb_table(
+          comb_table,
+          rate_rank_first = rate_rank_1st,
+          rate_rank_second = rate_rank_2nd
+        )
+    }
+  }
+}
+
+temp <- left_join(second_design, rate_table, by = c("strip_id", "plot_id"))
+
+data.table(temp)[, .(plot_id, strip_id, rate_rank.y)] %>%
+  data.table(first_design)[, .(plot_id, strip_id, rate_rank)][., on = c("plot_id", "strip_id")] %>%
+  .[, .N, by = .(rate_rank, rate_rank.y)]
+ 
+ggplot(temp) +
+  geom_sf(aes(fill = factor(rate_rank.y))) +
+  scale_fill_viridis_d()
+
+ggplot(first_design) +
+  geom_sf(aes(fill = factor(rate_rank))) +
+  scale_fill_viridis_d()
+
+update_comb_table <- function(comb_table, rate_rank_first, rate_rank_second) {
+  comb_table[, cases := ifelse(rate_rank_1 == rate_rank_first & rate_rank_2 == rate_rank_second, cases + 1, cases)]
+}
+```
