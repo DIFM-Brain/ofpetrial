@@ -43,32 +43,105 @@ assign_rates <- function(exp_data, rate_info) {
   # design_type <- trial_design$design_type[[1]]
   # push <- trial_design$push[[1]]
 
+  if (nrow(input_trial_data) == 2) {
+    # if two-input experiment and the experimental plots are identical
+    if (all(input_trial_data$exp_plots[[1]]$geometry == input_trial_data$exp_plots[[2]]$geometry)) {
+      input_trial_data_with_rates <-
+        input_trial_data %>%
+        dplyr::rowwise() %>%
+        #--- create rates data  ---#
+        dplyr::mutate(rates_data = list(
+          find_rates_data(
+            gc_rate = gc_rate,
+            unit = unit,
+            rates = tgt_rate_original,
+            min_rate = min_rate,
+            max_rate = max_rate,
+            num_rates = num_rates,
+            design_type = design_type
+          )
+        ))
+
+      #--- design for the first input ---#
+      design_first_input <-
+        assign_rates_by_input(
+          exp_sf = input_trial_data_with_rates$exp_plots[[1]],
+          rates_data = input_trial_data_with_rates$rates_data[[1]],
+          rank_seq_ws = input_trial_data_with_rates$rank_seq_ws[[1]],
+          rank_seq_as = input_trial_data_with_rates$rank_seq_as[[1]],
+          design_type = input_trial_data_with_rates$design_type[[1]]
+        )
+
+      design_second_input <- get_design_for_second(input_trial_data, first_dsign = design_first_input)
+
+      input_trial_data_with_rates$experiment_design <- list(design_first_input, design_second_input)
+
+      plots_with_rates_assigned <-
+        input_trial_data_with_rates %>%
+        dplyr::mutate(experiment_design = list(
+          experiment_design %>%
+            dplyr::select(rate, strip_id, plot_id) %>%
+            dplyr::mutate(type = "experiment")
+        ))
+    } else {
+      plots_with_rates_assigned <-
+        input_trial_data %>%
+        dplyr::rowwise() %>%
+        #--- create rates data  ---#
+        dplyr::mutate(rates_data = list(
+          find_rates_data(
+            gc_rate = gc_rate,
+            unit = unit,
+            rates = tgt_rate_original,
+            min_rate = min_rate,
+            max_rate = max_rate,
+            num_rates = num_rates,
+            design_type = design_type
+          )
+        )) %>%
+        dplyr::mutate(experiment_design = list(
+          assign_rates_by_input(
+            exp_sf = exp_plots,
+            rates_data = rates_data,
+            rank_seq_ws = rank_seq_ws,
+            rank_seq_as = rank_seq_as,
+            design_type = design_type
+          ) %>%
+            dplyr::select(rate, strip_id, plot_id) %>%
+            dplyr::mutate(type = "experiment")
+        ))
+    }
+  } else {
+    plots_with_rates_assigned <-
+      input_trial_data %>%
+      dplyr::rowwise() %>%
+      #--- create rates data  ---#
+      dplyr::mutate(rates_data = list(
+        find_rates_data(
+          gc_rate = gc_rate,
+          unit = unit,
+          rates = tgt_rate_original,
+          min_rate = min_rate,
+          max_rate = max_rate,
+          num_rates = num_rates,
+          design_type = design_type
+        )
+      )) %>%
+      dplyr::mutate(experiment_design = list(
+        assign_rates_by_input(
+          exp_sf = exp_plots,
+          rates_data = rates_data,
+          rank_seq_ws = rank_seq_ws,
+          rank_seq_as = rank_seq_as,
+          design_type = design_type
+        ) %>%
+          dplyr::select(rate, strip_id, plot_id) %>%
+          dplyr::mutate(type = "experiment")
+      ))
+  }
+
   trial_design <-
-    input_trial_data %>%
-    dplyr::rowwise() %>%
-    #--- create rates data  ---#
-    dplyr::mutate(rates_data = list(
-      find_rates_data(
-        gc_rate = gc_rate,
-        unit = unit,
-        rates = tgt_rate_original,
-        min_rate = min_rate,
-        max_rate = max_rate,
-        num_rates = num_rates,
-        design_type = design_type
-      )
-    )) %>%
-    dplyr::mutate(experiment_design = list(
-      assign_rates_by_input(
-        exp_sf = exp_plots,
-        rates_data = rates_data,
-        rank_seq_ws = rank_seq_ws,
-        rank_seq_as = rank_seq_as,
-        design_type = design_type
-      ) %>%
-        dplyr::select(rate, strip_id, plot_id) %>%
-        dplyr::mutate(type = "experiment")
-    )) %>%
+    plots_with_rates_assigned %>%
     dplyr::mutate(headland = list(
       dplyr::mutate(headland, rate = gc_rate) %>%
         dplyr::select(rate) %>%
@@ -112,6 +185,11 @@ assign_rates <- function(exp_data, rate_info) {
 #* +++++++++++++++++++++++++++++++++++
 #* Assign rates (latin and jump-rate-conscious)
 #* +++++++++++++++++++++++++++++++++++
+# exp_sf <- plots_with_rates_assigned$exp_plots[[1]]
+# rates_data <- plots_with_rates_assigned$rates_data[[1]]
+# rank_seq_ws <- plots_with_rates_assigned$rank_seq_ws[[1]]
+# rank_seq_as <- plots_with_rates_assigned$rank_seq_as[[1]]
+# design_type <- plots_with_rates_assigned$design_type[[1]]
 
 assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type) {
   max_plot_id <- max(exp_sf$plot_id)
@@ -507,11 +585,11 @@ get_starting_rank_across_strips <- function(num_levels) {
   return(return_seq)
 }
 
-get_starting_rank_across_strips_ls <- function(num_levels, basic_seq) {
+get_starting_rank_across_strips_ls <- function(num_rates, basic_seq) {
   seq <-
     lapply(
-      combinat::permn(1:num_levels),
-      \(x) {
+      combinat::permn(1:num_rates),
+      \(seq) {
         mat_list <-
           lapply(
             seq,
@@ -519,9 +597,8 @@ get_starting_rank_across_strips_ls <- function(num_levels, basic_seq) {
               get_seq_start(x, basic_seq, strip_id = 1, design_type = "ls")
             }
           )
-
         mat <- do.call(rbind, mat_list)
-        mat_lag <- rbind(mat[2:num_levels, ], mat[1, ])
+        mat_lag <- rbind(mat[2:num_rates, ], mat[1, ])
         mat_dif <- mat - mat_lag
 
         results_table <-
@@ -549,10 +626,6 @@ get_starting_rank_across_strips_ls <- function(num_levels, basic_seq) {
 
   return(seq)
 }
-
-
-
-
 
 get_rank_for_rb <- function(num_rates, data) {
   n_plot <- nrow(data)
@@ -654,4 +727,220 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
   }
 
   return(rates_data)
+}
+
+
+#++++++++++++++++++++++++++++++++++++
+#+ Find the design for the second input
+#++++++++++++++++++++++++++++++++++++
+# This function is used internally in assign_rates().
+
+get_design_for_second <- function(input_trial_data, first_dsign, rate_jump_threshold = NA) {
+  first_dsign <- design_first_input
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Prepare basic information for the second input
+  #++++++++++++++++++++++++++++++++++++
+  trial_data_second <- input_trial_data_with_rates[2, ]
+  second_design <- trial_data_second$exp_plots[[1]]
+  rates_data_second <- trial_data_second$rates_data[[1]]
+  num_rates <- nrow(rates_data_second)
+  num_plots <- nrow(second_design)
+
+  #--- table of unique combinations of the first and second input rates ---#
+  comb_table <-
+    data.table::CJ(
+      rate_rank_1 = first_design$rate_rank %>% unique(),
+      rate_rank_2 = 1:num_rates
+    ) %>%
+    .[, cases := 0]
+
+  #--- table of rates to be filled and referenced for dynamic rate assignment ---#
+  rate_table <-
+    data.table(second_design)[, .(strip_id, plot_id)] %>%
+    .[, rate_rank := 0]
+
+  #--- Find the spatial weights ---#
+  centroids_second <- st_centroid(second_design)
+
+  dist_mat <-
+    1 / (st_distance(
+      centroids_second,
+      centroids_second
+    ))
+
+  diag(dist_mat) <- 0
+
+  W <- apply(dist_mat, 1, \(x)  x / sum(x))
+
+  #--- determin rate jump threshold if not specified by the used ---#
+  if (is.na(rate_jump_threshold)) {
+    if (num_rates == 2) {
+      rate_jump_threshold <- 1 # plays no role
+    } else if (num_rates == 3) {
+      rate_jump_threshold <- 2 # plays no role
+    } else if (num_rates == 4) {
+      rate_jump_threshold <- 3 # plays no role
+    } else if (num_rates >= 5) {
+      rate_jump_threshold <- num_rates - 2 # plays no role
+    }
+  }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Find rates
+  #++++++++++++++++++++++++++++++++++++
+  for (row_index in 1:num_plots) { # loop over the strips
+
+    track_data <-
+      data.table(
+        plot_id = round(num_plots * seq(0.1, 1, by = 0.1), digits = 0)
+      ) %>%
+      .[, index := 1:.N]
+
+    if (row_index %in% round(num_plots * seq(0.1, 1, by = 0.1), digits = 0)) {
+      percentage <- track_data[plot_id == row_index, index]
+      print(paste(paste0(rep("==", percentage), collapse = ""), percentage * 10, "% complete"))
+    }
+
+    #--- find the strip id for the working plot ---#
+    working_strip_id <- second_design$strip_id[row_index]
+    working_plot_id <- second_design$plot_id[row_index]
+
+    #--- get the sf of the working strip ---#
+    working_strip_1st <- dplyr::filter(first_design, strip_id == working_strip_id)
+    working_strip_2nd <- dplyr::filter(second_design, strip_id == working_strip_id)
+
+    num_plots_in_strip <- max(working_strip_1st$plot_id)
+
+    if (working_strip_id == 1) { # the first strip
+      #--- rate of the first design for the working plot ---#
+      rate_rank_1st <- data.table(working_strip_1st)[plot_id == working_plot_id, rate_rank]
+
+      #---------------------
+      #- Find the rate rank
+      #---------------------
+      if (working_plot_id == 1) { # for the very first plot
+        rate_rank_2nd <- sample(1:num_rates, 1) # just pick a rate randomly
+      } else {
+        rate_rank_2nd_prev <- rate_table[row_index - 1, rate_rank]
+        rate_rank_2nd <-
+          #--- cannot take the save value as the last plot and the closeset plot in the previous strip  ---#
+          copy(comb_table)[rate_rank_2 != rate_rank_2nd_prev & rate_rank_1 == rate_rank_1st, ] %>%
+          #--- does not allow rate rank jumps of more than 3 (e.g., 1 -> 4) ---#
+          .[abs(rate_rank_2 - rate_rank_2nd_prev) <= rate_jump_threshold, ] %>%
+          .[cases == min(cases), ] %>%
+          .[sample(1:.N, 1), rate_rank_2]
+      }
+
+      #---------------------
+      #- Record the results
+      #---------------------
+      #--- record the chosen rate ---#
+      rate_table[row_index, rate_rank := rate_rank_2nd]
+
+      #--- update the combination table ---#
+      comb_table <-
+        update_comb_table(
+          comb_table,
+          rate_rank_first = rate_rank_1st,
+          rate_rank_second = rate_rank_2nd
+        )
+    } else { # after the first strip
+      previous_strip_2nd <- dplyr::filter(second_design, strip_id == working_strip_id - 1)
+
+      working_plot_2nd <- dplyr::filter(working_strip_2nd, plot_id == working_plot_id)
+
+      closest_plot_id_in_the_previous_strip <- previous_strip_2nd[which.min(st_distance(st_centroid(working_plot_2nd), st_centroid(previous_strip_2nd))), ]
+
+      #---------------------
+      #- Find the rate ranks for narrowing down the options
+      #---------------------
+      #--- rate_rank of the closest plot in the previous strip ---#
+      rates_list <- list()
+      rates_list$rate_rank_2nd_nb <-
+        rate_table[
+          plot_id == closest_plot_id_in_the_previous_strip$plot_id &
+            strip_id == closest_plot_id_in_the_previous_strip$strip_id,
+          rate_rank
+        ]
+
+      #--- rate of the 1st design of the working plot ---#
+      rates_list$rate_rank_1st <- data.table(first_design)[row_index, rate_rank]
+      rates_list$rate_rank_2nd_prev <- rate_table[row_index - 1, rate_rank]
+
+      #---------------------
+      #- Find the rate rank
+      #---------------------
+      rate_rank_2nd <- find_rate(row_index, working_plot_id, rates_list, comb_table, rate_table, W)
+
+      #---------------------
+      #- Record the results
+      #---------------------
+      #--- record the chosen rate ---#
+      rate_table[row_index, rate_rank := rate_rank_2nd]
+
+      #--- update the combination table ---#
+      comb_table <-
+        update_comb_table(
+          comb_table,
+          rate_rank_first = rates_list$rate_rank_1st,
+          rate_rank_second = rate_rank_2nd
+        )
+    }
+  }
+
+  trial_design <-
+    left_join(second_design, rate_table, by = c("strip_id", "plot_id")) %>%
+    left_join(rates_data_second, rate_table, by = c("rate_rank"))
+
+  return(trial_design)
+}
+#++++++++++++++++++++++++++++++++++++
+#+ Find the rate taking into account local spatial variability and rate jumps
+#++++++++++++++++++++++++++++++++++++
+# This function finds the rate taking into account local spatial variability and rate jumps for the second input when the first and second inputs share exactly the same experimental plots.
+# This function is used internally in get_design_for_second().
+
+find_rate <- function(row_index, working_plot_id, rates_list, comb_table, rate_table, W, rate_jump_threshold = 3) {
+  #--- Limit the options ---#
+  if (working_plot_id == 1) {
+    options <-
+      comb_table[rate_rank_2 != rates_list$rate_rank_2nd_nb & rate_rank_1 == rates_list$rate_rank_1st, ]
+  } else {
+    options <-
+      comb_table[rate_rank_2 != rates_list$rate_rank_2nd_prev & rate_rank_2 != rates_list$rate_rank_2nd_nb & rate_rank_1 == rates_list$rate_rank_1st, ]
+  }
+
+  #--- find the rate based on local variability score ---#
+  score_seq <-
+    lapply(options$rate_rank_2, \(x) {
+      local_rate_rank_vec <- rate_table[1:(row_index - 1), rate_rank - x]
+      if (working_plot_id == 1) {
+        #--- if the first plot of a strip ---#
+        # do not penalize deviation from the previous strip
+        variability_score <- mean(local_rate_rank_vec[1:(row_index - 1)]^2 * W[row_index, 1:(row_index - 1)])
+      } else {
+        #--- if not the first plot of a strip ---#
+        # penalize deviation from the previous strip to avoid an abrupt change in rate in the moving direction
+        variability_score <-
+          mean(c(
+            local_rate_rank_vec[1:(row_index - 2)]^2 * W[row_index, 1:(row_index - 2)],
+            local_rate_rank_vec[row_index - 1]^2 / 2 * W[row_index, row_index - 1]
+          ))
+      }
+    }) %>%
+    unlist()
+
+  options$variability_score <- score_seq
+
+  options <-
+    options %>%
+    .[cases %in% c(min(cases), min(cases) + 1), ] %>%
+    .[abs(rate_rank_2 - rates_list$ rate_rank_2nd_prev) <= rate_jump_threshold, ] %>%
+    .[variability_score == max(variability_score), ]
+
+  num_options <- nrow(options)
+  rate_rank_2nd <- options[sample(1:num_options, 1), rate_rank_2]
+
+  return(rate_rank_2nd)
 }

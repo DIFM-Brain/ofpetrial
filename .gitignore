@@ -4,6 +4,7 @@
 .RData
 .Ruserdata
 test/*
+!test/*.rmd
 debug/*
 *.DS_Store
 inst

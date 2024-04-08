@@ -1,0 +1,26 @@
+# Check and debug
+
+## Regenerate documentations reflecting the changes and apply `load_all()`
+
+```{r}
+#---  ---#
+devtools::document()
+devtools::load_all()
+```
+
+## Run all the examples to check error
+
+```{r}
+devtools::run_examples(pkg = here::here())
+```
+
+```{r}
+#--- check if the yaml can be read successfully ---#
+readLines("./_pkgdown.yml")
+```
+
+## Create datasets for examples
+
+```{r}
+source("dev/generate_datasets.R")
+```
