@@ -42,6 +42,18 @@ library(ofpetrial)
 We start with specifying plot and machine information for inputs using `prep_plot`, which simply creates a data.frame of the specified information with some internal unit conversion of length (feet to meter).
 
 ```{r}
+n_plot_info <-
+  prep_plot(
+    input_name = "NH3",
+    unit_system = "imperial",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 30,
+    plot_width = 30
+  )
+
+n_plot_info
+
 seed_plot_info <-
   prep_plot(
     input_name = "seed",
@@ -54,23 +66,12 @@ seed_plot_info <-
 
 seed_plot_info
 
-n_plot_info <-
-  prep_plot(
-    input_name = "NH3",
-    unit_system = "imperial",
-    machine_width = 30,
-    section_num = 1,
-    harvester_width = 30,
-    plot_width = 30
-  )
-
-n_plot_info
 ```
 
 Now that plot and machine specifications for the inputs are ready, we can create experiment plots based on them using `make_exp_plots()`. 
 
 ```{r}
-input_plot_info <- list(seed_plot_info, n_plot_info)
+input_plot_info <- list(n_plot_info, seed_plot_info)
 
 exp_data <-
   make_exp_plots(
@@ -107,19 +108,6 @@ Let's now assign input rates to the experimental plots we just created. Before d
 #!===========================================================
 # ! Assign rates
 # !===========================================================
-seed_rate_info <-
-  prep_rate(
-    plot_info = seed_plot_info,
-    gc_rate = 32000,
-    unit = "seed",
-    min_rate = 16000,
-    max_rate = 40000,
-    num_rates = 5,
-    design_type = "jcls"
-  )
-
-seed_rate_info
-
 n_rate_info <-
   prep_rate(
     plot_info = n_plot_info,
@@ -131,12 +119,25 @@ n_rate_info <-
   )
 
 n_rate_info
+
+seed_rate_info <-
+  prep_rate(
+    plot_info = seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
+    min_rate = 16000,
+    max_rate = 40000,
+    num_rates = 5,
+    design_type = "ls"
+  )
+
+seed_rate_info
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots (see [this vignette](https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html) for other design options and [this vignette](https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html) for changing rates manually.).
 
 ```{r}
-trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
+trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_info))
 ```
 
 Here is the visualization of the trial design done by `viz`.

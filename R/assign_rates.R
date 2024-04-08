@@ -72,7 +72,7 @@ assign_rates <- function(exp_data, rate_info) {
           design_type = input_trial_data_with_rates$design_type[[1]]
         )
 
-      design_second_input <- get_design_for_second(input_trial_data, first_dsign = design_first_input)
+      design_second_input <- get_design_for_second(input_trial_data_with_rates, first_design = design_first_input)
 
       input_trial_data_with_rates$experiment_design <- list(design_first_input, design_second_input)
 
@@ -735,13 +735,12 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
 #++++++++++++++++++++++++++++++++++++
 # This function is used internally in assign_rates().
 
-get_design_for_second <- function(input_trial_data, first_dsign, rate_jump_threshold = NA) {
-  first_dsign <- design_first_input
+get_design_for_second <- function(input_trial_data, first_design, rate_jump_threshold = NA) {
 
   #++++++++++++++++++++++++++++++++++++
   #+ Prepare basic information for the second input
   #++++++++++++++++++++++++++++++++++++
-  trial_data_second <- input_trial_data_with_rates[2, ]
+  trial_data_second <- input_trial_data[2, ]
   second_design <- trial_data_second$exp_plots[[1]]
   rates_data_second <- trial_data_second$rates_data[[1]]
   num_rates <- nrow(rates_data_second)
@@ -943,4 +942,11 @@ find_rate <- function(row_index, working_plot_id, rates_list, comb_table, rate_t
   rate_rank_2nd <- options[sample(1:num_options, 1), rate_rank_2]
 
   return(rate_rank_2nd)
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Simple routine to update comb_table in get_design_for_second()
+#++++++++++++++++++++++++++++++++++++
+update_comb_table <- function(comb_table, rate_rank_first, rate_rank_second) {
+  comb_table[, cases := ifelse(rate_rank_1 == rate_rank_first & rate_rank_2 == rate_rank_second, cases + 1, cases)]
 }
