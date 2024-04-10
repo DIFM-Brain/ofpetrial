@@ -9,7 +9,7 @@
 #' @param min_rate (numeric) minimum input rate. Ignored if rates are specified.
 #' @param max_rate (numeric) maximum input rate. Ignored if rates are specified
 #' @param num_rates (numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.
-#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("strip"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See for more details.
+#' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("str"), Randomized Strip ("rstr"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See the article on trial design for more details.
 #' @param rank_seq_ws (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.
 #' @param rank_seq_as (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.
 #' @param base_rate (integer) optional base application information created by add_base_rate
@@ -45,6 +45,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   #++++++++++++++++++++++++++++++++++++
   if (!is.null(rates)) {
     rates_ls <- rates
+    num_rates <- length(rates)
   } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
     #--- if min_rate, max_rate, and num_rates are specified ---#
     cat("Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates")
@@ -64,7 +65,8 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   #++++++++++++++++++++++++++++++++++++
   if (is.na(design_type)) {
     #--- do nothing ---#
-  } else if (design_type %in% c("ls", "jcls", "strip", "rb")) {
+    print('You did not specify design_type. It is assumed to be of type ls.') 
+  } else if (design_type %in% c("ls", "jcls", "str", "rstr", "rb")) {
     #--- do nothing ---#
   } else if (design_type == "sparse") {
     if (!gc_rate %in% rates_ls) {

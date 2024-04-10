@@ -68,7 +68,7 @@ get_cor <- function(i) {
 
 ```{r, cache = TRUE}
 cor_data <-
-  lapply(1:5000, get_cor) %>%
+  lapply(1:1000, get_cor) %>%
   data.table::rbindlist()
 
 cor_data[, .(

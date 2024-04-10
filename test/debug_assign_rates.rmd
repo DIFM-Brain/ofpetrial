@@ -155,9 +155,10 @@ n_rate_info <-
     design_type = "ls"
   )
 
-exp_data <- exp_data
-rate_info <- list(n_rate_info, seed_rate_info)
+trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_info))
+```
 
+```{r}
 if ("data.frame" %in% class(rate_info)) {
   input_trial_data <-
     rate_info %>%

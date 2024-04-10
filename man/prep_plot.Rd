@@ -13,9 +13,9 @@ prep_plot(
   plot_width = NA,
   headland_length = NA,
   side_length = NA,
-  max_plot_width = measurements::conv_unit(120, "ft", "m"),
-  min_plot_length = measurements::conv_unit(240, "ft", "m"),
-  max_plot_length = measurements::conv_unit(300, "ft", "m")
+  max_plot_width = NA,
+  min_plot_length = NA,
+  max_plot_length = NA
 )
 }
 \arguments{

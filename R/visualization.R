@@ -143,7 +143,8 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
               "\n(",
               dplyr::case_when(
                 design_type == "ls" ~ "Latin Square",
-                design_type == "strip" ~ "Strip",
+                design_type == "str" ~ "Strip",
+                design_type == "rstr" ~ "Randomized Strip",
                 design_type == "rb" ~ "Randomized Block",
                 design_type == "jcls" ~ "Jump-conscious Latin Square",
                 design_type == "ejca" ~ "Extra Jump-conscious Alternate",

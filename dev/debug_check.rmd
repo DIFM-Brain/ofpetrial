@@ -3,7 +3,6 @@
 ## Regenerate documentations reflecting the changes and apply `load_all()`
 
 ```{r}
-#---  ---#
 devtools::document()
 devtools::load_all()
 ```
