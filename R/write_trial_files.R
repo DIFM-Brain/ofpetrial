@@ -4,6 +4,7 @@
 #'
 #' @param td (tibble) a tibble of a trial design created by applying assign_rate() to experimental plots made by make_exp_plots().
 #' @param folder_path (character) path to the folder in which the files will be saved
+#' @param ext (character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by st_write()
 #' @param zip (logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.
 #' @param zip_name (character) name of the zip file created when zip = TRUE.
 #' @returns nothing
@@ -19,7 +20,7 @@
 #'   zip = TRUE
 #' )
 #' }
-write_trial_files <- function(td, folder_path = NA, zip = FALSE, zip_name = NA) {
+write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zip_name = NA) {
   # write_trial_files(td, folder_path = here::here("test"), zip = TRUE)
   # folder_path <- here::here(getwd(), "test")
   folder_path <- ifelse(is.na(folder_path), getwd(), folder_path)
@@ -34,7 +35,7 @@ write_trial_files <- function(td, folder_path = NA, zip = FALSE, zip_name = NA) 
   purrr::walk2(
     input_name_ls,
     trial_design_ls,
-    \(input_name, trial_design) write_td(input_name, trial_design, folder_path)
+    \(input_name, trial_design) write_td(input_name, trial_design, folder_path, ext)
   )
 
   #++++++++++++++++++++++++++++++++++++
@@ -51,7 +52,7 @@ write_trial_files <- function(td, folder_path = NA, zip = FALSE, zip_name = NA) 
   purrr::walk2(
     input_name_ls,
     ab_lines_ls,
-    \(input_name, ab_lines) write_ap_abline(input_name, abline_type, ab_lines, folder_path)
+    \(input_name, ab_lines) write_ap_abline(input_name, abline_type, ab_lines, folder_path, ext)
   )
 
   # st_read(here::here("test", "ab-line-NH3.shp")) %>% plot()
@@ -61,14 +62,14 @@ write_trial_files <- function(td, folder_path = NA, zip = FALSE, zip_name = NA) 
   #+++++++++++++++++++++++++++++++++++
   #* Note: harvest ab-lines are identical if two-input case
 
-  message("Writing the harvester ab-line as a shape file. \n")
+  message(paste0("Writing the harvester ab-line as .", ext, " file. \n"))
+
+  dsn = file.path(folder_path, paste0("ab-line-harvester", ".", ext))
+  unlink(dsn)
+
   sf::st_write(
     td$harvest_ab_lines[[1]] %>% sf::st_transform(4326),
-    dsn = folder_path,
-    layer = "harvester-ab-line",
-    driver = "ESRI Shapefile",
-    append = FALSE,
-    delete_layer = TRUE
+    dsn = dsn
   )
 
   # st_read(here::here("test", "harvester-ab-line.shp")) %>% plot()
@@ -104,29 +105,32 @@ write_trial_files <- function(td, folder_path = NA, zip = FALSE, zip_name = NA) 
   }
 }
 
+
 # !===========================================================
 # ! Helper function
 # !===========================================================
-write_td <- function(input_name, trial_design, folder_path) {
-  message("Writing the trial design as shape files. \n")
+write_td <- function(input_name, trial_design, folder_path, ext) {
+  message(paste0("Writing the trial design as .", ext, " files. \n"))
+
+  dsn = file.path(folder_path, paste0("trial-design-", input_name, ".", ext))
+  unlink(dsn)
+
   sf::st_write(
     trial_design %>% sf::st_transform(4326),
-    dsn = folder_path,
-    layer = paste0("trial-design-", input_name),
-    driver = "ESRI Shapefile",
-    append = FALSE,
-    delete_layer = TRUE
+    dsn = dsn
   )
 }
 
-write_ap_abline <- function(input_name, abline_type, ab_lines, folder_path) {
-  message("Writing the ab-lines as shape files. \n")
+write_ap_abline <- function(input_name, abline_type, ab_lines, folder_path, ext) {
+  message(paste0("Writing the ab-lines as .", ext," files. \n"))
+
+  dsn = file.path(folder_path, paste0("ab-line-", input_name, ".", ext))
+  unlink(dsn)
+
+  # try this and change message
   sf::st_write(
     ab_lines %>% sf::st_transform(4326),
-    dsn = folder_path,
-    layer = paste0("ab-line-", input_name),
-    driver = "ESRI Shapefile",
-    append = FALSE,
-    delete_layer = TRUE
+    dsn = dsn
   )
 }
+
