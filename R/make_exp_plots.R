@@ -153,6 +153,7 @@ make_exp_plots <- function(input_plot_info,
   # base_ab_lines_data <- trial_data_first$base_ab_lines_data[[1]]
   # abline_type <- "free"
   # plot_width <- trial_data_first$plot_width[[1]]
+  # field <- field_sf
   # machine_width <- trial_data_first$machine_width[[1]]
   # harvester_width <- trial_data_first$harvester_width[[1]]
   # section_num <- trial_data_first$section_num[[1]]
@@ -363,13 +364,13 @@ make_exp_plots <- function(input_plot_info,
     # experiment_plots_dissolved <- trial_data_eh$experiment_plots_dissolved
     # trial_data_eh$headland
     dplyr::mutate(headland = list(
-      st_difference(field_sf, experiment_plots_dissolved) %>%
+      suppressWarnings(st_difference(field_sf, experiment_plots_dissolved)) %>%
         sf::st_as_sf() %>%
         dplyr::rename(., geometry = attr(., "sf_column")) %>%
         dplyr::select(geometry)
     ))
 
-  trial_data_eh$field_sf <- field_sf
+  trial_data_eh$field_sf <- list(field_sf)
 
   trial_data_return <-
     dplyr::select(
@@ -413,11 +414,11 @@ make_trial_plots_by_input <- function(field,
                                       max_plot_length,
                                       second_input = FALSE) {
   #--- conversion ---#
-  # plot_width <- conv_unit(plot_width, "ft", "m")
-  # machine_width <- conv_unit(machine_width, "ft", "m")
-  # harvester_width <- conv_unit(harvester_width, "ft", "m")
-  # headland_length <- conv_unit(headland_length, "ft", "m")
-  # side_length <- conv_unit(side_length, "ft", "m")
+  # plot_width <- measurements::conv_unit(plot_width, "ft", "m")
+  # machine_width <- measurements::conv_unit(machine_width, "ft", "m")
+  # harvester_width <- measurements::conv_unit(harvester_width, "ft", "m")
+  # headland_length <- measurements::conv_unit(headland_length, "ft", "m")
+  # side_length <- measurements::conv_unit(side_length, "ft", "m")
 
   #--- ab-line tilted by harvester angle ---#
   plot_heading <- base_ab_lines_data$plot_heading
@@ -442,6 +443,8 @@ make_trial_plots_by_input <- function(field,
   #* only the angle of plot is used from plot_heading
   strips <- create_strips(field, plot_heading, plot_width, radius)
 
+  # ggplot(filter(strips, group == 1)) +
+  #   geom_sf()
   # ggplot() +
   #   geom_sf(data = strips, aes(fill = group)) +
   #   geom_sf(data = field, col = "black", fill = NA) +
@@ -576,6 +579,19 @@ make_trial_plots_by_input <- function(field,
   #--- this function is created to just suppress warnings from st_intersection ---#
   st_intersection_q <- purrr::quietly(sf::st_intersection)
 
+  # ggplot(strips_shifted) +
+  #   geom_sf(aes(fill = factor(group))) +
+  #   geom_sf(data = dplyr::filter(strips_shifted, group == 30), fill = "red") +
+  #   geom_sf(data = field)
+
+  # ggplot(strips) +
+  #   geom_sf(aes(fill = factor(group))) +
+  #   geom_sf(data = dplyr::filter(strips, group == 30), fill = "red") +
+  #   geom_sf(data = field)
+
+  # ggplot(int_lines) +
+  #   geom_sf(aes(fill = factor(group)))
+
   int_lines <-
     field %>%
     #--- create an inner buffer ---#
@@ -615,13 +631,19 @@ make_trial_plots_by_input <- function(field,
         dplyr::mutate(poly_id = poly_id) %>%
         dplyr::mutate(line_id = seq_len(nrow(.)))
     )) %>%
-    dplyr::filter(length(int_line) != 0) %>%
+    dplyr::filter(nrow(int_line) != 0) %>%
     purrr::pluck("int_line") %>%
     purrr::reduce(rbind)
 
   # ggplot() +
   #   geom_sf(data = field_sf) +
   #   geom_sf(data = int_lines)
+
+  # ggplot() +
+  #   geom_sf(data = final_exp_plots) +
+  #   geom_sf(data = filter(final_exp_plots, poly_line == "1_2"), fill = "red")
+
+  # tot_plot_length <- final_exp_plots$tot_plot_length[[1]]
 
   final_exp_plots <-
     int_lines %>%
@@ -645,7 +667,10 @@ make_trial_plots_by_input <- function(field,
         max_plot_length
       )
     )) %>%
+    #--- remove plot with null plot data ---#
+    # this happens when the total strip length is too short relative to the min_plot_length
     dplyr::filter(!is.null(plot_data)) %>%
+    #--- create plots for each strip ---#
     dplyr::mutate(plots = list(
       create_plots_in_strip(
         plot_data,
@@ -659,8 +684,17 @@ make_trial_plots_by_input <- function(field,
     )) %>%
     purrr::pluck("plots") %>%
     purrr::reduce(rbind) %>%
-    dplyr::rename(strip_id = group) %>%
-    dplyr::mutate(strip_id = strip_id - min(strip_id) + 1) %>%
+    left_join(
+      ., 
+      data.table(
+        group = unique(.$group)
+      ) %>%
+      .[order(group), ] %>%
+      .[, strip_id := 1:.N]
+      ,
+      by = "group"
+    ) %>%
+    dplyr::select(- group) %>%
     sf::st_set_crs(sf::st_crs(field))
 
   # ggplot() +

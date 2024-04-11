@@ -12,8 +12,8 @@
 #' @import dplyr
 #' @import sf
 #' @import stringr
-#' @import measurements
 #' @import tmap
+#' @import measurements
 #' @import english
 #' @import geometry
 #' @import RColorBrewer
@@ -41,7 +41,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
     mutate(num_harv_pass_in_plot = plot_width / harvester_width) %>%
     mutate(rate_number = get_rate_number(trial_design)) %>%
     mutate(rates = list(get_trial_rates(trial_design))) %>%
-    mutate(machines_in_plot = plot_width/machine_width) %>%
+    mutate(machines_in_plot = plot_width / machine_width) %>%
     mutate(headland_size = if (unit_system == "metric") {
       headland_length
     } else {
@@ -52,39 +52,42 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
     } else {
       conv_unit(side_length, "m", "feet")
     }) %>%
-    mutate(rate_data = list(data.table(tgt_rate_original,
-                                       tgt_rate_equiv,
-                                       total_equiv) %>%
-                              rowwise() %>%
-                              mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | " )) %>%
-                              dplyr::rename("rate" = "tgt_rate_original"))) %>%
+    mutate(rate_data = list(data.table(
+      tgt_rate_original,
+      tgt_rate_equiv,
+      total_equiv
+    ) %>%
+      rowwise() %>%
+      mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | ")) %>%
+      dplyr::rename("rate" = "tgt_rate_original"))) %>%
     mutate(map_design = list(
       tm_shape(trial_design %>%
-                 merge(rate_data, by = "rate") %>%
-                 mutate(all_units = as.factor(all_units))) +
+        merge(rate_data, by = "rate") %>%
+        mutate(all_units = as.factor(all_units))) +
         tm_polygons(
           col = "all_units",
-          title = if(input_name == "seed"){
-            if(unit_system == "metric"){
+          title = if (input_name == "seed") {
+            if (unit_system == "metric") {
               "Seeding Rate (ha)"
-              }else{
+            } else {
               "Seeding Rate (ac)"
-                }
-            }else if(include_base_rate == FALSE & input_name != "seed"){
-              if(unit_system == "metric"){
-                paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
-              }else{
-                paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
-              }
-            }else{
-              if(unit_system == "metric"){
-                paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
-              }else{
-                paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
-              }
-            },
+            }
+          } else if (include_base_rate == FALSE & input_name != "seed") {
+            if (unit_system == "metric") {
+              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
+            } else {
+              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
+            }
+          } else {
+            if (unit_system == "metric") {
+              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
+            } else {
+              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
+            }
+          },
           palette = ifelse(input_name == "seed", "Greens", "Greys")
-        ))) %>%
+        )
+    )) %>%
     mutate(trial_design = list(trial_design %>%
       mutate(area = as.numeric(st_area(.))) %>%
       mutate(type = case_when(
@@ -100,7 +103,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
         )
     ))
 
-  plots = get_plots(all_trial_info)
+  plots <- get_plots(all_trial_info)
 
   if (nrow(td) == 1) {
     machine_table <- data.table(
@@ -115,7 +118,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       mutate(machine_id = row_number()) %>%
       rowwise() %>%
       mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
-      mutate(sections_used = c(1, (1/all_trial_info$machines_in_plot))) %>%
+      mutate(sections_used = c(1, (1 / all_trial_info$machines_in_plot))) %>%
       mutate(trial_plot = list(plots)) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
@@ -127,7 +130,6 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
-
   } else {
     machine_table <- data.table(
       width = c(td$harvester_width[1], td$machine_width),
@@ -136,7 +138,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       ab_line = list(td$harvest_ab_lines[[1]][1, ], td$ab_lines[[1]], td$ab_lines[[2]])
     ) %>%
       mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
-      mutate(sections_used = c(1, (1/all_trial_info$machines_in_plot))) %>%
+      mutate(sections_used = c(1, (1 / all_trial_info$machines_in_plot))) %>%
       mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("planter", "applicator", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
@@ -263,31 +265,31 @@ text_rate_number <- function(all_trial_info) {
 }
 
 text_base_rate <- function(all_trial_info, unit_system) {
-  if (nrow(all_trial_info) == 1){
-    if (all_trial_info$include_base_rate == TRUE){
-      if(unit_system == "metric"){
+  if (nrow(all_trial_info) == 1) {
+    if (all_trial_info$include_base_rate == TRUE) {
+      if (unit_system == "metric") {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv, " kilograms of ", all_trial_info$input_type, " equivalent.")
-      }else{
+      } else {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv, " pounds of ", input_type, " equivalent.")
       }
     }
-  }else{
-    if (all_trial_info$include_base_rate[[1]] == TRUE & all_trial_info$include_base_rate[[2]] != TRUE){
-      if(unit_system == "metric"){
+  } else {
+    if (all_trial_info$include_base_rate[[1]] == TRUE & all_trial_info$include_base_rate[[2]] != TRUE) {
+      if (unit_system == "metric") {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " kilograms of ", all_trial_info$input_type[[1]], " equivalent.")
-      }else{
+      } else {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent.")
       }
-    }else if(all_trial_info$include_base_rate[[2]] == TRUE & all_trial_info$include_base_rate[[1]] != TRUE){
-      if(unit_system == "metric"){
+    } else if (all_trial_info$include_base_rate[[2]] == TRUE & all_trial_info$include_base_rate[[1]] != TRUE) {
+      if (unit_system == "metric") {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[2]], " kilograms of ", all_trial_info$input_type[[2]], " equivalent.")
-      }else{
+      } else {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[2]], " pounds of ", all_trial_info$input_type[[2]], " equivalent.")
       }
-    }else{
-      if(unit_system == "metric"){
+    } else {
+      if (unit_system == "metric") {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " kilograms of ", all_trial_info$input_type[[1]], " equivalent, and ", all_trial_info$base_rate_equiv[[2]], " kilograms of ", all_trial_info$input_type[[2]], " equivalent.")
-      }else{
+      } else {
         paste0("In addition, there was a base application of ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent, and ", all_trial_info$base_rate_equiv[[1]], " pounds of ", all_trial_info$input_type[[1]], " equivalent.")
       }
     }
@@ -415,23 +417,27 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
 }
 
 text_sections_used <- function(index, unit_system) {
-  if(machine_table$sections_used[[index]] > 1){
-    if(unit_system == "metric"){
-      paste0("Although the ", machine_table$machine_type[[index]], " is ",  machine_table$width[[index]],
-             " meters wide, the plots are ",
-             all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
-             " meters wide, using ",
-             as.character(english(machine_table$sections_used[[index]])),
-             " sections of the machine in the trial plots.")
-    }else{
-      paste0("Although the ", machine_table$machine_type[[index]], " is ",  conv_unit(machine_table$width[[index]], "m", "ft"),
-             " feet wide, the plots are ",
-             all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
-             " feet wide, using ",
-             as.character(english(machine_table$sections_used[[index]])),
-             " sections of the machine in the trial plots.")
+  if (machine_table$sections_used[[index]] > 1) {
+    if (unit_system == "metric") {
+      paste0(
+        "Although the ", machine_table$machine_type[[index]], " is ", machine_table$width[[index]],
+        " meters wide, the plots are ",
+        all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
+        " meters wide, using ",
+        as.character(english(machine_table$sections_used[[index]])),
+        " sections of the machine in the trial plots."
+      )
+    } else {
+      paste0(
+        "Although the ", machine_table$machine_type[[index]], " is ", conv_unit(machine_table$width[[index]], "m", "ft"),
+        " feet wide, the plots are ",
+        all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
+        " feet wide, using ",
+        as.character(english(machine_table$sections_used[[index]])),
+        " sections of the machine in the trial plots."
+      )
     }
-    }
+  }
 }
 
 text_plot_width <- function(all_trial_info, unit_system) {
@@ -577,25 +583,23 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
 }
 
 get_input_type <- function(input) {
-    match <- jsonlite::fromJSON(
-      system.file("extdata", "input_type_table.json", package = "ofpetrial"),
-      flatten = TRUE
-    ) %>%
+  match <- jsonlite::fromJSON(
+    system.file("extdata", "input_type_table.json", package = "ofpetrial"),
+    flatten = TRUE
+  ) %>%
     as.data.frame() %>%
     filter(input_name == input) %>%
-    pull(input_type)
+    dplyr::pull(input_type)
 
-    if(nrow(match == 0)){
-      match = input
-    }
-
-
+  if (nrow(match == 0)) {
+    match <- input
   }
+}
 
 get_field_size <- function(trial_design, land_unit) {
   trial_design %>%
     mutate(area = as.numeric(st_area(.))) %>%
-    pull(area) %>%
+    dplyr::pull(area) %>%
     sum(.) %>%
     conv_unit(., "m2", land_unit) %>%
     round(.)
@@ -610,21 +614,21 @@ get_plot_number <- function(trial_design) {
 get_plot_length <- function(trial_design, plot_width) {
   trial_design %>%
     mutate(area = as.numeric(st_area(.)) / plot_width) %>%
-    pull(area) %>%
+    dplyr::pull(area) %>%
     quantile(., c(0.1, 0.9)) %>%
     round(.)
 }
 
 get_rate_number <- function(trial_design) {
   trial_design %>%
-    pull(rate) %>%
+    dplyr::pull(rate) %>%
     unique(.) %>%
     length(.)
 }
 
 get_trial_rates <- function(trial_design) {
   trial_design %>%
-    pull(rate) %>%
+    dplyr::pull(rate) %>%
     unique(.) %>%
     sort(.)
 }
@@ -709,33 +713,36 @@ make_machine_polygon <- function(width, height, center, move_vec, crs) {
 }
 
 make_section_polygon <- function(width, machine_poly, sections_used, move_vec, crs) {
-  if(sections_used > 1){
+  if (sections_used > 1) {
     perp_move_vec <- rotate_vec(move_vec, 90)
-    width_section <- width/sections_used
+    width_section <- width / sections_used
 
     polys <- list()
     for (i in 1:sections_used) {
       coords <- st_coordinates(machine_poly)[c(2, 3, 11, 12, 2), 1:2]
 
-      first_top <- coords[2,] + perp_move_vec * width_section * (i - 1)
-      first_bottom <- coords[1,] + perp_move_vec * width_section * (i - 1)
-      next_top <- coords[2,] + perp_move_vec * width_section * i
-      next_bottom <- coords[1,] + perp_move_vec * width_section * i
+      first_top <- coords[2, ] + perp_move_vec * width_section * (i - 1)
+      first_bottom <- coords[1, ] + perp_move_vec * width_section * (i - 1)
+      next_top <- coords[2, ] + perp_move_vec * width_section * i
+      next_bottom <- coords[1, ] + perp_move_vec * width_section * i
 
       polys[[i]] <- list(
-        rbind(first_bottom,
-              first_top,
-              next_top,
-              next_bottom,
-              first_bottom)) %>%
+        rbind(
+          first_bottom,
+          first_top,
+          next_top,
+          next_bottom,
+          first_bottom
+        )
+      ) %>%
         st_polygon() %>%
         st_sfc(crs = crs) %>%
         st_sf()
     }
     polygon_sf <- do.call(rbind, polys)
-    }else{
-      polygon_sf <- NULL
-    }
+  } else {
+    polygon_sf <- NULL
+  }
 
   return(polygon_sf)
 }
@@ -744,66 +751,69 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # move_vec <- machine_table$move_vec[[1]]
 # input <- machine_table$input_name[[1]]
 # unit_system <- "imperial"
-make_plot_width_line <- function(trial_plot, move_vec, input, unit_system){
-  if(is.na(input) == FALSE){
+make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
+  if (is.na(input) == FALSE) {
     plot_width <- all_trial_info %>%
       filter(input_name == input) %>%
-      pull(plot_width)
+      dplyr::pull(plot_width)
 
     trial_plot <- trial_plot %>%
       filter(input_name == input) %>%
-      .[1,]
+      .[1, ]
 
     coords <- st_coordinates(trial_plot)[, 1:2]
 
     perp_move_vec <- rotate_vec(move_vec, 90)
     opp_perp_vec <- rotate_vec(perp_move_vec, 180)
 
-    #find NW corner
+    # find NW corner
     point1 <- coords %>%
       as.data.frame() %>%
       filter(X < mean(X)) %>%
       filter(Y > mean(Y)) %>%
-      as.matrix(.) - plot_width*move_vec
+      as.matrix(.) - plot_width * move_vec
 
-    point2 <- point1 + plot_width*perp_move_vec %>%
+    point2 <- point1 + plot_width * perp_move_vec %>%
       as.matrix()
 
-    arrow_ll <- point1 - 1*rotate_vec(opp_perp_vec, 30)
-    arrow_lr <- point1 - 1*rotate_vec(opp_perp_vec, -30)
+    arrow_ll <- point1 - 1 * rotate_vec(opp_perp_vec, 30)
+    arrow_lr <- point1 - 1 * rotate_vec(opp_perp_vec, -30)
 
-    arrow_rl <- point2 - 1*rotate_vec(perp_move_vec, 30)
-    arrow_rr <- point2 - 1*rotate_vec(perp_move_vec, -30)
+    arrow_rl <- point2 - 1 * rotate_vec(perp_move_vec, 30)
+    arrow_rr <- point2 - 1 * rotate_vec(perp_move_vec, -30)
 
-    new_line <- st_linestring(rbind(arrow_rl,
-                                    point2,
-                                    arrow_rr,
-                                    point2,
-                                    point1,
-                                    arrow_ll,
-                                    point1,
-                                    arrow_lr
+    new_line <- st_linestring(rbind(
+      arrow_rl,
+      point2,
+      arrow_rr,
+      point2,
+      point1,
+      arrow_ll,
+      point1,
+      arrow_lr
     )) %>%
       st_sfc(crs = st_crs(trial_plot)) %>%
       st_sf()
 
-    label_line = rbind((point1 - 3.2*move_vec), (point2 - 3.2*move_vec)) %>%
+    label_line <- rbind((point1 - 3.2 * move_vec), (point2 - 3.2 * move_vec)) %>%
       st_linestring() %>%
       st_sfc(crs = st_crs(trial_plot)) %>%
       st_sf() %>%
-      mutate(label = ifelse(unit_system == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet")))
+      dplyr::mutate(label = ifelse(unit_system == "metric", paste0(plot_width, " meters"), paste0(conv_unit(plot_width, "m", "ft"), " feet")))
 
     tm_shape(new_line, bbox = st_bbox(trial_plot)) +
-      tm_lines(col = "black" ,
-               lwd = 2) +
+      tm_lines(
+        col = "black",
+        lwd = 2
+      ) +
       tm_shape(label_line, bbox = st_bbox(trial_plot)) +
       tm_text("label",
-              col = "red",
-              size = 1,
-              fontface = "bold",
-              along.lines = T)
-
-  }else{
+        col = "red",
+        size = 1,
+        fontface = "bold",
+        along.lines = T
+      )
+  } else {
     NULL
   }
 }
@@ -811,7 +821,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system){
 get_move_vec <- function(ab_line) {
   lags <- st_coordinates(ab_line) %>%
     data.frame() %>%
-    mutate(
+    dplyr::mutate(
       dx = X - lag(X, n = 1),
       dy = Y - lag(Y, n = 1)
     )
@@ -854,24 +864,23 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
   return(cent)
 }
 
-get_plots <- function(all_trial_info){
-  if (length(all_trial_info$plot_width %>% unique()) == 1){
+get_plots <- function(all_trial_info) {
+  if (length(all_trial_info$plot_width %>% unique()) == 1) {
     design <- all_trial_info$trial_design[[1]] %>%
-      mutate(plot_id = row_number()) %>%
+      dplyr::mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
     first_plot <- all_trial_info$trial_design[[1]][1, ] %>%
-      mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
-               pull(plot_id) %>%
-               min(.))
+      dplyr::mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
+        dplyr::pull(plot_id) %>%
+        min(.))
 
     plots <- design %>%
       filter(plot_id == first_plot$plot_id) %>%
       st_transform_utm(.) %>%
-      mutate(input_name = input_name) %>%
+      dplyr::mutate(input_name = input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
-
-  }else{
+  } else {
     max_input <- all_trial_info %>%
       filter(plot_width == max(all_trial_info$plot_width))
 
@@ -879,30 +888,29 @@ get_plots <- function(all_trial_info){
       filter(plot_width != max(all_trial_info$plot_width))
 
     design1 <- max_input$trial_design[[1]] %>%
-      mutate(plot_id = row_number()) %>%
+      dplyr::mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
     design2 <- min_input$trial_design[[1]] %>%
-      mutate(plot_id = row_number()) %>%
+      dplyr::mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
     plot1 <- design1 %>%
       filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
-               pull(plot_id) %>%
-               min(.)) %>%
+        dplyr::pull(plot_id) %>%
+        min(.)) %>%
       st_transform_utm(.) %>%
-      mutate(input_name = max_input$input_name) %>%
+      dplyr::mutate(input_name = max_input$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
 
-    plot2 = st_intersection(st_transform_utm(design2), plot1) %>%
-      mutate(area = st_area(.)) %>%
+    plot2 <- st_intersection(st_transform_utm(design2), plot1) %>%
+      dplyr::mutate(area = st_area(.)) %>%
       filter(area >= median(area)) %>%
       st_transform_utm(.) %>%
-      mutate(input_name = min_input$input_name) %>%
+      dplyr::mutate(input_name = min_input$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
 
-    plots = rbind(plot1, plot2)
-
+    plots <- rbind(plot1, plot2)
   }
 
   return(plots)
@@ -932,23 +940,25 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
     } else {
       "#E69F00"
     }, lwd = 3) +
-    tm_fill(col = if (machine_type == "planter") {
-      "lawngreen"
-    } else if (machine_type == "applicator") {
-      "#0072B2"
-    } else {
-      "#E69F00"
-    },
-    alpha = 1)
+    tm_fill(
+      col = if (machine_type == "planter") {
+        "lawngreen"
+      } else if (machine_type == "applicator") {
+        "#0072B2"
+      } else {
+        "#E69F00"
+      },
+      alpha = 1
+    )
 }
 
 # section_poly <- polygon_sf
 # trial_plot <- machine_table$trial_plot[[1]]
 tmap_sections <- function(section_poly, trial_plot) {
-  if(is.null(section_poly) == FALSE){
+  if (is.null(section_poly) == FALSE) {
     tm_shape(section_poly, bbox = st_bbox(trial_plot)) +
       tm_borders(col = "grey18", lwd = 2, lty = "dotted")
-  }else{
+  } else {
     ""
   }
 }
@@ -956,31 +966,28 @@ tmap_sections <- function(section_poly, trial_plot) {
 # trial_plot <- machine_table$trial_plot[[1]]
 tmap_plot_all <- function(trial_plot) {
   if (trial_plot %>%
-    mutate(area = as.numeric(st_area(.))) %>%
-    pull(area) %>%
+    dplyr::mutate(area = as.numeric(st_area(.))) %>%
+    dplyr::pull(area) %>%
     unique(.) %>%
-    length() == 1){
-
+    length() == 1) {
     map <- tm_shape(trial_plot, bbox = st_bbox(trial_plot)) +
       tm_borders(col = "black")
-  }else{
+  } else {
     plots <- trial_plot %>%
-        mutate(area = as.numeric(st_area(.))) %>%
-        arrange(desc(area))
+      dplyr::mutate(area = as.numeric(st_area(.))) %>%
+      arrange(desc(area))
 
     map_small_plots <- list()
     for (i in 2:nrow(plots)) {
       map_small_plots[[i]] <- paste0("tm_shape(plots[", i, ",], bbox = st_bbox(plots)) +
         tm_borders(col = \"gray\", lwd = 2, lty = \"dashed\")")
-
     }
 
 
-    map <- tm_shape(plots[1,], bbox = st_bbox(plots)) +
+    map <- tm_shape(plots[1, ], bbox = st_bbox(plots)) +
       tm_borders(col = "black", lwd = 5) +
       tm_fill(col = "white") +
       eval(parse(text = paste0(map_small_plots, collapse = " + ")))
-
   }
 
   return(map)
@@ -989,20 +996,20 @@ tmap_plot_all <- function(trial_plot) {
 # trial_plot <- machine_table$trial_plot
 # input <- machine_table$input_name[[1]]
 tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
-  if(is.na(input) == TRUE){
-    map = NA
-  }else{
-    n_rates = all_trial_info %>%
+  if (is.na(input) == TRUE) {
+    map <- NA
+  } else {
+    n_rates <- all_trial_info %>%
       filter(input_name == input) %>%
-      pull(rates) %>%
+      dplyr::pull(rates) %>%
       unlist() %>%
       length()
-    my_palette = brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
+    my_palette <- brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
 
     plots <- trial_plot %>%
       filter(input_name == input)
 
-    map <- tm_shape(plots %>% mutate(rate = as.factor(rate)), bbox = st_bbox(plots)) +
+    map <- tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)), bbox = st_bbox(plots)) +
       tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", str_to_title(input), " Rate"))
   }
 
@@ -1012,12 +1019,11 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
 # trial_plot <- machine_table$trial_plot[[1]]
 tmap_plot_legend <- function(trial_plot) {
   if (trial_plot %>%
-      mutate(area = as.numeric(st_area(.))) %>%
-      pull(area) %>%
-      unique(.) %>%
-      length() == 1){
-
-    legend = tm_add_legend(
+    dplyr::mutate(area = as.numeric(st_area(.))) %>%
+    dplyr::pull(area) %>%
+    unique(.) %>%
+    length() == 1) {
+    legend <- tm_add_legend(
       title = "Trial Plots",
       type = "symbol",
       labels = c("Trial Plot"),
@@ -1025,14 +1031,14 @@ tmap_plot_legend <- function(trial_plot) {
       shape = 0,
       size = 2
     )
-  }else{
+  } else {
     plots <- trial_plot %>%
-      mutate(area = as.numeric(st_area(.))) %>%
+      dplyr::mutate(area = as.numeric(st_area(.))) %>%
       arrange(desc(area)) %>%
-      pull(input_name) %>%
+      dplyr::pull(input_name) %>%
       unique()
 
-    legend = tm_add_legend(
+    legend <- tm_add_legend(
       title = "Trial Plots",
       type = "symbol",
       labels = c(paste0(str_to_title(plots[1]), " Trial Plot"), paste0(str_to_title(plots[2]), " Trial Plot")),
@@ -1047,7 +1053,7 @@ tmap_plot_legend <- function(trial_plot) {
 tmap_label <- function(center, machine_type, trial_plot) {
   labels <- list()
   for (i in 1:nrow(center)) {
-    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.8)")
+    labels[[i]] <- paste0("tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% dplyr::mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.8)")
   }
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 

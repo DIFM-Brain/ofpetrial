@@ -48,8 +48,8 @@ seed_plot_info <-
 n_plot_info <-
   make_input_plot_data(
     input_name = "NH3",
-    plot_width = measurements::conv_unit(60, "ft", "m"),
-    machine_width = measurements::conv_unit(60, "ft", "m"),
+    plot_width = conv_unit(60, "ft", "m"),
+    machine_width = conv_unit(60, "ft", "m"),
     section_num = 1
   )
 
@@ -117,8 +117,8 @@ trial_design <- td
 n_plot_info <-
   make_input_plot_data(
     input_name = "NH3",
-    plot_width = measurements::conv_unit(60, "ft", "m"),
-    machine_width = measurements::conv_unit(30, "ft", "m"),
+    plot_width = conv_unit(60, "ft", "m"),
+    machine_width = conv_unit(30, "ft", "m"),
     section_num = 1
   )
 

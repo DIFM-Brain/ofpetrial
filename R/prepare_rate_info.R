@@ -140,6 +140,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
 #' @param base_rate (numeric) amount of input applied
 #' @returns data.frame of base rate information
 #' @import data.table
+#' @import measurements
 #' @export
 #' @examples
 #' base_info <-

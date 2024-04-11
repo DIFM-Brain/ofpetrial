@@ -36,7 +36,7 @@ st_tilt <- function(data_sf, angle, base_sf = FALSE, merge = TRUE) {
     wf_bbox <- sf::st_bbox(data_sf) %>% sf::st_as_sfc()
   }
 
-  base_point <- sf::st_centroid(wf_bbox)
+  base_point <- st_centroid_quietly(wf_bbox)
   data_geom <- sf::st_geometry(data_sf)
 
   data_tilted <- ((data_geom - base_point) * rot(angle / 180 * pi) + base_point) %>%
@@ -74,7 +74,7 @@ st_extend_line <- function(line, multiplier) {
 #+ Create a line that goes through the middle of a strip
 #++++++++++++++++++++++++++++++++++++
 get_through_line <- function(geometry, radius, ab_xy_nml) {
-  centroid <- suppressWarnings(sf::st_coordinates(sf::st_centroid(geometry)))
+  centroid <- suppressWarnings(sf::st_coordinates(st_centroid_quietly(geometry)))
   end_point <- centroid + radius * ab_xy_nml
   start_point <- centroid - radius * ab_xy_nml
   return_line <- sf::st_linestring(rbind(start_point, end_point)) %>%
@@ -132,8 +132,8 @@ make_heading_from_past_asapplied <- function(past_aa_input, field) {
       .[, mean(slope)]
   }
 
-  ab_start <- sf::st_geometry(sf::st_centroid(
-    past_aa_input[which.min(st_distance(past_aa_input, sf::st_geometry(sf::st_centroid(field)))), ]
+  ab_start <- sf::st_geometry(st_centroid_quietly(
+    past_aa_input[which.min(st_distance(past_aa_input, sf::st_geometry(st_centroid_quietly(field)))), ]
   ))[[1]]
   ab_end <- ab_start + c(1, dominant_slope)
 
@@ -188,15 +188,15 @@ get_angle_lines <- function(line_1, line_2) {
 #+ Create strips
 #++++++++++++++++++++++++++++++++++++
 create_strips <- function(field, plot_heading, plot_width, radius) {
-  circle <- sf::st_buffer(sf::st_centroid(field), radius)
+  circle <- sf::st_buffer(st_centroid_quietly(field), radius)
 
   strips <-
     sf::st_make_grid(circle, cellsize = c(plot_width, radius * 2 + 50)) %>%
     sf::st_as_sf() %>%
-    cbind(., sf::st_coordinates(sf::st_centroid(.))) %>%
+    cbind(., sf::st_coordinates(st_centroid_quietly(.))) %>%
     data.table() %>%
     .[order(X), ] %>%
-    .[, group := .GRP, by = X] %>%
+    .[, group := .GRP, by = .(X, Y)] %>%
     setnames("x", "geometry") %>%
     sf::st_as_sf()
 
@@ -213,7 +213,7 @@ create_strips <- function(field, plot_heading, plot_width, radius) {
   strips <-
     st_tilt(
       data_sf = strips,
-      angle = get_angle_lines(plot_heading, vertical_line),
+      angle = get_angle_lines(line_1 = plot_heading, line_2 = vertical_line),
       base_sf = circle,
       merge = TRUE
     )
@@ -314,23 +314,21 @@ get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
       )
     return(return_data)
   } else {
-    message("The range of plot length you specified (", min_plot_length, ", ", max_plot_length, ") ", "may be too narrow for this field. Consider expanding the range.")
 
     num_comp_plots <- tot_plot_length %/% min_plot_length
 
-    return_data <-
-      data.table(
-        plot_id = seq_len(num_comp_plots),
-        plot_length = min_plot_length
-      )
-
-    if(num_comp_plots == 0){
-      return_data = NULL
+    if (num_comp_plots == 0) {
+      return_data <- NULL
+    } else {
+      return_data <-
+        data.table(
+          plot_id = seq_len(num_comp_plots),
+          plot_length = min_plot_length
+        )
     }
   }
 
   return(return_data)
-
 }
 
 # get_plot_data <- function(tot_plot_length, min_plot_length, mean_length) {
@@ -418,7 +416,7 @@ create_plots_in_strip <- function(plot_data,
 
   base_point <- sf::st_geometry(new_center_line)[[1]][1, ]
 
-  if(is.null(plot_data) == FALSE){
+  if (is.null(plot_data) == FALSE) {
     return_polygons <-
       plot_data %>%
       .[, plot_start := data.table::shift(plot_length, type = "lag")] %>%
@@ -438,8 +436,8 @@ create_plots_in_strip <- function(plot_data,
       data.table() %>%
       .[, .(plot_id, geometry)] %>%
       sf::st_as_sf()
-  }else{
-    return_polygons = NULL
+  } else {
+    return_polygons <- NULL
   }
 
 
@@ -474,7 +472,7 @@ prepare_ablines <- function(ab_line, field, plot_width) {
   # === if ab-line is outside of the field boundary ===#
   if (nrow(sf::st_as_sf(suppressWarnings(sf::st_intersection(field, ab_line)))) == 0) {
     b <- t(
-      sf::st_coordinates(sf::st_centroid(field)) -
+      sf::st_coordinates(st_centroid_quietly(field)) -
         sf::st_geometry(ab_line)[[1]][1, ]
     )
     a <- cbind(
@@ -600,3 +598,4 @@ make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
 #+ Quiet intersection
 #++++++++++++++++++++++++++++++++++++
 st_intersection_quietly <- purrr::quietly(sf::st_intersection)
+st_centroid_quietly <- suppressMessages((sf::st_centroid))

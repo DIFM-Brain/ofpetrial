@@ -1,4 +1,3 @@
-
 #' Visualize various aspects of a trial design
 #'
 #' Create plots of experiment rates, plot layout, plot_id, strip_id, and block_id, which can be specified by the `type` argument.
@@ -18,7 +17,6 @@
 #' viz(td_two_input, type = "plot_id")
 #'
 viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = FALSE) {
-
   #++++++++++++++++++++++++++++++++++++
   #+ Debug
   #++++++++++++++++++++++++++++++++++++
@@ -62,7 +60,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
             data = trial_design,
             aes(label = block_id),
             size = text_size,
-            fun.geometry = sf::st_centroid
+            fun.geometry = st_centroid_quietly
           ) +
           scale_fill_discrete(name = "Block ID") +
           theme_void() +
@@ -78,7 +76,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
             data = trial_design,
             aes(label = strip_id),
             size = text_size,
-            fun.geometry = sf::st_centroid
+            fun.geometry = st_centroid_quietly
           ) +
           scale_fill_discrete(name = "Strip ID") +
           theme_void() +
@@ -94,7 +92,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
             data = trial_design,
             aes(label = plot_id),
             size = text_size,
-            fun.geometry = sf::st_centroid
+            fun.geometry = st_centroid_quietly
           ) +
           theme_void() +
           ggtitle(paste0("Plot ID of experiment plots for ", input_name))
@@ -196,7 +194,6 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         }
       ))
   } else if (type == "ab_line") {
-
     #--- determine the stack orientation ---#
     line_bbox <-
       td_rows$ab_lines[[1]] %>%
