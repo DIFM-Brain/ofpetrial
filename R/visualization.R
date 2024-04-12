@@ -106,33 +106,24 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         total_equiv
       ) %>%
         rowwise() %>%
-        mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | ")) %>%
+        mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv, total_equiv))), collapse = " | ")) %>%
         dplyr::rename("rate" = "tgt_rate_original"))) %>%
+      dplyr::mutate(rate_cols = list(data.table(
+        tgt_rate_original = unlist(tgt_rate_original),
+        tgt_rate_equiv = unlist(tgt_rate_equiv),
+        total_equiv = unlist(total_equiv)
+      ) %>%
+        data.frame(.) %>%
+        .[colSums(is.na(.)) == 0] %>%
+        colnames(.))) %>%
+      mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, rate_cols, input_name, input_type, unit))) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +
           geom_sf(data = trial_design %>%
             merge(rate_data, by = "rate") %>%
             mutate(all_units = as.factor(all_units)), aes(fill = factor(all_units)), color = "black") +
-          scale_fill_viridis_d(name = if (input_name == "seed") {
-            if (unit_system == "metric") {
-              "Seeding Rate (ha)"
-            } else {
-              "Seeding Rate (ac)"
-            }
-          } else if (include_base_rate == FALSE & input_name != "seed") {
-            if (unit_system == "metric") {
-              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
-            } else {
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ac) \n", "No base application")
-            }
-          } else {
-            if (unit_system == "metric") {
-              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
-            } else {
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ac) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lb/ac)"))
-            }
-          }) +
+          scale_fill_viridis_d(name = figure_title) +
           theme_void() +
           ggtitle(
             paste0(
@@ -238,3 +229,31 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
     gg_td$g_fig[[1]]
   }
 }
+
+get_figure_title <- function(unit_system, include_base_rate, rate_cols, input_name, input_type, unit){
+  `%notin%` <- Negate(`%in%`)
+
+  land_unit = if(unit_system == "metric"){
+    "ha"
+  }else{"ac"}
+
+  converted_unit = if(unit_system == "metric"){
+    "kg"
+  }else{"lb"}
+
+  name = if(include_base_rate == FALSE & "tgt_rate_equiv" %notin% rate_cols){
+    paste0(input_name, " (", unit, "/", land_unit, ") | ", "No base application")
+  } else if (include_base_rate == FALSE & "tgt_rate_equiv" %in% rate_cols) {
+    paste0(input_name, " (", unit, "/", land_unit, ") | ",
+           input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n", "No base application")
+  } else {
+    paste0(input_name, " (", unit, "/ha) | ",
+           input_type, " Equivalent (", converted_unit, "/", land_unit, ") | ",
+           "Total ", input_type, " (", converted_unit, "/", land_unit, ") \n",
+           paste0("Base application: ", base_rate_equiv, " (", converted_unit, "/", land_unit, ")"))
+
+  }
+
+  return(name)
+}
+
