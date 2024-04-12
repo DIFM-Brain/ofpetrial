@@ -324,6 +324,7 @@ cor_case_2
 When analyzing the experiment data and applying statistical methods to estimate yield response functions, field and topographic characteristics are often included in the model to control for their effects, which help isolate the impact of the input on yield. In designing experiments, it would be nice to have the input rates uncorrelated (orthogonal to) with those observed characteristics. The `check_ortho_with_chars()` checks this.
 
 Let's first import an already-design trial design called `td_single_input`.
+
 ```{r}
 data(td_single_input)
 ```

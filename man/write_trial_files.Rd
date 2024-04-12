@@ -4,12 +4,20 @@
 \alias{write_trial_files}
 \title{Write trial design files for field implementation}
 \usage{
-write_trial_files(td, folder_path = NA, zip = FALSE, zip_name = NA)
+write_trial_files(
+  td,
+  folder_path = NA,
+  ext = "shp",
+  zip = FALSE,
+  zip_name = NA
+)
 }
 \arguments{
 \item{td}{(tibble) a tibble of a trial design created by applying assign_rate() to experimental plots made by make_exp_plots().}
 
 \item{folder_path}{(character) path to the folder in which the files will be saved}
+
+\item{ext}{(character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by st_write()}
 
 \item{zip}{(logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.}
 

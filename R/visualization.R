@@ -100,14 +100,16 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
   } else if (type == "rates") {
     gg_td <-
       td_rows %>%
-      dplyr::mutate(rate_data = list(data.table(
-        tgt_rate_original,
-        tgt_rate_equiv,
-        total_equiv
-      ) %>%
-        rowwise() %>%
-        mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv, total_equiv))), collapse = " | ")) %>%
-        dplyr::rename("rate" = "tgt_rate_original"))) %>%
+      dplyr::mutate(rate_data = list(
+        data.table(
+          tgt_rate_original,
+          tgt_rate_equiv,
+          total_equiv
+        ) %>%
+          rowwise() %>%
+          mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv, total_equiv))), collapse = " | ")) %>%
+          dplyr::rename("rate" = "tgt_rate_original")
+      )) %>%
       dplyr::mutate(rate_cols = list(data.table(
         tgt_rate_original = unlist(tgt_rate_original),
         tgt_rate_equiv = unlist(tgt_rate_equiv),
@@ -116,7 +118,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         data.frame(.) %>%
         .[colSums(is.na(.)) == 0] %>%
         colnames(.))) %>%
-      mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, rate_cols, input_name, input_type, unit))) %>%
+      mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +
@@ -230,30 +232,36 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
   }
 }
 
-get_figure_title <- function(unit_system, include_base_rate, rate_cols, input_name, input_type, unit){
+get_figure_title <- function(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit) {
   `%notin%` <- Negate(`%in%`)
 
-  land_unit = if(unit_system == "metric"){
+  land_unit <- if (unit_system == "metric") {
     "ha"
-  }else{"ac"}
+  } else {
+    "ac"
+  }
 
-  converted_unit = if(unit_system == "metric"){
+  converted_unit <- if (unit_system == "metric") {
     "kg"
-  }else{"lb"}
+  } else {
+    "lb"
+  }
 
-  name = if(include_base_rate == FALSE & "tgt_rate_equiv" %notin% rate_cols){
+  name <- if (include_base_rate == FALSE & "tgt_rate_equiv" %notin% rate_cols) {
     paste0(input_name, " (", unit, "/", land_unit, ") | ", "No base application")
   } else if (include_base_rate == FALSE & "tgt_rate_equiv" %in% rate_cols) {
-    paste0(input_name, " (", unit, "/", land_unit, ") | ",
-           input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n", "No base application")
+    paste0(
+      input_name, " (", unit, "/", land_unit, ") | ",
+      input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n", "No base application"
+    )
   } else {
-    paste0(input_name, " (", unit, "/ha) | ",
-           input_type, " Equivalent (", converted_unit, "/", land_unit, ") | ",
-           "Total ", input_type, " (", converted_unit, "/", land_unit, ") \n",
-           paste0("Base application: ", base_rate_equiv, " (", converted_unit, "/", land_unit, ")"))
-
+    paste0(
+      input_name, " (", unit, "/ha) | ",
+      input_type, " Equivalent (", converted_unit, "/", land_unit, ") | ",
+      "Total ", input_type, " (", converted_unit, "/", land_unit, ") \n",
+      paste0("Base application: ", base_rate_equiv, " (", converted_unit, "/", land_unit, ")")
+    )
   }
 
   return(name)
 }
-

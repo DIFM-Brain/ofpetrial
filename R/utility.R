@@ -1,6 +1,3 @@
-
-
-
 # min_rate <- 0
 # max_rate <- 100
 # gc_rate <- 0
@@ -157,42 +154,115 @@ expand_grid_df <- function(data_1, data_2) {
 #++++++++++++++++++++++++++++++++++++
 #+ Permutation
 #++++++++++++++++++++++++++++++++++++
-# This code is borrowed from the combinat package (combinat::permn)
-permn <- function(x, fun = NULL, ...) {
-  if (is.numeric(x) && length(x) == 1 && x > 0 && trunc(x) ==
-    x) {
-    x <- seq(x)
-  }
-  n <- length(x)
-  nofun <- is.null(fun)
-  out <- vector("list", gamma(n + 1))
-  p <- ip <- seqn <- 1:n
-  d <- rep(-1, n)
-  d[1] <- 0
-  m <- n + 1
-  p <- c(m, p, m)
-  i <- 1
-  use <- -c(1, n + 2)
-  while (m != 1) {
-    out[[i]] <- if (nofun) {
-      x[p[use]]
+return_permutations <- function(x) {
+  get_permutations <- function(x) {
+    if (length(x) == 1) {
+      return(x)
     } else {
-      fun(x[p[use]], ...)
+      res <- matrix(nrow = 0, ncol = length(x))
+      for (i in seq_along(x)) {
+        res <- rbind(res, cbind(x[i], Recall(x[-i])))
+      }
     }
-    i <- i + 1
-    m <- n
-    chk <- (p[ip + d + 1] > seqn)
-    m <- max(seqn[!chk])
-    if (m < n) {
-      d[(m + 1):n] <- -d[(m + 1):n]
-    }
-    index1 <- ip[m] + 1
-    index2 <- p[index1] <- p[index1 + d[m]]
-    p[index1 + d[m]] <- m
-    tmp <- ip[index2]
-    ip[index2] <- ip[m]
-    ip[m] <- tmp
+    return(res)
   }
-  out
+  return_list <-
+    get_permutations(x) %>%
+    t() %>%
+    data.frame() %>%
+    as.list() %>%
+    unname()
+  return(return_list)
 }
 
+# #++++++++++++++++++++++++++++++++++++
+# #+ General unit conversion
+# #++++++++++++++++++++++++++++++++++++
+# convert_unit <- function(x, from, to) {
+#   unit <- std <- NULL
+#   if (nrow(subset(.conversions, unit == from, dim)) == 0) {
+#     stop("the 'from' argument is not an acceptable unit.")
+#   }
+#   if (nrow(subset(.conversions, unit == to, dim)) == 0) {
+#     stop("the 'to' argument is not an acceptable unit.")
+#   }
+#   if (subset(.conversions, unit == from, dim) != subset(
+#     .conversions,
+#     unit == to, dim
+#   )) {
+#     stop("these units cannot be converted because they are of different dimensions. Try using conv_dim().")
+#   }
+#   if ((from == "C" | from == "F" | from == "K" | from == "R") &
+#     (to == "C" | to == "F" | to == "K" | to == "R")) {
+#     frzC <- 0.01
+#     frzF <- 32.018
+#     frzK <- 273.16
+#     frzR <- 491.688
+#     boilC <- 99.9839
+#     boilF <- 211.97102
+#     boilK <- 373.1339
+#     boilR <- 671.64102
+#     rangeC <- boilC - frzC
+#     rangeF <- boilF - frzF
+#     rangeK <- boilK - frzK
+#     rangeR <- boilR - frzR
+#     prop <- (x - get(paste("frz", from, sep = ""))) / get(paste("range",
+#       from,
+#       sep = ""
+#     ))
+#     return(prop * get(paste("range", to, sep = "")) + get(paste("frz",
+#       to,
+#       sep = ""
+#     )))
+#   }
+#   if (from %in% c("dec_deg", "deg_dec_min", "deg_min_sec") &
+#     to %in% c("dec_deg", "deg_dec_min", "deg_min_sec")) {
+#     neg <- grepl("^-", x)
+#     x <- gsub("^-", "", x)
+#     NAs <- is.na(x)
+#     x_na_free <- x[!NAs]
+#     if (from == "dec_deg") {
+#       secs <- as.numeric(x_na_free) * 3600
+#     }
+#     if (from == "deg_dec_min") {
+#       secs <- lapply(split(as.numeric(unlist(strsplit(
+#         x_na_free,
+#         " "
+#       ))) * c(3600, 60), f = rep(1:length(x_na_free),
+#         each = 2
+#       )), sum)
+#     }
+#     if (from == "deg_min_sec") {
+#       secs <- lapply(split(as.numeric(unlist(strsplit(
+#         x_na_free,
+#         " "
+#       ))) * c(3600, 60, 1), f = rep(1:length(x_na_free),
+#         each = 3
+#       )), sum)
+#     }
+#     if (to == "dec_deg") {
+#       inter <- as.character(lapply(secs, function(y) y / 3600))
+#     }
+#     if (to == "deg_dec_min") {
+#       inter <- paste(
+#         lapply(secs, function(y) y %/% 3600),
+#         lapply(secs, function(y) y %% 3600 / 60)
+#       )
+#     }
+#     if (to == "deg_min_sec") {
+#       inter <- paste(
+#         lapply(secs, function(y) y %/% 3600),
+#         lapply(secs, function(y) y %% 3600 %/% 60), lapply(
+#           secs,
+#           function(y) y %% 3600 %% 60
+#         )
+#       )
+#     }
+#     x[!NAs] <- inter
+#     x <- paste0(ifelse(neg, "-", ""), x)
+#     x[grepl("NA", x)] <- NA
+#     return(x)
+#   }
+#   value <- x / subset(.conversions, unit == from, std, drop = TRUE)
+#   return(value * subset(.conversions, unit == to, std, drop = TRUE))
+# }

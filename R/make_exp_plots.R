@@ -69,13 +69,15 @@ make_exp_plots <- function(input_plot_info,
     field_sf <-
       boundary_data %>%
       .[-c(1:ncol(.))] %>%
-      make_sf_utm()
+      make_sf_utm() %>%
+      sf::st_as_sf()
   } else if ("character" %in% boundary_class) {
     field_sf <-
       sf::st_read(boundary_data, quiet = TRUE) %>%
       .[-c(1:ncol(.))] %>%
       make_sf_utm() %>%
-      sf::st_combine()
+      sf::st_combine() %>%
+      sf::st_as_sf()
   }
 
   #--- remove linestring if any ---#

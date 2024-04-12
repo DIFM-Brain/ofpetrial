@@ -622,7 +622,7 @@ get_starting_rank_across_strips <- function(num_levels) {
   if (num_levels > 1) {
     return_seq <-
       lapply(
-        combinat::permn(1:num_levels),
+        return_permutations(1:num_levels),
         \(seq){
           score <- sum((seq[1:num_levels] - c(seq[2:num_levels], seq[1]))^2) / num_levels
 
@@ -650,7 +650,7 @@ get_starting_rank_across_strips <- function(num_levels) {
 get_starting_rank_across_strips_ls <- function(num_rates, basic_seq) {
   seq <-
     lapply(
-      combinat::permn(1:num_rates),
+      return_permutations(1:num_rates),
       \(seq) {
         mat_list <-
           lapply(

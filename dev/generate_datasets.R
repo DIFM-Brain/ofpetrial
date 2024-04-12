@@ -153,9 +153,9 @@ object.size(td_two_input)
 
 usethis::use_data(td_two_input, overwrite = TRUE)
 
-#!===========================================================
-#! Trial design for a curved field
-#!===========================================================
+# !===========================================================
+# ! Trial design for a curved field
+# !===========================================================
 n_plot_info <-
   prep_plot(
     input_name = "NH3",
@@ -191,10 +191,3 @@ td_curved <-
   )
 
 usethis::use_data(td_curved, overwrite = TRUE)
-
-
-
-
-
-
-

@@ -413,7 +413,7 @@ text_sections_used <- function(index, unit_system) {
       paste0(
         "Although the ", machine_table$machine_type[[index]], " is ", machine_table$width[[index]],
         " meters wide, the plots are ",
-        all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
+        all_trial_info %>% dplyr::filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
         " meters wide, using ",
         as.character(english(machine_table$sections_used[[index]])),
         " sections of the machine in the trial plots."
@@ -422,7 +422,7 @@ text_sections_used <- function(index, unit_system) {
       paste0(
         "Although the ", machine_table$machine_type[[index]], " is ", conv_unit(machine_table$width[[index]], "m", "ft"),
         " feet wide, the plots are ",
-        all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
+        all_trial_info %>% dplyr::filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
         " feet wide, using ",
         as.character(english(machine_table$sections_used[[index]])),
         " sections of the machine in the trial plots."
@@ -579,7 +579,7 @@ get_input_type <- function(input) {
     flatten = TRUE
   ) %>%
     as.data.frame() %>%
-    filter(input_name == input) %>%
+    dplyr::filter(input_name == input) %>%
     dplyr::pull(input_type)
 
   if (length(match) == 0) {
@@ -598,7 +598,7 @@ get_field_size <- function(trial_design, land_unit) {
 
 get_plot_number <- function(trial_design) {
   trial_design %>%
-    filter(type == "experiment") %>%
+    dplyr::filter(type == "experiment") %>%
     nrow()
 }
 
@@ -745,11 +745,11 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info) {
   if (is.na(input) == FALSE) {
     plot_width <- all_trial_info %>%
-      filter(input_name == input) %>%
+      dplyr::filter(input_name == input) %>%
       dplyr::pull(plot_width)
 
     trial_plot <- trial_plot %>%
-      filter(input_name == input) %>%
+      dplyr::filter(input_name == input) %>%
       .[1, ]
 
     coords <- st_coordinates(trial_plot)[, 1:2]
@@ -760,8 +760,8 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
     # find NW corner
     point1 <- coords %>%
       as.data.frame() %>%
-      filter(X < mean(X)) %>%
-      filter(Y > mean(Y)) %>%
+      dplyr::filter(X < mean(X)) %>%
+      dplyr::filter(Y > mean(Y)) %>%
       as.matrix(.) - plot_width * move_vec
 
     point2 <- point1 + plot_width * perp_move_vec %>%
@@ -859,7 +859,7 @@ get_plots <- function(all_trial_info) {
   if (length(all_trial_info$plot_width %>% unique()) == 1) {
     design <- all_trial_info$trial_design[[1]] %>%
       mutate(plot_id = row_number()) %>%
-      filter(type == "Trial Area")
+      dplyr::filter(type == "Trial Area")
 
     first_plot <- all_trial_info$trial_design[[1]][1, ] %>%
       mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
@@ -867,27 +867,27 @@ get_plots <- function(all_trial_info) {
                min(.))
 
     plots <- design %>%
-      filter(plot_id == first_plot$plot_id) %>%
+      dplyr::filter(plot_id == first_plot$plot_id) %>%
       st_transform_utm(.) %>%
       mutate(input_name = all_trial_info$input_name[1]) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
   } else {
     max_input <- all_trial_info %>%
-      filter(plot_width == max(all_trial_info$plot_width))
+      dplyr::filter(plot_width == max(all_trial_info$plot_width))
 
     min_input <- all_trial_info %>%
-      filter(plot_width != max(all_trial_info$plot_width))
+      dplyr::filter(plot_width != max(all_trial_info$plot_width))
 
     design1 <- max_input$trial_design[[1]] %>%
       mutate(plot_id = row_number()) %>%
-      filter(type == "Trial Area")
+      dplyr::filter(type == "Trial Area")
 
     design2 <- min_input$trial_design[[1]] %>%
       mutate(plot_id = row_number()) %>%
-      filter(type == "Trial Area")
+      dplyr::filter(type == "Trial Area")
 
     plot1 <- design1 %>%
-      filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
+      dplyr::filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
                pull(plot_id) %>%
                min(.)) %>%
       st_transform_utm(.) %>%
@@ -896,7 +896,7 @@ get_plots <- function(all_trial_info) {
 
     plot2 = st_intersection(st_transform_utm(design2), plot1) %>%
       mutate(area = st_area(.)) %>%
-      filter(area >= median(area)) %>%
+      dplyr::filter(area >= median(area)) %>%
       st_transform_utm(.) %>%
       mutate(input_name = min_input$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
@@ -991,14 +991,14 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
     map <- NA
   } else {
     n_rates <- all_trial_info %>%
-      filter(input_name == input) %>%
+      dplyr::filter(input_name == input) %>%
       dplyr::pull(rates) %>%
       unlist() %>%
       length()
     my_palette <- brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
 
     plots <- trial_plot %>%
-      filter(input_name == input)
+      dplyr::filter(input_name == input)
 
     map <- tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)), bbox = st_bbox(plots)) +
       tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", str_to_title(input), " Rate"))
