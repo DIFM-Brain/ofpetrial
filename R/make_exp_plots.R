@@ -78,6 +78,9 @@ make_exp_plots <- function(input_plot_info,
       sf::st_combine()
   }
 
+  #--- remove linestring if any ---#
+  field_sf <- dplyr::filter(field_sf, st_geometry_type(field_sf) != "LINESTRING")
+
   #--- get the boundary box of the field ---#
   field_bbox <- sf::st_bbox(field_sf)
 
