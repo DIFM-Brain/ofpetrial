@@ -133,6 +133,21 @@ knitr::kable(list(rep_table$rep_table[[1]], rep_table$rep_table[[2]]),
   booktabs = TRUE)
 ```
 
+```{r rep-table-joint, echo=FALSE, include = TRUE}
+rep_table_joint <- cbind(all_trial_info$trial_design[[1]],
+               all_trial_info$trial_design[[2]]) %>%
+  mutate(treatment = paste0(rate, "_", rate.1)) %>%
+  group_by(treatment) %>%
+  summarise(Replicates = n()) %>%
+  data.frame() %>%
+  dplyr::select(treatment, Replicates) %>%
+  dplyr::rename("Treatment Rates" = "treatment")
+
+knitr::kable(rep_table_joint,
+  caption = paste0("Replicate of each Combination of", rep_table$input_name[[1]], " and ", rep_table$input_name[[2]], " Rate"),
+  booktabs = TRUE)
+```
+
 ## Steps in a Field Trial 
 
 ### Step 1. Apply Inputs Border Areas

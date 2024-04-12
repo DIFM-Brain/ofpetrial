@@ -48,6 +48,7 @@ knitr::opts_chunk$set(
 ```{r packages, message=FALSE, warning=FALSE, include=FALSE}
 all_trial_info <- readRDS(file.path("_all-trial-info-here_"))
 machine_table <- readRDS(file.path("_machine-table-here_"))
+unit_system <- all_trial_info$unit_system[1]
 # === packages ===#
 # library(bookdown)
 # library(pracma)
@@ -92,12 +93,13 @@ The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)`
 rep_table <- all_trial_info %>%
   rowwise() %>%
   mutate(rep_table = list(
-    trial_design %>% group_by(rate) %>%
+    trial_design %>% 
+      data.frame() %>%
+      group_by(rate) %>%
       summarise(
         Replicates = n(),
         .groups = "drop"
       ) %>%
-      data.frame() %>%
       dplyr::select(Replicates)
   ))
 

@@ -58,33 +58,24 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       total_equiv
     ) %>%
       rowwise() %>%
-      mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | ")) %>%
+      mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv, total_equiv))), collapse = " | ")) %>%
       dplyr::rename("rate" = "tgt_rate_original"))) %>%
+    dplyr::mutate(rate_cols = list(data.table(
+      tgt_rate_original = unlist(tgt_rate_original),
+      tgt_rate_equiv = unlist(tgt_rate_equiv),
+      total_equiv = unlist(total_equiv)
+    ) %>%
+      data.frame(.) %>%
+      .[colSums(is.na(.)) == 0] %>%
+      colnames(.))) %>%
+    mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, rate_cols, input_name, input_type, unit))) %>%
     mutate(map_design = list(
       tm_shape(trial_design %>%
         merge(rate_data, by = "rate") %>%
         mutate(all_units = as.factor(all_units))) +
         tm_polygons(
           col = "all_units",
-          title = if (input_name == "seed") {
-            if (unit_system == "metric") {
-              "Seeding Rate (ha)"
-            } else {
-              "Seeding Rate (ac)"
-            }
-          } else if (include_base_rate == FALSE & input_name != "seed") {
-            if (unit_system == "metric") {
-              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
-            } else {
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
-            }
-          } else {
-            if (unit_system == "metric") {
-              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
-            } else {
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
-            }
-          },
+          title = figure_title,
           palette = ifelse(input_name == "seed", "Greens", "Greys")
         )
     )) %>%
@@ -116,16 +107,16 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
       setorder(., cols = "machine_type") %>%
       mutate(machine_id = row_number()) %>%
-      rowwise() %>%
       mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
       mutate(sections_used = c(1, (1 / all_trial_info$machines_in_plot))) %>%
+      rowwise() %>%
       mutate(trial_plot = list(plots)) %>%
       mutate(move_vec = list(get_move_vec(ab_line))) %>%
       mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
+      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -150,7 +141,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
+      mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info))) %>%
       mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -591,7 +582,7 @@ get_input_type <- function(input) {
     filter(input_name == input) %>%
     dplyr::pull(input_type)
 
-  if (nrow(match == 0)) {
+  if (length(match) == 0) {
     match <- input
   }
 }
@@ -751,7 +742,7 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # move_vec <- machine_table$move_vec[[1]]
 # input <- machine_table$input_name[[1]]
 # unit_system <- "imperial"
-make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
+make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info) {
   if (is.na(input) == FALSE) {
     plot_width <- all_trial_info %>%
       filter(input_name == input) %>%
@@ -867,18 +858,18 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
 get_plots <- function(all_trial_info) {
   if (length(all_trial_info$plot_width %>% unique()) == 1) {
     design <- all_trial_info$trial_design[[1]] %>%
-      dplyr::mutate(plot_id = row_number()) %>%
+      mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
     first_plot <- all_trial_info$trial_design[[1]][1, ] %>%
-      dplyr::mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
-        dplyr::pull(plot_id) %>%
-        min(.))
+      mutate(plot_id = st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
+               pull(plot_id) %>%
+               min(.))
 
     plots <- design %>%
       filter(plot_id == first_plot$plot_id) %>%
       st_transform_utm(.) %>%
-      dplyr::mutate(input_name = input_name) %>%
+      mutate(input_name = all_trial_info$input_name[1]) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
   } else {
     max_input <- all_trial_info %>%
@@ -888,29 +879,29 @@ get_plots <- function(all_trial_info) {
       filter(plot_width != max(all_trial_info$plot_width))
 
     design1 <- max_input$trial_design[[1]] %>%
-      dplyr::mutate(plot_id = row_number()) %>%
+      mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
     design2 <- min_input$trial_design[[1]] %>%
-      dplyr::mutate(plot_id = row_number()) %>%
+      mutate(plot_id = row_number()) %>%
       filter(type == "Trial Area")
 
     plot1 <- design1 %>%
       filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
-        dplyr::pull(plot_id) %>%
-        min(.)) %>%
+               pull(plot_id) %>%
+               min(.)) %>%
       st_transform_utm(.) %>%
-      dplyr::mutate(input_name = max_input$input_name) %>%
+      mutate(input_name = max_input$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
 
-    plot2 <- st_intersection(st_transform_utm(design2), plot1) %>%
-      dplyr::mutate(area = st_area(.)) %>%
+    plot2 = st_intersection(st_transform_utm(design2), plot1) %>%
+      mutate(area = st_area(.)) %>%
       filter(area >= median(area)) %>%
       st_transform_utm(.) %>%
-      dplyr::mutate(input_name = min_input$input_name) %>%
+      mutate(input_name = min_input$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
 
-    plots <- rbind(plot1, plot2)
+    plots = rbind(plot1, plot2)
   }
 
   return(plots)
@@ -1059,3 +1050,31 @@ tmap_label <- function(center, machine_type, trial_plot) {
 
   return(tmap_label)
 }
+
+get_figure_title <- function(unit_system, include_base_rate, rate_cols, input_name, input_type, unit){
+  `%notin%` <- Negate(`%in%`)
+
+  land_unit = if(unit_system == "metric"){
+    "ha"
+  }else{"ac"}
+
+  converted_unit = if(unit_system == "metric"){
+    "kg"
+  }else{"lb"}
+
+  name = if(include_base_rate == FALSE & "tgt_rate_equiv" %notin% rate_cols){
+    paste0(input_name, " (", unit, "/", land_unit, ") | ", "No base application")
+  } else if (include_base_rate == FALSE & "tgt_rate_equiv" %in% rate_cols) {
+    paste0(input_name, " (", unit, "/", land_unit, ") | ",
+           input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n", "No base application")
+  } else {
+    paste0(input_name, " (", unit, "/ha) | ",
+           input_type, " Equivalent (", converted_unit, "/", land_unit, ") | ",
+           "Total ", input_type, " (", converted_unit, "/", land_unit, ") \n",
+           paste0("Base application: ", base_rate_equiv, " (", converted_unit, "/", land_unit, ")"))
+
+  }
+
+  return(name)
+}
+
