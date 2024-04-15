@@ -597,5 +597,6 @@ make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
 #+ Quiet intersection
 #++++++++++++++++++++++++++++++++++++
 st_intersection_quietly <- purrr::quietly(sf::st_intersection)
-
-st_centroid_quietly <- suppressMessages(sf::st_centroid)
+st_centroid_quietly <- function(...) {
+  suppressWarnings(sf::st_centroid(...))
+}

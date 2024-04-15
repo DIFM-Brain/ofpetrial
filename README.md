@@ -34,57 +34,59 @@ library(ofpetrial)
 ### Create experimental plots
 
 We start with specifying plot and machine information for inputs using
-`prep_plot_f()`, which simply creates a data.frame of the specified
+`prep_plot`, which simply creates a data.frame of the specified
 information with some internal unit conversion of length (feet to
 meter).
 
 ``` r
-seed_plot_info <-
-  prep_plot_f(
-    input_name = "seed",
-    machine_width = 60,
-    section_num = 24,
-    harvester_width = 30,
-    plot_width = 30
-  )
-
-seed_plot_info
-#> # A tibble: 1 × 10
-#>   input_name machine…¹ secti…² secti…³ harve…⁴ plot_…⁵
-#>   <chr>          <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 seed            18.3      24   0.762    9.14    9.14
-#> # … with 4 more variables: headland_length <dbl>,
-#> #   side_length <dbl>, min_plot_length <dbl>,
-#> #   max_plot_length <dbl>, and abbreviated variable
-#> #   names ¹​machine_width, ²​section_num,
-#> #   ³​section_width, ⁴​harvester_width, ⁵​plot_width
-
 n_plot_info <-
-  prep_plot_f(
+  prep_plot(
     input_name = "NH3",
+    unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
     harvester_width = 30,
     plot_width = 30
   )
+#> 
 
 n_plot_info
-#> # A tibble: 1 × 10
-#>   input_name machine…¹ secti…² secti…³ harve…⁴ plot_…⁵
-#>   <chr>          <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-#> 1 NH3             9.14       1    9.14    9.14    9.14
-#> # … with 4 more variables: headland_length <dbl>,
-#> #   side_length <dbl>, min_plot_length <dbl>,
-#> #   max_plot_length <dbl>, and abbreviated variable
-#> #   names ¹​machine_width, ²​section_num,
-#> #   ³​section_width, ⁴​harvester_width, ⁵​plot_width
+#> # A tibble: 1 × 11
+#>   input_name unit_system machine_width section_num
+#>   <chr>      <chr>               <dbl>       <dbl>
+#> 1 NH3        imperial             9.14           1
+#> # ℹ 7 more variables: section_width <dbl>,
+#> #   harvester_width <dbl>, plot_width <dbl>,
+#> #   headland_length <dbl>, side_length <dbl>,
+#> #   min_plot_length <dbl>, max_plot_length <dbl>
+
+seed_plot_info <-
+  prep_plot(
+    input_name = "seed",
+    unit_system = "imperial",
+    machine_width = 60,
+    section_num = 24,
+    harvester_width = 30,
+    plot_width = 30
+  )
+#> 
+
+seed_plot_info
+#> # A tibble: 1 × 11
+#>   input_name unit_system machine_width section_num
+#>   <chr>      <chr>               <dbl>       <dbl>
+#> 1 seed       imperial             18.3          24
+#> # ℹ 7 more variables: section_width <dbl>,
+#> #   harvester_width <dbl>, plot_width <dbl>,
+#> #   headland_length <dbl>, side_length <dbl>,
+#> #   min_plot_length <dbl>, max_plot_length <dbl>
 ```
 
 Now that plot and machine specifications for the inputs are ready, we
 can create experiment plots based on them using `make_exp_plots()`.
 
 ``` r
-input_plot_info <- list(seed_plot_info, n_plot_info)
+input_plot_info <- list(n_plot_info, seed_plot_info)
 
 exp_data <-
   make_exp_plots(
@@ -107,28 +109,17 @@ exp_data$exp_plots
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
-#>    plot_id strip_id poly_line
-#> 1        1        1       1_1
-#> 2        2        1       1_1
-#> 3        3        1       1_1
-#> 4        4        1       1_1
-#> 5        5        1       1_1
-#> 6        6        1       1_1
-#> 7        7        1       1_1
-#> 8        8        1       1_1
-#> 9        9        1       1_1
-#> 10       1        2       1_1
-#>                          geometry
-#> 1  POLYGON ((352997.6 4331460,...
-#> 2  POLYGON ((352999 4331540, 3...
-#> 3  POLYGON ((353000.5 4331621,...
-#> 4  POLYGON ((353001.9 4331702,...
-#> 5  POLYGON ((353003.3 4331782,...
-#> 6  POLYGON ((353004.8 4331863,...
-#> 7  POLYGON ((353006.2 4331943,...
-#> 8  POLYGON ((353007.7 4332024,...
-#> 9  POLYGON ((353009.1 4332104,...
-#> 10 POLYGON ((353006.7 4331460,...
+#>    plot_id poly_line strip_id                       geometry
+#> 1        1       1_1        1 POLYGON ((352997.6 4331460,...
+#> 2        2       1_1        1 POLYGON ((352999 4331540, 3...
+#> 3        3       1_1        1 POLYGON ((353000.5 4331621,...
+#> 4        4       1_1        1 POLYGON ((353001.9 4331702,...
+#> 5        5       1_1        1 POLYGON ((353003.3 4331782,...
+#> 6        6       1_1        1 POLYGON ((353004.8 4331863,...
+#> 7        7       1_1        1 POLYGON ((353006.2 4331943,...
+#> 8        8       1_1        1 POLYGON ((353007.7 4332024,...
+#> 9        9       1_1        1 POLYGON ((353009.1 4332104,...
+#> 10       1       1_1        2 POLYGON ((353006.7 4331460,...
 #> 
 #> [[2]]
 #> Simple feature collection with 369 features and 3 fields
@@ -137,28 +128,17 @@ exp_data$exp_plots
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
-#>    plot_id strip_id poly_line
-#> 1        1        1       1_1
-#> 2        2        1       1_1
-#> 3        3        1       1_1
-#> 4        4        1       1_1
-#> 5        5        1       1_1
-#> 6        6        1       1_1
-#> 7        7        1       1_1
-#> 8        8        1       1_1
-#> 9        9        1       1_1
-#> 10       1        2       1_1
-#>                          geometry
-#> 1  POLYGON ((352997.6 4331460,...
-#> 2  POLYGON ((352999 4331540, 3...
-#> 3  POLYGON ((353000.5 4331621,...
-#> 4  POLYGON ((353001.9 4331702,...
-#> 5  POLYGON ((353003.3 4331782,...
-#> 6  POLYGON ((353004.8 4331863,...
-#> 7  POLYGON ((353006.2 4331943,...
-#> 8  POLYGON ((353007.7 4332024,...
-#> 9  POLYGON ((353009.1 4332104,...
-#> 10 POLYGON ((353006.7 4331460,...
+#>    plot_id poly_line strip_id                       geometry
+#> 1        1       1_1        1 POLYGON ((352997.6 4331460,...
+#> 2        2       1_1        1 POLYGON ((352999 4331540, 3...
+#> 3        3       1_1        1 POLYGON ((353000.5 4331621,...
+#> 4        4       1_1        1 POLYGON ((353001.9 4331702,...
+#> 5        5       1_1        1 POLYGON ((353003.3 4331782,...
+#> 6        6       1_1        1 POLYGON ((353004.8 4331863,...
+#> 7        7       1_1        1 POLYGON ((353006.2 4331943,...
+#> 8        8       1_1        1 POLYGON ((353007.7 4332024,...
+#> 9        9       1_1        1 POLYGON ((353009.1 4332104,...
+#> 10       1       1_1        2 POLYGON ((353006.7 4331460,...
 ```
 
 `exp_data$exp_plots` is a list and you can access the individual
@@ -172,28 +152,17 @@ exp_data$exp_plots[[1]]
 #> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
 #> Projected CRS: WGS 84 / UTM zone 28N
 #> First 10 features:
-#>    plot_id strip_id poly_line
-#> 1        1        1       1_1
-#> 2        2        1       1_1
-#> 3        3        1       1_1
-#> 4        4        1       1_1
-#> 5        5        1       1_1
-#> 6        6        1       1_1
-#> 7        7        1       1_1
-#> 8        8        1       1_1
-#> 9        9        1       1_1
-#> 10       1        2       1_1
-#>                          geometry
-#> 1  POLYGON ((352997.6 4331460,...
-#> 2  POLYGON ((352999 4331540, 3...
-#> 3  POLYGON ((353000.5 4331621,...
-#> 4  POLYGON ((353001.9 4331702,...
-#> 5  POLYGON ((353003.3 4331782,...
-#> 6  POLYGON ((353004.8 4331863,...
-#> 7  POLYGON ((353006.2 4331943,...
-#> 8  POLYGON ((353007.7 4332024,...
-#> 9  POLYGON ((353009.1 4332104,...
-#> 10 POLYGON ((353006.7 4331460,...
+#>    plot_id poly_line strip_id                       geometry
+#> 1        1       1_1        1 POLYGON ((352997.6 4331460,...
+#> 2        2       1_1        1 POLYGON ((352999 4331540, 3...
+#> 3        3       1_1        1 POLYGON ((353000.5 4331621,...
+#> 4        4       1_1        1 POLYGON ((353001.9 4331702,...
+#> 5        5       1_1        1 POLYGON ((353003.3 4331782,...
+#> 6        6       1_1        1 POLYGON ((353004.8 4331863,...
+#> 7        7       1_1        1 POLYGON ((353006.2 4331943,...
+#> 8        8       1_1        1 POLYGON ((353007.7 4332024,...
+#> 9        9       1_1        1 POLYGON ((353009.1 4332104,...
+#> 10       1       1_1        2 POLYGON ((353006.7 4331460,...
 ```
 
 We can visualize the layout of the experiment plots using
@@ -215,28 +184,6 @@ using `prep_rates()`.
 #!===========================================================
 # ! Assign rates
 # !===========================================================
-seed_rate_info <-
-  prep_rate(
-    plot_info = seed_plot_info,
-    gc_rate = 32000,
-    unit = "seed",
-    min_rate = 16000,
-    max_rate = 40000,
-    num_rates = 5,
-    design_type = "jcls"
-  )
-#> Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates
-
-seed_rate_info
-#> # A tibble: 1 × 10
-#>   input…¹ desig…² gc_rate unit  rates  min_r…³ max_r…⁴
-#>   <chr>   <chr>     <dbl> <chr> <list>   <dbl>   <dbl>
-#> 1 seed    jcls      32000 seed  <NULL>   16000   40000
-#> # … with 3 more variables: num_rates <dbl>,
-#> #   rank_seq_ws <list>, rank_seq_as <list>, and
-#> #   abbreviated variable names ¹​input_name,
-#> #   ²​design_type, ³​min_rate, ⁴​max_rate
-
 n_rate_info <-
   prep_rate(
     plot_info = n_plot_info,
@@ -248,14 +195,36 @@ n_rate_info <-
   )
 
 n_rate_info
-#> # A tibble: 1 × 10
-#>   input_…¹ desig…² gc_rate unit  rates min_r…³ max_r…⁴
-#>   <chr>    <chr>     <dbl> <chr> <lis> <lgl>   <lgl>  
-#> 1 NH3      ls          180 lb    <dbl> NA      NA     
-#> # … with 3 more variables: num_rates <dbl>,
-#> #   rank_seq_ws <list>, rank_seq_as <list>, and
-#> #   abbreviated variable names ¹​input_name,
-#> #   ²​design_type, ³​min_rate, ⁴​max_rate
+#> # A tibble: 1 × 13
+#>   input_name design_type gc_rate unit  tgt_rate_original
+#>   <chr>      <chr>         <dbl> <chr> <list>           
+#> 1 NH3        ls              180 lb    <dbl [5]>        
+#> # ℹ 8 more variables: tgt_rate_equiv <list>,
+#> #   include_base_rate <lgl>, total_equiv <list>,
+#> #   min_rate <lgl>, max_rate <lgl>, num_rates <int>,
+#> #   rank_seq_ws <list>, rank_seq_as <list>
+
+seed_rate_info <-
+  prep_rate(
+    plot_info = seed_plot_info,
+    gc_rate = 32000,
+    unit = "seed",
+    min_rate = 16000,
+    max_rate = 40000,
+    num_rates = 5,
+    design_type = "ls"
+  )
+#> Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates
+
+seed_rate_info
+#> # A tibble: 1 × 13
+#>   input_name design_type gc_rate unit  tgt_rate_original
+#>   <chr>      <chr>         <dbl> <chr> <list>           
+#> 1 seed       ls            32000 seed  <dbl [5]>        
+#> # ℹ 8 more variables: tgt_rate_equiv <list>,
+#> #   include_base_rate <lgl>, total_equiv <list>,
+#> #   min_rate <dbl>, max_rate <dbl>, num_rates <dbl>,
+#> #   rank_seq_ws <list>, rank_seq_as <list>
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots (see
@@ -266,8 +235,17 @@ vignette](https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manual
 for changing rates manually.).
 
 ``` r
-trial_design <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
-#> Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates
+trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_info))
+#> [1] "== 10 % complete"
+#> [1] "==== 20 % complete"
+#> [1] "====== 30 % complete"
+#> [1] "======== 40 % complete"
+#> [1] "========== 50 % complete"
+#> [1] "============ 60 % complete"
+#> [1] "============== 70 % complete"
+#> [1] "================ 80 % complete"
+#> [1] "================== 90 % complete"
+#> [1] "==================== 100 % complete"
 ```
 
 Here is the visualization of the trial design done by `viz`.
@@ -294,10 +272,11 @@ Here, let’s check the correlation between the seed and NH3 rates.
 (
   cor_inputs <- check_ortho_inputs(trial_design)
 )
-#> [1] 0.4980795
+#> Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.
+#> [1] -0.01355273
 ```
 
-The correlation coefficient is 0.5.
+The correlation coefficient is -0.01.
 
 ### Write the trial design files for implementation
 
@@ -307,6 +286,7 @@ the machine operators to actually implement the trial.
 
 ``` r
 write_trial_files(td, zip = TRUE, zip_name = "td-collection")
+# write_trial_files(td, folder_path = here::here("test"), zip = TRUE, zip_name = "td-collection")
 ```
 
 Here, all the shape files (trial dsign, applicator/planter ab-line, and

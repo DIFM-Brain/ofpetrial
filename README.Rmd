@@ -168,6 +168,7 @@ Once you are satisfied with the trial design adn the location of the ab-lines, y
 
 ```{r, eval = FALSE}
 write_trial_files(td, zip = TRUE, zip_name = "td-collection")
+# write_trial_files(td, folder_path = here::here("test"), zip = TRUE, zip_name = "td-collection")
 ```
 
 Here, all the shape files (trial dsign, applicator/planter ab-line, and harvester ab-line) are packed in a zipped folder, named "td-collection.zip".

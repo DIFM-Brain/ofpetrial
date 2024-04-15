@@ -266,3 +266,18 @@ return_permutations <- function(x) {
 #   value <- x / subset(.conversions, unit == from, std, drop = TRUE)
 #   return(value * subset(.conversions, unit == to, std, drop = TRUE))
 # }
+
+
+#++++++++++++++++++++++++++++++++++++
+#+ Ger number in english
+#++++++++++++++++++++++++++++++++++++
+get_number_in_english <- function(num) {
+  return(number_english_dictionary[number == num, num_in_english])
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Calculate dot product
+#++++++++++++++++++++++++++++++++++++
+get_dot_product <- function(vec_1, vec_2) {
+  return(sum(vec_1 * vec_2))
+}
