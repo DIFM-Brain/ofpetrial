@@ -11,6 +11,7 @@
 ^README\.html$
 ^NEWS\.Rmd$
 ^NEWS\.html$
+^NEWS_files$
 ^debug$
 ^dev_notes\.md$
 ^checklist\.md$

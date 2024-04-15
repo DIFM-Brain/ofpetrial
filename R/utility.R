@@ -281,3 +281,8 @@ get_number_in_english <- function(num) {
 get_dot_product <- function(vec_1, vec_2) {
   return(sum(vec_1 * vec_2))
 }
+
+# make_trial_report(
+#   td = td_single_input,
+#   trial_name = "Test Trial"
+# )

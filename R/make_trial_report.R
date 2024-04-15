@@ -248,14 +248,14 @@ text_plot_num_length <- function(all_trial_info, unit_system) {
 text_rate_number <- function(all_trial_info) {
   if (nrow(all_trial_info) == 1) {
     paste0(
-      as.character(english(all_trial_info$rate_number)),
+      as.character(get_number_in_english(all_trial_info$rate_number)),
       " targeted ", all_trial_info$input_name, " rates."
     )
   } else {
     if (all_trial_info$rate_number[[1]] == all_trial_info$rate_number[[2]]) {
-      paste0(as.character(english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
+      paste0(as.character(get_number_in_english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " and ", all_trial_info$input_name[[2]], " rates.")
     } else {
-      paste0(as.character(english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " rates and ", as.character(english(all_trial_info$rate_number[[2]])), " targeted ", all_trial_info$input_name[[2]], " rates.")
+      paste0(as.character(get_number_in_english(all_trial_info$rate_number[[1]])), " targeted ", all_trial_info$input_name[[1]], " rates and ", as.character(get_number_in_english(all_trial_info$rate_number[[2]])), " targeted ", all_trial_info$input_name[[2]], " rates.")
     }
   }
 }
@@ -420,7 +420,7 @@ text_sections_used <- function(index, unit_system) {
         " meters wide, the plots are ",
         all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width),
         " meters wide, using ",
-        as.character(english(machine_table$sections_used[[index]])),
+        as.character(get_number_in_english(machine_table$sections_used[[index]])),
         " sections of the machine in the trial plots."
       )
     } else {
@@ -429,7 +429,7 @@ text_sections_used <- function(index, unit_system) {
         " feet wide, the plots are ",
         all_trial_info %>% filter(input_name == machine_table$input_name[[index]]) %>% pull(plot_width) %>% conv_unit(., "m", "ft"),
         " feet wide, using ",
-        as.character(english(machine_table$sections_used[[index]])),
+        as.character(get_number_in_english(machine_table$sections_used[[index]])),
         " sections of the machine in the trial plots."
       )
     }
@@ -465,7 +465,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
     if (all_trial_info$plot_width[[1]] == all_trial_info$plot_width[[2]]) {
       if (unit_system == "metric") {
         paste0(
-          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[1]])),
           " ",
           all_trial_info$harvester_width[[1]],
           "-meter harvester swath",
@@ -479,7 +479,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
         )
       } else {
         paste0(
-          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[1]])),
           " ",
           conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
           "-foot harvester swath",
@@ -495,7 +495,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
     } else {
       if (unit_system == "metric") {
         paste0(
-          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[1]])),
           " ",
           all_trial_info$harvester_width[[1]],
           "-meter harvester swath",
@@ -505,7 +505,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
             ""
           },
           " and ",
-          as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
+          as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[2]])),
           " ",
           all_trial_info$harvester_width[[2]],
           "-meter harvester swath",
@@ -520,7 +520,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
         )
       } else {
         paste0(
-          as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+          as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[1]])),
           " ",
           conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
           "-foot harvester swath",
@@ -530,7 +530,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
             ""
           },
           " and ",
-          as.character(english(all_trial_info$num_harv_pass_in_plot[[2]])),
+          as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[2]])),
           " ",
           conv_unit(all_trial_info$harvester_width[[2]], "m", "ft"),
           "-foot harvester swath",
@@ -548,7 +548,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
   } else {
     if (unit_system == "metric") {
       paste0(
-        as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+        as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[1]])),
         " ",
         all_trial_info$harvester_width[[1]],
         "-meter harvester swath",
@@ -562,7 +562,7 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
       )
     } else {
       paste0(
-        as.character(english(all_trial_info$num_harv_pass_in_plot[[1]])),
+        as.character(get_number_in_english(all_trial_info$num_harv_pass_in_plot[[1]])),
         " ",
         conv_unit(all_trial_info$harvester_width[[1]], "m", "ft"),
         "-foot harvester swath",
