@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trial AB-line Types and Options • ofpetrial</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -108,21 +108,14 @@
 <p>Load the <code>ofpetrial</code> package</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
-<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
 <span><span class="co">#&gt; Warning: replacing previous import 'data.table::last' by 'dplyr::last' when</span></span>
+<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
 <span><span class="co">#&gt; loading 'ofpetrial'</span></span>
 <span><span class="co">#&gt; Warning: replacing previous import 'data.table::between' by 'dplyr::between'</span></span>
 <span><span class="co">#&gt; when loading 'ofpetrial'</span></span>
-<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
-<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
-<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
-<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
-<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
-<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
-<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.2.3</span></span></code></pre></div>
 <p>The AB-line is the driving direction of a machine. In practice, a
 farmer uploads AB-lines into the machine and can choose between these
 AB-lines at the time of operation. While this AB-line indicates the
@@ -168,6 +161,11 @@ options are clearer as the AB-line shifts or is not included.</p>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `experiment_plots_dissolved = list(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
+<span><span class="co">#&gt; Caused by warning:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> package 'sf' was built under R version 4.2.3</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_free</span>, type <span class="op">=</span> <span class="st">"layout"</span>, abline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V2-ab-line_files/figure-html/ab-line-example1-1.png" width="700"></p>
@@ -209,7 +207,7 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <code class="sourceCode R"><span><span class="va">aa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `as-applied-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpXKb9Gz/temp_libpath1d7137f5683/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpe0WQFf/temp_libpath15f7a29e69868/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 10404 features and 32 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -270,7 +268,7 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

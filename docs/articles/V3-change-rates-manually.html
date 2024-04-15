@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Change Trial Rates Manually • ofpetrial</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -138,6 +138,11 @@ manually. This vignette demonstrates such operations.</p>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `experiment_plots_dissolved = list(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
+<span><span class="co">#&gt; Caused by warning:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> package 'sf' was built under R version 4.2.3</span></span>
 <span></span>
 <span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
@@ -168,7 +173,7 @@ withint-strip plot id and a strip id when they were created using
 <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">td</span><span class="op">$</span><span class="va">trial_design</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; Simple feature collection with 571 features and 4 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 191 features and 4 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
 <span><span class="co">#&gt; Bounding box:  xmin: -16.70078 ymin: 39.11957 xmax: -16.69604 ymax: 39.12696</span></span>
@@ -176,24 +181,26 @@ withint-strip plot id and a strip id when they were created using
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;    rate strip_id plot_id       type                       geometry</span></span>
 <span><span class="co">#&gt; 1   100        1       1 experiment POLYGON ((-16.70021 39.1198...</span></span>
-<span><span class="co">#&gt; 2   140        1       2 experiment POLYGON ((-16.70021 39.1200...</span></span>
-<span><span class="co">#&gt; 3   180        1       3 experiment POLYGON ((-16.70021 39.1202...</span></span>
-<span><span class="co">#&gt; 4   220        1       4 experiment POLYGON ((-16.70021 39.1205...</span></span>
-<span><span class="co">#&gt; 5   260        1       5 experiment POLYGON ((-16.70021 39.1207...</span></span>
-<span><span class="co">#&gt; 6   100        1       6 experiment POLYGON ((-16.70021 39.1209...</span></span>
-<span><span class="co">#&gt; 7   140        1       7 experiment POLYGON ((-16.70021 39.1211...</span></span>
-<span><span class="co">#&gt; 8   180        1       8 experiment POLYGON ((-16.70021 39.1214...</span></span>
-<span><span class="co">#&gt; 9   220        1       9 experiment POLYGON ((-16.70021 39.1216...</span></span>
-<span><span class="co">#&gt; 10  260        1      10 experiment POLYGON ((-16.70021 39.1218...</span></span></code></pre></div>
+<span><span class="co">#&gt; 2   140        1       2 experiment POLYGON ((-16.70021 39.1205...</span></span>
+<span><span class="co">#&gt; 3   180        1       3 experiment POLYGON ((-16.70021 39.1211...</span></span>
+<span><span class="co">#&gt; 4   220        1       4 experiment POLYGON ((-16.70021 39.1218...</span></span>
+<span><span class="co">#&gt; 5   260        1       5 experiment POLYGON ((-16.70021 39.1225...</span></span>
+<span><span class="co">#&gt; 6   100        1       6 experiment POLYGON ((-16.70021 39.1231...</span></span>
+<span><span class="co">#&gt; 7   140        1       7 experiment POLYGON ((-16.70021 39.1238...</span></span>
+<span><span class="co">#&gt; 8   180        1       8 experiment POLYGON ((-16.70021 39.1245...</span></span>
+<span><span class="co">#&gt; 9   220        1       9 experiment POLYGON ((-16.70021 39.1251...</span></span>
+<span><span class="co">#&gt; 10  260        1      10 experiment POLYGON ((-16.70021 39.1258...</span></span></code></pre></div>
 <p>The figure below shows the strip id associated with each plot.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"strip_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_text()`).</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
 <p>The figure below shows the plot id associated with each plot.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"plot_id"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_text()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_text()`).</span></span></code></pre></div>
 <p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>As you can see, <code>plot_id</code> is the unique numeric identifier
 assigned to each of the plots <strong>within</strong> a strip. So, there
@@ -374,7 +381,7 @@ use the “rb” option in <code><a href="../reference/assign_rates.html">assign
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

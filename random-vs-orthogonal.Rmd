@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ofpetrial)
-library(data.table)
 library(ggplot2)
 ```
 

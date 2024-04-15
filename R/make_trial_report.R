@@ -11,7 +11,6 @@
 #' @import rmarkdown
 #' @import dplyr
 #' @import sf
-#' @import stringr
 #' @import tmap
 #' @import measurements
 #' @import english

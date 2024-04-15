@@ -9,4 +9,6 @@ debug/*
 *.DS_Store
 inst
 *.gitignore
+vignettes/*.html
+vignettes/*files*
 .Rhistory

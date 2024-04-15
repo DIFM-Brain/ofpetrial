@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r knitr_setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -32,7 +32,7 @@ It is ideal for each of the yield data points to be associated with a single inp
 
 Let's first create experiment plots where plot width is specified as 90 feet, which is twice as wide as the applicator of the nitrogen fertilizer and three times as wide as the harvesters.
 
-```{r}
+```{r create_exp_plots}
 n_plot_info <-
   prep_plot(
     input_name = "NH3",
@@ -54,7 +54,7 @@ exp_data <-
 
 Running `check_alignment()` to `exp_data`,
 
-```{r}
+```{r machine_al_check}
 (
   machine_alignment_check <- check_alignment(exp_data)
 )
@@ -62,7 +62,7 @@ Running `check_alignment()` to `exp_data`,
 
 One of the elements of the resulting output is `g_path_alignment`, which is a `ggplot` figure of the path of the harvester (red) and applicator (blue).
 
-```{r}
+```{r path_check_viz}
 machine_alignment_check$g_path_alignment
 ```
 

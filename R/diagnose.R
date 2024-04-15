@@ -185,7 +185,8 @@ check_ortho_with_chars <- function(td, sp_data_list, vars_list) {
       spatial_data = sp_data_list
     )
 
-  expand_grid_df(char_data, dplyr::select(td, input_name, trial_design)) %>%
+  diagnostics <-
+    expand_grid_df(char_data, dplyr::select(td, input_name, trial_design)) %>%
     dplyr::mutate(
       checks =
         purrr::pmap(
@@ -195,6 +196,8 @@ check_ortho_with_chars <- function(td, sp_data_list, vars_list) {
     ) %>%
     tidyr::unnest(checks) %>%
     dplyr::select(var, input_name, summary_data, summary_fig)
+
+  return(diagnostics)
 }
 
 
@@ -211,6 +214,10 @@ check_ortho_with_chars <- function(td, sp_data_list, vars_list) {
 #++++++++++++++++++++++++++++++++++++
 #+ summarize one set of characteristic variables and spatial data
 #++++++++++++++++++++++++++++++++++++
+# trial_design <- diagnostics$trial_design[[1]]
+# spatial_data <- diagnostics$spatial_data[[1]]
+# char_vars <- diagnostics$variable[[1]]
+
 summarize_chars <- function(trial_design, spatial_data, char_vars) {
   rate_design <- dplyr::select(trial_design, rate)
 
@@ -227,7 +234,7 @@ summarize_chars <- function(trial_design, spatial_data, char_vars) {
       .[order(count), ] %>%
       .[1, geom]
 
-    if ("POINT" == dominant_geom_type) {
+    if (dominant_geom_type == "POINT") {
       joined_data <- sf::st_join(trial_design, char_sf)
     } else if (dominant_geom_type %in% c("POLYGON", "MULTIPOLYGON")) {
       suppressWarnings(
@@ -264,6 +271,7 @@ summarize_chars <- function(trial_design, spatial_data, char_vars) {
 # char_vars <- c("mukey", "clay")
 # var <- "mukey"
 # var <- "clay"
+# var <- "Yld_Vol_Dr"
 
 #- Note: Summarize the relationship between input rate and a characteristic. If the characteristics variable is numeric, it find its correlation with the input rate. If categorical, it finds the mean and sd of rate by category.
 

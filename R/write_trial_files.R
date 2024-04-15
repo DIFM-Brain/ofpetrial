@@ -8,7 +8,6 @@
 #' @param zip (logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.
 #' @param zip_name (character) name of the zip file created when zip = TRUE.
 #' @returns nothing
-#' @import sf
 #' @export
 #' @examples
 #' #--- load trial design ---#
@@ -64,7 +63,7 @@ write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zi
 
   message(paste0("Writing the harvester ab-line as .", ext, " file. \n"))
 
-  dsn = file.path(folder_path, paste0("ab-line-harvester", ".", ext))
+  dsn <- file.path(folder_path, paste0("ab-line-harvester", ".", ext))
   unlink(dsn)
 
   sf::st_write(
@@ -97,7 +96,7 @@ write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zi
     zip::zip(
       zipfile = zip_name,
       files = list.files(folder_path, recursive = FALSE, full.names = FALSE) %>%
-        .[stringr::str_detect(., shp_files_ls_text)],
+        .[grepl(shp_files_ls_text, .)],
       recurse = FALSE,
       compression_level = 9,
       root = folder_path
@@ -112,7 +111,7 @@ write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zi
 write_td <- function(input_name, trial_design, folder_path, ext) {
   message(paste0("Writing the trial design as .", ext, " files. \n"))
 
-  dsn = file.path(folder_path, paste0("trial-design-", input_name, ".", ext))
+  dsn <- file.path(folder_path, paste0("trial-design-", input_name, ".", ext))
   unlink(dsn)
 
   sf::st_write(
@@ -122,9 +121,9 @@ write_td <- function(input_name, trial_design, folder_path, ext) {
 }
 
 write_ap_abline <- function(input_name, abline_type, ab_lines, folder_path, ext) {
-  message(paste0("Writing the ab-lines as .", ext," files. \n"))
+  message(paste0("Writing the ab-lines as .", ext, " files. \n"))
 
-  dsn = file.path(folder_path, paste0("ab-line-", input_name, ".", ext))
+  dsn <- file.path(folder_path, paste0("ab-line-", input_name, ".", ext))
   unlink(dsn)
 
   # try this and change message
@@ -133,4 +132,3 @@ write_ap_abline <- function(input_name, abline_type, ab_lines, folder_path, ext)
     dsn = dsn
   )
 }
-

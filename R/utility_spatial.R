@@ -225,7 +225,7 @@ create_strips <- function(field, plot_heading, plot_width, radius) {
 #+ Transform to the appropriate UTM
 #++++++++++++++++++++++++++++++++++++
 st_transform_utm <- function(sf) {
-  if (stringr::str_detect(sf::st_crs(sf)$wkt, "longitude") != TRUE) {
+  if (grepl("longitude", sf::st_crs(sf)$wkt) != TRUE) {
     print("Not in lat/long. Returning original object.")
     return(sf)
   } else {
@@ -314,7 +314,6 @@ get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
       )
     return(return_data)
   } else {
-
     num_comp_plots <- tot_plot_length %/% min_plot_length
 
     if (num_comp_plots == 0) {
@@ -598,4 +597,5 @@ make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
 #+ Quiet intersection
 #++++++++++++++++++++++++++++++++++++
 st_intersection_quietly <- purrr::quietly(sf::st_intersection)
-st_centroid_quietly <- suppressMessages((sf::st_centroid))
+
+st_centroid_quietly <- suppressMessages(sf::st_centroid)

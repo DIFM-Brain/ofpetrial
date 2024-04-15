@@ -9,6 +9,8 @@
 ^docs$
 ^README\.Rmd$
 ^README\.html$
+^NEWS\.Rmd$
+^NEWS\.html$
 ^debug$
 ^dev_notes\.md$
 ^checklist\.md$

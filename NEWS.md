@@ -1,4 +1,5 @@
 # ofpetrial 0.1.0
+
 The first complete set of functions that make the package functional and useful for the users to design and implement on-farm precision experiments.
 
 ## Prepare plot and rate information 

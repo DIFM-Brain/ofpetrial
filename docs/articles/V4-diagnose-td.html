@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagnose Trial Designs • ofpetrial</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -108,23 +108,17 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#--- pacakges ---#</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
-<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
 <span><span class="co">#&gt; Warning: replacing previous import 'data.table::last' by 'dplyr::last' when</span></span>
+<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
+<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
 <span><span class="co">#&gt; loading 'ofpetrial'</span></span>
 <span><span class="co">#&gt; Warning: replacing previous import 'data.table::between' by 'dplyr::between'</span></span>
 <span><span class="co">#&gt; when loading 'ofpetrial'</span></span>
-<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
-<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
-<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
-<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
-<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
-<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
-<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; terra 1.7.39</span></span>
+<span><span class="co">#&gt; Warning: package 'terra' was built under R version 4.2.3</span></span>
+<span><span class="co">#&gt; terra 1.7.71</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.2.3</span></span>
 <span></span>
 <span><span class="co">#--- file names ---#</span></span>
 <span><span class="va">boundary_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span></span>
@@ -162,7 +156,12 @@ fertilizer and three times as wide as the harvesters.</p>
 <span>    abline_data <span class="op">=</span> <span class="va">abline_file</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span></code></pre></div>
+<span><span class="co">#&gt; Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span></span>
+<span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `experiment_plots_dissolved = list(...)`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
+<span><span class="co">#&gt; Caused by warning:</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> package 'sf' was built under R version 4.2.3</span></span></code></pre></div>
 <p>Running <code><a href="../reference/check_alignment.html">check_alignment()</a></code> to <code>exp_data</code>,</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span></span>
@@ -171,7 +170,7 @@ fertilizer and three times as wide as the harvesters.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">#&gt;   input_name                      harvest_ab_line overlap_data  harvester_path</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NH3        (353001.2 4331404, 353012.2 4332022) <span style="color: #949494;">&lt;dt [39 × 7]&gt;</span> <span style="color: #949494;">&lt;sf [45 × 3]&gt;</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> NH3        (353001.2 4331404, 353012.7 4332047) <span style="color: #949494;">&lt;dt [39 × 7]&gt;</span> <span style="color: #949494;">&lt;sf [45 × 3]&gt;</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: g_path_alignment &lt;list&gt;, g_overlap &lt;list&gt;</span></span></span></code></pre></div>
 <p>One of the elements of the resulting output is
 <code>g_path_alignment</code>, which is a <code>ggplot</code> figure of
@@ -179,7 +178,7 @@ the path of the harvester (red) and applicator (blue).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">machine_alignment_check</span><span class="op">$</span><span class="va">g_path_alignment</span></span>
 <span><span class="co">#&gt; [[1]]</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/path_check_viz-1.png" width="700"></p>
 <p>As you can see, three yield paths fit perfectly in a single
 applicator path. That is, there is not mixed treatment problme in this
 layout of experiment plots. The <code>g_overlap</code> element is a
@@ -191,8 +190,9 @@ strips have value of 100%.</p>
 <code class="sourceCode R"><span><span class="va">machine_alignment_check</span><span class="op">$</span><span class="va">g_overlap</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_bar()`).</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
+<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_bar()`).</span></span></code></pre></div>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
 <p>Now, let’s make the plot width 45 feet.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
@@ -204,7 +204,7 @@ strips have value of 100%.</p>
 <span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    plot_width <span class="op">=</span> <span class="fl">45</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; For NH3, the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of 90 ensures that at least one harvest path within the path of NH3 does not have the problems.</span></span>
+<span><span class="co">#&gt; For NH3, the plot width you specified would cause mixed treatment problems. However, there is a plot width that avoids them. It is suggested that you use 90 as the plot width.</span></span>
 <span></span>
 <span><span class="va">exp_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
@@ -221,15 +221,16 @@ two input rates.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">machine_alignment_check</span><span class="op">$</span><span class="va">g_path_alignment</span></span>
 <span><span class="co">#&gt; [[1]]</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>This can be confirmed with the following figure, which shows that a
 third of harvester strips have 50% mix.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">machine_alignment_check</span><span class="op">$</span><span class="va">g_overlap</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containing missing values (`geom_bar()`).</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_bar()`).</span></span></code></pre></div>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <p>If you see this kind of problem, reconsider changing the plot width,
 unless it is not avoidable. If you are not sure what the right plot
 width is, it might be advisable to leave <code>plot_width</code>
@@ -310,19 +311,750 @@ where the two input rates are highly correlated. Here is an example.</p>
 <span>    rank_seq_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="va">td_two_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">td_two_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "== 10 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "==== 20 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "====== 30 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "======== 40 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "========== 50 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "============ 60 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "============== 70 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "================ 80 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "================== 90 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; [1] "==================== 100 % complete"</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span>
+<span><span class="co">#&gt; Warning: st_centroid assumes attributes are constant over geometries</span></span></code></pre></div>
 <p>Here is the visualization of the assigned rates for both inputs. It
 is easy to see that both input have exactly the same pattern because of
 the same <code>rank_seq_ws</code> and <code>plot_width</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_two_input</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 <p>You can check the correlation of the two inputs using
 <code><a href="../reference/check_ortho_inputs.html">check_ortho_inputs()</a></code> like this.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_ortho_inputs.html">check_ortho_inputs</a></span><span class="op">(</span><span class="va">td_two_input</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.</span></span>
-<span><span class="co">#&gt; [1] 0.995888</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -0.006103384</span></span></code></pre></div>
 <p>As you can see, they are extremely highly correlated. When you see
 this, you should reassign rates for one of the inputs.</p>
 <p>Now, let’s change the width of the plots for NH3 to 60 feet, which is
@@ -341,7 +1073,7 @@ assign rates to the new experiment plots.</p>
 <span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>    plot_width <span class="op">=</span> <span class="fl">60</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; For NH3, the plot width you specified would cause mixed treatment problems. Unfortunately, there is no plot width that avoids them. Plot width of 30 ensures that at least one harvest path within the path of NH3 does not have the problems.</span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
 <span><span class="co">#++++++++++++++++++++++++++++++++++++</span></span>
 <span><span class="co">#+ Recreate experient plots for NH3</span></span>
@@ -360,13 +1092,13 @@ assign rates to the new experiment plots.</p>
 <span><span class="va">td_two_input_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_two_input_2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>Now, there are two plots of different rates of seed in a single plot
 of NH3. Consequently, their correlation is very low now.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/check_ortho_inputs.html">check_ortho_inputs</a></span><span class="op">(</span><span class="va">td_two_input_2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Checking the correlation between the two inputs. This may take some time depending on the number of experiment plots.</span></span>
-<span><span class="co">#&gt; [1] 0.06697862</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.0663964</span></span></code></pre></div>
 <hr>
 <p>Now, let’s think about a case where the randomized block design is
 used for both inputs<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> We are using the same plot width for both
@@ -414,8 +1146,8 @@ both inputs, some cases introduce a higher correlation than others.</p>
 <span>    rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">140</span>, <span class="fl">180</span>, <span class="fl">220</span>, <span class="fl">260</span><span class="op">)</span>,</span>
 <span>    design_type <span class="op">=</span> <span class="st">"rb"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p>The first case has a correlation of -0.0282114, while the second case
-is 0.047442.</p>
+<p>The first case has a correlation of -0.1049839, while the second case
+is 0.0240804.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#--- case 1 ---#</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">543</span><span class="op">)</span></span>
@@ -423,7 +1155,7 @@ is 0.047442.</p>
 <span><span class="va">cor_case_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_ortho_inputs.html">check_ortho_inputs</a></span><span class="op">(</span><span class="va">td_two_input_rb_1</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cor_case_1</span></span>
-<span><span class="co">#&gt; [1] -0.02821141</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -0.1049839</span></span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#--- case 2 ---#</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">383543</span><span class="op">)</span></span>
@@ -431,7 +1163,7 @@ is 0.047442.</p>
 <span><span class="va">cor_case_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_ortho_inputs.html">check_ortho_inputs</a></span><span class="op">(</span><span class="va">td_two_input_rb_2</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cor_case_2</span></span>
-<span><span class="co">#&gt; [1] 0.04744195</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.0240804</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="check-the-correlation-of-the-input-rates-with-observed-fieldtopographic-characteristics">Check the correlation of the input rates with observed
@@ -451,7 +1183,7 @@ uncorrelated (orthogonal to) with those observed characteristics. The
 <p>Here is the visualization of the trial desing.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>Here, we have three sets of spatial data we want to check.</p>
 <ul>
 <li>Past yield data (<code>Yld_Vol_Dr</code>) from the same field
@@ -471,7 +1203,7 @@ data)</li>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">yield_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"yield-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `yield-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpXKb9Gz/temp_libpath1d7137f5683/ofpetrial/extdata/yield-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpe0WQFf/temp_libpath15f7a29e69868/ofpetrial/extdata/yield-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 16822 features and 34 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
@@ -483,7 +1215,7 @@ data)</li>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">Yld_Vol_Dr</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_color_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <hr>
 <p><strong>SSURGO</strong></p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -491,7 +1223,7 @@ data)</li>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ssurgo-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mukey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">mukey</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ssurgo-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/tg/3shgnxh95bj__tdvkkmgs8n80000gn/T/RtmpXKb9Gz/temp_libpath1d7137f5683/ofpetrial/extdata/ssurgo-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpe0WQFf/temp_libpath15f7a29e69868/ofpetrial/extdata/ssurgo-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 11 features and 9 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
@@ -502,47 +1234,47 @@ data)</li>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ssurgo_sf</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">mukey</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ssurgo_sf</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">clay</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_fill_viridis_c</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-26-2.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-22-2.png" width="700"></p>
 <hr>
 <p><strong>Slope and TWI</strong></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">topo_rast</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"slope.tif"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"twi.tif"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"slope.tif"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"twi.tif"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 <hr>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checks</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/check_ortho_with_chars.html">check_ortho_with_chars</a></span><span class="op">(</span></span>
 <span>    td <span class="op">=</span> <span class="va">td_single_input</span>,</span>
 <span>    sp_data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">yield_sf</span>, <span class="va">ssurgo_sf</span>, <span class="va">topo_rast</span><span class="op">)</span>,</span>
-<span>    vars_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Yld_Vol_Dr"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mukey"</span>, <span class="st">"clay"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span><span class="op">)</span></span>
+<span>    vars_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Yld_Vol_Dr"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mukey"</span>, <span class="st">"clay"</span><span class="op">)</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">topo_rast</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: There was 1 warning in `dplyr::mutate()`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `checks = purrr::pmap(list(trial_design, spatial_data,</span></span>
 <span><span class="co">#&gt;   variable), summarize_chars)`.</span></span>
 <span><span class="co">#&gt; Caused by warning:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Computation failed in `stat_bin()`</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Computation failed in `stat_bin()`.</span></span>
 <span><span class="co">#&gt; Caused by error in `abs()`:</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> non-numeric argument to mathematical function</span></span></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checks</span><span class="op">$</span><span class="va">summary_data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt;          var cor_with_rate</span></span>
-<span><span class="co">#&gt; 1 Yld_Vol_Dr   -0.01505854</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 Yld_Vol_Dr    0.01821775</span></span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">checks</span><span class="op">$</span><span class="va">summary_fig</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
+<p><img src="V4-diagnose-td_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr>
@@ -570,7 +1302,7 @@ see add citation.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>

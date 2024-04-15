@@ -69,7 +69,14 @@ assign_rates <- function(exp_data, rate_info) {
     multiple_of_the_other <- (num_rates_ls[which.max(num_rates_ls)] %% num_rates_ls[-which.max(num_rates_ls)] == 0)
 
     # are the geometries identical?
-    geometry_identical <- all(input_trial_data$exp_plots[[1]]$geometry == input_trial_data$exp_plots[[2]]$geometry)
+    geometry_identical <-
+      if (!length(input_trial_data$exp_plots[[1]]$geometry) == length(input_trial_data$exp_plots[[2]]$geometry)) {
+        # if the numbers of plots are different
+        FALSE
+      } else {
+        # if the numbers of plots are the same and they are identical
+        all(input_trial_data$exp_plots[[1]]$geometry == input_trial_data$exp_plots[[2]]$geometry)
+      }
 
     # are both design types "ls" (not random)
     both_ls <- all(input_trial_data$design_type == "ls" | is.na(input_trial_data$design_type))
@@ -375,7 +382,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
         start_rank_as,
         ceiling(max_strip_id / num_rates) + 1
       ) %>%
-      .[1:(max_strip_id + 1)]
+      .[1:max_strip_id]
 
     assigned_rates_data <-
       data.table::data.table(
@@ -488,7 +495,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       start_rank_as,
       ceiling(max_strip_id / num_rates) + 1
     ) %>%
-      .[1:(max_strip_id + 1)]
+      .[1:max_strip_id]
 
     assigned_rates_data <-
       data.table::data.table(

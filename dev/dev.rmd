@@ -16,7 +16,6 @@ usethis::use_package("ggplot2")
 usethis::use_package("magrittr")
 usethis::use_package("sf")
 usethis::use_package("lwgeom")
-usethis::use_package("stringr")
 usethis::use_package("purrr")
 usethis::use_package("terra")
 usethis::use_package("tibble")
@@ -58,4 +57,9 @@ usethis::use_vignette("random-vs-orthogonal")
 ```{r}
 #--- build pkgdown website ---#
 pkgdown::build_site()
+```
+
+
+```{r}
+usethis::edit_r_environ()
 ```

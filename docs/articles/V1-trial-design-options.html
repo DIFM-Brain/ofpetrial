@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trial Design Options • ofpetrial</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -244,15 +244,14 @@ rank of its plots look like this.</p>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
 </div>
 <div class="section level2">
-<h2 id="strip-trial-strip">Strip trial (“strip”)<a class="anchor" aria-label="anchor" href="#strip-trial-strip"></a>
+<h2 id="strip-trial-str">Strip trial (“str”)<a class="anchor" aria-label="anchor" href="#strip-trial-str"></a>
 </h2>
-<p>You can design a strip trial using
-<code>design_type = "strip"</code>. You can specify the spatial pattern
-of strip rates using the <code>rank_seq_as</code> option. The code below
-repeats 100 (rank 1), 280 (rank 4), 220 (rank 3), and 160 (rank 2).
-Since the strip trial has a single rate per strip,
-<code>rank_seq_ws</code> is not available unlike
-<code>design_type = "ls"</code>.</p>
+<p>You can design a strip trial using <code>design_type = "str"</code>.
+You can specify the spatial pattern of strip rates using the
+<code>rank_seq_as</code> option. The code below repeats 100 (rank 1),
+280 (rank 4), 220 (rank 3), and 160 (rank 2). Since the strip trial has
+a single rate per strip, <code>rank_seq_ws</code> is not available
+unlike <code>design_type = "ls"</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
@@ -261,7 +260,7 @@ Since the strip trial has a single rate per strip,
 <span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
 <span>    rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">160</span>, <span class="fl">220</span>, <span class="fl">280</span><span class="op">)</span>,</span>
 <span>    rank_seq_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
-<span>    design_type <span class="op">=</span> <span class="st">"strip"</span>,</span>
+<span>    design_type <span class="op">=</span> <span class="st">"str"</span>,</span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">td_strip</span> <span class="op">&lt;-</span></span>
@@ -293,9 +292,39 @@ experiment.</p>
 <p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level2">
+<h2 id="randomized-strip-rstr">Randomized Strip (“rstr”)<a class="anchor" aria-label="anchor" href="#randomized-strip-rstr"></a>
+</h2>
+<p>You can create a randomized strip design using the “rstr” option as
+follows.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">329544</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
+<span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
+<span>    gc_rate <span class="op">=</span> <span class="fl">180</span>,</span>
+<span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
+<span>    rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">160</span>, <span class="fl">220</span>, <span class="fl">280</span><span class="op">)</span>,</span>
+<span>    rank_seq_as <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span>,</span>
+<span>    design_type <span class="op">=</span> <span class="st">"rstr"</span>,</span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">td_randomized_strip</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span></span>
+<span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
+<span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_randomized_strip</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p>This design is not completely randomized. Rather it is randomized
+inside a block of strips. Here, a block consists of four consecutive
+strips because four distinct rates were provided by the user.</p>
+</div>
+<div class="section level2">
 <h2 id="randomized-block-rb">Randomized Block (“rb”)<a class="anchor" aria-label="anchor" href="#randomized-block-rb"></a>
 </h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -312,13 +341,13 @@ experiment.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_rb</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>When <code>design_type = "rb"</code>, blocks are created internally
 when <code><a href="../reference/assign_rates.html">assign_rates()</a></code> is run. Here is what blocks look
 like.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/add_blocks.html">add_blocks</a></span><span class="op">(</span><span class="va">td_rb</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"block_id"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>Since there are five distinctive rates, each block consists of five
 by five plots. In each of the block, the five rates are randomly
 assigned in a way that each of the rates appear exactly five times.</p>
@@ -332,8 +361,9 @@ exactly the same design by specifying <code>rank_seq_as</code> and
 <code>rank_seq_ws</code> appropriately. JCLS ensures that the jumps in
 rate from plot to plot in the direction of the applicator/planter less
 than equal to rate rank of 2. For exmaple, input rate never goes from
-100 to 220 or 260 in JCLS.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+100 to 220 or 260 in JCLS. This type of designs avoids placing too much
+mechanical strain on the applicator/planter.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -350,7 +380,7 @@ than equal to rate rank of 2. For exmaple, input rate never goes from
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_jcls</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="extra-jump-conscious-alternate-ejca">Extra Jump-conscious Alternate (“ejca”)<a class="anchor" aria-label="anchor" href="#extra-jump-conscious-alternate-ejca"></a>
@@ -358,7 +388,7 @@ than equal to rate rank of 2. For exmaple, input rate never goes from
 <p>This design alternate high-rate strip and low-rate strip, thus
 avoiding sudden changes in input rates so that machines can handle
 them.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -375,12 +405,12 @@ them.</p>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_ejca</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="sparse-sparse">Sparse (“sparse”)<a class="anchor" aria-label="anchor" href="#sparse-sparse"></a>
 </h2>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
 <span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -395,9 +425,9 @@ them.</p>
 <span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
 <span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td_sparse</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="V1-trial-design-options_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
 </div>
   </div>
 
@@ -418,7 +448,7 @@ them.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
 </div>
 
       </footer>
