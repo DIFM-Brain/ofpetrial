@@ -88,6 +88,7 @@ exp_data$exp_plots
 As you can see, it is a list of two `sf` objects of experiment plots. Since, it is a list, you can access the `sf` itself like this.
 
 ```{r}
+#--- first element of the list ---#
 exp_data$exp_plots[[1]]
 ```
 
@@ -120,7 +121,7 @@ n_rate_info <-
 td <- assign_rates(exp_data, rate_info = list(seed_rate_info, n_rate_info))
 ```
 
-As you can see, `td` has a very similar structure and sets of variables (e.g., `input_name` and `exp_plots` were inherited from `exp_data`). This is not surprising because we just assigned rates to the experiment plots with `assign_rates()`.
+As you can see below, `td` has a very similar structure and sets of variables (e.g., `input_name` and `exp_plots` were inherited from `exp_data`). This is not surprising because we just assigned rates to the experiment plots with `assign_rates()`.
 
 ```{r}
 dplyr::glimpse(td)

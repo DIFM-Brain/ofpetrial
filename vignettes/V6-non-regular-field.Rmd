@@ -46,7 +46,7 @@ exp_data <-
 viz(exp_data, type = "layout")
 ```
 
-In this kind of spatial arrangement of experiment plots, some blocks can be shaped not so rectangular and it is simply impossible to define regular rectangular blocks. 5 by 5 blocks look like below for this field.
+In this kind of spatial arrangement of experiment plots, some blocks can be shaped not so rectangular and it is simply impossible to define regular rectangular blocks. 5 by 5 blocks would look like below for this field if you try to assign blocks regardless.
 
 ```{r, echo = FALSE}
 n_rate_info <-
@@ -69,8 +69,10 @@ viz(td_rb, type = "rates")
 add_blocks(td_rb) %>% viz(type = "block_id")
 ```
 
+This means that designing trial using a randomized block design for this type of field may not produce a design you might have intended.
 
 # Field with ditches and holes
 
-More often than not, fields have ditches (or parts where crops cannot be grown). The `make_exp_plots()` function avoids such areas automatically in creating experiment plots. 
+More often than not, fields have ditches (or parts where crops cannot be grown). The `make_exp_plots()` function avoids such areas automatically in creating experiment plots like below: 
+
 

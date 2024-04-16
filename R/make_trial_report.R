@@ -579,11 +579,8 @@ text_harvester_passes <- function(all_trial_info, unit_system) {
 }
 
 get_input_type <- function(input) {
-  match <- jsonlite::fromJSON(
-    system.file("extdata", "input_type_table.json", package = "ofpetrial"),
-    flatten = TRUE
-  ) %>%
-    as.data.frame() %>%
+  match <-
+    input_type_table %>%
     dplyr::filter(input_name == input) %>%
     dplyr::pull(input_type)
 
@@ -1025,7 +1022,7 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
       unlist() %>%
       length()
 
-    my_palette <- brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
+    my_palette <- get_palette(n_rates)
 
     plots <- trial_plot %>%
       filter(input_name == input)
@@ -1056,7 +1053,7 @@ tmap_plot_legend <- function(trial_plot) {
   } else {
     plots <- trial_plot %>%
       dplyr::mutate(area = as.numeric(st_area(.))) %>%
-      dplry::arrange(desc(area)) %>%
+      dplyr::arrange(desc(area)) %>%
       dplyr::pull(input_name) %>%
       unique()
 
@@ -1081,4 +1078,25 @@ tmap_label <- function(center, machine_type, trial_plot) {
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 
   return(tmap_label)
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Ger number in english
+#++++++++++++++++++++++++++++++++++++
+get_number_in_english <- function(num) {
+  return(number_english_dictionary[number == num, num_in_english])
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Calculate dot product
+#++++++++++++++++++++++++++++++++++++
+get_dot_product <- function(vec_1, vec_2) {
+  return(sum(vec_1 * vec_2))
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Get palette
+#++++++++++++++++++++++++++++++++++++
+get_palette <- function(num_rates) {
+  return(my_palettes[n_rates == num_rates, my_palette][[1]])
 }

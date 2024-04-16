@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `ofpetrial` package offers various trial design types. This vignette provides examples of availabl design types. Let's first  prepare experiment plots to which we assign rates using various trial design options.
+The `ofpetrial` package offers various trial design types. This vignette provides examples of availabl design types. Let's first prepare experiment plots to which we assign rates using various trial design options.
 
 ```{r, warning = FALSE, message = FALSE}
 library(ofpetrial)
@@ -59,6 +59,20 @@ n_rate_info <-
     rates = c(100, 140, 180, 220, 260),
     design_type = "ls"
   )
+
+td_ls_d <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+
+viz(td_ls_d)
+```
+
+Note that the trial design produced by `assign_rates()` is randomly picked from a pool of candidate Latin Square designs. If you would like to reproduce the same trial design later, you can use `set.seed()`.
+
+```{r}
+set.seed(89934)
 
 td_ls_d <-
   assign_rates(
@@ -122,7 +136,28 @@ viz(td_ls_2, type = "rates")
 
 # Strip trial ("str")
 
-You can design a strip trial using `design_type = "str"`. You can specify the spatial pattern of strip rates using the `rank_seq_as` option. The code below repeats 100 (rank 1), 280 (rank 4), 220 (rank 3), and 160 (rank 2). Since the strip trial has a single rate per strip, `rank_seq_ws` is not available unlike `design_type = "ls"`.
+You can design a strip trial using `design_type = "str"`. By default, it repeates a sequence of rates like below.
+
+```{r}
+n_rate_info <-
+  prep_rate(
+    plot_info = n_plot_info,
+    gc_rate = 180,
+    unit = "lb",
+    rates = c(100, 160, 220, 280),
+    design_type = "str",
+  )
+
+td_strip <-
+  assign_rates(
+    exp_data = exp_data,
+    rate_info = n_rate_info
+  )
+
+viz(td_strip, type = "rates")
+```
+
+Just like the "ls" option, you can specify the spatial pattern of strip rates using the `rank_seq_as` option. The code below repeats 100 (rank 1), 280 (rank 4), 220 (rank 3), and 160 (rank 2). Since the strip trial has a single rate per strip, `rank_seq_ws` is not available unlike `design_type = "ls"`.
 
 ```{r}
 n_rate_info <-
@@ -180,7 +215,6 @@ n_rate_info <-
     gc_rate = 180,
     unit = "lb",
     rates = c(100, 160, 220, 280),
-    rank_seq_as = c(1, 4, 3, 2),
     design_type = "rstr",
   )
 
@@ -193,9 +227,11 @@ td_randomized_strip <-
 viz(td_randomized_strip, type = "rates")
 ```
 
-This design is not completely randomized. Rather it is randomized inside a block of strips. Here, a block consists of four consecutive strips because four distinct rates were provided by the user.
+This design is not completely randomized. Rather it is randomized inside a block of strips. Here, a block consists of four consecutive strips because four distinct rates were provided by the user. 
 
 # Randomized Block ("rb")
+
+You can crete a randomized block design using the `"rb"` option.
 
 ```{r}
 n_rate_info <-
@@ -222,11 +258,11 @@ When `design_type = "rb"`, blocks are created internally when `assign_rates()` i
 add_blocks(td_rb) %>% viz(type = "block_id")
 ```
 
-Since there are five distinctive rates, each block consists of five by five plots. In each of the block, the five rates are randomly assigned in a way that each of the rates appear exactly five times.
+Since there are five distinctive rates, each block consists of five by five plots. In each of the block, the five rates are randomly assigned in a way that each of the rates appear exactly five times. 
 
 # Jump-conscious Latin Square ("jcls")
 
-Jump-conscious Latin Square (`design_type = "jcls`) is merely a special type of Latin Square design. Indeed, you can create exactly the same design by specifying `rank_seq_as` and `rank_seq_ws` appropriately. JCLS ensures that the jumps in rate from plot to plot in the direction of the applicator/planter less than equal to rate rank of 2. For exmaple, input rate never goes from 100 to 220 or 260 in JCLS. This type of designs avoids placing too much mechanical strain on the applicator/planter.
+Jump-conscious Latin Square (`design_type = "jcls`) is merely a special type of Latin Square design. Indeed, you can create exactly the same design by specifying `rank_seq_as` and `rank_seq_ws` appropriately. JCLS ensures that jumps in rate from plot to plot in the direction of the applicator/planter less than equal to rate rank of 2. For exmaple, input rate never goes from 100 to 220 or 260 in JCLS. This type of designs avoids placing too much mechanical strain on the applicator/planter.
 
 ```{r}
 n_rate_info <-
@@ -249,7 +285,7 @@ viz(td_jcls, type = "rates")
 
 # Extra Jump-conscious Alternate ("ejca")
 
-This design alternate high-rate strip and low-rate strip, thus avoiding sudden changes in input rates so that machines can handle them.
+This design alternate high-rate strip and low-rate strip, thus avoiding sudden changes in input rates so that machines can handle them. EJCA is more machine friendly than JCLS.
 
 ```{r}
 n_rate_info <-
@@ -272,6 +308,8 @@ viz(td_ejca, type = "rates")
 
 # Sparse ("sparse")
 
+Sparse design with the `"sparse"` option generate a trial design so that every other experimental plot has the status-quo rate (business-as-usual rate). This can potentially alleviate yield loss associated with lower rates compared to other designs as lower rates happen less frequently.
+
 ```{r}
 n_rate_info <-
   prep_rate(
@@ -287,9 +325,7 @@ td_sparse <-
     exp_data = exp_data,
     rate_info = n_rate_info
   )
-```
 
-```{r}
 viz(td_sparse, type = "rates")
 ```
 

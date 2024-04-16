@@ -1,15 +1,14 @@
 # One-time operation
 
+## Add R CMD check button to the github repository
 ```{r}
-#++++++++++++++++++++++++++++++++++++
-#+ Add buttons
-#++++++++++++++++++++++++++++++++++++
 #--- R CMD check ---#
 usethis::use_github_action_check_standard()
+```
 
-#++++++++++++++++++++++++++++++++++++
-#+ packages to use
-#++++++++++++++++++++++++++++++++++++
+## Packages to use
+
+```{r}
 usethis::use_package("data.table")
 usethis::use_import_from("dplyr", "mutate")
 usethis::use_import_from("dplyr", "select")
@@ -42,22 +41,25 @@ usethis::use_package("knitr")
 usethis::use_package("rmarkdown")
 usethis::use_package("tmap")
 usethis::use_pipe() # can use %>% after this
+```
 
-#++++++++++++++++++++++++++++++++++++
-#+ Folders, files to ignore
-#++++++++++++++++++++++++++++++++++++
+## Folders, files to ignore
+
+```{r}
 usethis::use_build_ignore(c("dev_notes.md", "checklist.md", "notes.md", "organize.R", "structure.rmd", "todo.md", "test.R", "docs", "README.html", "debug", "random-vs-orthogonal.Rmd", "test", "dev", "_pkgdown.yml", "R_retired"))
+```
 
+## Create a folder where codes to generate datasets are created
 
-#--- create a folder where codes to generate datasets are created ---#
+```{r}
 usethis::use_data_raw("generate_data.R")
+```
 
-#++++++++++++++++++++++++++++++++++++
-#+ Vignette and other documents
-#++++++++++++++++++++++++++++++++++++
+## Vignette and other documents
+
+```{r}
 usethis::use_readme_rmd()
 usethis::use_news_md()
-usethis::use_vignette("V0-example-work-flows")
 usethis::use_vignette("V1-trial-design-options")
 usethis::use_vignette("V2-ab-line")
 usethis::use_vignette("V3-change-rates-manually")
@@ -65,6 +67,7 @@ usethis::use_vignette("V4-diagnose-td")
 usethis::use_vignette("V5-understanding-structure")
 usethis::use_vignette("V6-non-regular-field")
 usethis::use_vignette("random-vs-orthogonal")
+usethis::use_vignette("V7-more-examples")
 ```
 
 # Build website

@@ -1,4 +1,4 @@
-+ [ ] measurement unit by input type (N, seed, )
++ [x] measurement unit by input type (N, seed, )
 + [x] trial design
   + [x] sparse design
   + [x] strip design
@@ -30,11 +30,13 @@
 + [x] discrete example? cover crop?
 + [ ] check the orthogonality with past trial design
 + [a] improve the creation of headland (difference of field and experiment)
-+ [ ] what to do with blocks?
++ [x] what to do with blocks?
 + [ ] distribution of input rate in check 
 + [ ] 
 + [ ] rate text in viz add /acre or /ha depending on units. N rate in lb/acre (original)
-+ [ ] more than one inputs of the same type (different form of N, or different cover crops) where each of the inputs do no occupy the same plot
++ [ ] more than one inputs of the same type (different form of N, or different cover crops) where each of the inputs do not occupy the same plot
++ [ ] add an example of experimental plots for a field with holes
++ [ ] check the language explaining how "rstr" works in V1-trial-design-options.Rmd
 
 # Problems
 

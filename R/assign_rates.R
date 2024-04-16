@@ -862,8 +862,6 @@ get_design_for_second <- function(input_trial_data, first_design, rate_jump_thre
   #++++++++++++++++++++++++++++++++++++
   for (row_index in 1:num_plots) { # loop over the strips
 
-    print(row_index)
-
     track_data <-
       data.table::data.table(
         plot_id = round(num_plots * seq(0.1, 1, by = 0.1), digits = 0)

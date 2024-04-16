@@ -27,7 +27,7 @@ library(ggplot2)
 library(dplyr)
 ```
 
-Suppose you have created a trial design applying `assign_rates()` to experiment plots made by `make_exp_plots()`, but you are not quite satisfied with it and would like to change rates here and there. You can easily do so manually. This vignette demonstrates such operations. 
+Suppose you have created a trial design applying `assign_rates()` to experiment plots made by `make_exp_plots()`, but you are not quite satisfied with it and would like to change rates here and there. You can easily do so manually using the `change_rates()` function. This vignette demonstrates such operations. 
 
 # Data Preparation 
 
@@ -104,7 +104,7 @@ You can use `change_rates()` to change rates. The code below change the rate ass
 ```{r}
 modified_td <-
   change_rates(
-    td,
+    td = td,
     input_name = "NH3",
     strip_ids = 1,
     plot_ids = 1,
@@ -190,7 +190,7 @@ data(td_curved)
 viz(td_curved)
 ```
 
-Notice that there is a three-plot strip at the east end of the field. Suppose, you can "remove" it from experiments (there is nothing wrong with keeping them as part of the experiment). You can do so by assining the rate for the non-experimental part of field (which is `r td_curved$gc_rate`) to the strip. 
+Notice that there is a three-plot strip at the east end of the field. Suppose, you would like to "remove" it from experiments (there is nothing wrong with keeping them as part of the experiment). You can do so by assining the rate for the non-experimental part of field (which is `r td_curved$gc_rate`) to the strip. 
 
 ```{r}
 change_rates(

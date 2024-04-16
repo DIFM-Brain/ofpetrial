@@ -205,7 +205,25 @@ number_english_dictionary <-
 #++++++++++++++++++++++++++++++++++++
 #+ Color sequence
 #++++++++++++++++++++++++++++++++++++
+my_palettes <-
+  data.table(
+    n_rates = 1:6
+  ) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(my_palette = list(
+    RColorBrewer::brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
+  )) %>%
+  data.table()
 
+#++++++++++++++++++++++++++++++++++++
+#+ Input type table
+#++++++++++++++++++++++++++++++++++++
+input_type_table <-
+  jsonlite::fromJSON(
+    here::here("data-raw/input_type_table.json"),
+    flatten = TRUE
+  ) %>%
+  data.frame()
 
 #++++++++++++++++++++++++++++++++++++
 #+ Input unit conversion table
@@ -226,6 +244,8 @@ input_unit_conversion_table <-
 usethis::use_data(
   number_english_dictionary,
   input_unit_conversion_table,
+  input_type_table,
+  my_palettes,
   internal = TRUE,
   overwrite = TRUE
 )

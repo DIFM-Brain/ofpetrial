@@ -1,5 +1,5 @@
 ---
-title: "Example Work Flow"
+title: "More Examples"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Example Work Flow}
@@ -21,6 +21,8 @@ library(ofpetrial)
 
 # Single-input Nitrogen Experiment
 
+Create plot information.
+
 ```{r}
 n_plot_info <-
   prep_plot(
@@ -31,7 +33,11 @@ n_plot_info <-
     harvester_width = 30,
     plot_width = 30
   )
+```
 
+Create exerpimental plots based on the plot information.
+
+```{r}
 exp_data <-
   make_exp_plots(
     input_plot_info = n_plot_info,
@@ -39,7 +45,9 @@ exp_data <-
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
+```
 
+```{r}
 n_rate_info <-
   prep_rate(
     plot_info = n_plot_info,
@@ -137,7 +145,7 @@ trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_i
 viz(trial_design)
 ```
 
-# Pivot Bio Experiment
+# Cover crop experiment 
 
 # Precision Nitrogen Project (PNP) at University of Nebraska Lincoln
 

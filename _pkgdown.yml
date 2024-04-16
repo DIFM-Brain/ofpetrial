@@ -25,7 +25,7 @@ reference:
   - title: Visualization
     contents:
       - viz
-  - title: Write out files
+  - title: Write out trial design files and make trial report
     contents:
       - write_trial_files
       - make_trial_report
