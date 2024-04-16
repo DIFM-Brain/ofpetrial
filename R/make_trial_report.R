@@ -584,7 +584,7 @@ get_input_type <- function(input) {
     dplyr::filter(input_name == input) %>%
     dplyr::pull(input_type)
 
-  if (nrow(match == 0)) {
+  if (length(match) == 0) {
     match <- input
   }
 }
