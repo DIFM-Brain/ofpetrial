@@ -99,7 +99,11 @@ assign_rates <- function(exp_data, rate_info) {
             design_type = input_trial_data_with_rates$design_type[[1]]
           )
 
-        design_second_input <- get_design_for_second(input_trial_data_with_rates, first_design = design_first_input)
+        design_second_input <-
+          get_design_for_second(
+            input_trial_data = input_trial_data_with_rates,
+            first_design = design_first_input
+          )
 
         input_trial_data_with_rates$experiment_design <- list(design_first_input, design_second_input)
 
@@ -858,6 +862,8 @@ get_design_for_second <- function(input_trial_data, first_design, rate_jump_thre
   #++++++++++++++++++++++++++++++++++++
   for (row_index in 1:num_plots) { # loop over the strips
 
+    print(row_index)
+
     track_data <-
       data.table::data.table(
         plot_id = round(num_plots * seq(0.1, 1, by = 0.1), digits = 0)
@@ -893,7 +899,7 @@ get_design_for_second <- function(input_trial_data, first_design, rate_jump_thre
         rate_rank_2nd <-
           #--- cannot take the save value as the last plot and the closeset plot in the previous strip  ---#
           data.table::copy(comb_table)[rate_rank_2 != rate_rank_2nd_prev & rate_rank_1 == rate_rank_1st, ] %>%
-          #--- does not allow rate rank jumps of more than 3 (e.g., 1 -> 4) ---#
+          #--- does not allow rate rank jumps of more than rate_jump_threshold (e.g., 1 -> 4) ---#
           .[abs(rate_rank_2 - rate_rank_2nd_prev) <= rate_jump_threshold, ] %>%
           .[cases == min(cases), ] %>%
           .[sample(1:.N, 1), rate_rank_2]
@@ -992,7 +998,7 @@ find_rate <- function(row_index, working_plot_id, rates_list, comb_table, rate_t
         variability_score <-
           mean(c(
             local_rate_rank_vec[1:(row_index - 2)]^2 * W[row_index, 1:(row_index - 2)],
-            local_rate_rank_vec[row_index - 1]^2 / 2 * W[row_index, row_index - 1]
+            -local_rate_rank_vec[row_index - 1]^2 / 2 * W[row_index, row_index - 1]
           ))
       }
     }) %>%
@@ -1000,14 +1006,24 @@ find_rate <- function(row_index, working_plot_id, rates_list, comb_table, rate_t
 
   options$variability_score <- score_seq
 
-  options <-
+  final_options <-
     options %>%
     .[cases %in% c(min(cases), min(cases) + 1), ] %>%
-    .[abs(rate_rank_2 - rates_list$ rate_rank_2nd_prev) <= rate_jump_threshold, ] %>%
-    .[variability_score == max(variability_score), ]
+    .[abs(rate_rank_2 - rates_list$ rate_rank_2nd_prev) <= rate_jump_threshold, ]
 
-  num_options <- nrow(options)
-  rate_rank_2nd <- options[sample(1:num_options, 1), rate_rank_2]
+  if (nrow(final_options) > 0) { # if no options are available
+    rate_rank_2nd <-
+      final_options[variability_score == max(variability_score), ] %>%
+      .[sample(1:.N, 1), rate_rank_2]
+  } else {
+    rate_rank_2nd <-
+      options %>%
+      .[abs(rate_rank_2 - rates_list$ rate_rank_2nd_prev) <= rate_jump_threshold, ] %>%
+      .[cases %in% c(min(cases), min(cases) + 1), ] %>%
+      .[variability_score == max(variability_score), ] %>%
+      .[sample(1:.N, 1), rate_rank_2 ]
+
+  }
 
   return(rate_rank_2nd)
 }
