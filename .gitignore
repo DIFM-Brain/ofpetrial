@@ -12,3 +12,7 @@ inst
 vignettes/*.html
 vignettes/*files*
 .Rhistory
+data-raw/*.dbf
+data-raw/*.shx
+data-raw/*.shp
+data-raw/*.prj

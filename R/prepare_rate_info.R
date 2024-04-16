@@ -65,7 +65,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   #++++++++++++++++++++++++++++++++++++
   if (is.na(design_type)) {
     #--- do nothing ---#
-    print('You did not specify design_type. It is assumed to be of type ls.') 
+    print("You did not specify design_type. It is assumed to be of type ls.")
   } else if (design_type %in% c("ls", "jcls", "str", "rstr", "rb")) {
     #--- do nothing ---#
   } else if (design_type == "sparse") {
@@ -118,7 +118,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
     input_trial_data$base_input <- base_input
     input_trial_data$base_rate_original <- base_rate_original
     input_trial_data$base_rate_equiv <- base_rate_equiv
-  }else{
+  } else {
     input_trial_data$include_base_rate <- FALSE
   }
   input_trial_data$total_equiv <- list(tgt_rate_original + base_rate_equiv)
@@ -184,21 +184,12 @@ convert_rates <- function(input_name,
     reporting_unit <- "imperial"
   }
 
-  conv_table <-
-    jsonlite::fromJSON(
-      system.file("extdata", "nitrogen_conversion.json", package = "ofpetrial"),
-      flatten = TRUE
-    ) %>%
-    data.table() %>%
-    .[, conv_factor := as.numeric(conv_factor)] %>%
-    .[, form_unit := paste(type, unit, sep = "_")] %>%
-    as.data.frame()
-
   if (input_name == "N_equiv") {
     conv_factor_n <- 1
   } else {
-    conv_factor_n <- which(conv_table[, "form_unit"] %in% paste(input_name, new_unit, sep = "_")) %>%
-      conv_table[., "conv_factor"]
+    conv_factor_n <-
+      which(input_unit_conversion_table[, "form_unit"] %in% paste(input_name, new_unit, sep = "_")) %>%
+      input_unit_conversion_table[., "conv_factor"]
   }
   if (is.numeric(conv_factor_n) == FALSE) {
     message("There is no combination of your specific input name and unit for conversion into target nutrient rate. We will assume the conversion is 1, and the target rates will be in your given unit.")

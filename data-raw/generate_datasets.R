@@ -192,9 +192,9 @@ td_curved <-
 
 usethis::use_data(td_curved, overwrite = TRUE)
 
-#!===========================================================
-#! Internal Data
-#!===========================================================
+# !===========================================================
+# ! Internal Data
+# !===========================================================
 #++++++++++++++++++++++++++++++++++++
 #+ Number to english
 #++++++++++++++++++++++++++++++++++++
@@ -207,4 +207,54 @@ number_english_dictionary <-
 #++++++++++++++++++++++++++++++++++++
 
 
-usethis::use_data(number_english_dictionary, internal = TRUE)
+#++++++++++++++++++++++++++++++++++++
+#+ Input unit conversion table
+#++++++++++++++++++++++++++++++++++++
+input_unit_conversion_table <-
+  jsonlite::fromJSON(
+    here::here("data-raw/input_unit_conversion_table.json"),
+    flatten = TRUE
+  ) %>%
+  data.table() %>%
+  .[, conv_factor := as.numeric(conv_factor)] %>%
+  .[, form_unit := paste(type, unit, sep = "_")] %>%
+  as.data.frame()
+
+#++++++++++++++++++++++++++++++++++++
+#+ Save all as internal data
+#++++++++++++++++++++++++++++++++++++
+usethis::use_data(
+  number_english_dictionary,
+  input_unit_conversion_table,
+  internal = TRUE,
+  overwrite = TRUE
+)
+
+# !===========================================================
+# ! External Data
+# !===========================================================
+#++++++++++++++++++++++++++++++++++++
+#+ Harvest data
+#++++++++++++++++++++++++++++++++++++
+# Make the yield data small to make the package light
+yield_sf_small <-
+  #--- read the raw yield data file ---#
+  st_read(here::here("data-raw/yield-simple1.shp")) %>%
+  dplyr::select(Yld_Vol_Dr) %>%
+  #--- get every 10 ---#
+  dplyr::slice(seq(1, dplyr::n(), by = 5))
+
+st_write(yield_sf_small, here::here("inst/extdata/yield-simple1.shp"))
+
+#++++++++++++++++++++++++++++++++++++
+#+ As-applied data
+#++++++++++++++++++++++++++++++++++++
+# make the as-applied data small to make the package light
+as_applied_sf_small <-
+  #--- read the raw yield data file ---#
+  st_read(here::here("data-raw/as-applied-simple1.shp")) %>%
+  dplyr::select(Tgt_Rate_k, Elevation_, Speed_mph_) %>%
+  #--- get every 10 ---#
+  dplyr::slice(seq(1, dplyr::n(), by = 5))
+
+st_write(as_applied_sf_small, here::here("inst/extdata/as-applied-simple1.shp"))
