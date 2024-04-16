@@ -1,0 +1,50 @@
+[
+  {
+    "input_name": "NH3",
+    "input_type": "N"
+  },
+  {
+    "input_name": "uan32",
+    "input_type": "N"
+  },
+  {
+    "input_name": "n_equiv",
+    "input_type": "N"
+  },
+  {
+    "input_name": "uan28",
+    "input_type": "N"
+  },
+  {
+    "input_name": "uan28_ats",
+    "input_type": "N"
+  },
+  {
+    "input_name": "urea",
+    "input_type": "N"
+  },
+  {
+    "input_name": "ammonium_nitrate",
+    "input_type": "N"
+  },
+  {
+    "input_name": "KCL",
+    "input_type": "K"
+  },
+  {
+    "input_name": "chicken_manure",
+    "input_type": "N"
+  },
+  {
+    "input_name": "24-0-0-3 UAN",
+    "input_type": "N"
+  },
+  {
+    "input_name": "seed",
+    "input_type": "S"
+  },
+  {
+    "input_name": "general",
+    "input_type": "user specified input"
+  }
+ ]
