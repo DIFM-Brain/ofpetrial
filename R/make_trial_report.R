@@ -877,7 +877,7 @@ get_plots <- function(all_trial_info) {
   if (length(all_trial_info$plot_width %>% unique()) == 1) {
     design <-
       all_trial_info$trial_design[[1]] %>%
-      dplyr::mutate(plot_id = row_number()) %>%
+      dplyr::mutate(plot_id = dplyr::row_number()) %>%
       dplyr::filter(type == "Trial Area")
 
     first_plot <-
