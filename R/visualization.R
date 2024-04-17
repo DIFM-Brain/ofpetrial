@@ -117,6 +117,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       ) %>%
         data.frame(.) %>%
         .[colSums(is.na(.)) == 0] %>%
+        .[!duplicated(as.list(.))] %>%
         colnames(.))) %>%
       mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
       dplyr::mutate(g_tr = list(
@@ -130,7 +131,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
           ggtitle(
             paste0(
               "Trial design for ",
-              input_name,
+              to_title(input_name),
               "\n(",
               dplyr::case_when(
                 design_type == "ls" ~ "Latin Square",
@@ -248,15 +249,15 @@ get_figure_title <- function(unit_system, include_base_rate, base_rate_equiv, ra
   }
 
   name <- if (include_base_rate == FALSE & "tgt_rate_equiv" %notin% rate_cols) {
-    paste0(input_name, " (", unit, "/", land_unit, ") | ", "No base application")
+    paste0(to_title(input_name), " (", unit, "/", land_unit, ")")
   } else if (include_base_rate == FALSE & "tgt_rate_equiv" %in% rate_cols) {
     paste0(
-      input_name, " (", unit, "/", land_unit, ") | ",
+      to_title(input_name), " (", unit, "/", land_unit, ") | ",
       input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n", "No base application"
     )
   } else {
     paste0(
-      input_name, " (", unit, "/ha) | ",
+      to_title(input_name), " (", unit, "/ha) | ",
       input_type, " Equivalent (", converted_unit, "/", land_unit, ") | ",
       "Total ", input_type, " (", converted_unit, "/", land_unit, ") \n",
       paste0("Base application: ", base_rate_equiv, " (", converted_unit, "/", land_unit, ")")

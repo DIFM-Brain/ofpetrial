@@ -121,7 +121,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   } else {
     input_trial_data$include_base_rate <- FALSE
   }
-  input_trial_data$total_equiv <- list(tgt_rate_original + base_rate_equiv)
+  input_trial_data$total_equiv <- list(tgt_rate_equiv + base_rate_equiv)
   input_trial_data$min_rate <- min_rate
   input_trial_data$max_rate <- max_rate
   input_trial_data$num_rates <- num_rates
