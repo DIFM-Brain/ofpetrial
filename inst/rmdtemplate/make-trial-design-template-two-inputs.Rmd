@@ -83,13 +83,13 @@ Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ tria
 
 ```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
 
-tmap_arrange(all_trial_info$map_design[[1]] + tm_layout(
+tmap::tmap_arrange(all_trial_info$map_design[[1]] + tmap::tm_layout(
   legend.outside = "TRUE",
   frame = FALSE,
   legend.title.size = 2,
   legend.text.size = 1.5
 ),
-all_trial_info$map_design[[2]] + tm_layout(
+all_trial_info$map_design[[2]] + tmap::tm_layout(
   legend.outside = "TRUE",
   frame = FALSE,
   legend.title.size = 2,
@@ -104,7 +104,7 @@ Figure \@ref(fig:trial-plot) displays the trial plots for the two inputs, with `
 ```{r trial-plot, echo=FALSE, fig.cap="Map of Trial Plots", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 machine_table$map_plot[[1]] +
   machine_table$plot_legend[[1]] +
-  tm_layout(
+  tmap::tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
@@ -117,11 +117,12 @@ The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)`
 
 ```{r rep-table, echo=FALSE, include = TRUE}
 rep_table <- all_trial_info %>%
-  rowwise() %>%
-  mutate(rep_table = list(
-    trial_design %>% group_by(rate) %>%
-      summarise(
-        Replicates = n(),
+  dplyr::rowwise() %>%
+  dplyr::mutate(rep_table = list(
+    trial_design %>% 
+      dplyr::group_by(rate) %>%
+      dplyr::summarise(
+        Replicates = dplyr::n(),
         .groups = "drop"
       ) %>%
       data.frame() %>%
@@ -136,9 +137,9 @@ knitr::kable(list(rep_table$rep_table[[1]], rep_table$rep_table[[2]]),
 ```{r rep-table-joint, echo=FALSE, include = TRUE}
 rep_table_joint <- cbind(all_trial_info$trial_design[[1]],
                all_trial_info$trial_design[[2]]) %>%
-  mutate(treatment = paste0(rate, "_", rate.1)) %>%
-  group_by(treatment) %>%
-  summarise(Replicates = n()) %>%
+  dplyr::mutate(treatment = paste0(rate, "_", rate.1)) %>%
+  dplyr::group_by(treatment) %>%
+  dplyr::summarise(Replicates = dplyr::n()) %>%
   data.frame() %>%
   dplyr::select(treatment, Replicates) %>%
   dplyr::rename("Treatment Rates" = "treatment")
@@ -155,7 +156,7 @@ knitr::kable(rep_table_joint,
 Because areas near the border of the field are used to turn machinery around and may be exposed to different amounts of sun and wind than are areas in the field’s interior, data from border areas are not used in the experiment. Therefore, the first step in putting the trial design “in the ground” is to apply the input around border areas, in the same way the farmer would if not participating in the trial design. Figure \@ref(fig:headland-map) identifies the border areas for this field. 
 
 ```{r headland-map, echo = FALSE, fig.cap = "Map of Field Borders", fig.height = 6, include = TRUE}
-all_trial_info$map_headlands[[1]] + tm_layout(
+all_trial_info$map_headlands[[1]] + tmap::tm_layout(
   legend.outside = "TRUE",
   frame = FALSE,
   legend.title.size = 2,
@@ -163,11 +164,11 @@ all_trial_info$map_headlands[[1]] + tm_layout(
 )
 ```
 
-### Step 2.  Center the `r str_to_title(machine_table$machine_type[[1]])` on the AB-line Provided and Implement Trial
+### Step 2.  Center the `r to_title(machine_table$machine_type[[1]])` on the AB-line Provided and Implement Trial
 
-Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(1, unit_system)`
+Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(machine_table, 1, unit_system)`
 
-```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
@@ -190,14 +191,14 @@ machine_table$map_plot_indiv[[1]] +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
   machine_table$width_line[[1]] +
-  tm_add_legend(
+  tmap::tm_add_legend(
     type = "line",
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
     lwd = 3
   ) +
-  tm_layout(
+  tmap::tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
@@ -206,11 +207,11 @@ machine_table$map_plot_indiv[[1]] +
   )
 ```
 
-### Step 3.  Center the `r str_to_title(machine_table$machine_type[[2]])` on the AB-line Provided and Implement Trial
+### Step 3.  Center the `r to_title(machine_table$machine_type[[2]])` on the AB-line Provided and Implement Trial
 
-As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(2, unit_system)`
+As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(machine_table, 2, unit_system)`
 
-```{r machine-alignment-2, echo=FALSE, fig.cap = paste0("Alignment of ", str_to_title(machine_table$machine_type[[2]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+```{r machine-alignment-2, echo=FALSE, fig.cap = paste0("Alignment of ", to_title(machine_table$machine_type[[2]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
@@ -232,14 +233,14 @@ machine_table$map_plot_indiv[[2]] +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
   machine_table$width_line[[2]] +
-  tm_add_legend(
+  tmap::tm_add_legend(
     type = "line",
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
     lty = c("dashed"),
     lwd = 3
   ) +
-  tm_layout(
+  tmap::tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
@@ -278,7 +279,7 @@ machine_table$map_plot[[1]] +
   eval(parse(text = paste0(ab_maps, collapse = " + "))) +
   eval(parse(text = paste0(poly_maps, collapse = " + "))) +
   eval(parse(text = paste0(label_maps, collapse = " + "))) +
-  tm_add_legend(
+  tmap::tm_add_legend(
     type = "line",
     labels = na.omit(labels_ablines),
     col = na.omit(colors),
@@ -286,7 +287,7 @@ machine_table$map_plot[[1]] +
     lwd = 3
   ) +
   machine_table$plot_legend[[1]] +
-  tm_layout(
+  tmap::tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
@@ -326,7 +327,7 @@ machine_table$map_plot[[1]] +
   #   title = "AB-Lines"
   # ) +
   machine_table$plot_legend[[1]] +
-  tm_layout(
+  tmap::tm_layout(
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",

@@ -111,13 +111,14 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       setorder(., cols = "machine_type") %>%
       dplyr::mutate(machine_id = dplyr::row_number()) %>%
       dplyr::rowwise() %>%
+      dplyr::mutate(unit_system = td$unit_system[[1]]) %>%
       dplyr::mutate(trial_plot = list(plots)) %>%
       dplyr::mutate(move_vec = list(get_move_vec(ab_line))) %>%
       dplyr::mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, td$unit_system))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -135,15 +136,16 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       dplyr::mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("planter", "applicator", "harvester"))] %>%
       data.table::setorder(., cols = "machine_type") %>%
-      dplyr::mutate(machine_id = row_number()) %>%
+      dplyr::mutate(machine_id = dplyr::row_number()) %>%
       dplyr::rowwise() %>%
+      dplyr::mutate(unit_system = td$unit_system[[1]]) %>%
       dplyr::mutate(trial_plot = list(plots)) %>%
       dplyr::mutate(move_vec = list(get_move_vec(ab_line))) %>%
       dplyr::mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, td$unit_system))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -167,8 +169,8 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
     gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
     gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
-    gsub("_length-unit_", ifelse(unit_system == "metric", "meter", "foot"), .) %>%
-    gsub("_land-unit_", land_unit, .) %>%
+    gsub("_length-unit_", ifelse(all_trial_info$unit_system[[1]] == "metric", "meter", "foot"), .) %>%
+    gsub("_land-unit_", all_trial_info$land_unit[[1]], .) %>%
     gsub("_field-size_", all_trial_info$field_size[[1]], .) %>%
     gsub("_headland-size_", all_trial_info$headland_size[[1]], .) %>%
     gsub("_sideland-size_", all_trial_info$sideland_size[[1]], .)
@@ -318,9 +320,9 @@ trial_text_inputs <- function(all_trial_info) {
 
 trial_text_machinery_names_cap <- function(machine_table) {
   if (nrow(machine_table) > 2) {
-    paste0(tools::toTitleCase(machine_table$machine_type[[1]]), " and ", tools::toTitleCase(machine_table$machine_type[[2]]))
+    paste0(to_title(machine_table$machine_type[[1]]), " and ", to_title(machine_table$machine_type[[2]]))
   } else {
-    paste0(tools::toTitleCase(machine_table$machine_type[[1]]))
+    paste0(to_title(machine_table$machine_type[[1]]))
   }
 }
 
@@ -412,7 +414,7 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
   }
 }
 
-text_sections_used <- function(index, unit_system) {
+text_sections_used <- function(machine_table, index, unit_system) {
   if (machine_table$sections_used[[index]] > 1) {
     if (unit_system == "metric") {
       paste0(
@@ -740,11 +742,11 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
   return(polygon_sf)
 }
 
-# trial_plot <- machine_table$trial_plot[[1]]
-# move_vec <- machine_table$move_vec[[1]]
-# input <- machine_table$input_name[[1]]
+# trial_plot <- machine_table$trial_plot[[2]]
+# move_vec <- machine_table$move_vec[[2]]
+# input <- machine_table$input_name[[2]]
 # unit_system <- "imperial"
-make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
+make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info) {
   if (is.na(input) == FALSE) {
     plot_width <- all_trial_info %>%
       dplyr::filter(input_name == input) %>%
@@ -754,7 +756,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
       dplyr::filter(input_name == input) %>%
       .[1, ]
 
-    coords <- sf::st_coordinates(trial_plot)[, 1:2]
+    coords <- sf::st_coordinates(trial_plot$geometry)[, 1:2]
 
     perp_move_vec <- rotate_vec(move_vec, 90)
     opp_perp_vec <- rotate_vec(perp_move_vec, 180)
@@ -786,7 +788,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
         point1,
         arrow_lr
       )) %>%
-      sf::st_sfc(crs = sf::st_crs(trial_plot)) %>%
+      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
       sf::st_sf()
 
     label_line <-
@@ -795,7 +797,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
         (point2 - 3.2 * move_vec)
       ) %>%
       sf::st_linestring() %>%
-      sf::st_sfc(crs = sf::st_crs(trial_plot)) %>%
+      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
       sf::st_sf() %>%
       dplyr::mutate(
         label = ifelse(
@@ -805,12 +807,12 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
         )
       )
 
-    tmap::tm_shape(new_line, bbox = sf::st_bbox(trial_plot)) +
+    tmap::tm_shape(new_line, bbox = sf::st_bbox(trial_plot$geometry)) +
       tmap::tm_lines(
         col = "black",
         lwd = 2
       ) +
-      tmap::tm_shape(label_line, bbox = sf::st_bbox(trial_plot)) +
+      tmap::tm_shape(label_line, bbox = sf::st_bbox(trial_plot$geometry)) +
       tmap::tm_text("label",
         col = "red",
         size = 1,
@@ -843,7 +845,7 @@ get_move_vec <- function(ab_line) {
 # plot <- machine_table$trial_plot[[2]]
 # move_vec <- machine_table$move_vec[[1]]
 # machine_id <- machine_table$machine_id[[2]]
-# machine_width <- machine_table$machine_width[[2]]
+# machine_width <- machine_table$width[[2]]
 # height <- machine_table$height[[2]]
 
 find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, machine_width, height) {
@@ -852,7 +854,7 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
 
   # intersect the ab_line and plot polygon
   line_coords <-
-    sf::st_intersection(plot, ab_line) %>%
+    sf::st_intersection(plot[1,], ab_line) %>%
     sf::st_coordinates()
 
   cent <- line_coords[1, 1:2] %>%
@@ -899,12 +901,28 @@ get_plots <- function(all_trial_info) {
             min(.)
       )
 
-    plots <-
-      design %>%
-      dplyr::filter(plot_id == first_plot$plot_id) %>%
-      st_transform_utm(.) %>%
-      dplyr::mutate(input_name = all_trial_info$input_name) %>%
-      dplyr::select(rate, strip_id, plot_id, type, input_name)
+    if(nrow(all_trial_info) == 2){
+      plots <-
+        rbind(design %>%
+        dplyr::filter(plot_id == first_plot$plot_id) %>%
+        st_transform_utm(.) %>%
+        dplyr::mutate(input_name = all_trial_info$input_name[[1]]) %>%
+        dplyr::select(rate, strip_id, plot_id, type, input_name),
+        design %>%
+          dplyr::filter(plot_id == first_plot$plot_id) %>%
+          st_transform_utm(.) %>%
+          dplyr::mutate(input_name = all_trial_info$input_name[[2]]) %>%
+          dplyr::select(rate, strip_id, plot_id, type, input_name))
+
+    }else{
+      plots <-
+        design %>%
+        dplyr::filter(plot_id == first_plot$plot_id) %>%
+        st_transform_utm(.) %>%
+        dplyr::mutate(input_name = all_trial_info$input_name)
+      # %>%
+      #   dplyr::select(rate, strip_id, plot_id, type, input_name)
+    }
   } else {
     max_input <- all_trial_info %>%
       dplyr::filter(plot_width == max(all_trial_info$plot_width))
@@ -913,11 +931,11 @@ get_plots <- function(all_trial_info) {
       dplyr::filter(plot_width != max(all_trial_info$plot_width))
 
     design1 <- max_input$trial_design[[1]] %>%
-      dplyr::mutate(plot_id = row_number()) %>%
+      dplyr::mutate(plot_id = dplyr::row_number()) %>%
       dplyr::filter(type == "Trial Area")
 
     design2 <- min_input$trial_design[[1]] %>%
-      dplyr::mutate(plot_id = row_number()) %>%
+      dplyr::mutate(plot_id = dplyr::row_number()) %>%
       dplyr::filter(type == "Trial Area")
 
     plot1 <-
@@ -1039,7 +1057,7 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
 
     map <-
       tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)), bbox = sf::st_bbox(plots)) +
-      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", tools::toTitleCase(input), " Rate"))
+      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", to_title(input), " Rate"))
   }
 
   return(map)
@@ -1071,7 +1089,7 @@ tmap_plot_legend <- function(trial_plot) {
       tmap::tm_add_legend(
         title = "Trial Plots",
         type = "symbol",
-        labels = c(paste0(tools::toTitleCase(plots[1]), " Trial Plot"), paste0(tools::toTitleCase(plots[2]), " Trial Plot")),
+        labels = c(paste0(to_title(plots[1]), " Trial Plot"), paste0(to_title(plots[2]), " Trial Plot")),
         col = c("black", "gray"),
         shape = 0,
         size = 2
@@ -1109,4 +1127,16 @@ get_dot_product <- function(vec_1, vec_2) {
 #++++++++++++++++++++++++++++++++++++
 get_palette <- function(num_rates) {
   return(my_palettes[n_rates == num_rates, my_palette][[1]])
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Make title for figure
+#++++++++++++++++++++++++++++++++++++
+to_title <- function(string){
+  if(string %in% c("UAN28", "UAN32", "uan32", "uan28")){
+    title = toupper(as.character(string))
+  }else{
+    title = tools::toTitleCase(as.character(string))
+  }
+  return(title)
 }
