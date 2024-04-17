@@ -80,7 +80,6 @@ usethis::use_vignette("V7-more-examples")
 pkgdown::build_site()
 ```
 
-
 ```{r}
 usethis::edit_r_environ()
 ```

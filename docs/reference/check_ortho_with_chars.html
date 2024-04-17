@@ -38,7 +38,7 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/V0-example-work-flows.html">Example Work Flow</a>
+      <a href="../articles/V0-basic-work-flow.html">Basic Workflow</a>
     </li>
     <li>
       <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
@@ -57,6 +57,9 @@
     </li>
     <li>
       <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
+    </li>
+    <li>
+      <a href="../articles/V7-more-examples.html">More Examples</a>
     </li>
   </ul></li>
 <li>
@@ -110,18 +113,18 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_single_input</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">yield_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"yield-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `yield-simple1' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpe0WQFf/temp_libpath15f7a29e69868/ofpetrial/extdata/yield-simple1.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpfSGh2I/temp_libpath7daf1e9ccdb6/ofpetrial/extdata/yield-simple1.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 16822 features and 34 fields</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 3365 features and 1 field</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POINT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dimension:     XY</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -16.70075 ymin: 39.11962 xmax: -16.69612 ymax: 39.1269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bounding box:  xmin: -16.70072 ymin: 39.11962 xmax: -16.69613 ymax: 39.1269</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geodetic CRS:  WGS 84</span>
 <span class="r-in"><span><span class="va">ssurgo_sf</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ssurgo-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mukey <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">mukey</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `ssurgo-simple1' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpe0WQFf/temp_libpath15f7a29e69868/ofpetrial/extdata/ssurgo-simple1.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpfSGh2I/temp_libpath7daf1e9ccdb6/ofpetrial/extdata/ssurgo-simple1.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 11 features and 9 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: POLYGON</span>
@@ -150,7 +153,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">checks</span><span class="op">$</span><span class="va">summary_data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          var cor_with_rate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Yld_Vol_Dr    0.01821775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Yld_Vol_Dr    0.02190976</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">checks</span><span class="op">$</span><span class="va">summary_fig</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-plt img"><img src="check_ortho_with_chars-1.png" alt="" width="700" height="433"></span>

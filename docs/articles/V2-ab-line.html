@@ -56,7 +56,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/V0-example-work-flows.html">Example Work Flow</a>
+      <a href="../articles/V0-basic-work-flow.html">Basic Workflow</a>
     </li>
     <li>
       <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
@@ -75,6 +75,9 @@
     </li>
     <li>
       <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
+    </li>
+    <li>
+      <a href="../articles/V7-more-examples.html">More Examples</a>
     </li>
   </ul>
 </li>
@@ -108,35 +111,29 @@
 <p>Load the <code>ofpetrial</code> package</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ofpetrial</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'data.table::last' by 'dplyr::last' when</span></span>
-<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'data.table::first' by 'dplyr::first' when</span></span>
-<span><span class="co">#&gt; loading 'ofpetrial'</span></span>
-<span><span class="co">#&gt; Warning: replacing previous import 'data.table::between' by 'dplyr::between'</span></span>
-<span><span class="co">#&gt; when loading 'ofpetrial'</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.2.3</span></span></code></pre></div>
-<p>The AB-line is the driving direction of a machine. In practice, a
-farmer uploads AB-lines into the machine and can choose between these
-AB-lines at the time of operation. While this AB-line indicates the
-driving direction of the machine, it can also be used center the machine
-on this line. Centering the machine on the AB-line becomes important
-when conducting OFPEs.</p>
+<p>AB-line is the driving direction of a machine. In practice, a farmer
+uploads AB-lines into the machine and can choose between these AB-lines
+at the time of operation. While this AB-line indicates the driving
+direction of the machine, it can also be used to center the machine on
+this line. Centering the machine on the AB-line becomes important when
+conducting OFPEs.</p>
 <p>The function <code>make_input_plot_data</code> contains several
 options for <code>abline_type</code>: “free”, “lock”, and “none”. When
-<code>abline_type</code> equals “lock”, the resulting experimental plots
-will be centered on the initial AB-line given by
-<code>abline_data</code>, and the AB-line returned by the
-<code>write_trial_files</code> function will be identical to that in
-<code>abline_data</code>. If <code>abline_type</code> equals “free”, the
-experimental plots are also centered on the AB-line, but the AB-lines
-returned by the <code>write_trial_files</code> function are created to
-be in the first and last rows of the experimental plot. Then the farmer
-can choose the side where they prefer to start. Generally, the “free”
-option is best unless there is a reason the farmer or operator needs to
-start in a specific part of the field. Finally, the “none” option is
-similar to lock but it will not return a new AB-line for the trial,
-assuming that the line in <code>abline_data</code> will be used.</p>
+<code>abline_type = "lock"</code>, the resulting experimental plots will
+be centered on the initial AB-line given by <code>abline_data</code>,
+and the AB-line returned by the <code>write_trial_files</code> function
+will be identical to that in <code>abline_data</code>. If
+<code>abline_type</code> equals “free”, the experimental plots are also
+centered on the AB-line, but the AB-lines returned by the
+<code>write_trial_files</code> function are created to be in the first
+and last rows of the experimental plot. Then the farmer can choose the
+side where they prefer to start. Generally, the “free” option is best
+unless there is a reason the farmer or operator needs to start in a
+specific part of the field. Finally, the “none” option is similar to
+lock but it will not return a new AB-line for the trial, assuming that
+the line in <code>abline_data</code> will be used.</p>
 <p>The following example uses a seeding trial to demonstrate the three
 options for <code>abline_type</code>. When visualizing the trial plots
 and AB-line with <code>viz_layout</code>, the differences between these
@@ -207,12 +204,12 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <code class="sourceCode R"><span><span class="va">aa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `as-applied-simple1' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/Rtmpe0WQFf/temp_libpath15f7a29e69868/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/t4/5gnqprbn38nftyxkyk5hdwmd8hnypy/T/RtmpfSGh2I/temp_libpath7daf1e9ccdb6/ofpetrial/extdata/as-applied-simple1.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
-<span><span class="co">#&gt; Simple feature collection with 10404 features and 32 fields</span></span>
+<span><span class="co">#&gt; Simple feature collection with 2081 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POINT</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
-<span><span class="co">#&gt; Bounding box:  xmin: -16.70074 ymin: 39.11965 xmax: -16.69611 ymax: 39.12688</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: -16.70071 ymin: 39.11965 xmax: -16.69615 ymax: 39.12687</span></span>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">aa</span><span class="op">$</span><span class="va">geometry</span>, pch <span class="op">=</span> <span class="fl">1</span>, cex <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V2-ab-line_files/figure-html/plot-yield-data-1.png" width="700"></p>
@@ -235,13 +232,6 @@ create an AB-line for a new soybean trial with the same equipment.</p>
 <span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as-applied-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
 <span>    abline_type <span class="op">=</span> <span class="st">"lock"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: There were 2 warnings in `dplyr::mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `ab_sf = list(...)`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In row 1.</span></span>
-<span><span class="co">#&gt; Caused by warning in `acos()`:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> NaNs produced</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_plots_aa</span>, type <span class="op">=</span> <span class="st">"layout"</span>, abline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V2-ab-line_files/figure-html/ab-line-from-yield-1.png" width="700"></p>

@@ -56,7 +56,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/V0-example-work-flows.html">Example Work Flow</a>
+      <a href="../articles/V0-basic-work-flow.html">Basic Workflow</a>
     </li>
     <li>
       <a href="../articles/V1-trial-design-options.html">Trial Design Options</a>
@@ -75,6 +75,9 @@
     </li>
     <li>
       <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
+    </li>
+    <li>
+      <a href="../articles/V7-more-examples.html">More Examples</a>
     </li>
   </ul>
 </li>
@@ -248,7 +251,8 @@ regular variable using $ (or any other methods to pull a variable from a
 experiment plots. Since, it is a list, you can access the
 <code>sf</code> itself like this.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="co">#--- first element of the list ---#</span></span>
+<span><span class="va">exp_data</span><span class="op">$</span><span class="va">exp_plots</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Simple feature collection with 54 features and 3 fields</span></span>
 <span><span class="co">#&gt; Geometry type: POLYGON</span></span>
 <span><span class="co">#&gt; Dimension:     XY</span></span>
@@ -294,11 +298,11 @@ experiment plots. Since, it is a list, you can access the
 <span></span>
 <span><span class="co">#--- assign rates ---#</span></span>
 <span><span class="va">td</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">seed_rate_info</span>, <span class="va">n_rate_info</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>As you can see, <code>td</code> has a very similar structure and sets
-of variables (e.g., <code>input_name</code> and <code>exp_plots</code>
-were inherited from <code>exp_data</code>). This is not surprising
-because we just assigned rates to the experiment plots with
-<code><a href="../reference/assign_rates.html">assign_rates()</a></code>.</p>
+<p>As you can see below, <code>td</code> has a very similar structure
+and sets of variables (e.g., <code>input_name</code> and
+<code>exp_plots</code> were inherited from <code>exp_data</code>). This
+is not surprising because we just assigned rates to the experiment plots
+with <code><a href="../reference/assign_rates.html">assign_rates()</a></code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 2</span></span>
@@ -349,16 +353,16 @@ because we just assigned rates to the experiment plots with
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;     rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1  16000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
-<span><span class="co">#&gt; 2  26667        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
-<span><span class="co">#&gt; 3  40000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
-<span><span class="co">#&gt; 4  32000        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
-<span><span class="co">#&gt; 5  21333        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
-<span><span class="co">#&gt; 6  16000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
-<span><span class="co">#&gt; 7  26667        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
-<span><span class="co">#&gt; 8  40000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
-<span><span class="co">#&gt; 9  32000        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
-<span><span class="co">#&gt; 10 40000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
+<span><span class="co">#&gt; 1  32000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2  21333        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3  16000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4  26667        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5  40000        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6  32000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7  21333        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8  16000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9  26667        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 10 16000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; Simple feature collection with 244 features and 4 fields</span></span>
@@ -377,7 +381,7 @@ because we just assigned rates to the experiment plots with
 <span><span class="co">#&gt; 7   140        1       7 experiment POLYGON ((-16.70035 39.1242...</span></span>
 <span><span class="co">#&gt; 8   100        1       8 experiment POLYGON ((-16.70035 39.125,...</span></span>
 <span><span class="co">#&gt; 9   260        1       9 experiment POLYGON ((-16.70035 39.1257...</span></span>
-<span><span class="co">#&gt; 10  260        2       1 experiment POLYGON ((-16.70018 39.1199...</span></span></code></pre></div>
+<span><span class="co">#&gt; 10  100        2       1 experiment POLYGON ((-16.70018 39.1199...</span></span></code></pre></div>
 <p>Since the individual trial designs are just <code>sf</code>, you can
 of course wrangle them direclty if you would like to.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -392,16 +396,16 @@ of course wrangle them direclty if you would like to.</p>
 <span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">#&gt; First 10 features:</span></span>
 <span><span class="co">#&gt;     rate strip_id plot_id       type                       geometry</span></span>
-<span><span class="co">#&gt; 1  16000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
-<span><span class="co">#&gt; 2  26667        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
-<span><span class="co">#&gt; 3  40000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
-<span><span class="co">#&gt; 4  32000        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
-<span><span class="co">#&gt; 5  21333        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
-<span><span class="co">#&gt; 6  16000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
-<span><span class="co">#&gt; 7  26667        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
-<span><span class="co">#&gt; 8  40000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
-<span><span class="co">#&gt; 9  32000        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
-<span><span class="co">#&gt; 10 40000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
+<span><span class="co">#&gt; 1  32000        1       1 experiment POLYGON ((-16.69997 39.1199...</span></span>
+<span><span class="co">#&gt; 2  21333        1       2 experiment POLYGON ((-16.69997 39.1206...</span></span>
+<span><span class="co">#&gt; 3  16000        1       3 experiment POLYGON ((-16.69997 39.1213...</span></span>
+<span><span class="co">#&gt; 4  26667        1       4 experiment POLYGON ((-16.69997 39.1221...</span></span>
+<span><span class="co">#&gt; 5  40000        1       5 experiment POLYGON ((-16.69997 39.1228...</span></span>
+<span><span class="co">#&gt; 6  32000        1       6 experiment POLYGON ((-16.69997 39.1235...</span></span>
+<span><span class="co">#&gt; 7  21333        1       7 experiment POLYGON ((-16.69997 39.1242...</span></span>
+<span><span class="co">#&gt; 8  16000        1       8 experiment POLYGON ((-16.69997 39.125,...</span></span>
+<span><span class="co">#&gt; 9  26667        1       9 experiment POLYGON ((-16.69997 39.1257...</span></span>
+<span><span class="co">#&gt; 10 16000        2       1 experiment POLYGON ((-16.69927 39.1199...</span></span>
 <span></span>
 <span><span class="co">#--- change the rates to all 0 ---#</span></span>
 <span><span class="op">(</span></span>
@@ -446,7 +450,7 @@ have a mixed treatment problem.</p>
 <span><span class="co">#&gt; $ harvest_ab_line  <span style="color: #949494; font-style: italic;">&lt;LINESTRING [m]&gt;</span> LINESTRING (352984.9 433140..., LINESTRING (352984.9 …</span></span>
 <span><span class="co">#&gt; $ overlap_data     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.table[40 x 7]&gt;], [&lt;data.table[41 x 7]&gt;]</span></span>
 <span><span class="co">#&gt; $ harvester_path   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;sf[46 x 3]&gt;], [&lt;sf[46 x 3]&gt;]</span></span>
-<span><span class="co">#&gt; $ g_path_alignment <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [NULL, &lt;environment: 0x30ff7fcc0&gt;, &lt;enviro…</span></span>
+<span><span class="co">#&gt; $ g_path_alignment <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [NULL, &lt;environment: 0x111dd8e48&gt;, &lt;enviro…</span></span>
 <span><span class="co">#&gt; $ g_overlap        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [3.0000000, 4.0000000, 5.0000000, 6.0000000, 7.00000…</span></span></code></pre></div>
 <p>As you can see, its output has four list-columns and there are three
 different types of objects stored in them.</p>

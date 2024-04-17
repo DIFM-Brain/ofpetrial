@@ -34,9 +34,7 @@ library(ofpetrial)
 ### Create experimental plots
 
 We start with specifying plot and machine information for inputs using
-`prep_plot`, which simply creates a data.frame of the specified
-information with some internal unit conversion of length (e.g., feet to
-meter).
+`prep_plot`.
 
 ``` r
 n_plot_info <-
@@ -48,173 +46,29 @@ n_plot_info <-
     harvester_width = 30,
     plot_width = 30
   )
-
-n_plot_info
-#> # A tibble: 1 × 11
-#>   input_name unit_system machine_width section_num
-#>   <chr>      <chr>               <dbl>       <dbl>
-#> 1 NH3        imperial             9.14           1
-#> # ℹ 7 more variables: section_width <dbl>,
-#> #   harvester_width <dbl>, plot_width <dbl>,
-#> #   headland_length <dbl>, side_length <dbl>,
-#> #   min_plot_length <dbl>, max_plot_length <dbl>
-
-seed_plot_info <-
-  prep_plot(
-    input_name = "seed",
-    unit_system = "imperial",
-    machine_width = 60,
-    section_num = 24,
-    harvester_width = 30,
-    plot_width = 30
-  )
-
-seed_plot_info
-#> # A tibble: 1 × 11
-#>   input_name unit_system machine_width section_num
-#>   <chr>      <chr>               <dbl>       <dbl>
-#> 1 seed       imperial             18.3          24
-#> # ℹ 7 more variables: section_width <dbl>,
-#> #   harvester_width <dbl>, plot_width <dbl>,
-#> #   headland_length <dbl>, side_length <dbl>,
-#> #   min_plot_length <dbl>, max_plot_length <dbl>
+#> 
 ```
 
-Now that plot and machine specifications for the inputs are ready, we
-can create experiment plots based on them using `make_exp_plots()`.
+Now, we can create experiment plots based on them using
+`make_exp_plots()`.
 
 ``` r
-input_plot_info <- list(n_plot_info, seed_plot_info)
-
 exp_data <-
   make_exp_plots(
-    input_plot_info = input_plot_info,
+    input_plot_info = n_plot_info,
     boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
-```
 
-The experiment plots created by `make_exp_plots()` is stored in
-`exp_plots`.
-
-``` r
-exp_data$exp_plots
-#> [[1]]
-#> Simple feature collection with 369 features and 3 fields
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
-#> Projected CRS: WGS 84 / UTM zone 28N
-#> First 10 features:
-#>    plot_id poly_line strip_id
-#> 1        1       1_1        1
-#> 2        2       1_1        1
-#> 3        3       1_1        1
-#> 4        4       1_1        1
-#> 5        5       1_1        1
-#> 6        6       1_1        1
-#> 7        7       1_1        1
-#> 8        8       1_1        1
-#> 9        9       1_1        1
-#> 10       1       1_1        2
-#>                          geometry
-#> 1  POLYGON ((352997.6 4331460,...
-#> 2  POLYGON ((352999 4331540, 3...
-#> 3  POLYGON ((353000.5 4331621,...
-#> 4  POLYGON ((353001.9 4331702,...
-#> 5  POLYGON ((353003.3 4331782,...
-#> 6  POLYGON ((353004.8 4331863,...
-#> 7  POLYGON ((353006.2 4331943,...
-#> 8  POLYGON ((353007.7 4332024,...
-#> 9  POLYGON ((353009.1 4332104,...
-#> 10 POLYGON ((353006.7 4331460,...
-#> 
-#> [[2]]
-#> Simple feature collection with 369 features and 3 fields
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
-#> Projected CRS: WGS 84 / UTM zone 28N
-#> First 10 features:
-#>    plot_id poly_line strip_id
-#> 1        1       1_1        1
-#> 2        2       1_1        1
-#> 3        3       1_1        1
-#> 4        4       1_1        1
-#> 5        5       1_1        1
-#> 6        6       1_1        1
-#> 7        7       1_1        1
-#> 8        8       1_1        1
-#> 9        9       1_1        1
-#> 10       1       1_1        2
-#>                          geometry
-#> 1  POLYGON ((352997.6 4331460,...
-#> 2  POLYGON ((352999 4331540, 3...
-#> 3  POLYGON ((353000.5 4331621,...
-#> 4  POLYGON ((353001.9 4331702,...
-#> 5  POLYGON ((353003.3 4331782,...
-#> 6  POLYGON ((353004.8 4331863,...
-#> 7  POLYGON ((353006.2 4331943,...
-#> 8  POLYGON ((353007.7 4332024,...
-#> 9  POLYGON ((353009.1 4332104,...
-#> 10 POLYGON ((353006.7 4331460,...
-```
-
-`exp_data$exp_plots` is a list and you can access the individual
-experiment plots (an `sf` object) like this.
-
-``` r
-exp_data$exp_plots[[1]]
-#> Simple feature collection with 369 features and 3 fields
-#> Geometry type: POLYGON
-#> Dimension:     XY
-#> Bounding box:  xmin: 352988.4 ymin: 4331460 xmax: 353376.6 ymax: 4332198
-#> Projected CRS: WGS 84 / UTM zone 28N
-#> First 10 features:
-#>    plot_id poly_line strip_id
-#> 1        1       1_1        1
-#> 2        2       1_1        1
-#> 3        3       1_1        1
-#> 4        4       1_1        1
-#> 5        5       1_1        1
-#> 6        6       1_1        1
-#> 7        7       1_1        1
-#> 8        8       1_1        1
-#> 9        9       1_1        1
-#> 10       1       1_1        2
-#>                          geometry
-#> 1  POLYGON ((352997.6 4331460,...
-#> 2  POLYGON ((352999 4331540, 3...
-#> 3  POLYGON ((353000.5 4331621,...
-#> 4  POLYGON ((353001.9 4331702,...
-#> 5  POLYGON ((353003.3 4331782,...
-#> 6  POLYGON ((353004.8 4331863,...
-#> 7  POLYGON ((353006.2 4331943,...
-#> 8  POLYGON ((353007.7 4332024,...
-#> 9  POLYGON ((353009.1 4332104,...
-#> 10 POLYGON ((353006.7 4331460,...
-```
-
-We can visualize the layout of the experiment plots using `viz()` with
-`type = "layout"` option.
-
-``` r
 viz(exp_data, type = "layout", abline = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 ### Assign rates
 
-Let’s now assign input rates to the experimental plots we just created.
-Before doing so, we need to prepare rate information for both inputs
-using `prep_rate()`. Here, `design_type = "ls"` (Latin Square) is used
-for both seed and nitrogen experiments (see [this
-vignette](https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html)
-for other design options and [this
-vignette](https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html)
-for changing rates manually.).
+We first prepare nitrogen rates.
 
 ``` r
 #!===========================================================
@@ -230,55 +84,28 @@ n_rate_info <-
     rank_seq_ws = c(5, 4, 3, 2, 1)
   )
 
-n_rate_info
-#> # A tibble: 1 × 13
-#>   input_name design_type gc_rate unit 
-#>   <chr>      <chr>         <dbl> <chr>
-#> 1 NH3        ls              180 lb   
-#> # ℹ 9 more variables: tgt_rate_original <list>,
-#> #   tgt_rate_equiv <list>, include_base_rate <lgl>,
-#> #   total_equiv <list>, min_rate <lgl>,
-#> #   max_rate <lgl>, num_rates <int>,
-#> #   rank_seq_ws <list>, rank_seq_as <list>
-
-seed_rate_info <-
-  prep_rate(
-    plot_info = seed_plot_info,
-    gc_rate = 32000,
-    unit = "seed",
-    min_rate = 16000,
-    max_rate = 40000,
-    num_rates = 5,
-    design_type = "ls"
-  )
-#> Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates
-
-seed_rate_info
-#> # A tibble: 1 × 13
-#>   input_name design_type gc_rate unit 
-#>   <chr>      <chr>         <dbl> <chr>
-#> 1 seed       ls            32000 seed 
-#> # ℹ 9 more variables: tgt_rate_original <list>,
-#> #   tgt_rate_equiv <list>, include_base_rate <lgl>,
-#> #   total_equiv <list>, min_rate <dbl>,
-#> #   max_rate <dbl>, num_rates <dbl>,
-#> #   rank_seq_ws <list>, rank_seq_as <list>
+dplyr::glimpse(n_rate_info)
+#> Rows: 1
+#> Columns: 13
+#> $ input_name        [3m[38;5;246m<chr>[39m[23m "NH3"
+#> $ design_type       [3m[38;5;246m<chr>[39m[23m "ls"
+#> $ gc_rate           [3m[38;5;246m<dbl>[39m[23m 180
+#> $ unit              [3m[38;5;246m<chr>[39m[23m "lb"
+#> $ tgt_rate_original [3m[38;5;246m<list>[39m[23m <100, 140, 180, 220, 260>
+#> $ tgt_rate_equiv    [3m[38;5;246m<list>[39m[23m <82.0, 114.8, 147.6, 180.4, 213.2>
+#> $ include_base_rate [3m[38;5;246m<lgl>[39m[23m FALSE
+#> $ total_equiv       [3m[38;5;246m<list>[39m[23m <100, 140, 180, 220, 260>
+#> $ min_rate          [3m[38;5;246m<lgl>[39m[23m NA
+#> $ max_rate          [3m[38;5;246m<lgl>[39m[23m NA
+#> $ num_rates         [3m[38;5;246m<int>[39m[23m 5
+#> $ rank_seq_ws       [3m[38;5;246m<list>[39m[23m <5, 4, 3, 2, 1>
+#> $ rank_seq_as       [3m[38;5;246m<list>[39m[23m <NULL>
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots.
 
 ``` r
-trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_info))
-#> [1] "== 10 % complete"
-#> [1] "==== 20 % complete"
-#> [1] "====== 30 % complete"
-#> [1] "======== 40 % complete"
-#> [1] "========== 50 % complete"
-#> [1] "============ 60 % complete"
-#> [1] "============== 70 % complete"
-#> [1] "================ 80 % complete"
-#> [1] "================== 90 % complete"
-#> [1] "==================== 100 % complete"
+trial_design <- assign_rates(exp_data, rate_info = n_rate_info)
 ```
 
 Here is the visualization of the trial design done by `viz`.
@@ -287,42 +114,18 @@ Here is the visualization of the trial design done by `viz`.
 viz(trial_design)
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by default.
 
-### Diagnose the trial design
-
-The `ofpetrial` package offers several functions to check the soundness
-of a trial design (see [this
-vignette](https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html)
-for more details and examples).
-
-Here, let’s check the correlation between the seed and NH3 rates.
-
-``` r
-(
-  cor_inputs <- check_ortho_inputs(trial_design)
-)
-#> [1] 0.0002658361
-```
-
-The correlation coefficient is 0.
-
 ### Write the trial design files for implementation
 
-Once you are satisfied with the trial design and the location of the
-ab-lines, you can write out all the necessary files as shape files for
-the machine operators to actually implement the trial.
+You can write out the trial design as a shape file.
 
 ``` r
-write_trial_files(td, zip = TRUE, zip_name = "td-collection")
+write_trial_files(td)
 ```
-
-Here, all the shape files (trial dsign, applicator/planter ab-line, and
-harvester ab-line) are packed in a zipped folder, named
-“td-collection.zip”.
 
 # Acknowledgement
 
