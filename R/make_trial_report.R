@@ -854,7 +854,7 @@ find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, mac
 
   # intersect the ab_line and plot polygon
   line_coords <-
-    sf::st_intersection(plot[1,], ab_line) %>%
+    sf::st_intersection(plot[1, ], ab_line) %>%
     sf::st_coordinates()
 
   cent <- line_coords[1, 1:2] %>%
@@ -901,20 +901,21 @@ get_plots <- function(all_trial_info) {
             min(.)
       )
 
-    if(nrow(all_trial_info) == 2){
+    if (nrow(all_trial_info) == 2) {
       plots <-
-        rbind(design %>%
-        dplyr::filter(plot_id == first_plot$plot_id) %>%
-        st_transform_utm(.) %>%
-        dplyr::mutate(input_name = all_trial_info$input_name[[1]]) %>%
-        dplyr::select(rate, strip_id, plot_id, type, input_name),
-        design %>%
-          dplyr::filter(plot_id == first_plot$plot_id) %>%
-          st_transform_utm(.) %>%
-          dplyr::mutate(input_name = all_trial_info$input_name[[2]]) %>%
-          dplyr::select(rate, strip_id, plot_id, type, input_name))
-
-    }else{
+        rbind(
+          design %>%
+            dplyr::filter(plot_id == first_plot$plot_id) %>%
+            st_transform_utm(.) %>%
+            dplyr::mutate(input_name = all_trial_info$input_name[[1]]) %>%
+            dplyr::select(rate, strip_id, plot_id, type, input_name),
+          design %>%
+            dplyr::filter(plot_id == first_plot$plot_id) %>%
+            st_transform_utm(.) %>%
+            dplyr::mutate(input_name = all_trial_info$input_name[[2]]) %>%
+            dplyr::select(rate, strip_id, plot_id, type, input_name)
+        )
+    } else {
       plots <-
         design %>%
         dplyr::filter(plot_id == first_plot$plot_id) %>%
@@ -1132,11 +1133,11 @@ get_palette <- function(num_rates) {
 #++++++++++++++++++++++++++++++++++++
 #+ Make title for figure
 #++++++++++++++++++++++++++++++++++++
-to_title <- function(string){
-  if(string %in% c("UAN28", "UAN32", "uan32", "uan28")){
-    title = toupper(as.character(string))
-  }else{
-    title = tools::toTitleCase(as.character(string))
+to_title <- function(string) {
+  if (string %in% c("UAN28", "UAN32", "uan32", "uan28")) {
+    title <- toupper(as.character(string))
+  } else {
+    title <- tools::toTitleCase(as.character(string))
   }
   return(title)
 }

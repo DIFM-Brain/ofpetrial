@@ -102,7 +102,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   # try to convert if the input is anything other than seed
   # if the combination of input and inut is not found, the conversion factor is simply 1
   if (input_trial_data$input_name != "seed") {
-    tgt_rate_equiv <- convert_rates(input_trial_data$input_name, unit, rates)
+    tgt_rate_equiv <- convert_rates(input_trial_data$input_name, unit, rates_ls)
   } else {
     tgt_rate_equiv <- tgt_rate_original
   }
