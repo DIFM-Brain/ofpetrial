@@ -106,18 +106,18 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       ) %>%
       dplyr::mutate(height = max(width) / 4) %>%
       .[, machine_type := factor(machine_type, levels = c("applicator", "planter", "harvester"))] %>%
-      setorder(., cols = "machine_type") %>%
-      dplyr::mutate(machine_id = row_number()) %>%
-      dplyr::rowwise() %>%
       dplyr::mutate(number_in_plot = c(max(all_trial_info$num_harv_pass_in_plot), ceiling(all_trial_info$machines_in_plot))) %>%
       dplyr::mutate(sections_used = c(1, (1 / all_trial_info$machines_in_plot))) %>%
+      setorder(., cols = "machine_type") %>%
+      dplyr::mutate(machine_id = dplyr::row_number()) %>%
+      dplyr::rowwise() %>%
       dplyr::mutate(trial_plot = list(plots)) %>%
       dplyr::mutate(move_vec = list(get_move_vec(ab_line))) %>%
       dplyr::mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, td$unit_system))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -143,7 +143,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, td$unit_system))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -822,12 +822,14 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system) {
   }
 }
 
+# ab_line <- machine_table$ab_line[[1]]
 get_move_vec <- function(ab_line) {
   lags <- sf::st_coordinates(ab_line) %>%
     data.frame() %>%
+    dplyr::select(X, Y) %>%
     dplyr::mutate(
-      dx = X - lag(X, n = 1),
-      dy = Y - lag(Y, n = 1)
+      dx = X - dplyr::lag(X, n = 1),
+      dy = Y - dplyr::lag(Y, n = 1)
     )
 
   lag_vec <- c(lags$dx[2], lags$dy[2])
@@ -835,6 +837,14 @@ get_move_vec <- function(ab_line) {
 
   return(move_vec)
 }
+
+# ab_line <- machine_table$ab_line[[2]]
+# number_in_plot <- machine_table$number_in_plot[[2]]
+# plot <- machine_table$trial_plot[[2]]
+# move_vec <- machine_table$move_vec[[1]]
+# machine_id <- machine_table$machine_id[[2]]
+# machine_width <- machine_table$machine_width[[2]]
+# height <- machine_table$height[[2]]
 
 find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, machine_width, height) {
   normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
@@ -893,7 +903,7 @@ get_plots <- function(all_trial_info) {
       design %>%
       dplyr::filter(plot_id == first_plot$plot_id) %>%
       st_transform_utm(.) %>%
-      dplyr::mutate(input_name = input_name) %>%
+      dplyr::mutate(input_name = all_trial_info$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
   } else {
     max_input <- all_trial_info %>%
@@ -1042,7 +1052,7 @@ tmap_plot_legend <- function(trial_plot) {
     dplyr::pull(area) %>%
     unique(.) %>%
     length() == 1) {
-    legend <- tm_add_legend(
+    legend <- tmap::tm_add_legend(
       title = "Trial Plots",
       type = "symbol",
       labels = c("Trial Plot"),
@@ -1073,7 +1083,7 @@ tmap_plot_legend <- function(trial_plot) {
 tmap_label <- function(center, machine_type, trial_plot) {
   labels <- list()
   for (i in 1:nrow(center)) {
-    labels[[i]] <- paste0("tmap::tm_shape(st_point(center[", i, ", ]) %>% st_sfc(crs = st_crs(trial_plot)) %>% st_sf() %>% dplyr::mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = st_bbox(trial_plot)) + tm_text(\"label\", size = 0.8)")
+    labels[[i]] <- paste0("tmap::tm_shape(st_point(center[", i, ", ]) %>% sf::st_sfc(crs = sf::st_crs(trial_plot)) %>% sf::st_sf() %>% dplyr::mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = sf::st_bbox(trial_plot)) + tmap::tm_text(\"label\", size = 0.8)")
   }
   tmap_label <- eval(parse(text = paste0(labels, collapse = " + ")))
 
