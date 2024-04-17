@@ -65,6 +65,7 @@ make_exp_plots <- function(input_plot_info,
   #+ Field boundary
   #++++++++++++++++++++++++++++++++++++
   boundary_class <- class(boundary_data)
+
   if ("sf" %in% boundary_class) {
     field_sf <-
       boundary_data %>%
@@ -97,6 +98,7 @@ make_exp_plots <- function(input_plot_info,
   #+ Plot-heading and other parameter
   #++++++++++++++++++++++++++++++++++++
   abline_class <- class(abline_data)
+
   trial_data_pa <-
     input_plot_info %>%
     #--- whether to lock or not ---#

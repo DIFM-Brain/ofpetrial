@@ -318,9 +318,9 @@ trial_text_inputs <- function(all_trial_info) {
 
 trial_text_machinery_names_cap <- function(machine_table) {
   if (nrow(machine_table) > 2) {
-    paste0(str_to_title(machine_table$machine_type[[1]]), " and ", str_to_title(machine_table$machine_type[[2]]))
+    paste0(tools::toTitleCase(machine_table$machine_type[[1]]), " and ", tools::toTitleCase(machine_table$machine_type[[2]]))
   } else {
-    paste0(str_to_title(machine_table$machine_type[[1]]))
+    paste0(tools::toTitleCase(machine_table$machine_type[[1]]))
   }
 }
 
@@ -1039,7 +1039,7 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
 
     map <-
       tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)), bbox = sf::st_bbox(plots)) +
-      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", str_to_title(input), " Rate"))
+      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", tools::toTitleCase(input), " Rate"))
   }
 
   return(map)
@@ -1071,7 +1071,7 @@ tmap_plot_legend <- function(trial_plot) {
       tmap::tm_add_legend(
         title = "Trial Plots",
         type = "symbol",
-        labels = c(paste0(str_to_title(plots[1]), " Trial Plot"), paste0(str_to_title(plots[2]), " Trial Plot")),
+        labels = c(paste0(tools::toTitleCase(plots[1]), " Trial Plot"), paste0(tools::toTitleCase(plots[2]), " Trial Plot")),
         col = c("black", "gray"),
         shape = 0,
         size = 2

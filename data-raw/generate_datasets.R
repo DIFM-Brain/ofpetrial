@@ -280,7 +280,7 @@ as_applied_sf_small <-
 st_write(as_applied_sf_small, here::here("inst/extdata/as-applied-simple1.shp"))
 
 #++++++++++++++++++++++++++++++++++++
-#+ Field boundary with holes
+#+ Field boundary and ab-line for a field with holes
 #++++++++++++++++++++++++++++++++++++
 field_with_holes <-
   st_read(here::here("data-raw/FarmC_FieldZ boundary.shp")) %>%
@@ -288,3 +288,8 @@ field_with_holes <-
 
 st_write(field_with_holes, here::here("inst/extdata/field_boundary_with_holes.shp"))
 
+ab_line <-
+  st_read(here::here("data-raw/FarmC_FieldZ ab-line.shp")) %>%
+  dplyr::select(geometry)
+
+st_write(ab_line, here::here("inst/extdata/ab_line_for_field_with_holes.shp"))
