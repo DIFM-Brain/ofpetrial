@@ -111,13 +111,14 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       setorder(., cols = "machine_type") %>%
       dplyr::mutate(machine_id = dplyr::row_number()) %>%
       dplyr::rowwise() %>%
+      dplyr::mutate(unit_system = td$unit_system[[1]]) %>%
       dplyr::mutate(trial_plot = list(plots)) %>%
       dplyr::mutate(move_vec = list(get_move_vec(ab_line))) %>%
       dplyr::mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, td$unit_system))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -137,13 +138,14 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       data.table::setorder(., cols = "machine_type") %>%
       dplyr::mutate(machine_id = row_number()) %>%
       dplyr::rowwise() %>%
+      dplyr::mutate(unit_system = td$unit_system[[1]]) %>%
       dplyr::mutate(trial_plot = list(plots)) %>%
       dplyr::mutate(move_vec = list(get_move_vec(ab_line))) %>%
       dplyr::mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, td$unit_system))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -167,8 +169,8 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
     gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
     gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
     gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
-    gsub("_length-unit_", ifelse(unit_system == "metric", "meter", "foot"), .) %>%
-    gsub("_land-unit_", land_unit, .) %>%
+    gsub("_length-unit_", ifelse(all_trial_info$unit_system[[1]] == "metric", "meter", "foot"), .) %>%
+    gsub("_land-unit_", all_trial_info$land_unit[[1]], .) %>%
     gsub("_field-size_", all_trial_info$field_size[[1]], .) %>%
     gsub("_headland-size_", all_trial_info$headland_size[[1]], .) %>%
     gsub("_sideland-size_", all_trial_info$sideland_size[[1]], .)
@@ -318,9 +320,9 @@ trial_text_inputs <- function(all_trial_info) {
 
 trial_text_machinery_names_cap <- function(machine_table) {
   if (nrow(machine_table) > 2) {
-    paste0(tools::toTitleCase(machine_table$machine_type[[1]]), " and ", tools::toTitleCase(machine_table$machine_type[[2]]))
+    paste0(to_title(machine_table$machine_type[[1]]), " and ", to_title(machine_table$machine_type[[2]]))
   } else {
-    paste0(tools::toTitleCase(machine_table$machine_type[[1]]))
+    paste0(to_title(machine_table$machine_type[[1]]))
   }
 }
 
@@ -1039,7 +1041,7 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
 
     map <-
       tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)), bbox = sf::st_bbox(plots)) +
-      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", tools::toTitleCase(input), " Rate"))
+      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", to_title(input), " Rate"))
   }
 
   return(map)
@@ -1071,7 +1073,7 @@ tmap_plot_legend <- function(trial_plot) {
       tmap::tm_add_legend(
         title = "Trial Plots",
         type = "symbol",
-        labels = c(paste0(tools::toTitleCase(plots[1]), " Trial Plot"), paste0(tools::toTitleCase(plots[2]), " Trial Plot")),
+        labels = c(paste0(to_title(plots[1]), " Trial Plot"), paste0(to_title(plots[2]), " Trial Plot")),
         col = c("black", "gray"),
         shape = 0,
         size = 2
@@ -1109,4 +1111,16 @@ get_dot_product <- function(vec_1, vec_2) {
 #++++++++++++++++++++++++++++++++++++
 get_palette <- function(num_rates) {
   return(my_palettes[n_rates == num_rates, my_palette][[1]])
+}
+
+#++++++++++++++++++++++++++++++++++++
+#+ Make title for figure
+#++++++++++++++++++++++++++++++++++++
+to_title <- function(string){
+  if(string %in% c("UAN28", "UAN32", "uan32", "uan28")){
+    title = toupper(as.character(string))
+  }else{
+    title = tools::toTitleCase(as.character(string))
+  }
+  return(title)
 }
