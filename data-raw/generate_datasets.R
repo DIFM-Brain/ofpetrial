@@ -278,3 +278,13 @@ as_applied_sf_small <-
   dplyr::slice(seq(1, dplyr::n(), by = 5))
 
 st_write(as_applied_sf_small, here::here("inst/extdata/as-applied-simple1.shp"))
+
+#++++++++++++++++++++++++++++++++++++
+#+ Field boundary with holes
+#++++++++++++++++++++++++++++++++++++
+field_with_holes <-
+  st_read(here::here("data-raw/FarmC_FieldZ boundary.shp")) %>%
+  dplyr::select(geometry)
+
+st_write(field_with_holes, here::here("inst/extdata/field_boundary_with_holes.shp"))
+

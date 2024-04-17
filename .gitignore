@@ -16,3 +16,4 @@ data-raw/*.dbf
 data-raw/*.shx
 data-raw/*.shp
 data-raw/*.prj
+data-raw/*.qpj

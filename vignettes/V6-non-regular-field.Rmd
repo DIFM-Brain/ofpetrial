@@ -75,4 +75,24 @@ This means that designing trial using a randomized block design for this type of
 
 More often than not, fields have ditches (or parts where crops cannot be grown). The `make_exp_plots()` function avoids such areas automatically in creating experiment plots like below: 
 
+```{r}
+n_plot_info <-
+  prep_plot(
+    input_name = "NH3",
+    unit_system = "imperial",
+    machine_width = 30,
+    section_num = 1,
+    harvester_width = 20,
+    headland_length = 30,
+    side_length = 60
+  )
 
+exp_data <-
+  make_exp_plots(
+    input_plot_info = n_plot_info,
+    boundary_data = system.file("extdata", "field_boundary_with_holes.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+viz(exp_data, type = "layout")
+```
