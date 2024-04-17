@@ -1,0 +1,19 @@
+---
+title: "V0-basic-work-flow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{V0-basic-work-flow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ofpetrial)
+```

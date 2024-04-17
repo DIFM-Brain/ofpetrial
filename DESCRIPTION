@@ -1,13 +1,13 @@
 Package: ofpetrial
 Type: Package
-Title: Design On-farm Field Trials
+Title: Design On-farm Precision Field Agronomic Trials
 Version: 0.1.0
 Authors@R:
   c(
     person(
       given = "Taro",
       family =" Mieno",
-      role = c("aut", "cre"),
+      role = c("aut", "cre", "cph"),
       email = "tmieno2@unl.edu"
     ), 
     person(
@@ -18,8 +18,7 @@ Authors@R:
     )
   )
 Maintainer: Taro Mieno <tmieno2@unl.edu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: A comprehensive system for designing and implementing on-farm precision field agronomic trials. You provide field data, tell 'ofpetrial' how to design a trial, and get readily-usable trial design files and a report checks the validity and reliability of the trial design.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -44,3 +43,5 @@ Imports:
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
+Suggests: 
+    knitr

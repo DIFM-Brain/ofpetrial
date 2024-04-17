@@ -60,14 +60,17 @@ usethis::use_data_raw("generate_data.R")
 ```{r}
 usethis::use_readme_rmd()
 usethis::use_news_md()
+usethis::use_cran_comments()
+usethis::use_vignette("V0-basic-work-flow")
 usethis::use_vignette("V1-trial-design-options")
 usethis::use_vignette("V2-ab-line")
 usethis::use_vignette("V3-change-rates-manually")
 usethis::use_vignette("V4-diagnose-td")
 usethis::use_vignette("V5-understanding-structure")
 usethis::use_vignette("V6-non-regular-field")
-usethis::use_vignette("random-vs-orthogonal")
 usethis::use_vignette("V7-more-examples")
+
+# usethis::use_vignette("random-vs-orthogonal")
 ```
 
 # Build website
@@ -81,3 +84,4 @@ pkgdown::build_site()
 ```{r}
 usethis::edit_r_environ()
 ```
+
