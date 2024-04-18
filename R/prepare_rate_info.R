@@ -145,9 +145,9 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
 #' @examples
 #' base_info <-
 #'   add_base_rate(
-#'     "uan28",
-#'     "gallons",
-#'     15
+#'     base_input_name = "uan28",
+#'     base_unit = "gallons",
+#'     base_rate = 15
 #'   )
 #'
 add_base_rate <- function(base_input_name, base_unit, base_rate) {

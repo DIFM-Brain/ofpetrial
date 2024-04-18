@@ -98,6 +98,11 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
           ggtitle(paste0("Plot ID of experiment plots for ", input_name))
       ))
   } else if (type == "rates") {
+
+    tgt_rate_original <- gg_td$tgt_rate_original[[1]]
+    tgt_rate_equiv <- gg_td$tgt_rate_equiv[[1]]
+    total_equiv <- gg_td$total_equiv[[1]]
+
     gg_td <-
       td_rows %>%
       dplyr::mutate(rate_data = list(
@@ -117,15 +122,20 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       ) %>%
         data.frame(.) %>%
         .[colSums(is.na(.)) == 0] %>%
-        colnames(.))) %>%
-      mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
+        colnames(.)
+      )) %>%
+      mutate(legend_title = list(get_legend_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +
-          geom_sf(data = trial_design %>%
-            merge(rate_data, by = "rate") %>%
-            mutate(all_units = as.factor(all_units)), aes(fill = factor(all_units)), color = "black") +
-          scale_fill_viridis_d(name = figure_title) +
+          geom_sf(
+            data = trial_design %>%
+              merge(rate_data, by = "rate") %>%
+              mutate(all_units = as.factor(all_units)),
+            aes(fill = factor(all_units)),
+            color = "black"
+          ) +
+          scale_fill_viridis_d(name = legend_title) +
           theme_void() +
           ggtitle(
             paste0(
@@ -232,7 +242,11 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
   }
 }
 
-get_figure_title <- function(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit) {
+# !===========================================================
+# ! Helper functions
+# !===========================================================
+
+get_legend_title <- function(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit) {
   `%notin%` <- Negate(`%in%`)
 
   land_unit <- if (unit_system == "metric") {
@@ -265,3 +279,25 @@ get_figure_title <- function(unit_system, include_base_rate, base_rate_equiv, ra
 
   return(name)
 }
+
+# td <- trial_design$trial_design[[1]]
+# trial_design <- trial_design[[1]]
+# input_name <- trial_design$input_name[1]
+# unit <- trial_design$unit[1]
+
+get_plot_data <- function(td, input_name, unit, base_rate = NULL) {
+  plot_data <-
+    td %>%
+    dplyr::mutate(
+      tgt_rate_equiv = ifelse(
+        input_name != "seed",
+        convert_rates(input_name, unit, rate),
+        rate
+      )
+    ) %>%
+    dplyr::mutate(tgt_rate_original = rate) %>%
+    dplyr::mutate(base_rate_original = ifelse(!is.null(base_rate), base_rate$rate, 0)) %>%
+    dplyr::mutate(base_rate_equiv = ifelse(!is.null(base_rate), convert_rates(base_rate$input_name, base_rate$unit, base_rate_original), 0)) %>%
+    dplyr::mutate(total_equiv = tgt_rate_equiv + base_rate_equiv)
+}
+
