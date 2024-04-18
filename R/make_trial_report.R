@@ -23,7 +23,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
     dplyr::mutate(land_unit = ifelse(unit_system == "metric", "hectare", "acre")) %>%
     dplyr::mutate(trial_name = trial_name) %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(input_type = get_input_type(input_name)) %>%
+    # dplyr::mutate(input_type = get_input_type(input_name)) %>%
     dplyr::mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     dplyr::mutate(plot_number = get_plot_number(trial_design)) %>%
     dplyr::mutate(plot_length = list(get_plot_length(trial_design, plot_width))) %>%
@@ -47,38 +47,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       total_equiv
     ) %>%
       dplyr::rowwise() %>%
-      dplyr::mutate(all_units = paste(unique(c(tgt_rate_original, tgt_rate_equiv, total_equiv)), collapse = " | ")) %>%
       dplyr::rename("rate" = "tgt_rate_original"))) %>%
-    dplyr::mutate(map_design = list(
-      tmap::tm_shape(
-        trial_design %>%
-          merge(rate_data, by = "rate") %>%
-          dplyr::mutate(all_units = as.factor(all_units))
-      ) +
-        tmap::tm_polygons(
-          col = "all_units",
-          title = if (input_name == "seed") {
-            if (unit_system == "metric") {
-              "Seeding Rate (ha)"
-            } else {
-              "Seeding Rate (ac)"
-            }
-          } else if (include_base_rate == FALSE & input_name != "seed") {
-            if (unit_system == "metric") {
-              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) \n", "No base application")
-            } else {
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) \n", "No base application")
-            }
-          } else {
-            if (unit_system == "metric") {
-              paste0(input_name, " (", unit, "/ha) | ", input_type, " Equivalent (kg/ha) | ", "Total ", input_type, " (kg/ha) \n", paste0("Base application: ", base_rate_equiv, " (kg/ha)"))
-            } else {
-              paste0(input_name, " (", unit, "/ac) | ", input_type, " Equivalent (lb/ha) | ", "Total ", input_type, " (lb/ac) \n", paste0("Base application: ", base_rate_equiv, " (lbs/ac)"))
-            }
-          },
-          palette = ifelse(input_name == "seed", "Greens", "Greys")
-        )
-    )) %>%
     dplyr::mutate(trial_design = list(trial_design %>%
       dplyr::mutate(area = as.numeric(st_area(.))) %>%
       dplyr::mutate(type = case_when(
@@ -1026,7 +995,7 @@ tmap_plot_all <- function(trial_plot) {
     map_small_plots <- list()
     for (i in 2:nrow(plots)) {
       map_small_plots[[i]] <- paste0("tmap::tm_shape(plots[", i, ",], bbox = st_bbox(plots)) +
-        tm_borders(col = \"gray\", lwd = 2, lty = \"dashed\")")
+        tmap::tm_borders(col = \"gray\", lwd = 2, lty = \"dashed\")")
     }
 
     map <-
