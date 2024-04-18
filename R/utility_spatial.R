@@ -247,12 +247,15 @@ utm_zone <- function(long) {
 #++++++++++++++++++++++++++++++++++++
 #+ Move points inward
 #++++++++++++++++++++++++++++++++++++
-move_points_inward <- function(line, dist, ab_xy_nml) {
+extend_or_shorten_line <- function(line, dist, ab_xy_nml) {
+  # dist > 0 means shortening the line
+  # dist < 0 means extending the line
+
   #--- in case the intersected line is multi-linestring ---#
   temp_lines <- sf::st_cast(line, "LINESTRING")
   line <- temp_lines[[length(temp_lines)]]
 
-  if (as.numeric(sf::st_length(line)) > 2 * dist) {
+  if (as.numeric(sf::st_length(line)) > 2 * dist) { # if the line is shorter than the twice of the distance to be "shortened" (dist > 0). If dist < 0, then okay.
     start_point <- line[1, ]
     end_point <- line[2, ]
 

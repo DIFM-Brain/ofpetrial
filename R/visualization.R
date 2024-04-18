@@ -124,7 +124,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         .[colSums(is.na(.)) == 0] %>%
         .[!duplicated(as.list(.))] %>%
         colnames(.))) %>%
-      mutate(figure_title = list(get_figure_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
+      mutate(legend_title = list(get_legend_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
           geom_sf(data = field_sf, fill = NA) +

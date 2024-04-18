@@ -11,6 +11,16 @@ seed_plot_info <-
     side_length = 60
   )
 
+exp_data <-
+  make_exp_plots(
+    input_plot_info = seed_plot_info,
+    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+    abline_type = "free"
+  )
+
+viz(exp_data, type = "layout")
+
 # error 2: headland and sideland choices are not handled independently
 # when sidelands are larger than headlands, all become the size of the sidelands
 seed_plot_info <-
@@ -26,6 +36,8 @@ seed_plot_info <-
   )
 
 input_plot_info <- list(seed_plot_info)
+
+viz(exp_data, type = "layout")
 
 exp_data <-
   make_exp_plots(

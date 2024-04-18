@@ -429,8 +429,10 @@ make_trial_plots_by_input <- function(field,
 
   #--- ab-line tilted by harvester angle ---#
   plot_heading <- base_ab_lines_data$plot_heading
+
   #--- unit vector pointing in the direction the machine moves ---#
   ab_xy_nml <- base_ab_lines_data$ab_xy_nml
+
   #--- unit vector pointing in the direction PERPENDICULAR to the direction the machine moves ---#
   ab_xy_nml_p90 <- base_ab_lines_data$ab_xy_nml_p90
 
@@ -572,8 +574,6 @@ make_trial_plots_by_input <- function(field,
   #++++++++++++++++++++++++++++++++++++
   #+ Create experiment plots
   #++++++++++++++++++++++++++++++++++++
-  side_length <- 1.5 * side_length
-
   # ggplot(final_exp_plots) +
   #   geom_sf(aes(fill = factor(strip_id)))
 
@@ -582,9 +582,6 @@ make_trial_plots_by_input <- function(field,
   #   geom_sf(data = sf::st_buffer(field, - side_length)) +
   #   geom_sf(data = dplyr::filter(final_exp_plots, group == 157) %>% pull(through_line) %>% .[[1]]) +
   #   coord_sf(datum = sf::st_crs(field))
-
-  #--- this function is created to just suppress warnings from st_intersection ---#
-  st_intersection_q <- purrr::quietly(sf::st_intersection)
 
   # ggplot(strips_shifted) +
   #   geom_sf(aes(fill = factor(group))) +
@@ -597,18 +594,31 @@ make_trial_plots_by_input <- function(field,
   #   geom_sf(data = field)
 
   # ggplot(int_lines) +
+  #   geom_sf(data = field) +
   #   geom_sf(aes(fill = factor(group)))
+
+  # ggplot() +
+  #   geom_sf(data = field) +
+  #   geom_sf(data = int_lines$through_line)
+
+  # ggplot() +
+  #   geom_sf(data = field) +
+  #   geom_sf(data = int_lines$x)
+
+  inner_buffer_dist <- side_length + plot_width / 2
 
   int_lines <-
     field %>%
     #--- create an inner buffer ---#
-    sf::st_buffer(-side_length) %>%
-    #--- intersect strips and the field ---#
-    st_intersection_q(strips_shifted, .) %>%
+    sf::st_buffer(-inner_buffer_dist) %>%
+    #--- intersect strips and the inner buffer of the field ---#
+    # there will be incomplete strips at the edge
+    st_intersection_quietly(strips_shifted, .) %>%
     .$result %>%
     dplyr::select(group) %>%
     dplyr::rowwise() %>%
     #--- split multipolygons to individual polygons ---#
+    # multipolygons may exist when there are holes in the field
     dplyr::mutate(indiv_polygon = list(
       sf::st_cast(geometry, "POLYGON") %>%
         sf::st_as_sf() %>%
@@ -622,14 +632,17 @@ make_trial_plots_by_input <- function(field,
     dplyr::rowwise() %>%
     #--- get the original strip geometry by group ---#
     dplyr::left_join(., as.data.frame(strips_shifted[, c("group", "geometry")]), by = "group") %>%
-    #--- draw a line that goes through the middle of the strips ---#
+    #--- draw a line that goes through the middle of the strips based on the original strip geometry ---#
+    # this lines goes beyond the field boundary
     dplyr::mutate(through_line = list(
       get_through_line(geometry, radius, ab_xy_nml)
     )) %>%
     dplyr::mutate(int_line = list(
       #--- multistring can be created here ---#
-      # Note: when there is a hole in the field, we can have
+      # Note (1): when there is a hole in the field, we can have
       # a multilinestring.
+      # Note (2): "x" in st_intersection refers to the geometry of the strips intersected with the inner buffer of the field, not that of strips_shifted
+      # Note (3): through_lines at the edge may not be intersecting with any of the intersected polygons, which then will be ignored. This means that at least half (if field is rectangular) of the edge strips must be intersecting with the inner buffer.
       suppressWarnings(sf::st_intersection(x, through_line)) %>%
         #--- separate multiline string into to individual linestring ---#
         sf::st_cast("LINESTRING") %>%
@@ -655,11 +668,12 @@ make_trial_plots_by_input <- function(field,
   final_exp_plots <-
     int_lines %>%
     dplyr::rowwise() %>%
-    #--- move int_points inward by (head_dist - side_distance) ---#
+    #--- move int_points inward or outward in the moving direction by (head_dist - side_distance) ---#
+    # when strips were intersected with the inner buffer of the field earlier, the int_lines are too short if inner_buffer_dist > headland_length and too long if inner_buffer_dist < headland_length. This operation extends or shorten the int_lines to respect the headland length specified by the user.
     dplyr::mutate(new_center_line = list(
-      move_points_inward(
+      extend_or_shorten_line(
         x,
-        max(headland_length - side_length, 0),
+        headland_length - inner_buffer_dist,
         ab_xy_nml
       )
     )) %>%
