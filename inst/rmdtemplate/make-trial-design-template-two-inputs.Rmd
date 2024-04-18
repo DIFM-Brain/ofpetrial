@@ -82,21 +82,7 @@ machine_table <- readRDS(file.path("_machine-table-here_"))
 Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, unit_system)` Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_base_rate(all_trial_info, unit_system)`
 
 ```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
-
-tmap::tmap_arrange(all_trial_info$map_design[[1]] + tmap::tm_layout(
-  legend.outside = "TRUE",
-  frame = FALSE,
-  legend.title.size = 2,
-  legend.text.size = 1.5
-),
-all_trial_info$map_design[[2]] + tmap::tm_layout(
-  legend.outside = "TRUE",
-  frame = FALSE,
-  legend.title.size = 2,
-  legend.text.size = 1.5
-),
-ncol = 1
-)
+viz(all_trial_info)
 ```
 
 Figure \@ref(fig:trial-plot) displays the trial plots for the two inputs, with `r text_plot_width(all_trial_info, unit_system)`.
