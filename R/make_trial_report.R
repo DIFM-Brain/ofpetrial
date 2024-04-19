@@ -61,6 +61,14 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
           title = "Type of Field Area",
           palette = c("red", "grey")
         )
+    )) %>%
+    mutate(total_input = list(
+      trial_design %>%
+        mutate(area = as.numeric(st_area(.))) %>%
+        mutate(acres = area * 0.000247105) %>%
+        mutate(total_input = sum(acres * as.numeric(as.character(rate)))) %>%
+        pull(total_input) %>%
+        unique()
     ))
 
   plots <- get_plots(all_trial_info)
@@ -1008,26 +1016,28 @@ tmap_plot_all <- function(trial_plot) {
   return(map)
 }
 
-# trial_plot <- machine_table$trial_plot
+# trial_plot <- machine_table$trial_plot[[1]]
 # input <- machine_table$input_name[[1]]
 tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
   if (is.na(input) == TRUE) {
     map <- NA
   } else {
-    n_rates <- all_trial_info %>%
-      dplyr::filter(input_name == input) %>%
-      dplyr::pull(rates) %>%
-      unlist() %>%
+    plots <- trial_plot %>%
+      filter(input_name == input)
+
+    n_rates <- plots %>%
+      dplyr::pull(rate) %>%
+      unique() %>%
       length()
 
     my_palette <- get_palette(n_rates)
 
-    plots <- trial_plot %>%
-      filter(input_name == input)
-
     map <-
-      tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)), bbox = sf::st_bbox(plots)) +
-      tmap::tm_fill(col = "rate", palette = my_palette, title = paste0("Trial Plot ", to_title(input), " Rate"))
+      tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)),
+                     bbox = sf::st_bbox(plots)) +
+      tmap::tm_fill(col = "rate",
+                    palette = my_palette,
+                    title = paste0("Trial Plot ", to_title(input), " Rate"))
   }
 
   return(map)
@@ -1110,3 +1120,42 @@ to_title <- function(string) {
   }
   return(title)
 }
+
+text_total_input_amounts <- function(all_trial_info){
+  if(nrow(all_trial_info) == 1){
+    paste0("The total amount of ",
+         all_trial_info$input_name[[1]],
+         " applied on the field will be ",
+         round(all_trial_info$total_input),
+         all_trial_info$unit[1],
+         ".")
+  }else if(nrow(all_trial_info) == 2 & length(all_trial_info$unit %>% unique()) == 1){
+   paste0("The total amount of ",
+          all_trial_info$input_name[[1]],
+          " and ",
+          all_trial_info$input_name[[2]],
+          " applied on the field will be ",
+          round(all_trial_info$total_input[[1]]),
+          " and ",
+          round(all_trial_info$total_input[[2]]),
+          " ",
+          all_trial_info$unit[[1]],
+          ", respectively.")
+    }else{
+  paste0("The total amount of ",
+         all_trial_info$input_name[[1]],
+         " and ",
+         all_trial_info$input_name[[2]],
+         " applied on the field will be ",
+         round(all_trial_info$total_input[[1]]),
+         " ",
+         all_trial_info$unit[[1]],
+         " and ",
+         round(all_trial_info$total_input[[2]]),
+         " ",
+         all_trial_info$unit[[2]],
+         ", respectively.")
+    }
+
+}
+

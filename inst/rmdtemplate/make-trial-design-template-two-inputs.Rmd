@@ -77,9 +77,35 @@ machine_table <- readRDS(file.path("_machine-table-here_"))
 # library(zip)
 ```
 
+```{r warning=FALSE, include=FALSE}
+ab_line_1 <- data.table(all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1,-3],
+                        all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2,-3]) %>%
+  t(.) %>%
+  data.frame(.) %>%
+  dplyr::select("X2", "X1")
+rownames(ab_line_1) <- c("Point A",
+                         "Point B")
+
+ab_line_2 <- data.table(all_trial_info$ab_lines[[2]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1,-3],
+                        all_trial_info$ab_lines[[2]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2,-3]) %>%
+  t(.) %>%
+  data.frame(.) %>%
+  dplyr::select("X2", "X1")
+rownames(ab_line_2) <- c("Point A",
+                           "Point B")
+
+ab_line_harvest <- data.table(all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1,-3],
+                              all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2,-3]) %>%
+  t(.) %>%
+  data.frame(.) %>%
+  dplyr::select("X2", "X1")
+rownames(ab_line_harvest) <- c("Point A",
+                               "Point B")
+```
+
 ## Description of Field Trial Design
 
-Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, unit_system)` Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_base_rate(all_trial_info, unit_system)`
+Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, unit_system)` Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_base_rate(all_trial_info, unit_system)` `r text_total_input_amounts(all_trial_info)`
 
 ```{r td-map, echo=FALSE, fig.cap = "Trial Map", fig.height = 6, include = TRUE}
 viz(all_trial_info)
@@ -133,6 +159,27 @@ rep_table_joint <- cbind(all_trial_info$trial_design[[1]],
 knitr::kable(rep_table_joint,
   caption = paste0("Replicate of each Combination of", rep_table$input_name[[1]], " and ", rep_table$input_name[[2]], " Rate"),
   booktabs = TRUE)
+```
+
+```{r ab-lines, echo=FALSE}
+kable(ab_line_1, 
+      col.names = c("Lat", "Long"),
+      digits = 7,
+      caption = paste0("AB-line for ", all_trial_info$input_name[[1]]))
+```
+
+```{r echo=FALSE}
+  kable(ab_line_2, 
+        col.names = c("Lat", "Long"),
+        digits = 7,
+        caption = paste0("AB-line for ", all_trial_info$input_name[[2]]))
+```
+
+```{r ab-line-h, echo=FALSE}
+kable(ab_line_harvest, 
+      col.names = c("Lat", "Long"),
+      digits = 7,
+      caption = "AB-line for harvest")
 ```
 
 ## Steps in a Field Trial 
