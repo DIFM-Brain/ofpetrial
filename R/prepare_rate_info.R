@@ -13,6 +13,7 @@
 #' @param rank_seq_ws (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.
 #' @param rank_seq_as (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.
 #' @param base_rate (integer) optional base application information created by add_base_rate
+#' @param rate_jump_threshold (integer) highest jump in rate rank acceptable
 #' @returns data.frame of input rate information
 #' @import data.table
 #' @export
@@ -33,7 +34,7 @@
 #'   unit = "seeds",
 #'   rates = c(20000, 25000, 30000, 35000, 40000)
 #' )
-prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL, base_rate = NULL) {
+prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL, base_rate = NULL, rate_jump_threshold = NA) {
   #* +++++++++++++++++++++++++++++++++++
   #* Main
   #* +++++++++++++++++++++++++++++++++++
@@ -127,6 +128,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   input_trial_data$num_rates <- num_rates
   input_trial_data$rank_seq_ws <- list(rank_seq_ws)
   input_trial_data$rank_seq_as <- list(rank_seq_as)
+  input_trial_data$rate_jump_threshold <- rate_jump_threshold
 
   return(input_trial_data)
 }

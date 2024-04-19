@@ -62,6 +62,9 @@ assign_rates <- function(exp_data, rate_info) {
   # design_type <- input_trial_data_with_rates$design_type[[1]]
 
   if (nrow(input_trial_data) == 2) {
+    #++++++++++++++++++++++++++++++++++++
+    #+ two-input case
+    #++++++++++++++++++++++++++++++++++++
     # if two-input experiment and the experimental plots are identical, then check if joint processing is necessary
     num_rates_ls <- input_trial_data$num_rates %>% unlist()
 
@@ -78,7 +81,7 @@ assign_rates <- function(exp_data, rate_info) {
         all(input_trial_data$exp_plots[[1]]$geometry == input_trial_data$exp_plots[[2]]$geometry)
       }
 
-    # are both design types "ls" (not random)
+    # are both design types "ls" (not random)?
     both_ls <- all(input_trial_data$design_type == "ls" | is.na(input_trial_data$design_type))
 
     # whether you need to crete designs separately
@@ -96,13 +99,15 @@ assign_rates <- function(exp_data, rate_info) {
             rates_data = input_trial_data_with_rates$rates_data[[1]],
             rank_seq_ws = input_trial_data_with_rates$rank_seq_ws[[1]],
             rank_seq_as = input_trial_data_with_rates$rank_seq_as[[1]],
-            design_type = input_trial_data_with_rates$design_type[[1]]
+            design_type = input_trial_data_with_rates$design_type[[1]],
+            rate_jump_threshold = input_trial_data_with_rates$rate_jump_threshold[[1]]
           )
 
         design_second_input <-
           get_design_for_second(
             input_trial_data = input_trial_data_with_rates,
-            first_design = design_first_input
+            first_design = design_first_input,
+            rank_seq_as = input_trial_data_with_rates$rank_seq_as[[2]]
           )
 
         input_trial_data_with_rates$experiment_design <- list(design_first_input, design_second_input)
@@ -124,14 +129,17 @@ assign_rates <- function(exp_data, rate_info) {
             rates_data = rates_data,
             rank_seq_ws = rank_seq_ws,
             rank_seq_as = rank_seq_as,
-            design_type = design_type
+            design_type = design_type,
+            rate_jump_threshold = rate_jump_threshold
           ) %>%
             dplyr::select(rate, strip_id, plot_id) %>%
             dplyr::mutate(type = "experiment")
         ))
     }
   } else {
-    # single-input case
+    #++++++++++++++++++++++++++++++++++++
+    #+ single-input case
+    #++++++++++++++++++++++++++++++++++++
     plots_with_rates_assigned <-
       input_trial_data_with_rates %>%
       dplyr::mutate(experiment_design = list(
@@ -140,7 +148,8 @@ assign_rates <- function(exp_data, rate_info) {
           rates_data = rates_data,
           rank_seq_ws = rank_seq_ws,
           rank_seq_as = rank_seq_as,
-          design_type = design_type
+          design_type = design_type,
+          rate_jump_threshold = rate_jump_threshold
         ) %>%
           dplyr::select(rate, strip_id, plot_id) %>%
           dplyr::mutate(type = "experiment")
@@ -202,7 +211,7 @@ assign_rate_rank_by_strip <- function(rank_seq_ws, rank_seq_as, num_strips, max_
     dplyr::rowwise() %>%
     dplyr::mutate(rate_rank = list(
       rep(
-        get_seq_start(start_rank, rank_seq_ws),
+        get_rank_ws_for_strip(start_rank, rank_seq_ws),
         ceiling(max_plot_num / length(rank_seq_ws))
       )
     )) %>%
@@ -228,7 +237,7 @@ assign_rate_rank_by_strip <- function(rank_seq_ws, rank_seq_as, num_strips, max_
 # rank_seq_as <- plots_with_rates_assigned$rank_seq_as[[1]]
 # design_type <- plots_with_rates_assigned$design_type[[1]]
 
-assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type) {
+assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type, rate_jump_threshold) {
   max_plot_id <- max(exp_sf$plot_id)
   max_strip_id <- max(exp_sf$strip_id)
   num_rates <- nrow(rates_data)
@@ -244,14 +253,14 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
 
     #--- get the rate rank sequence within a strip---#
     if (is.null(rank_seq_ws)) {
-      basic_seq <- gen_sequence(num_rates, design_type)
+      basic_seq <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
     } else {
       basic_seq <- rank_seq_ws
     }
 
     #--- get the starting ranks across strips for the field---#
     if (is.null(rank_seq_as)) {
-      start_rank_as <- get_starting_rank_across_strips_ls(num_rates, basic_seq)
+      start_rank_as <- get_starting_rank_as_ls(num_rates, basic_seq)
     } else {
       start_rank_as <- rank_seq_as
     }
@@ -284,7 +293,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       if (i == 1) {
         rate_ranks <-
           rep(
-            get_seq_start(start_rank, basic_seq),
+            get_rank_ws_for_strip(start_rank, basic_seq),
             ceiling(num_plots_ws / length(basic_seq))
           ) %>%
           .[1:num_plots_ws]
@@ -293,7 +302,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
 
         rate_ranks <-
           rep(
-            get_seq_start(start_rank, basic_seq),
+            get_rank_ws_for_strip(start_rank, basic_seq),
             ceiling(num_plots_ws / length(basic_seq))
           ) %>%
           .[1:num_plots_ws]
@@ -316,7 +325,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
           # determine rates
           rate_ranks <-
             rep(
-              get_seq_start(start_rank, basic_seq),
+              get_rank_ws_for_strip(start_rank, basic_seq),
               ceiling(num_plots_ws / length(basic_seq))
             ) %>%
             .[1:num_plots_ws]
@@ -365,6 +374,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       .[, `:=`(block_id = NULL, block_row = NULL, block_col = NULL)] %>%
       sf::st_as_sf()
   } else if (design_type == "jcls") {
+
     #--- get the rate rank sequence within a strip---#
     if (!is.null(rank_seq_ws)) {
       message(
@@ -372,11 +382,11 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       )
     }
 
-    basic_seq <- gen_sequence(num_rates, design_type)
+    basic_seq <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
 
     #--- get the starting ranks across strips for the field---#
     if (is.null(rank_seq_as)) {
-      start_rank_as <- get_starting_rank_across_strips(num_rates)
+      start_rank_as <- get_starting_rank_as_ls(num_rates)
     } else {
       start_rank_as <- rank_seq_as
     }
@@ -396,7 +406,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       dplyr::rowwise() %>%
       dplyr::mutate(rate_rank = list(
         rep(
-          get_seq_start(start_rank, basic_seq),
+          get_rank_ws_for_strip(start_rank, basic_seq),
           ceiling(max_plot_id / length(basic_seq))
         )
       )) %>%
@@ -420,7 +430,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       )
     }
     if (is.null(rank_seq_as)) {
-      start_rank_as <- get_starting_rank_across_strips(num_rates)
+      start_rank_as <- get_starting_rank_as(num_rates)
     } else {
       start_rank_as <- rank_seq_as
     }
@@ -482,14 +492,14 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
 
     #--- get the rate rank sequence within a strip---#
     if (is.null(rank_seq_ws)) {
-      basic_seq <- gen_sequence(num_rates, design_type)
+      basic_seq <- gen_basic_rank_ws_sparse(num_rates, design_type)
     } else {
       basic_seq <- rank_seq_ws
     }
 
     #--- get the starting ranks across strips for the field---#
     if (is.null(rank_seq_as)) {
-      start_rank_as <- get_starting_rank_across_strips(num_rates - 1) + 1
+      start_rank_as <- get_starting_rank_as(num_rates - 1) + 1
     } else {
       start_rank_as <- rank_seq_as
     }
@@ -509,7 +519,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       dplyr::rowwise() %>%
       dplyr::mutate(rate_rank = list(
         rep(
-          get_seq_start_sparse(start_rank, basic_seq, strip_id),
+          get_rank_ws_for_strip_sparse(start_rank, basic_seq, strip_id),
           ceiling(max_plot_id / length(basic_seq))
         )
       )) %>%
@@ -536,7 +546,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       dplyr::nest_by(tier) %>%
       dplyr::mutate(num_levels = nrow(data)) %>%
       dplyr::mutate(basic_seq = list(
-        gen_sequence(num_levels, design_type)
+        gen_basic_rank_ws(num_levels, rate_jump_threshold)
       )) %>%
       #--- split the strips to two tiers in an alternate fashion ---#
       dplyr::mutate(strip_plot_data = list(
@@ -591,25 +601,73 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
   return(return_data)
 }
 
-gen_sequence <- function(length, design_type) {
-  if (length %% 2 == 0) { # even
-    seq_r <- c(seq(1, length, by = 2), seq(length, 2, by = -2))
-  } else { # odd
-    seq_r <- c(seq(1, length, by = 2), seq(length - 1, 2, by = -2))
+#++++++++++++++++++++++++++++++++++++
+#+ Utility functions that helps assign_rates_by_input()
+#++++++++++++++++++++++++++++++++++++
+# It generates basic within-strip rate rank sequence given the number of rates in a way rate jumps are under the rate_jump_threshold
+# It is probably better if rates go up and down alternately instead of increasing and then decreasing (measured by zigzag_score). Having low rate_jump_threshold sacrifices zigzagability.
+
+gen_basic_rank_ws <- function(num_rates, rate_jump_threshold = NA) {
+
+  #--- function to calculate cumulative sum ---#
+  rsum.cumsum <- function(x, n = 3L) tail(cumsum(x) - cumsum(c(rep(0, n), head(x, -n))), -n + 1)
+
+  if (is.na(rate_jump_threshold)) {
+    rate_jump_threshold <- ceiling(num_rates / 2)
   }
 
-  if (design_type == "sparse") {
-    seq_r <- seq_r[-1]
-    for (i in (seq(1, 2 * length(seq_r) - 1, by = 2))) {
-      seq_r <- append(seq_r, 1, after = i)
+  if (num_rates >= 9) {
+    # if num_rates are too high, the permutation takes so long. So, we just go simiple here.
+    if (num_rates %% 2 == 0) { # even
+      return_basic_seq <- c(seq(1, num_rates, by = 2), seq(num_rates, 2, by = -2))
+    } else { # odd
+      return_basic_seq <- c(seq(1, num_rates, by = 2), seq(num_rates - 1, 2, by = -2))
     }
+  } else if (num_rates == 2) {
+    return_basic_seq <- c(1, 2)
+  } else {
+    mat <- return_permutations(1:num_rates) %>% do.call(rbind, .)
+    dif_mat <- mat - cbind(mat[, 2:num_rates], mat[, 1])
+    max_rate_jump <- apply(dif_mat, 1, \(x) max(abs(x)))
+    jump_score <- apply(dif_mat, 1, \(x) sum(abs(x)^2))
+    zigzag_score <- apply(dif_mat, 1, \(x) sum(abs(rsum.cumsum(x, n = 2)))^2)
+    total_score <- jump_score + zigzag_score
+    which_satisfy_rate_jump <- max_rate_jump <= rate_jump_threshold
+
+    best_id <-
+      data.table(
+        id = 1:length(jump_score),
+        total_score = total_score,
+        which_satisfy_rate_jump = max_rate_jump <= rate_jump_threshold
+      ) %>%
+      .[which_satisfy_rate_jump == TRUE, ] %>%
+      .[which.min(total_score), id]
+
+    return_basic_seq <- mat[best_id, ]
   }
-  return(seq_r)
+
+  return(return_basic_seq)
 }
 
-get_seq_start <- function(rate_rank, basic_seq) {
+gen_basic_rank_ws_sparse <- function(length, design_type) {
+  if (length %% 2 == 0) { # even
+    return_basic_seq <- c(seq(1, length, by = 2), seq(length, 2, by = -2))
+  } else { # odd
+    return_basic_seq <- c(seq(1, length, by = 2), seq(length - 1, 2, by = -2))
+  }
+
+  return_basic_seq <- return_basic_seq[-1]
+  for (i in (seq(1, 2 * length(return_basic_seq) - 1, by = 2))) {
+    return_basic_seq <- append(return_basic_seq, 1, after = i)
+  }
+  return(return_basic_seq)
+}
+
+
+# generate sequence of rate ranks within a strip given the starting rate rank (starting_rate_rank)
+get_rank_ws_for_strip <- function(starting_rate_rank, basic_seq) {
   max_rank <- length(basic_seq)
-  start_position <- which(basic_seq == rate_rank)
+  start_position <- which(basic_seq == starting_rate_rank)
 
   f_seq <- start_position:max_rank
   s_seq <- 1:start_position
@@ -619,8 +677,9 @@ get_seq_start <- function(rate_rank, basic_seq) {
   return(return_rank)
 }
 
-get_seq_start_sparse <- function(rate_rank, basic_seq, strip_id) {
-  return_rank <- get_seq_start(rate_rank, basic_seq)
+# generate sequence of rate ranks within a strip given the starting rate rank specifically for the sparse design (starting_rate_rank)
+get_rank_ws_for_strip_sparse <- function(starting_rate_rank, basic_seq, strip_id) {
+  return_rank <- get_rank_ws_for_strip(starting_rate_rank, basic_seq)
 
   if (strip_id %% 2 == 0) {
     return_rank <- append(1, return_rank[-length(return_rank)])
@@ -629,7 +688,8 @@ get_seq_start_sparse <- function(rate_rank, basic_seq, strip_id) {
   return(return_rank)
 }
 
-get_starting_rank_across_strips <- function(num_levels) {
+# Get sequence of rate ranks across strips based on the number of rates. This is used for design_type == "str" and "sparse"
+get_starting_rank_as <- function(num_levels) {
   if (num_levels > 1) {
     return_seq <-
       lapply(
@@ -658,7 +718,8 @@ get_starting_rank_across_strips <- function(num_levels) {
   return(return_seq)
 }
 
-get_starting_rank_across_strips_ls <- function(num_rates, basic_seq) {
+# Get sequence of rate ranks across strips based on the number of rates. This is used for design_type == "ls". It checks changes in rates across strips (columns) for all the rows and avoid designs that has gradual changes in rate rank across strips.
+get_starting_rank_as_ls <- function(num_rates, basic_seq) {
   seq <-
     lapply(
       return_permutations(1:num_rates),
@@ -667,7 +728,7 @@ get_starting_rank_across_strips_ls <- function(num_rates, basic_seq) {
           lapply(
             seq,
             \(x) {
-              get_seq_start(x, basic_seq)
+              get_rank_ws_for_strip(x, basic_seq)
             }
           )
         mat <- do.call(rbind, mat_list)
@@ -1019,8 +1080,7 @@ find_rate <- function(row_index, working_plot_id, rates_list, comb_table, rate_t
       .[abs(rate_rank_2 - rates_list$ rate_rank_2nd_prev) <= rate_jump_threshold, ] %>%
       .[cases %in% c(min(cases), min(cases) + 1), ] %>%
       .[variability_score == max(variability_score), ] %>%
-      .[sample(1:.N, 1), rate_rank_2 ]
-
+      .[sample(1:.N, 1), rate_rank_2]
   }
 
   return(rate_rank_2nd)
