@@ -99,10 +99,6 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       ))
   } else if (type == "rates") {
 
-    tgt_rate_original <- gg_td$tgt_rate_original[[1]]
-    tgt_rate_equiv <- gg_td$tgt_rate_equiv[[1]]
-    total_equiv <- gg_td$total_equiv[[1]]
-
     gg_td <-
       td_rows %>%
       dplyr::mutate(rate_data = list(
