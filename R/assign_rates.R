@@ -81,18 +81,21 @@ assign_rates <- function(exp_data, rate_info) {
         all(input_trial_data$exp_plots[[1]]$geometry == input_trial_data$exp_plots[[2]]$geometry)
       }
 
+    # whether any of rank_seq_as and rank_seq_es is specified
+    no_rank_seq_specified <- all(lapply(input_trial_data_with_rates$rank_seq_as, is.null) %>% unlist()) & all(lapply(input_trial_data_with_rates$rank_seq_ws, is.null) %>% unlist())
+
     # are both design types "ls" (not random)?
     both_ls <- all(input_trial_data$design_type == "ls" | is.na(input_trial_data$design_type))
 
     # whether you need to crete designs separately
-    require_joint_designing <- geometry_identical & both_ls & multiple_of_the_other
+    require_joint_designing <- geometry_identical & both_ls & multiple_of_the_other & no_rank_seq_specified
 
     if (require_joint_designing) {
       if (all(num_rates_ls == 2)) { # special case of 2 by 2
 
         plots_with_rates_assigned <- make_design_for_2_by_2(input_trial_data_with_rates)
       } else {
-        #--- design for the first input ---#
+        #--- make design for the first input ---#
         design_first_input <-
           assign_rates_by_input(
             exp_sf = input_trial_data_with_rates$exp_plots[[1]],
@@ -121,6 +124,11 @@ assign_rates <- function(exp_data, rate_info) {
           ))
       }
     } else { # two-input, but can just design them independently
+
+      if ((geometry_identical & both_ls & multiple_of_the_other) & !no_rank_seq_specified) {
+        message("You specified either rank_seq_ws and/or rank_seq_as for at least one of the inputs and the two trial designs are created independently without any consideration for even number of replications and balanced spatial distribution of the joint rate combinations to respect the specified rank sequence(s). Please use ofpetrial::make_trial_report() to check these aspected of the trial designs created. You could alternatively leave those arguments empty, and then the code will generate trial designs that are free of the above problems.")
+      }
+
       plots_with_rates_assigned <-
         input_trial_data_with_rates %>%
         dplyr::mutate(experiment_design = list(
@@ -251,29 +259,28 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
     #- Preparation
     #---------------------
 
-    #--- get the rate rank sequence within a strip---#
-    if (is.null(rank_seq_ws)) {
-      basic_seq <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
-    } else {
-      basic_seq <- rank_seq_ws
-    }
-
-    #--- get the starting ranks across strips for the field---#
-    if (is.null(rank_seq_as)) {
-      start_rank_as <- get_starting_rank_as_ls(num_rates, basic_seq)
-    } else {
-      start_rank_as <- rank_seq_as
-    }
-
-    if (is.null(rank_seq_as) & is.null(rank_seq_ws)) {
+    if (is.null(rank_seq_ws) & is.null(rank_seq_as)) {
+      # if both are missing, then first get rank_seq_ws and then rank_seq_as
+      rank_seq_ws <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
+      rank_seq_as <- get_starting_rank_as_ls(num_rates, rank_seq_ws)
+    } else if (!is.null(rank_seq_ws) & is.null(rank_seq_as)) {
+      # if rank_seq_ws was specified, but rank_seq_as is missing
+      rank_seq_ws <- rank_seq_ws
+      rank_seq_as <- get_starting_rank_as_ls(num_rates, rank_seq_ws)
+    } else if (is.null(rank_seq_ws) & !is.null(rank_seq_as)) {
+      # if rank_seq_as was specified, but rank_seq_ws is missing
+      rank_seq_as <- rank_seq_as
+      rank_seq_ws <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
       message(
-        'Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"'
+        'Note: You specified rank_seq_as yourself. Please study the resulting trial design map and make sure it is satisfactory.'
       )
+    } else {
+      # both specified, do nothing
     }
 
     full_start_seq_long <-
       rep(
-        start_rank_as,
+        rank_seq_as,
         ceiling(max_strip_id / num_rates) + 5
       )
 
@@ -293,8 +300,8 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       if (i == 1) {
         rate_ranks <-
           rep(
-            get_rank_ws_for_strip(start_rank, basic_seq),
-            ceiling(num_plots_ws / length(basic_seq))
+            get_rank_ws_for_strip(start_rank, rank_seq_ws),
+            ceiling(num_plots_ws / length(rank_seq_ws))
           ) %>%
           .[1:num_plots_ws]
       } else {
@@ -302,8 +309,8 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
 
         rate_ranks <-
           rep(
-            get_rank_ws_for_strip(start_rank, basic_seq),
-            ceiling(num_plots_ws / length(basic_seq))
+            get_rank_ws_for_strip(start_rank, rank_seq_ws),
+            ceiling(num_plots_ws / length(rank_seq_ws))
           ) %>%
           .[1:num_plots_ws]
 
@@ -325,8 +332,8 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
           # determine rates
           rate_ranks <-
             rep(
-              get_rank_ws_for_strip(start_rank, basic_seq),
-              ceiling(num_plots_ws / length(basic_seq))
+              get_rank_ws_for_strip(start_rank, rank_seq_ws),
+              ceiling(num_plots_ws / length(rank_seq_ws))
             ) %>%
             .[1:num_plots_ws]
         }

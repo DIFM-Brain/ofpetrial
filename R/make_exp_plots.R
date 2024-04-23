@@ -665,6 +665,10 @@ make_trial_plots_by_input <- function(field,
 
   # tot_plot_length <- final_exp_plots$tot_plot_length[[1]]
 
+# final_exp_plots$tot_plot_length
+# final_exp_plots$min_plot_length
+# final_exp_plots$max_plot_length
+
   final_exp_plots <-
     int_lines %>%
     dplyr::rowwise() %>%
@@ -682,10 +686,10 @@ make_trial_plots_by_input <- function(field,
       as.numeric(sf::st_length(new_center_line))
     )) %>%
     dplyr::mutate(plot_data = list(
-      get_plot_data(
-        tot_plot_length,
-        min_plot_length,
-        max_plot_length
+      get_trial_plot_data(
+        tot_plot_length, # inside the data
+        min_plot_length, # inherited as an argument of make_trial_plots_by_input() 
+        max_plot_length # inherited as an argument of make_trial_plots_by_input() 
       )
     )) %>%
     #--- remove plot with null plot data ---#

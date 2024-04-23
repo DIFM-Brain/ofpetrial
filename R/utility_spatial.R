@@ -281,7 +281,7 @@ extend_or_shorten_line <- function(line, dist, ab_xy_nml) {
 #++++++++++++++++++++++++++++++++++++
 #+ Get plot data
 #++++++++++++++++++++++++++++++++++++
-get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
+get_trial_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
   #* +++++++++++++++++++++++++++++++++++
   #* For debugging
   #* +++++++++++++++++++++++++++++++++++
@@ -304,14 +304,14 @@ get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
   if (plot_length_s > min_plot_length & plot_length_s < max_plot_length) {
     #--- if the average length satisfy the condition ---#
     return_data <-
-      data.table(
+      data.table::data.table(
         plot_id = seq_len(num_comp_plots + 1),
         plot_length = plot_length_s
       )
     return(return_data)
   } else if (plot_length_l > min_plot_length & plot_length_l < max_plot_length) {
     return_data <-
-      data.table(
+      data.table::data.table(
         plot_id = seq_len(num_comp_plots),
         plot_length = plot_length_l
       )
@@ -323,7 +323,7 @@ get_plot_data <- function(tot_plot_length, min_plot_length, max_plot_length) {
       return_data <- NULL
     } else {
       return_data <-
-        data.table(
+        data.table::data.table(
           plot_id = seq_len(num_comp_plots),
           plot_length = min_plot_length
         )
