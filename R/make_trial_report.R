@@ -1126,7 +1126,7 @@ text_total_input_amounts <- function(all_trial_info){
     paste0("The total amount of ",
          all_trial_info$input_name[[1]],
          " applied on the field will be ",
-         round(all_trial_info$total_input),
+         round(all_trial_info$total_input[[1]]),
          all_trial_info$unit[1],
          ".")
   }else if(nrow(all_trial_info) == 2 & length(all_trial_info$unit %>% unique()) == 1){
