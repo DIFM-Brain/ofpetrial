@@ -18,7 +18,6 @@
 #' @param max_plot_length (numeric) Maximum length of the plots. Default is 91.440 meter (300 feet)
 #' @returns a tibble with plot information necessary to create experiment plots
 #' @import data.table
-#' @import measurements
 #' @export
 #' @examples
 #' input_name <- "seed"
@@ -57,7 +56,7 @@ prep_plot <- function(input_name,
       ifelse(
         unit_system == "imperial",
         120,
-        conv_unit(120, "ft", "m") # 36.4576 meter
+        conv_unit(120, "feet", "meters") # 36.4576 meter
       )
   }
   if (is.na(min_plot_length)) {
@@ -65,7 +64,7 @@ prep_plot <- function(input_name,
       ifelse(
         unit_system == "imperial",
         240,
-        conv_unit(240, "ft", "m") # 73.152 meter
+        conv_unit(240, "feet", "meters") # 73.152 meter
       )
   }
   if (is.na(max_plot_length)) {
@@ -73,7 +72,7 @@ prep_plot <- function(input_name,
       ifelse(
         unit_system == "imperial",
         300,
-        conv_unit(300, "ft", "m") # 91.440 meter
+        conv_unit(300, "feet", "meters") # 91.440 meter
       )
   }
   if (is.na(side_length)) {
@@ -84,7 +83,7 @@ prep_plot <- function(input_name,
         ifelse(
           unit_system == "imperial",
           30,
-          conv_unit(30, "ft", "m")
+          conv_unit(30, "feet", "meters")
         )
       )
   }
@@ -155,15 +154,15 @@ prep_plot <- function(input_name,
       tibble::tibble(
         input_name = input_name,
         unit_system = unit_system,
-        machine_width = conv_unit(machine_width, "ft", "m"),
+        machine_width = conv_unit(machine_width, "feet", "meters"),
         section_num = section_num,
-        section_width = conv_unit(section_width, "ft", "m"),
-        harvester_width = conv_unit(harvester_width, "ft", "m"),
-        plot_width = conv_unit(plot_width, "ft", "m"),
-        headland_length = conv_unit(headland_length, "ft", "m"),
-        side_length = conv_unit(side_length, "ft", "m"),
-        min_plot_length = conv_unit(min_plot_length, "ft", "m"),
-        max_plot_length = conv_unit(max_plot_length, "ft", "m")
+        section_width = conv_unit(section_width, "feet", "meters"),
+        harvester_width = conv_unit(harvester_width, "feet", "meters"),
+        plot_width = conv_unit(plot_width, "feet", "meters"),
+        headland_length = conv_unit(headland_length, "feet", "meters"),
+        side_length = conv_unit(side_length, "feet", "meters"),
+        min_plot_length = conv_unit(min_plot_length, "feet", "meters"),
+        max_plot_length = conv_unit(max_plot_length, "feet", "meters")
       )
   }
 

@@ -178,93 +178,12 @@ return_permutations <- function(x) {
 # #++++++++++++++++++++++++++++++++++++
 # #+ General unit conversion
 # #++++++++++++++++++++++++++++++++++++
-# convert_unit <- function(x, from, to) {
-#   unit <- std <- NULL
-#   if (nrow(subset(.conversions, unit == from, dim)) == 0) {
-#     stop("the 'from' argument is not an acceptable unit.")
-#   }
-#   if (nrow(subset(.conversions, unit == to, dim)) == 0) {
-#     stop("the 'to' argument is not an acceptable unit.")
-#   }
-#   if (subset(.conversions, unit == from, dim) != subset(
-#     .conversions,
-#     unit == to, dim
-#   )) {
-#     stop("these units cannot be converted because they are of different dimensions. Try using conv_dim().")
-#   }
-#   if ((from == "C" | from == "F" | from == "K" | from == "R") &
-#     (to == "C" | to == "F" | to == "K" | to == "R")) {
-#     frzC <- 0.01
-#     frzF <- 32.018
-#     frzK <- 273.16
-#     frzR <- 491.688
-#     boilC <- 99.9839
-#     boilF <- 211.97102
-#     boilK <- 373.1339
-#     boilR <- 671.64102
-#     rangeC <- boilC - frzC
-#     rangeF <- boilF - frzF
-#     rangeK <- boilK - frzK
-#     rangeR <- boilR - frzR
-#     prop <- (x - get(paste("frz", from, sep = ""))) / get(paste("range",
-#       from,
-#       sep = ""
-#     ))
-#     return(prop * get(paste("range", to, sep = "")) + get(paste("frz",
-#       to,
-#       sep = ""
-#     )))
-#   }
-#   if (from %in% c("dec_deg", "deg_dec_min", "deg_min_sec") &
-#     to %in% c("dec_deg", "deg_dec_min", "deg_min_sec")) {
-#     neg <- grepl("^-", x)
-#     x <- gsub("^-", "", x)
-#     NAs <- is.na(x)
-#     x_na_free <- x[!NAs]
-#     if (from == "dec_deg") {
-#       secs <- as.numeric(x_na_free) * 3600
-#     }
-#     if (from == "deg_dec_min") {
-#       secs <- lapply(split(as.numeric(unlist(strsplit(
-#         x_na_free,
-#         " "
-#       ))) * c(3600, 60), f = rep(1:length(x_na_free),
-#         each = 2
-#       )), sum)
-#     }
-#     if (from == "deg_min_sec") {
-#       secs <- lapply(split(as.numeric(unlist(strsplit(
-#         x_na_free,
-#         " "
-#       ))) * c(3600, 60, 1), f = rep(1:length(x_na_free),
-#         each = 3
-#       )), sum)
-#     }
-#     if (to == "dec_deg") {
-#       inter <- as.character(lapply(secs, function(y) y / 3600))
-#     }
-#     if (to == "deg_dec_min") {
-#       inter <- paste(
-#         lapply(secs, function(y) y %/% 3600),
-#         lapply(secs, function(y) y %% 3600 / 60)
-#       )
-#     }
-#     if (to == "deg_min_sec") {
-#       inter <- paste(
-#         lapply(secs, function(y) y %/% 3600),
-#         lapply(secs, function(y) y %% 3600 %/% 60), lapply(
-#           secs,
-#           function(y) y %% 3600 %% 60
-#         )
-#       )
-#     }
-#     x[!NAs] <- inter
-#     x <- paste0(ifelse(neg, "-", ""), x)
-#     x[grepl("NA", x)] <- NA
-#     return(x)
-#   }
-#   value <- x / subset(.conversions, unit == from, std, drop = TRUE)
-#   return(value * subset(.conversions, unit == to, std, drop = TRUE))
-# }
+conv_unit <- function(unit_from, unit_to, value){
+  table <- read.csv(system.file("extdata", "conversions.csv", package = "ofpetrial"))
 
+  factor <- table %>%
+    filter(from == unit_from & to == unit_to) %>%
+    pull(conv_factor)
 
+  return(value*factor)
+}
