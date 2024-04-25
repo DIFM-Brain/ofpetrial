@@ -142,22 +142,36 @@ rep_table <- all_trial_info %>%
   ))
 
 knitr::kable(list(rep_table$rep_table[[1]], rep_table$rep_table[[2]]),
-  caption = paste0("Replicate of each ", rep_table$input_name[[1]], " and ", rep_table$input_name[[2]], " Target Rate"),
+  caption = paste0("Replicate of each ", to_title(rep_table$input_name[[1]]), " and ", to_title(rep_table$input_name[[2]]), " Target Rate"),
   booktabs = TRUE)
 ```
 
 ```{r rep-table-joint, echo=FALSE, include = TRUE}
-rep_table_joint <- cbind(all_trial_info$trial_design[[1]],
-               all_trial_info$trial_design[[2]]) %>%
+min_plot_area <- min(all_trial_info$trial_design[[1]] %>%
+  pull(area) %>%
+  median(),
+  all_trial_info$trial_design[[2]] %>%
+  pull(area) %>%
+  median())
+
+sf_use_s2(FALSE)
+
+rep_table_joint <- st_intersection(all_trial_info$trial_design[[1]] %>%
+                                     filter(type != "Border Buffer"),
+               all_trial_info$trial_design[[2]] %>%
+                 filter(type != "Border Buffer")) %>%
   dplyr::mutate(treatment = paste0(rate, "_", rate.1)) %>%
+  dplyr::mutate(area = as.numeric(st_area(.))) %>%
+  dplyr::filter(area > min_plot_area*0.8) %>%
   dplyr::group_by(treatment) %>%
+  dplyr::select(treatment) %>%
   dplyr::summarise(Replicates = dplyr::n()) %>%
   data.frame() %>%
   dplyr::select(treatment, Replicates) %>%
   dplyr::rename("Treatment Rates" = "treatment")
 
 knitr::kable(rep_table_joint,
-  caption = paste0("Replicate of each Combination of", rep_table$input_name[[1]], " and ", rep_table$input_name[[2]], " Rate"),
+  caption = paste0("Replicate of each Combination of", to_title(rep_table$input_name[[1]]), " and ", to_title(rep_table$input_name[[2]]), " Rate"),
   booktabs = TRUE)
 ```
 
@@ -165,21 +179,21 @@ knitr::kable(rep_table_joint,
 kable(ab_line_1, 
       col.names = c("Lat", "Long"),
       digits = 7,
-      caption = paste0("AB-line for ", all_trial_info$input_name[[1]]))
+      caption = paste0("AB-line for ", to_title(all_trial_info$input_name[[1]])))
 ```
 
 ```{r echo=FALSE}
   kable(ab_line_2, 
         col.names = c("Lat", "Long"),
         digits = 7,
-        caption = paste0("AB-line for ", all_trial_info$input_name[[2]]))
+        caption = paste0("AB-line for ", to_title(all_trial_info$input_name[[2]])))
 ```
 
 ```{r ab-line-h, echo=FALSE}
 kable(ab_line_harvest, 
       col.names = c("Lat", "Long"),
       digits = 7,
-      caption = "AB-line for harvest")
+      caption = "AB-line for Harvest")
 ```
 
 ## Steps in a Field Trial 

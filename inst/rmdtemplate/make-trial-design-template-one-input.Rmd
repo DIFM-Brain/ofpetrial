@@ -116,7 +116,7 @@ rep_table <- all_trial_info %>%
   ))
 
 rep_table$rep_table[[1]] %>%
-  knitr::kable(caption = paste0("Replicates of each ", rep_table$input_name[[1]], " Target Rate"))
+  knitr::kable(caption = paste0("Replicates of each ", to_title(rep_table$input_name[[1]]), " Target Rate"))
 ```
 
 ## AB-Lines
@@ -127,14 +127,14 @@ The points for the AB-lines of each machine are in tables \@ref(tab:ab-lines) to
 kable(ab_line_1, 
       col.names = c("Lat", "Long"),
       digits = 7,
-      caption = paste0("AB-line for ", all_trial_info$input_name[[1]]))
+      caption = paste0("AB-line for ", to_title(all_trial_info$input_name[[1]])))
 ```
 
 ```{r ab-line-h, echo=FALSE}
 kable(ab_line_harvest, 
       col.names = c("Lat", "Long"),
       digits = 7,
-      caption = "AB-line for harvest")
+      caption = "AB-line for Harvest")
 ```
 
 ## Steps in a Field Trial 
