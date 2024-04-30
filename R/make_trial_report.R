@@ -391,7 +391,7 @@ trial_text_machine_sizes_and_plot_width <- function(machine_table, all_trial_inf
   }
 }
 
-text_sections_used <- function(machine_table, index, unit_system) {
+text_sections_used <- function(all_trial_info, machine_table, index, unit_system) {
   if (machine_table$sections_used[[index]] > 1) {
     if (unit_system == "metric") {
       paste0(

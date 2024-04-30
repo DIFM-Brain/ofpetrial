@@ -178,10 +178,9 @@ return_permutations <- function(x) {
 # #++++++++++++++++++++++++++++++++++++
 # #+ General unit conversion
 # #++++++++++++++++++++++++++++++++++++
-conv_unit <- function(unit_from, unit_to, value){
-  table <- read.csv(system.file("extdata", "conversions.csv", package = "ofpetrial"))
+conv_unit <- function(value, unit_from, unit_to){
 
-  factor <- table %>%
+  factor <- gen_unit_conversion_table %>%
     filter(from == unit_from & to == unit_to) %>%
     pull(conv_factor)
 
