@@ -725,35 +725,54 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # unit_system <- "imperial"
 make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info) {
   if (is.na(input) == FALSE) {
+    # directions for figure creation
+    perp_move_vec <- rotate_vec(move_vec, 90)
+    opp_move_vec <- rotate_vec(move_vec, 180)
+
+
+    # get plot width
     plot_width <- all_trial_info %>%
       dplyr::filter(input_name == input) %>%
       dplyr::pull(plot_width)
 
+    # plot for given input
     trial_plot <- trial_plot %>%
       dplyr::filter(input_name == input) %>%
       .[1, ]
 
-    coords <- sf::st_coordinates(trial_plot$geometry)[, 1:2]
+    # move the abline to not be centered in the case that there is an even number of plots
 
-    perp_move_vec <- rotate_vec(move_vec, 90)
-    opp_perp_vec <- rotate_vec(perp_move_vec, 180)
+    abline_coords <- all_trial_info$ab_lines[[1]] %>%
+      sf::st_coordinates(.) %>%
+      .[, 1:2]
 
-    # find NW corner
-    point1 <- coords %>%
-      as.data.frame() %>%
-      dplyr::filter(X < mean(X)) %>%
-      dplyr::filter(Y > mean(Y)) %>%
-      dplyr::filter(Y >= max(Y)) %>% # this is in the case where the first condition didn't eliminate all but one
-      as.matrix(.) - plot_width * move_vec
+    shifted_line <- sf::st_linestring(rbind(
+      abline_coords[1,] - 30*move_vec,
+      abline_coords[2,]
+      )) %>%
+      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
+      sf::st_sf()
 
-    point2 <- point1 + plot_width * perp_move_vec %>%
-      as.matrix()
+    abline_perp <- shifted_line %>%
+      st_rotate(., pi/2)
 
-    arrow_ll <- point1 - 1 * rotate_vec(opp_perp_vec, 30)
-    arrow_lr <- point1 - 1 * rotate_vec(opp_perp_vec, -30)
+    line <- st_intersection(abline_perp, trial_plot)
 
-    arrow_rl <- point2 - 1 * rotate_vec(perp_move_vec, 30)
-    arrow_rr <- point2 - 1 * rotate_vec(perp_move_vec, -30)
+    ab_coords <- sf::st_coordinates(line$geometry)[, 1:2]
+
+    point1 <- ab_coords %>%
+      as.matrix() %>%
+      .[1, ]
+
+    point2 <- ab_coords %>%
+      as.matrix() %>%
+      .[2, ]
+
+    arrow_ll <- point1 - 1 * opp_move_vec
+    arrow_lr <- point1 + 1 * opp_move_vec
+
+    arrow_rl <- point2 - 1 * move_vec
+    arrow_rr <- point2 + 1 * move_vec
 
     new_line <-
       sf::st_linestring(rbind(
@@ -870,11 +889,22 @@ get_plots <- function(all_trial_info) {
       dplyr::mutate(plot_id = dplyr::row_number()) %>%
       dplyr::filter(type == "Trial Area")
 
+    abline_coords <- all_trial_info$ab_lines[[1]] %>%
+      sf::st_coordinates(.) %>%
+      .[, 1:2]
+
+    abline <- sf::st_linestring(rbind(
+      abline_coords[1,] - 30*move_vec,
+      abline_coords[2,]
+    )) %>%
+      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
+      sf::st_sf()
+
     first_plot <-
       all_trial_info$trial_design[[1]][1, ] %>%
       dplyr::mutate(
         plot_id =
-          sf::st_intersection(st_transform_utm(design), all_trial_info$ab_lines[[1]]) %>%
+          sf::st_intersection(st_transform_utm(design), sf::st_centroid(abline)) %>%
             dplyr::pull(plot_id) %>%
             min(.)
       )
@@ -909,6 +939,18 @@ get_plots <- function(all_trial_info) {
     min_input <- all_trial_info %>%
       dplyr::filter(plot_width != max(all_trial_info$plot_width))
 
+    # abline of input with max plot width
+    abline_coords <- max_input$ab_lines[[1]] %>%
+      sf::st_coordinates(.) %>%
+      .[, 1:2]
+
+    abline <- sf::st_linestring(rbind(
+      abline_coords[1,] - 30*move_vec,
+      abline_coords[2,]
+    )) %>%
+      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
+      sf::st_sf()
+
     design1 <- max_input$trial_design[[1]] %>%
       dplyr::mutate(plot_id = dplyr::row_number()) %>%
       dplyr::filter(type == "Trial Area")
@@ -919,7 +961,7 @@ get_plots <- function(all_trial_info) {
 
     plot1 <-
       design1 %>%
-      dplyr::filter(plot_id == st_intersection(st_transform_utm(design1), max_input$ab_lines[[1]]) %>%
+      dplyr::filter(plot_id == st_intersection(st_transform_utm(design1), sf::st_centroid(abline)) %>%
         dplyr::pull(plot_id) %>%
         min(.)) %>%
       st_transform_utm(.) %>%

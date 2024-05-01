@@ -603,3 +603,21 @@ st_intersection_quietly <- purrr::quietly(sf::st_intersection)
 st_centroid_quietly <- function(...) {
   suppressWarnings(sf::st_centroid(...))
 }
+
+#++++++++++++++++++++++++++++++++++++
+#+ Rotating sf object
+#++++++++++++++++++++++++++++++++++++
+st_rotate <- function(x, radians) {
+  rot_matrix <- matrix(c(cos(radians), sin(radians), -sin(radians), cos(radians)), 2, 2)
+  crs <- st_crs(x)
+
+  center <- sf::st_centroid(sf::st_as_sfc(sf::st_bbox(x)))
+
+  x_rotated <- (sf::st_geometry(x) - center) * rot_matrix + center
+
+  # put new geometry in the same sf object
+  sf::st_geometry(x) <- x_rotated
+  # replace lost crs
+  sf::st_crs(x) <- crs
+  return(x)
+}
