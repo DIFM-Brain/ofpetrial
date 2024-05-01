@@ -95,6 +95,7 @@ We can now use `assign_rates()` to assign rates to experiment plots.
 trial_design <- assign_rates(exp_data, rate_info = n_rate_info)
 ```
 
+
 Here is the visualization of the trial design done by `viz`.
 
 ```{r, dpi = 600}
