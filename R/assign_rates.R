@@ -244,6 +244,7 @@ assign_rate_rank_by_strip <- function(rank_seq_ws, rank_seq_as, num_strips, max_
 # rank_seq_ws <- plots_with_rates_assigned$rank_seq_ws[[1]]
 # rank_seq_as <- plots_with_rates_assigned$rank_seq_as[[1]]
 # design_type <- plots_with_rates_assigned$design_type[[1]]
+# rate_jump_threshold <- plots_with_rates_assigned$rate_jump_threshold[[1]]
 
 assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, design_type, rate_jump_threshold) {
   max_plot_id <- max(exp_sf$plot_id)
@@ -262,17 +263,17 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
     if (is.null(rank_seq_ws) & is.null(rank_seq_as)) {
       # if both are missing, then first get rank_seq_ws and then rank_seq_as
       rank_seq_ws <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
-      rank_seq_as <- get_starting_rank_as_ls(num_rates, rank_seq_ws)
+      rank_seq_as <- get_starting_rank_as_ls(rank_seq_ws)
     } else if (!is.null(rank_seq_ws) & is.null(rank_seq_as)) {
       # if rank_seq_ws was specified, but rank_seq_as is missing
       rank_seq_ws <- rank_seq_ws
-      rank_seq_as <- get_starting_rank_as_ls(num_rates, rank_seq_ws)
+      rank_seq_as <- get_starting_rank_as_ls(rank_seq_ws)
     } else if (is.null(rank_seq_ws) & !is.null(rank_seq_as)) {
       # if rank_seq_as was specified, but rank_seq_ws is missing
       rank_seq_as <- rank_seq_as
       rank_seq_ws <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
       message(
-        'Note: You specified rank_seq_as yourself. Please study the resulting trial design map and make sure it is satisfactory.'
+        "Note: You specified rank_seq_as yourself. Please study the resulting trial design map and make sure it is satisfactory."
       )
     } else {
       # both specified, do nothing
@@ -381,7 +382,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       .[, `:=`(block_id = NULL, block_row = NULL, block_col = NULL)] %>%
       sf::st_as_sf()
   } else if (design_type == "jcls") {
-
     #--- get the rate rank sequence within a strip---#
     if (!is.null(rank_seq_ws)) {
       message(
@@ -615,7 +615,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
 # It is probably better if rates go up and down alternately instead of increasing and then decreasing (measured by zigzag_score). Having low rate_jump_threshold sacrifices zigzagability.
 
 gen_basic_rank_ws <- function(num_rates, rate_jump_threshold = NA) {
-
   #--- function to calculate cumulative sum ---#
   rsum.cumsum <- function(x, n = 3L) tail(cumsum(x) - cumsum(c(rep(0, n), head(x, -n))), -n + 1)
 
@@ -726,47 +725,106 @@ get_starting_rank_as <- function(num_levels) {
 }
 
 # Get sequence of rate ranks across strips based on the number of rates. This is used for design_type == "ls". It checks changes in rates across strips (columns) for all the rows and avoid designs that has gradual changes in rate rank across strips.
-get_starting_rank_as_ls <- function(num_rates, basic_seq) {
-  seq <-
-    lapply(
-      return_permutations(1:num_rates),
-      \(seq) {
-        mat_list <-
-          lapply(
-            seq,
-            \(x) {
-              get_rank_ws_for_strip(x, basic_seq)
-            }
-          )
-        mat <- do.call(rbind, mat_list)
-        mat_lag <- rbind(mat[2:num_rates, ], mat[1, ])
-        mat_dif <- mat - mat_lag
 
-        results_table <-
-          data.table::data.table(
-            seq = list(seq),
-            # mat = list(mat_dif),
-            #--- count the number of changes of 1 ---#
-            check_1 = max(apply(mat_dif, 2, \(x) sum(x == 1))),
-            #--- count the number of changes of -1 ---#
-            check_n1 = max(apply(mat_dif, 2, \(x) sum(x == -1))),
-            score = abs(mat_dif) %>% mean()
-          )
+get_starting_rank_as_ls <- function(rank_seq_ws) {
+  
+  num_rates <- length(rank_seq_ws)
 
-        return(results_table)
-      }
-    ) %>%
-    data.table::rbindlist() %>%
-    #--- pick the sequence that would result in smallest numbers of gradual changes ---#
-    .[(check_1 + check_n1) == min(check_1 + check_n1), ] %>%
-    #--- pick the one with the higest score (typically exactly the same for all the options) ---#
-    .[score == max(score), ] %>%
-    #--- pick one from the remaining options randomly ---#
-    .[sample(nrow(.), 1), seq] %>%
-    .[[1]]
+  if (num_rates <= 3) { # no degrees of freedom (does not matter which)
+    rank_seq_as <- sample(1:num_rates, num_rates)
+  } else {
+    rank_seq_as <-
+      lapply(
+        return_permutations(1:num_rates),
+        \(seq) {
+          # left to right (direction of machine)
+          mat_list <-
+            lapply(
+              seq,
+              \(x) {
+                get_rank_ws_for_strip(x, rank_seq_ws)
+              }
+            )
+          mat <- do.call(rbind, mat_list)
+          mat_dif <- mat - rbind(mat[2:num_rates, ], mat[1, ])
+          mat_dif_diag_up <- mat - kronecker(matrix(1, 2, 2), mat)[2:(num_rates + 1), num_rates:(2 * num_rates - 1)]
+          mat_dif_diag_down <- mat - kronecker(matrix(1, 2, 2), mat)[2:(num_rates + 1), 2:(num_rates + 1)]
 
-  return(seq)
+          results_table <-
+            data.table::data.table(
+              seq = list(seq),
+              # mat = list(mat_dif),
+              #--- count the number of changes of 1 ---#
+              check_1_horizontal = max(apply(mat_dif, 2, \(x) sum(abs(x) == 1))),
+              check_0_diagonal_up = max(apply(mat_dif_diag_up, 2, \(x) sum(abs(x) == 0))),
+              check_0_diagonal_down = max(apply(mat_dif_diag_down, 2, \(x) sum(abs(x) == 0))),
+              score_horizontal = abs(mat_dif) %>% mean(),
+              score_diagonal = abs(mat_dif_diag) %>% mean()
+            ) %>%
+            .[, score := score_horizontal + score_diagonal]
+
+          return(results_table)
+        }
+      ) %>%
+      data.table::rbindlist() %>%
+      #--- pick the sequence that would result in the smallest numbers of gradual changes ---#
+      .[check_1_horizontal <= (min(check_1_horizontal) + 2), ] %>%
+      .[check_0_diagonal_up < num_rates, ] %>%
+      .[check_0_diagonal_down < num_rates, ] %>%
+      #--- pick the one with the higest score (typically exactly the same for all the options) ---#
+      .[score == max(score), ] %>%
+      #--- pick one from the remaining options randomly ---#
+      .[sample(nrow(.), 1), seq] %>%
+      .[[1]]
+  }
+
+  return(rank_seq_as)
 }
+
+# get_starting_rank_as_ls <- function(rank_seq_ws) {
+
+#   num_rates <- length(rank_seq_ws)
+
+#   seq <-
+#     lapply(
+#       return_permutations(1:num_rates),
+#       \(seq) {
+#         mat_list <-
+#           lapply(
+#             seq,
+#             \(x) {
+#               get_rank_ws_for_strip(x, rank_seq_ws)
+#             }
+#           )
+#         mat <- do.call(rbind, mat_list)
+#         mat_lag <- rbind(mat[2:num_rates, ], mat[1, ])
+#         mat_dif <- mat - mat_lag
+
+#         results_table <-
+#           data.table::data.table(
+#             seq = list(seq),
+#             # mat = list(mat_dif),
+#             #--- count the number of changes of 1 ---#
+#             check_1 = max(apply(mat_dif, 2, \(x) sum(x == 1))),
+#             #--- count the number of changes of -1 ---#
+#             check_n1 = max(apply(mat_dif, 2, \(x) sum(x == -1))),
+#             score = abs(mat_dif) %>% mean()
+#           )
+
+#         return(results_table)
+#       }
+#     ) %>%
+#     data.table::rbindlist() %>%
+#     #--- pick the sequence that would result in smallest numbers of gradual changes ---#
+#     .[(check_1 + check_n1) == min(check_1 + check_n1), ] %>%
+#     #--- pick the one with the higest score (typically exactly the same for all the options) ---#
+#     .[score == max(score), ] %>%
+#     #--- pick one from the remaining options randomly ---#
+#     .[sample(nrow(.), 1), seq] %>%
+#     .[[1]]
+
+#   return(seq)
+# }
 
 get_rank_for_rb <- function(num_rates, data) {
   n_plot <- nrow(data)
