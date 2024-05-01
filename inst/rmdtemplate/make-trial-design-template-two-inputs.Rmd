@@ -256,7 +256,7 @@ machine_table$map_plot_indiv[[1]] +
 
 ### Step 3.  Center the `r to_title(machine_table$machine_type[[2]])` on the AB-line Provided and Implement Trial
 
-As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(machine_table, 2, unit_system)`
+As before, the trial design should be uploaded into the monitor, and the operator should center the `r machine_table$machine_type[[2]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[2]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-2) shows the `r machine_table$machine_type[[2]]` inside a trial plot along with its respective AB-line. `r text_sections_used(all_trial_info, machine_table, 2, unit_system)`
 
 ```{r machine-alignment-2, echo=FALSE, fig.cap = paste0("Alignment of ", to_title(machine_table$machine_type[[2]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()

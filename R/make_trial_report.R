@@ -719,9 +719,9 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
   return(polygon_sf)
 }
 
-# trial_plot <- machine_table$trial_plot[[2]]
-# move_vec <- machine_table$move_vec[[2]]
-# input <- machine_table$input_name[[2]]
+# trial_plot <- machine_table$trial_plot[[1]]
+# move_vec <- machine_table$move_vec[[1]]
+# input <- machine_table$input_name[[1]]
 # unit_system <- "imperial"
 make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info) {
   if (is.na(input) == FALSE) {
@@ -743,6 +743,7 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
       as.data.frame() %>%
       dplyr::filter(X < mean(X)) %>%
       dplyr::filter(Y > mean(Y)) %>%
+      dplyr::filter(Y >= max(Y)) %>% # this is in the case where the first condition didn't eliminate all but one
       as.matrix(.) - plot_width * move_vec
 
     point2 <- point1 + plot_width * perp_move_vec %>%
