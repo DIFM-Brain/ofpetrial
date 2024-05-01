@@ -200,6 +200,56 @@ assign_rates <- function(exp_data, rate_info) {
     )) %>%
     dplyr::ungroup()
 
+  if(nrow(trial_design) == 2){
+    min_plot_area <- min(trial_design$trial_design[[1]] %>%
+                           dplyr::mutate(area = as.numeric(st_area(.))) %>%
+                           pull(area) %>%
+                           median(),
+                         trial_design$trial_design[[2]] %>%
+                           dplyr::mutate(area = as.numeric(st_area(.))) %>%
+                           pull(area) %>%
+                           median())
+
+    sf_use_s2(FALSE)
+
+    min_rep <- st_intersection(trial_design$trial_design[[1]] %>%
+                                         filter(type != "Border Buffer"),
+                               trial_design$trial_design[[2]] %>%
+                                         filter(type != "Border Buffer")) %>%
+      dplyr::mutate(treatment = paste0(rate, "_", rate.1)) %>%
+      dplyr::mutate(area = as.numeric(st_area(.))) %>%
+      dplyr::filter(area > min_plot_area*0.8) %>%
+      dplyr::group_by(treatment) %>%
+      dplyr::select(treatment) %>%
+      dplyr::summarise(Replicates = dplyr::n()) %>%
+      data.frame() %>%
+      dplyr::select(treatment, Replicates) %>%
+      dplyr::rename("Treatment Rates" = "treatment") %>%
+      dplyr::pull(Replicates) %>%
+      min()
+
+    if(min_rep <= 4){
+      message("Minimum number of treatment replications is less than or equal to 4. Please consider reducing the number of treatment levels or designing a one input trial.")
+    }
+
+  }else{
+    min_rep <-
+        trial_design$trial_design %>%
+          data.frame() %>%
+          dplyr::group_by(rate) %>%
+          dplyr::summarise(
+            Replicates = dplyr::n(),
+            .groups = "drop"
+          ) %>%
+          dplyr::select(Replicates) %>%
+      min()
+
+    if(min_rep <= 4){
+      message("Minimum number of treatment replications is less than or equal to 4. Please consider reducing the number of treatment levels.")
+    }
+
+  }
+
   return(trial_design)
 }
 
