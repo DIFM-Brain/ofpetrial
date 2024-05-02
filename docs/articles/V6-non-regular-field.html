@@ -79,6 +79,9 @@
     <li>
       <a href="../articles/V7-more-examples.html">More Examples</a>
     </li>
+    <li>
+      <a href="../articles/V8-visualize-from-scratch.html">Modify or create trial design maps from scratch</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -153,7 +156,6 @@ look like this.</p>
 can be shaped not so rectangular and it is simply impossible to define
 regular rectangular blocks. 5 by 5 blocks would look like below for this
 field if you try to assign blocks regardless.</p>
-<pre><code><span><span class="co">#&gt; Note: You specified neither rank_seq_as or rank_seq_ws. The resulting trial design is equivalent to design_type = "jcls"</span></span></code></pre>
 <p><img src="V6-non-regular-field_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <pre><code><span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_text()`).</span></span></code></pre>
@@ -167,7 +169,7 @@ this type of field may not produce a design you might have intended.</p>
 <p>More often than not, fields have ditches (or parts where crops cannot
 be grown). The <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code> function avoids such areas
 automatically in creating experiment plots like below:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>

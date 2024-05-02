@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 2.19.1
 pkgdown: 2.0.8
 pkgdown_sha: ~
 articles:
@@ -10,5 +10,6 @@ articles:
   V5-understanding-structure: V5-understanding-structure.html
   V6-non-regular-field: V6-non-regular-field.html
   V7-more-examples: V7-more-examples.html
-last_built: 2024-04-17T16:45Z
+  V8-visualize-from-scratch: V8-visualize-from-scratch.html
+last_built: 2024-05-02T14:46Z
 

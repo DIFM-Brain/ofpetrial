@@ -1,6 +1,0 @@
-+ visualization.R: functions to visualize 
-+ make_exp_plots.R: functions to make experiment plots
-+ assign_rates.R: functions to assign rates to plots
-+ utility.R: general functions 
-+ utility_spatialR: general functions 
-+ write_td_files.R: write files for the grower  

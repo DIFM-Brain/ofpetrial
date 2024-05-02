@@ -61,6 +61,9 @@
     <li>
       <a href="../articles/V7-more-examples.html">More Examples</a>
     </li>
+    <li>
+      <a href="../articles/V8-visualize-from-scratch.html">Modify or create trial design maps from scratch</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -95,7 +98,8 @@
 <span>  design_type <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  rank_seq_ws <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rank_seq_as <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  base_rate <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  base_rate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rate_jump_threshold <span class="op">=</span> <span class="cn">NA</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -130,7 +134,7 @@
 
 
 <dt>design_type</dt>
-<dd><p>(string) type of trial design. available options are Latin Square ("ls"), Strip ("str"), Randomized Strip ("rstr"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See the article on trial design for more details.</p></dd>
+<dd><p>(string) type of trial design. available options are Latin Square ("ls"), Strip ("str"), Randomized Strip ("rstr"), Randomized Block ("rb"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See the article on trial design for more details.</p></dd>
 
 
 <dt>rank_seq_ws</dt>
@@ -143,6 +147,10 @@
 
 <dt>base_rate</dt>
 <dd><p>(integer) optional base application information created by add_base_rate</p></dd>
+
+
+<dt>rate_jump_threshold</dt>
+<dd><p>(integer) highest jump in rate rank acceptable</p></dd>
 
 </dl></div>
     <div id="value">
@@ -172,13 +180,12 @@
 <span class="r-in"><span>  rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20000</span>, <span class="fl">25000</span>, <span class="fl">30000</span>, <span class="fl">35000</span>, <span class="fl">40000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "You did not specify design_type. It is assumed to be of type ls."</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name design_type gc_rate unit  tgt_rate_original tgt_rate_equiv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> seed       <span style="color: #BB0000;">NA</span>            <span style="text-decoration: underline;">30</span>000 seeds <span style="color: #949494;">&lt;dbl [5]&gt;</span>         <span style="color: #949494;">&lt;dbl [5]&gt;</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 7 more variables: include_base_rate &lt;lgl&gt;, total_equiv &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   min_rate &lt;lgl&gt;, max_rate &lt;lgl&gt;, num_rates &lt;int&gt;, rank_seq_ws &lt;list&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rank_seq_as &lt;list&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   input_name design_type gc_rate unit  tgt_rate_original tgt_rate_equiv min_rate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> seed       <span style="color: #BB0000;">NA</span>            <span style="text-decoration: underline;">30</span>000 seeds <span style="color: #949494;">&lt;dbl [5]&gt;</span>         <span style="color: #949494;">&lt;dbl [5]&gt;</span>      <span style="color: #BB0000;">NA</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: max_rate &lt;lgl&gt;, num_rates &lt;int&gt;, rank_seq_ws &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rank_seq_as &lt;list&gt;, rate_jump_threshold &lt;lgl&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

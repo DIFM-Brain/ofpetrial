@@ -8,7 +8,6 @@ reference:
     contents:
       - prep_plot
       - prep_rate
-      - add_base_rate
   - title: Generate trial designs
     contents:
       - make_exp_plots

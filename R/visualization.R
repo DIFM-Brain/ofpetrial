@@ -99,59 +99,33 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
       ))
   } else if (type == "rates") {
     # input_name <- gg_td$input_name[[1]]
+    # input_type <- gg_td$input_type[[1]]
     # unit <- gg_td$unit[[1]]
+    # unit_system <- gg_td$unit_system[[1]]
     # gc_rate <- gg_td$gc_rate[[1]]
-    # rate_data_exp <- gg_td$rate_data_exp[[1]]
     # tgt_rate_original <- gg_td$tgt_rate_original[[1]]
+    # trial_design <- gg_td$trial_design[[1]]
 
     gg_td <-
       td_rows %>%
-      dplyr::mutate(rate_data_exp = list(
-        data.table(
-          tgt_rate_original,
-          tgt_rate_equiv
-        ) %>%
-          rowwise() %>%
-          mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv))), collapse = " | ")) %>%
-          dplyr::rename("rate" = "tgt_rate_original")
+      dplyr::mutate(data_for_plot = list(
+        data.table::data.table(rate = unique(trial_design$rate)) %>%
+          .[, rata_equiv := convert_rates(input_name, unit, gc_rate)] %>%
+          .[order(rate), ] %>%
+          .[, all_units := factor(paste(rate, " | ", rata_equiv))] %>%
+          dplyr::left_join(trial_design, ., by = "rate")
       )) %>%
-      dplyr::mutate(rate_data = list(
-        if (gc_rate %in% tgt_rate_original) {
-          rate_data_exp
-        } else {
-          rbind(
-            rate_data_exp,
-            data.frame(
-              rate = gc_rate,
-              tgt_rate_equiv = convert_rates(input_name, unit, gc_rate)
-            ) %>%
-              dplyr::mutate(all_units = paste(unique(na.omit(c(rate, tgt_rate_equiv))), collapse = " | "))
-          )
-        }
+      dplyr::mutate(need_equiv_rate = list(
+        data.table(data_for_plot)[, all(rate != rata_equiv)]
       )) %>%
-      dplyr::mutate(rate_cols = list(
-        data.table(
-          tgt_rate_original = unlist(tgt_rate_original),
-          tgt_rate_equiv = unlist(tgt_rate_equiv)
-        ) %>%
-          data.frame(.) %>%
-          .[colSums(is.na(.)) == 0] %>%
-          .[!duplicated(as.list(.))] %>%
-          colnames(.)
-      )) %>%
-      mutate(legend_title = list(
+      dplyr::mutate(legend_title = list(
         get_legend_title(
           unit_system,
-          base_rate_equiv,
-          rate_cols,
+          need_equiv_rate,
           input_name,
           input_type,
           unit
         )
-      )) %>%
-      dplyr::mutate(data_for_plot = list(
-        merge(trial_design, rate_data, by = "rate") %>%
-          dplyr::mutate(all_units = as.factor(all_units))
       )) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
@@ -273,7 +247,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
 # ! Helper functions
 # !===========================================================
 
-get_legend_title <- function(unit_system, base_rate_equiv, rate_cols, input_name, input_type, unit) {
+get_legend_title <- function(unit_system, need_equiv_rate, input_name, input_type, unit) {
   `%notin%` <- Negate(`%in%`)
 
   land_unit <- if (unit_system == "metric") {
@@ -288,12 +262,12 @@ get_legend_title <- function(unit_system, base_rate_equiv, rate_cols, input_name
     "lb"
   }
 
-  name <- if ("tgt_rate_equiv" %notin% rate_cols) {
+  name <- if (!need_equiv_rate) {
     paste0(to_title(input_name), " (", unit, "/", land_unit, ")")
-  } else if ("tgt_rate_equiv" %in% rate_cols) {
+  } else if (need_equiv_rate) {
     paste0(
       to_title(input_name), " (", unit, "/", land_unit, ") | ",
-      input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n"
+      input_type, " Equivalent (", converted_unit, "/", land_unit, ")"
     )
   }
 
