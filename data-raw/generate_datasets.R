@@ -252,9 +252,9 @@ input_unit_conversion_table <-
 #+ General unit conversion table
 #++++++++++++++++++++++++++++++++++++
 gen_unit_conversion_table <- data.table(
-  from = c("hectares", "acres", "meters", "feet", "kg", "pounds", "acres", "m2"),
-  to = c("acres", "hectares", "feet", "meters", "pounds", "kg", "m2", "acres"),
-  conv_factor = c(1/0.40468564224, 0.40468564224, 1/0.3048, 0.3048, 1/0.45359237, 0.45359237, 4046.856422, 1/4046.856422)
+  from = c("hectares", "acres", "meters", "feet", "kg", "pounds", "acres", "m2", "liters", "gallons"),
+  to = c("acres", "hectares", "feet", "meters", "pounds", "kg", "m2", "acres", "gallons", "liters"),
+  conv_factor = c(1/0.40468564224, 0.40468564224, 1/0.3048, 0.3048, 1/0.45359237, 0.45359237, 4046.856422, 1/4046.856422, 0.2641721, 3.785412)
 )
 
 #++++++++++++++++++++++++++++++++++++

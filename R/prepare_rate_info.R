@@ -137,11 +137,11 @@ convert_rates <- function(input_name,
   } else {
     # change rates to the imperial form for the table
     if (unit == "liters") {
-      rate <- conv_unit(rate, "l", "us_gal")
+      rate <- conv_unit(rate, "liters", "gallons")
       new_unit <- "gallons"
       reporting_unit <- "metric"
     } else if (unit == "kg") {
-      rate <- conv_unit(rate, "kg", "lb")
+      rate <- conv_unit(rate, "kg", "pounds")
       new_unit <- "lb"
       reporting_unit <- "metric"
     } else {
@@ -163,7 +163,7 @@ convert_rates <- function(input_name,
     }
 
     if (reporting_unit == "metric") {
-      conv_factor_n <- conv_factor_n * conv_unit(1, "lbs", "kg") * conv_unit(1, "hectare", "acre")
+      conv_factor_n <- conv_factor_n * conv_unit(1, "pounds", "kg") * conv_unit(1, "hectares", "acres")
     }
 
     if (conversion_type == "to_n_equiv") {
