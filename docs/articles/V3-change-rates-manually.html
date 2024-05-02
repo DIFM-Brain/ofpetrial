@@ -77,10 +77,7 @@
       <a href="../articles/V6-non-regular-field.html">Non-regular fields</a>
     </li>
     <li>
-      <a href="../articles/V7-more-examples.html">More Examples</a>
-    </li>
-    <li>
-      <a href="../articles/V8-visualize-from-scratch.html">Modify or create trial design maps from scratch</a>
+      <a href="../articles/V7-visualize-from-scratch.html">Modify or create trial design maps from scratch</a>
     </li>
   </ul>
 </li>
@@ -367,6 +364,108 @@ at the left lower corner of the field.</p>
 <p>If you would like, you could repeat this to other blocks of plots to
 generate a randomized block design. Of course, it is much easier to just
 use the “rb” option in <code><a href="../reference/assign_rates.html">assign_rates()</a></code>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="application-precision-nitrogen-project-pnp-at-university-of-nebraska-lincoln">Application: Precision Nitrogen Project (PNP) at University of
+Nebraska Lincoln<a class="anchor" aria-label="anchor" href="#application-precision-nitrogen-project-pnp-at-university-of-nebraska-lincoln"></a>
+</h2>
+<p>Here, we apply what we have learned so far to create a trial design
+like the ones used in <span class="citation">Puntel, Thompson, and Mieno
+(2024)</span>.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
+<span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
+<span>    unit_system <span class="op">=</span> <span class="st">"imperial"</span>,</span>
+<span>    machine_width <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    section_num <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    harvester_width <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    headland_length <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    plot_width <span class="op">=</span> <span class="fl">60</span>,</span>
+<span>    min_plot_length <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>    max_plot_length <span class="op">=</span> <span class="fl">300</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span></span>
+<span><span class="va">exp_data</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
+<span>    input_plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
+<span>    boundary_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"boundary-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ab-line-simple1.shp"</span>, package <span class="op">=</span> <span class="st">"ofpetrial"</span><span class="op">)</span>,</span>
+<span>    abline_type <span class="op">=</span> <span class="st">"free"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n_rate_info</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/prep_rate.html">prep_rate</a></span><span class="op">(</span></span>
+<span>    plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
+<span>    gc_rate <span class="op">=</span> <span class="fl">240</span>,</span>
+<span>    unit <span class="op">=</span> <span class="st">"lb"</span>,</span>
+<span>    rates <span class="op">=</span> <span class="fl">240</span>,</span>
+<span>    design_type <span class="op">=</span> <span class="st">"str"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">td</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span></span>
+<span>    exp_data <span class="op">=</span> <span class="va">exp_data</span>,</span>
+<span>    rate_info <span class="op">=</span> <span class="va">n_rate_info</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">td</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>    <span class="va">td</span>,</span>
+<span>    strip_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span>,</span>
+<span>    new_rates <span class="op">=</span> <span class="fl">180</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">td</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">td</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>    strip_ids <span class="op">=</span> <span class="fl">8</span><span class="op">:</span><span class="fl">12</span>,</span>
+<span>    plot_ids <span class="op">=</span> <span class="fl">5</span><span class="op">:</span><span class="fl">9</span>,</span>
+<span>    new_rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">140</span>, <span class="fl">180</span>, <span class="fl">220</span>, <span class="fl">260</span><span class="op">)</span>,</span>
+<span>    rate_by <span class="op">=</span> <span class="st">"strip"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>    strip_ids <span class="op">=</span> <span class="fl">8</span><span class="op">:</span><span class="fl">12</span>,</span>
+<span>    plot_ids <span class="op">=</span> <span class="fl">15</span><span class="op">:</span><span class="fl">19</span>,</span>
+<span>    new_rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">140</span>, <span class="fl">260</span>, <span class="fl">100</span>, <span class="fl">180</span>, <span class="fl">220</span><span class="op">)</span>,</span>
+<span>    rate_by <span class="op">=</span> <span class="st">"strip"</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>    strip_ids <span class="op">=</span> <span class="fl">8</span><span class="op">:</span><span class="fl">12</span>,</span>
+<span>    plot_ids <span class="op">=</span> <span class="fl">25</span><span class="op">:</span><span class="fl">29</span>,</span>
+<span>    new_rates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">220</span>, <span class="fl">100</span>, <span class="fl">260</span>, <span class="fl">220</span>, <span class="fl">180</span><span class="op">)</span>,</span>
+<span>    rate_by <span class="op">=</span> <span class="st">"strip"</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">td</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="../reference/change_rates.html">change_rates</a></span><span class="op">(</span></span>
+<span>    <span class="va">td</span>,</span>
+<span>    strip_ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">16</span><span class="op">)</span>,</span>
+<span>    new_rates <span class="op">=</span> <span class="fl">180</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">td</span>, type <span class="op">=</span> <span class="st">"rates"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="V3-change-rates-manually_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-puntel2024leveraging" class="csl-entry">
+Puntel, Laila A, Laura J Thompson, and Taro Mieno. 2024.
+<span>“Leveraging Digital Agriculture for on-Farm Testing of
+Technologies.”</span> <em>Frontiers in Agronomy</em> 6: 1234232.
+</div>
 </div>
 </div>
   </div>

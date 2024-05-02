@@ -9,8 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%",
-  dpi = 600
+  out.width = "100%"
 )
 ```
 
@@ -98,7 +97,7 @@ trial_design <- assign_rates(exp_data, rate_info = n_rate_info)
 
 Here is the visualization of the trial design done by `viz`.
 
-```{r, dpi = 600}
+```{r}
 viz(trial_design)
 ```
 

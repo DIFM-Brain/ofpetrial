@@ -68,8 +68,7 @@ usethis::use_vignette("V3-change-rates-manually")
 usethis::use_vignette("V4-diagnose-td")
 usethis::use_vignette("V5-understanding-structure")
 usethis::use_vignette("V6-non-regular-field")
-usethis::use_vignette("V7-more-examples")
-usethis::use_vignette("V8-visualize-from-scratch")
+usethis::use_vignette("V7-visualize-from-scratch")
 
 # usethis::use_vignette("random-vs-orthogonal")
 ```

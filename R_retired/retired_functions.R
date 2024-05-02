@@ -1023,3 +1023,12 @@ make_design_for_2_by_2 <- function(input_trial_data_with_rates) {
   return(plots_with_rates_assigned)
 }
 
+add_base_rate <- function(base_input_name, base_unit, base_rate) {
+  base_info <- data.frame(
+    input_name = base_input_name,
+    unit = base_unit,
+    rate = base_rate
+  )
+
+  return(base_info)
+}

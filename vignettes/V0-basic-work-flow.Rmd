@@ -10,8 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  dpi = 600
+  comment = "#>"
 )
 ```
 
@@ -85,7 +84,7 @@ exp_data$exp_plots[[1]]
 
 We can visualize the layout of the experiment plots using `viz()` with `type = "layout"` option.
 
-```{r, dpi = 600}
+```{r}
 viz(exp_data, type = "layout", abline = TRUE)
 ```
 
@@ -139,7 +138,7 @@ trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_i
 
 Here is the visualization of the trial design done by `viz`.
 
-```{r, dpi = 600}
+```{r}
 viz(trial_design)
 ```
 

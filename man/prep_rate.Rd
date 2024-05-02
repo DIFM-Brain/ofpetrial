@@ -15,7 +15,6 @@ prep_rate(
   design_type = NA,
   rank_seq_ws = NULL,
   rank_seq_as = NULL,
-  base_rate = NULL,
   rate_jump_threshold = NA
 )
 }
@@ -39,8 +38,6 @@ prep_rate(
 \item{rank_seq_ws}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.}
 
 \item{rank_seq_as}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.}
-
-\item{base_rate}{(integer) optional base application information created by add_base_rate}
 
 \item{rate_jump_threshold}{(integer) highest jump in rate rank acceptable}
 }

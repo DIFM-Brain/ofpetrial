@@ -12,7 +12,6 @@
 #' @param design_type (string) type of trial design. available options are Latin Square ("ls"), Strip ("str"), Randomized Strip ("rstr"), Randomized Block ("rb"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See the article on trial design for more details.
 #' @param rank_seq_ws (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.
 #' @param rank_seq_as (integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.
-#' @param base_rate (integer) optional base application information created by add_base_rate
 #' @param rate_jump_threshold (integer) highest jump in rate rank acceptable
 #' @returns data.frame of input rate information
 #' @import data.table
@@ -34,7 +33,7 @@
 #'   unit = "seeds",
 #'   rates = c(20000, 25000, 30000, 35000, 40000)
 #' )
-prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL, base_rate = NULL, rate_jump_threshold = NA) {
+prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA, rank_seq_ws = NULL, rank_seq_as = NULL, rate_jump_threshold = NA) {
   #* +++++++++++++++++++++++++++++++++++
   #* Main
   #* +++++++++++++++++++++++++++++++++++
@@ -176,12 +175,4 @@ convert_rates <- function(input_name,
   return(as.numeric(converted_rate))
 }
 
-add_base_rate <- function(base_input_name, base_unit, base_rate) {
-  base_info <- data.frame(
-    input_name = base_input_name,
-    unit = base_unit,
-    rate = base_rate
-  )
 
-  return(base_info)
-}

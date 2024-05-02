@@ -180,7 +180,7 @@ return_permutations <- function(x) {
 # #++++++++++++++++++++++++++++++++++++
 conv_unit <- function(value, unit_from, unit_to){
 
-  factor <- gen_unit_conversion_table %>%
+  factor <- generic_unit_conversion_table %>%
     filter(from == unit_from & to == unit_to) %>%
     pull(conv_factor)
 
