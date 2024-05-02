@@ -722,7 +722,6 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
     perp_move_vec <- rotate_vec(move_vec, 90)
     opp_move_vec <- rotate_vec(move_vec, 180)
 
-
     # get plot width
     plot_width <- all_trial_info %>%
       dplyr::filter(input_name == input) %>%
@@ -734,13 +733,12 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
       .[1, ]
 
     # move the abline to not be centered in the case that there is an even number of plots
-
     abline_coords <- all_trial_info$ab_lines[[1]] %>%
       sf::st_coordinates(.) %>%
       .[, 1:2]
 
     shifted_line <- sf::st_linestring(rbind(
-      abline_coords[1,] - 30*move_vec,
+      abline_coords[1,] - 40*move_vec,
       abline_coords[2,]
       )) %>%
       sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
@@ -886,11 +884,13 @@ get_plots <- function(all_trial_info) {
       sf::st_coordinates(.) %>%
       .[, 1:2]
 
+    move_vec <- get_move_vec(all_trial_info$ab_lines[[1]])
+
     abline <- sf::st_linestring(rbind(
-      abline_coords[1,] - 30*move_vec,
+      abline_coords[1,] - 40*move_vec,
       abline_coords[2,]
     )) %>%
-      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
+      sf::st_sfc(crs = sf::st_crs(all_trial_info$ab_lines[[1]])) %>%
       sf::st_sf()
 
     first_plot <-
@@ -937,11 +937,13 @@ get_plots <- function(all_trial_info) {
       sf::st_coordinates(.) %>%
       .[, 1:2]
 
+    move_vec <- get_move_vec(max_input$ab_lines[[1]])
+
     abline <- sf::st_linestring(rbind(
-      abline_coords[1,] - 30*move_vec,
+      abline_coords[1,] - 40*move_vec,
       abline_coords[2,]
     )) %>%
-      sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
+      sf::st_sfc(crs = sf::st_crs(max_input$ab_lines[[1]])) %>%
       sf::st_sf()
 
     design1 <- max_input$trial_design[[1]] %>%
