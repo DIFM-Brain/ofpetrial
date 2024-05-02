@@ -37,7 +37,6 @@ Imports:
     zip,
     rmarkdown,
     tmap,
-    measurements,
     magrittr,
     dplyr
 VignetteBuilder: knitr

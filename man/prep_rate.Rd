@@ -15,7 +15,8 @@ prep_rate(
   design_type = NA,
   rank_seq_ws = NULL,
   rank_seq_as = NULL,
-  base_rate = NULL
+  base_rate = NULL,
+  rate_jump_threshold = NA
 )
 }
 \arguments{
@@ -33,13 +34,15 @@ prep_rate(
 
 \item{num_rates}{(numeric) Default is 5. It has to be an even number if design_type is "ejca". Ignored if rates are specified.}
 
-\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("str"), Randomized Strip ("rstr"), Randomized Block ("rb"), Jump-conscious Latin Square ("jcls"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See the article on trial design for more details.}
+\item{design_type}{(string) type of trial design. available options are Latin Square ("ls"), Strip ("str"), Randomized Strip ("rstr"), Randomized Block ("rb"), Sparse ("sparse"), and Extra Jump-conscious Alternate "ejca". See the article on trial design for more details.}
 
 \item{rank_seq_ws}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "within" a strip.}
 
 \item{rank_seq_as}{(integer) vector of integers indicating the order of the ranking of the rates, which will be repeated "across" strip for their first plots.}
 
 \item{base_rate}{(integer) optional base application information created by add_base_rate}
+
+\item{rate_jump_threshold}{(integer) highest jump in rate rank acceptable}
 }
 \value{
 data.frame of input rate information

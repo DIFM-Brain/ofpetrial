@@ -261,29 +261,6 @@ add_blocks(td_rb) %>% viz(type = "block_id")
 
 Since there are five distinctive rates, each block consists of five by five plots. In each of the block, the five rates are randomly assigned in a way that each of the rates appear exactly five times. 
 
-# Jump-conscious Latin Square ("jcls")
-
-Jump-conscious Latin Square (`design_type = "jcls`) is merely a special type of Latin Square design. Indeed, you can create exactly the same design by specifying `rank_seq_as` and `rank_seq_ws` appropriately. JCLS ensures that jumps in rate from plot to plot in the direction of the applicator/planter less than equal to rate rank of 2. For exmaple, input rate never goes from 100 to 220 or 260 in JCLS. This type of designs avoids placing too much mechanical strain on the applicator/planter.
-
-```{r}
-n_rate_info <-
-  prep_rate(
-    plot_info = n_plot_info,
-    gc_rate = 180,
-    unit = "lb",
-    rates = c(100, 140, 180, 220, 260),
-    design_type = "jcls",
-  )
-
-td_jcls <-
-  assign_rates(
-    exp_data = exp_data,
-    rate_info = n_rate_info
-  )
-
-viz(td_jcls, type = "rates")
-```
-
 # Extra Jump-conscious Alternate ("ejca")
 
 This design alternate high-rate strip and low-rate strip, thus avoiding sudden changes in input rates so that machines can handle them. EJCA is more machine friendly than JCLS.

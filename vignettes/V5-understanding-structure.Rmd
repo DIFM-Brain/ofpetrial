@@ -104,7 +104,7 @@ seed_rate_info <-
     min_rate = 16000,
     max_rate = 40000,
     num_rates = 5,
-    design_type = "jcls"
+    design_type = "ls"
   )
 
 n_rate_info <-

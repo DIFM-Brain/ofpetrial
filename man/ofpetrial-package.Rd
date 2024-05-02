@@ -4,12 +4,12 @@
 \name{ofpetrial-package}
 \alias{ofpetrial}
 \alias{ofpetrial-package}
-\title{ofpetrial: Design On-farm Field Trials}
+\title{ofpetrial: Design On-farm Precision Field Agronomic Trials}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+A comprehensive system for designing and implementing on-farm precision field agronomic trials. You provide field data, tell 'ofpetrial' how to design a trial, and get readily-usable trial design files and a report checks the validity and reliability of the trial design.
 }
 \author{
-\strong{Maintainer}: Taro  Mieno \email{tmieno2@unl.edu}
+\strong{Maintainer}: Taro  Mieno \email{tmieno2@unl.edu} [copyright holder]
 
 Authors:
 \itemize{

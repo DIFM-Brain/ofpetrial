@@ -110,7 +110,7 @@ assign_rates <- function(exp_data, rate_info) {
           get_design_for_second(
             input_trial_data = input_trial_data_with_rates,
             first_design = design_first_input,
-            rank_seq_as = input_trial_data_with_rates$rank_seq_as[[2]]
+            rate_jump_threshold = input_trial_data_with_rates$rate_jump_threshold[[2]]
           )
 
         input_trial_data_with_rates$experiment_design <- list(design_first_input, design_second_input)
@@ -122,6 +122,9 @@ assign_rates <- function(exp_data, rate_info) {
               dplyr::select(rate, strip_id, plot_id) %>%
               dplyr::mutate(type = "experiment")
           ))
+
+        #--- check if each rate-combination has enough replications ---#
+        check_replicates_two_input(plots_with_rates_assigned, geometry_identical)
       }
     } else { # two-input, but can just design them independently
 
@@ -143,6 +146,9 @@ assign_rates <- function(exp_data, rate_info) {
             dplyr::select(rate, strip_id, plot_id) %>%
             dplyr::mutate(type = "experiment")
         ))
+
+      #--- check if each rate-combination has enough replications ---#
+      check_replicates_two_input(plots_with_rates_assigned, geometry_identical)
     }
   } else {
     #++++++++++++++++++++++++++++++++++++
@@ -162,6 +168,9 @@ assign_rates <- function(exp_data, rate_info) {
           dplyr::select(rate, strip_id, plot_id) %>%
           dplyr::mutate(type = "experiment")
       ))
+
+    #--- check if each rate has enough replications ---#
+    check_replicates_single_input(plots_with_rates_assigned)
   }
 
   trial_design <-
@@ -200,86 +209,9 @@ assign_rates <- function(exp_data, rate_info) {
     )) %>%
     dplyr::ungroup()
 
-  if(nrow(trial_design) == 2){
-    min_plot_area <- min(trial_design$trial_design[[1]] %>%
-                           dplyr::mutate(area = as.numeric(st_area(.))) %>%
-                           pull(area) %>%
-                           median(),
-                         trial_design$trial_design[[2]] %>%
-                           dplyr::mutate(area = as.numeric(st_area(.))) %>%
-                           pull(area) %>%
-                           median())
 
-    sf_use_s2(FALSE)
-
-    min_rep <- st_intersection(trial_design$trial_design[[1]] %>%
-                                         filter(type != "Border Buffer"),
-                               trial_design$trial_design[[2]] %>%
-                                         filter(type != "Border Buffer")) %>%
-      dplyr::mutate(treatment = paste0(rate, "_", rate.1)) %>%
-      dplyr::mutate(area = as.numeric(st_area(.))) %>%
-      dplyr::filter(area > min_plot_area*0.8) %>%
-      dplyr::group_by(treatment) %>%
-      dplyr::select(treatment) %>%
-      dplyr::summarise(Replicates = dplyr::n()) %>%
-      data.frame() %>%
-      dplyr::select(treatment, Replicates) %>%
-      dplyr::rename("Treatment Rates" = "treatment") %>%
-      dplyr::pull(Replicates) %>%
-      min()
-
-    if(min_rep <= 4){
-      message("Minimum number of treatment replications is less than or equal to 4. Please consider reducing the number of treatment levels or designing a one input trial.")
-    }
-
-  }else{
-    min_rep <-
-        trial_design$trial_design %>%
-          data.frame() %>%
-          dplyr::group_by(rate) %>%
-          dplyr::summarise(
-            Replicates = dplyr::n(),
-            .groups = "drop"
-          ) %>%
-          dplyr::select(Replicates) %>%
-      min()
-
-    if(min_rep <= 4){
-      message("Minimum number of treatment replications is less than or equal to 4. Please consider reducing the number of treatment levels.")
-    }
-
-  }
 
   return(trial_design)
-}
-
-assign_rate_rank_by_strip <- function(rank_seq_ws, rank_seq_as, num_strips, max_plot_num) {
-  full_start_seq <-
-    rep(
-      rank_seq_as,
-      ceiling(num_strips / length(rank_seq_as)) + 1
-    ) %>%
-    .[1:num_strips]
-
-  assigned_rate_rank_data <-
-    data.table::data.table(
-      strip_id = 1:num_strips,
-      start_rank = full_start_seq
-    ) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(rate_rank = list(
-      rep(
-        get_rank_ws_for_strip(start_rank, rank_seq_ws),
-        ceiling(max_plot_num / length(rank_seq_ws))
-      )
-    )) %>%
-    tidyr::unnest(rate_rank) %>%
-    data.table::data.table() %>%
-    .[, dummy := 1] %>%
-    .[, plot_id := cumsum(dummy), by = strip_id] %>%
-    .[, .(strip_id, plot_id, rate_rank)]
-
-  return(assigned_rate_rank_data)
 }
 
 
@@ -431,55 +363,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
       .[, block := .GRP, by = block_id] %>%
       .[, `:=`(block_id = NULL, block_row = NULL, block_col = NULL)] %>%
       sf::st_as_sf()
-  } else if (design_type == "jcls") {
-    #--- get the rate rank sequence within a strip---#
-    if (!is.null(rank_seq_ws)) {
-      message(
-        'Note: rank_seq_ws is ignored when design_type = "jcls"'
-      )
-    }
-
-    basic_seq <- gen_basic_rank_ws(num_rates, rate_jump_threshold)
-
-    #--- get the starting ranks across strips for the field---#
-    if (is.null(rank_seq_as)) {
-      start_rank_as <- get_starting_rank_as_ls(num_rates)
-    } else {
-      start_rank_as <- rank_seq_as
-    }
-
-    full_start_seq <-
-      rep(
-        start_rank_as,
-        ceiling(max_strip_id / num_rates) + 1
-      ) %>%
-      .[1:max_strip_id]
-
-    assigned_rates_data <-
-      data.table::data.table(
-        strip_id = 1:max_strip_id,
-        start_rank = full_start_seq
-      ) %>%
-      dplyr::rowwise() %>%
-      dplyr::mutate(rate_rank = list(
-        rep(
-          get_rank_ws_for_strip(start_rank, basic_seq),
-          ceiling(max_plot_id / length(basic_seq))
-        )
-      )) %>%
-      tidyr::unnest(rate_rank) %>%
-      data.table::data.table() %>%
-      .[, dummy := 1] %>%
-      .[, plot_id := cumsum(dummy), by = strip_id] %>%
-      rates_data[., on = "rate_rank"] %>%
-      .[, .(strip_id, plot_id, rate)]
-
-    return_data <-
-      dplyr::left_join(
-        exp_sf,
-        assigned_rates_data,
-        by = c("strip_id", "plot_id")
-      )
   } else if (design_type == "str") {
     if (!is.null(rank_seq_ws)) {
       message(
@@ -658,6 +541,34 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
   return(return_data)
 }
 
+assign_rate_rank_by_strip <- function(rank_seq_ws, rank_seq_as, num_strips, max_plot_num) {
+  full_start_seq <-
+    rep(
+      rank_seq_as,
+      ceiling(num_strips / length(rank_seq_as)) + 1
+    ) %>%
+    .[1:num_strips]
+
+  assigned_rate_rank_data <-
+    data.table::data.table(
+      strip_id = 1:num_strips,
+      start_rank = full_start_seq
+    ) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(rate_rank = list(
+      rep(
+        get_rank_ws_for_strip(start_rank, rank_seq_ws),
+        ceiling(max_plot_num / length(rank_seq_ws))
+      )
+    )) %>%
+    tidyr::unnest(rate_rank) %>%
+    data.table::data.table() %>%
+    .[, dummy := 1] %>%
+    .[, plot_id := cumsum(dummy), by = strip_id] %>%
+    .[, .(strip_id, plot_id, rate_rank)]
+
+  return(assigned_rate_rank_data)
+}
 #++++++++++++++++++++++++++++++++++++
 #+ Utility functions that helps assign_rates_by_input()
 #++++++++++++++++++++++++++++++++++++
@@ -777,7 +688,6 @@ get_starting_rank_as <- function(num_levels) {
 # Get sequence of rate ranks across strips based on the number of rates. This is used for design_type == "ls". It checks changes in rates across strips (columns) for all the rows and avoid designs that has gradual changes in rate rank across strips.
 
 get_starting_rank_as_ls <- function(rank_seq_ws) {
-  
   num_rates <- length(rank_seq_ws)
 
   if (num_rates <= 3) { # no degrees of freedom (does not matter which)
@@ -809,7 +719,7 @@ get_starting_rank_as_ls <- function(rank_seq_ws) {
               check_0_diagonal_up = max(apply(mat_dif_diag_up, 2, \(x) sum(abs(x) == 0))),
               check_0_diagonal_down = max(apply(mat_dif_diag_down, 2, \(x) sum(abs(x) == 0))),
               score_horizontal = abs(mat_dif) %>% mean(),
-              score_diagonal = abs(mat_dif_diag) %>% mean()
+              score_diagonal = (abs(mat_dif_diag_up) + abs(mat_dif_diag_down)) %>% mean()
             ) %>%
             .[, score := score_horizontal + score_diagonal]
 
@@ -912,8 +822,8 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
   #* +++++++++++++++++++++++++++++++++++
 
   if (is.na(design_type)) {
-    #--- if design_type not specified, use jcls ---#
-    design_type <- "jcls"
+    #--- if design_type not specified, use ls ---#
+    design_type <- "ls"
   } else {
     design_type <- design_type
   }
@@ -940,7 +850,7 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
   #++++++++++++++++++++++++++++++++++++
   #+ Order (rank) rates based on design type
   #++++++++++++++++++++++++++++++++++++
-  if (design_type %in% c("ls", "jcls", "str", "rstr", "rb")) {
+  if (design_type %in% c("ls", "str", "rstr", "rb")) {
     rates_data <-
       data.table::data.table(
         rate = rates_ls,
@@ -1258,4 +1168,74 @@ make_design_for_2_by_2 <- function(input_trial_data_with_rates) {
     ))
 
   return(plots_with_rates_assigned)
+}
+
+
+#++++++++++++++++++++++++++++++++++++
+#+ Check the number of replicates
+#++++++++++++++++++++++++++++++++++++
+check_replicates_two_input <- function(plots_with_rates_assigned, geometry_identical) {
+  exp_1 <- plots_with_rates_assigned$experiment_design[[1]]
+  exp_2 <- plots_with_rates_assigned$experiment_design[[2]]
+
+  if (geometry_identical) {
+    exp_1_dt <-
+      data.table(exp_1)[, .(plot_id, strip_id, rate)] %>%
+      setnames("rate", "rate_1")
+
+    exp_2_dt <-
+      data.table(exp_2)[, .(plot_id, strip_id, rate)] %>%
+      setnames("rate", "rate_2")
+
+    min_rep <-
+      exp_1_dt[exp_2_dt, on = .(plot_id, strip_id)] %>%
+      .[, .(num_replicates = .N), by = .(rate_1, rate_2)] %>%
+      .[, min(num_replicates)]
+  } else {
+    min_plot_area <-
+      min(
+        exp_1 %>%
+          dplyr::mutate(area = as.numeric(st_area(.))) %>%
+          pull(area) %>%
+          median(),
+        exp_2 %>%
+          dplyr::mutate(area = as.numeric(st_area(.))) %>%
+          pull(area) %>%
+          median()
+      )
+
+    min_rep <-
+      st_intersection_quietly(
+        dplyr::filter(exp_1, type != "Border Buffer"),
+        dplyr::filter(exp_2, type != "Border Buffer")
+      ) %>%
+      .$result %>%
+      dplyr::mutate(treatment = paste0(rate, "_", rate.1)) %>%
+      dplyr::mutate(area = as.numeric(st_area(.))) %>%
+      dplyr::filter(area > min_plot_area * 0.8) %>%
+      dplyr::group_by(treatment) %>%
+      dplyr::select(treatment) %>%
+      dplyr::summarise(num_replicates = dplyr::n()) %>%
+      data.frame() %>%
+      dplyr::select(treatment, num_replicates) %>%
+      dplyr::rename("Treatment Rates" = "treatment") %>%
+      dplyr::pull(num_replicates) %>%
+      min()
+  }
+
+  if (min_rep <= 4) {
+    message("Minimum number of treatment replications is less than or equal to 4. Please consider reducing the number of treatment levels or designing a one input trial.")
+  }
+}
+
+check_replicates_single_input <- function(plots_with_rates_assigned) {
+  min_rep <-
+    plots_with_rates_assigned$experiment_design[[1]] %>%
+    data.table() %>%
+    .[, .(num_replicates = .N), by = rate] %>%
+    .[, min(num_replicates)]
+
+  if (min_rep <= 4) {
+    message("Minimum number of treatment replications is less than or equal to 4. Please consider reducing the number of treatment levels.")
+  }
 }

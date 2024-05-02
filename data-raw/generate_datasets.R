@@ -133,7 +133,7 @@ seed_rate_info <-
     min_rate = 16000,
     max_rate = 40000,
     num_rates = 5,
-    design_type = "jcls"
+    design_type = "ls"
   )
 
 n_rate_info <-
@@ -205,13 +205,23 @@ number_english_dictionary <-
 #++++++++++++++++++++++++++++++++++++
 #+ Color sequence
 #++++++++++++++++++++++++++++++++++++
-my_palettes <-
+my_palettes_grey <-
   data.table(
     n_rates = 1:6
   ) %>%
   dplyr::rowwise() %>%
   dplyr::mutate(my_palette = list(
     RColorBrewer::brewer.pal(n = n_rates + 3, "Greys")[1:n_rates]
+  )) %>%
+  data.table()
+
+my_palettes_green <-
+  data.table(
+    n_rates = 3:8
+  ) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(my_palette = list(
+    RColorBrewer::brewer.pal(n = n_rates, "Greens")
   )) %>%
   data.table()
 
@@ -255,7 +265,8 @@ usethis::use_data(
   gen_unit_conversion_table,
   input_unit_conversion_table,
   input_type_table,
-  my_palettes,
+  my_palettes_grey,
+  my_palettes_green,
   internal = TRUE,
   overwrite = TRUE
 )

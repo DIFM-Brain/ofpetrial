@@ -41,13 +41,6 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
     } else {
       conv_unit(side_length, "meters", "feet")
     }) %>%
-    dplyr::mutate(rate_data = list(data.table(
-      tgt_rate_original,
-      tgt_rate_equiv,
-      total_equiv
-    ) %>%
-      dplyr::rowwise() %>%
-      dplyr::rename("rate" = "tgt_rate_original"))) %>%
     dplyr::mutate(trial_design = list(trial_design %>%
       dplyr::mutate(area = as.numeric(st_area(.))) %>%
       dplyr::mutate(type = case_when(
@@ -1030,7 +1023,7 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
       unique() %>%
       length()
 
-    my_palette <- get_palette(n_rates)
+    my_palette <- get_palette_grey(n_rates)
 
     map <-
       tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)),
@@ -1105,8 +1098,8 @@ get_dot_product <- function(vec_1, vec_2) {
 #++++++++++++++++++++++++++++++++++++
 #+ Get palette
 #++++++++++++++++++++++++++++++++++++
-get_palette <- function(num_rates) {
-  return(my_palettes[n_rates == num_rates, my_palette][[1]])
+get_palette_grey <- function(num_rates) {
+  return(my_palettes_grey[n_rates == num_rates, my_palette][[1]])
 }
 
 #++++++++++++++++++++++++++++++++++++

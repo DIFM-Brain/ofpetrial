@@ -98,51 +98,83 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
           ggtitle(paste0("Plot ID of experiment plots for ", input_name))
       ))
   } else if (type == "rates") {
+    # input_name <- gg_td$input_name[[1]]
+    # unit <- gg_td$unit[[1]]
+    # gc_rate <- gg_td$gc_rate[[1]]
+    # rate_data_exp <- gg_td$rate_data_exp[[1]]
+    # tgt_rate_original <- gg_td$tgt_rate_original[[1]]
 
     gg_td <-
       td_rows %>%
-      dplyr::mutate(rate_data = list(
+      dplyr::mutate(rate_data_exp = list(
         data.table(
           tgt_rate_original,
-          tgt_rate_equiv,
-          total_equiv
+          tgt_rate_equiv
         ) %>%
           rowwise() %>%
-          mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv, total_equiv))), collapse = " | ")) %>%
+          mutate(all_units = paste(unique(na.omit(c(tgt_rate_original, tgt_rate_equiv))), collapse = " | ")) %>%
           dplyr::rename("rate" = "tgt_rate_original")
       )) %>%
-      dplyr::mutate(rate_cols = list(data.table(
-        tgt_rate_original = unlist(tgt_rate_original),
-        tgt_rate_equiv = unlist(tgt_rate_equiv),
-        total_equiv = unlist(total_equiv)
-      ) %>%
-        data.frame(.) %>%
-        .[colSums(is.na(.)) == 0] %>%
-        .[!duplicated(as.list(.))] %>%
-        colnames(.))) %>%
-      mutate(legend_title = list(get_legend_title(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit))) %>%
+      dplyr::mutate(rate_data = list(
+        if (gc_rate %in% tgt_rate_original) {
+          rate_data_exp
+        } else {
+          rbind(
+            rate_data_exp,
+            data.frame(
+              rate = gc_rate,
+              tgt_rate_equiv = convert_rates(input_name, unit, gc_rate)
+            ) %>%
+              dplyr::mutate(all_units = paste(unique(na.omit(c(rate, tgt_rate_equiv))), collapse = " | "))
+          )
+        }
+      )) %>%
+      dplyr::mutate(rate_cols = list(
+        data.table(
+          tgt_rate_original = unlist(tgt_rate_original),
+          tgt_rate_equiv = unlist(tgt_rate_equiv)
+        ) %>%
+          data.frame(.) %>%
+          .[colSums(is.na(.)) == 0] %>%
+          .[!duplicated(as.list(.))] %>%
+          colnames(.)
+      )) %>%
+      mutate(legend_title = list(
+        get_legend_title(
+          unit_system,
+          base_rate_equiv,
+          rate_cols,
+          input_name,
+          input_type,
+          unit
+        )
+      )) %>%
+      dplyr::mutate(data_for_plot = list(
+        merge(trial_design, rate_data, by = "rate") %>%
+          dplyr::mutate(all_units = as.factor(all_units))
+      )) %>%
       dplyr::mutate(g_tr = list(
         ggplot() +
-          geom_sf(data = field_sf, fill = NA) +
           geom_sf(
-            data = trial_design %>%
-              merge(rate_data, by = "rate") %>%
-              mutate(all_units = as.factor(all_units)),
+            data = field_sf,
+            fill = NA
+          ) +
+          geom_sf(
+            data = data_for_plot,
             aes(fill = factor(all_units)),
             color = "black"
           ) +
-          scale_fill_viridis_d(name = legend_title) +
+          scale_fill_brewer(name = legend_title, palette = "Greens") +
           theme_void() +
           ggtitle(
             paste0(
-              "Trial design for ",
-              "\n(",
+              "Trial design",
+              " (",
               dplyr::case_when(
                 design_type == "ls" ~ "Latin Square",
                 design_type == "str" ~ "Strip",
                 design_type == "rstr" ~ "Randomized Strip",
                 design_type == "rb" ~ "Randomized Block",
-                design_type == "jcls" ~ "Jump-conscious Latin Square",
                 design_type == "ejca" ~ "Extra Jump-conscious Alternate",
                 design_type == "sparse" ~ "Sparse"
               ),
@@ -241,7 +273,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
 # ! Helper functions
 # !===========================================================
 
-get_legend_title <- function(unit_system, include_base_rate, base_rate_equiv, rate_cols, input_name, input_type, unit) {
+get_legend_title <- function(unit_system, base_rate_equiv, rate_cols, input_name, input_type, unit) {
   `%notin%` <- Negate(`%in%`)
 
   land_unit <- if (unit_system == "metric") {
@@ -256,19 +288,12 @@ get_legend_title <- function(unit_system, include_base_rate, base_rate_equiv, ra
     "lb"
   }
 
-  name <- if (include_base_rate == FALSE & "tgt_rate_equiv" %notin% rate_cols) {
+  name <- if ("tgt_rate_equiv" %notin% rate_cols) {
     paste0(to_title(input_name), " (", unit, "/", land_unit, ")")
-  } else if (include_base_rate == FALSE & "tgt_rate_equiv" %in% rate_cols) {
+  } else if ("tgt_rate_equiv" %in% rate_cols) {
     paste0(
       to_title(input_name), " (", unit, "/", land_unit, ") | ",
-      input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n", "No base application"
-    )
-  } else {
-    paste0(
-      to_title(input_name), " (", unit, "/ha) | ",
-      input_type, " Equivalent (", converted_unit, "/", land_unit, ") | ",
-      "Total ", input_type, " (", converted_unit, "/", land_unit, ") \n",
-      paste0("Base application: ", base_rate_equiv, " (", converted_unit, "/", land_unit, ")")
+      input_type, " Equivalent (", converted_unit, "/", land_unit, ") \n"
     )
   }
 
@@ -279,20 +304,22 @@ get_legend_title <- function(unit_system, include_base_rate, base_rate_equiv, ra
 # trial_design <- trial_design[[1]]
 # input_name <- trial_design$input_name[1]
 # unit <- trial_design$unit[1]
+# get_plot_data <- function(td, input_name, unit, base_rate = NULL) {
+#   plot_data <-
+#     td %>%
+#     dplyr::mutate(
+#       tgt_rate_equiv = ifelse(
+#         input_name != "seed",
+#         convert_rates(input_name, unit, rate),
+#         rate
+#       )
+#     ) %>%
+#     dplyr::mutate(tgt_rate_original = rate) %>%
+#     dplyr::mutate(base_rate_original = ifelse(!is.null(base_rate), base_rate$rate, 0)) %>%
+#     dplyr::mutate(base_rate_equiv = ifelse(!is.null(base_rate), convert_rates(base_rate$input_name, base_rate$unit, base_rate_original), 0)) %>%
+#     dplyr::mutate(total_equiv = tgt_rate_equiv + base_rate_equiv)
+# }
 
-get_plot_data <- function(td, input_name, unit, base_rate = NULL) {
-  plot_data <-
-    td %>%
-    dplyr::mutate(
-      tgt_rate_equiv = ifelse(
-        input_name != "seed",
-        convert_rates(input_name, unit, rate),
-        rate
-      )
-    ) %>%
-    dplyr::mutate(tgt_rate_original = rate) %>%
-    dplyr::mutate(base_rate_original = ifelse(!is.null(base_rate), base_rate$rate, 0)) %>%
-    dplyr::mutate(base_rate_equiv = ifelse(!is.null(base_rate), convert_rates(base_rate$input_name, base_rate$unit, base_rate_original), 0)) %>%
-    dplyr::mutate(total_equiv = tgt_rate_equiv + base_rate_equiv)
+get_palette_green <- function(num_rates) {
+  return(my_palettes_green[n_rates == num_rates, my_palette][[1]])
 }
-
