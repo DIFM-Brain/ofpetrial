@@ -7,7 +7,6 @@ test/*
 !test/*.rmd
 debug/*
 *.DS_Store
-inst
 *.gitignore
 vignettes/*.html
 vignettes/*files*
@@ -17,4 +16,3 @@ data-raw/*.shx
 data-raw/*.shp
 data-raw/*.prj
 data-raw/*.qpj
-inst/doc

@@ -4,8 +4,7 @@ The first complete set of functions that make the package functional and useful 
 
 ## Prepare plot and rate information 
 
-- prep_plot_m()
-- prep_plot_f()
+- prep_plot()
 - prep_rate()
 
 ## Generate trial designs
@@ -16,9 +15,7 @@ The first complete set of functions that make the package functional and useful 
 ## Modify input rates
 
 - add_blocks()
-- change_rate_by_plot()
-- change_rate_by_block()
-- change_rate_by_strip()
+- change_rates()
 
 ## Diagnose trial design
 
@@ -29,13 +26,16 @@ The first complete set of functions that make the package functional and useful 
 ## Visualization
 - viz()
 
+## Make trial design reports
+- make_trial_report()
+
 ## Write out files
 - write_trial_files()
 
 ## Data
-- plot_info()
-- exp_data()
-- rate_info()
-- td_single_input()
-- td_two_input()
-- td_curved()
+- plot_info
+- exp_data
+- rate_info
+- td_single_input
+- td_two_input
+- td_curved
