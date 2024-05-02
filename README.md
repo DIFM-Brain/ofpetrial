@@ -62,14 +62,6 @@ exp_data <-
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
-#> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0;
-#> sf_use_s2() is TRUE
-#> Warning: There was 1 warning in `dplyr::mutate()`.
-#> ℹ In argument: `experiment_plots_dissolved =
-#>   list(...)`.
-#> ℹ In row 1.
-#> Caused by warning:
-#> ! package 'sf' was built under R version 4.2.3
 
 viz(exp_data, type = "layout", abline = TRUE)
 ```
