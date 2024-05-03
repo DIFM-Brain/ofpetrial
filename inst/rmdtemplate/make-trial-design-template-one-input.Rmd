@@ -100,6 +100,7 @@ rownames(ab_line_harvest) <- c(
   "Point B"
 )
 ```
+
 ## Description of Field Trial Design
 
 Figure \@ref(fig:td-map) depicts the trial design made for the _trial-name_ trial.  Note that in the interior of the _field-size_-_land-unit_ field contains a grid of `r text_plot_num_length(all_trial_info, unit_system)`  Each plot is assigned one of `r text_rate_number(all_trial_info)` The variable rate `r trial_text_machinery_names_lower(machine_table)` `r text_plant_apply(all_trial_info)` `r trial_text_inputs(all_trial_info)` in each plot at a rate close to its targeted rate. `r text_total_input_amounts(all_trial_info)`

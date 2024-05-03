@@ -6,6 +6,7 @@
 #' @param trial_name (character) name of trial to be used in report
 #' @param folder_path (character) path to the folder in which the report will be saved
 #' @returns html document with trial design description and figures to guide trial implementation based on your machinery and plot sizes
+#' @import bookdown
 #' @export
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
@@ -131,8 +132,8 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
   }
 
   #--- save all_trial_info and machine_table as temporary files ---#
-  all_trial_info_path <- tempfile()
-  machine_table_path <- tempfile()
+  all_trial_info_path <- file.path(tempdir(), "all_trial_info.rds")
+  machine_table_path <- file.path(tempdir(), "machine_table_path.rds")
 
   saveRDS(all_trial_info, all_trial_info_path)
   saveRDS(machine_table, machine_table_path)
@@ -154,6 +155,15 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
         is.na(all_trial_info$trial_name[[1]]), # if no trial name specified
         "",
         paste0(" for ", all_trial_info$trial_name[[1]]) # if trial name specified
+      ),
+      .
+    ) %>%
+    gsub(
+      " made for the _trial-name_ trial",
+      ifelse(
+        is.na(all_trial_info$trial_name[[1]]), # if no trial name specified
+        "",
+        paste0(" made for the ", all_trial_info$trial_name[[1]], " trial") # if trial name specified
       ),
       .
     ) %>%

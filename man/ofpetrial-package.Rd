@@ -4,7 +4,7 @@
 \name{ofpetrial-package}
 \alias{ofpetrial}
 \alias{ofpetrial-package}
-\title{ofpetrial: Design On-farm Precision Field Agronomic Trials}
+\title{ofpetrial: Design On-Farm Precision Field Agronomic Trials}
 \description{
 A comprehensive system for designing and implementing on-farm precision field agronomic trials. You provide field data, tell 'ofpetrial' how to design a trial, and get readily-usable trial design files and a report checks the validity and reliability of the trial design.
 }
