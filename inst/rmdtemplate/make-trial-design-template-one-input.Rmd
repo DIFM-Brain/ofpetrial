@@ -76,21 +76,29 @@ unit_system <- all_trial_info$unit_system[1]
 ```
 
 ```{r warning=FALSE, include=FALSE}
-ab_line_1 <- data.table(all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1,-3],
-                        all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2,-3]) %>%
+ab_line_1 <- data.table(
+  all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1, -3],
+  all_trial_info$ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2, -3]
+) %>%
   t(.) %>%
   data.frame(.) %>%
   dplyr::select("X2", "X1")
-rownames(ab_line_1) <- c("Point A",
-                         "Point B")
+rownames(ab_line_1) <- c(
+  "Point A",
+  "Point B"
+)
 
-ab_line_harvest <- data.table(all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1,-3],
-                              all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2,-3]) %>%
+ab_line_harvest <- data.table(
+  all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[1, -3],
+  all_trial_info$harvest_ab_lines[[1]] %>% sf::st_transform(4326) %>% st_coordinates() %>% .[2, -3]
+) %>%
   t(.) %>%
   data.frame(.) %>%
   dplyr::select("X2", "X1")
-rownames(ab_line_harvest) <- c("Point A",
-                               "Point B")
+rownames(ab_line_harvest) <- c(
+  "Point A",
+  "Point B"
+)
 ```
 ## Description of Field Trial Design
 
@@ -105,7 +113,7 @@ The number of plots assigned each targeted `r trial_text_inputs(all_trial_info)`
 rep_table <- all_trial_info %>%
   rowwise() %>%
   mutate(rep_table = list(
-    trial_design %>% 
+    trial_design %>%
       data.frame() %>%
       dplyr::group_by(rate) %>%
       dplyr::summarise(
@@ -124,17 +132,19 @@ rep_table$rep_table[[1]] %>%
 The points for the AB-lines of each machine are in tables \@ref(tab:ab-lines) to \@ref(tab:ab-line-h). There are also shapefiles of the AB-lines included in the files downloaded on the main trial download button. 
 
 ```{r ab-lines, echo=FALSE}
-kable(ab_line_1, 
-      col.names = c("Lat", "Long"),
-      digits = 7,
-      caption = paste0("AB-line for ", to_title(all_trial_info$input_name[[1]])))
+kable(ab_line_1,
+  col.names = c("Lat", "Long"),
+  digits = 7,
+  caption = paste0("AB-line for ", to_title(all_trial_info$input_name[[1]]))
+)
 ```
 
 ```{r ab-line-h, echo=FALSE}
-kable(ab_line_harvest, 
-      col.names = c("Lat", "Long"),
-      digits = 7,
-      caption = "AB-line for Harvest")
+kable(ab_line_harvest,
+  col.names = c("Lat", "Long"),
+  digits = 7,
+  caption = "AB-line for Harvest"
+)
 ```
 
 ## Steps in a Field Trial 
@@ -144,7 +154,6 @@ kable(ab_line_harvest,
 Because areas near the border of the field are used to turn machinery around and may be exposed to different amounts of sun and wind than are areas in the field’s interior, data from border areas are not used in the experiment. Therefore, the first step in putting the trial design “in the ground” is to apply the input around border areas, in the same way the farmer would if not participating in the trial design. Figure \@ref(fig:headland-map) identifies the border areas for this field. 
 
 ```{r headland-map, echo = FALSE, fig.cap = "Map of Field Borders", fig.height = 6, include = TRUE}
-
 all_trial_info$map_headlands[[1]] + tmap::tm_layout(
   legend.outside = "TRUE",
   frame = FALSE,
@@ -170,10 +179,27 @@ for (i in 1:(nrow(machine_table) - 1)) {
   ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
-  labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
-  labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
-
+  colors[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "#0072B2"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "lawngreen"
+  } else {
+    "#E69F00"
+  }
+  labels_polygons[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter"
+  } else {
+    "Harvester"
+  }
+  labels_ablines[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator AB-Line"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter AB-Line"
+  } else {
+    "Harvester AB-Line"
+  }
 }
 
 machine_table$map_plot_indiv[[1]] +
@@ -193,8 +219,8 @@ machine_table$map_plot_indiv[[1]] +
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
-  legend.title.size = 2,
-  legend.text.size = 1.5
+    legend.title.size = 2,
+    legend.text.size = 1.5
   )
 ```
 
@@ -218,10 +244,27 @@ for (i in nrow(machine_table)) {
   ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
-  labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
-  labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
-
+  colors[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "#0072B2"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "lawngreen"
+  } else {
+    "#E69F00"
+  }
+  labels_polygons[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter"
+  } else {
+    "Harvester"
+  }
+  labels_ablines[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator AB-Line"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter AB-Line"
+  } else {
+    "Harvester AB-Line"
+  }
 }
 
 machine_table$map_plot[[1]] +
@@ -240,8 +283,8 @@ machine_table$map_plot[[1]] +
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
-  legend.title.size = 2,
-  legend.text.size = 1.5
+    legend.title.size = 2,
+    legend.text.size = 1.5
   )
 ```
 
@@ -260,8 +303,20 @@ for (i in 1:nrow(machine_table)) {
   # ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
-  polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
+  colors[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "#0072B2"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "lawngreen"
+  } else {
+    "#E69F00"
+  }
+  polygons[i] <- if (machine_table$machine_type[i] == "applicator") {
+    "Applicator"
+  } else if (machine_table$machine_type[i] == "planter") {
+    "Planter"
+  } else {
+    "Harvester"
+  }
 }
 
 machine_table$map_plot[[1]] +
@@ -280,8 +335,8 @@ machine_table$map_plot[[1]] +
     legend.outside = TRUE,
     frame = FALSE,
     bg.color = "grey85",
-  legend.title.size = 2,
-  legend.text.size = 1.5
+    legend.title.size = 2,
+    legend.text.size = 1.5
   )
 ```
 

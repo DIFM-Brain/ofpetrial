@@ -4,7 +4,7 @@
 \alias{make_trial_report}
 \title{Create trial design report}
 \usage{
-make_trial_report(td, trial_name, folder_path = getwd())
+make_trial_report(td, trial_name = NA, folder_path = getwd())
 }
 \arguments{
 \item{td}{trial design created by assign_rates()}
@@ -22,15 +22,8 @@ This function creates a report describing the trial design created by the user w
 \examples{
 #--- load experiment made by assign_rates() ---#
 data(td_single_input)
-td_single_input
-\dontrun{
 make_trial_report(
-  td_single_input,
-  "Test Trial",
-  folder_path
+  td = td_single_input,
+  folder_path = tempdir()
 )
-}
-
-# Rmd
-# Wrapping up
 }

@@ -174,5 +174,3 @@ convert_rates <- function(input_name,
 
   return(as.numeric(converted_rate))
 }
-
-

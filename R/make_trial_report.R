@@ -6,20 +6,17 @@
 #' @param trial_name (character) name of trial to be used in report
 #' @param folder_path (character) path to the folder in which the report will be saved
 #' @returns html document with trial design description and figures to guide trial implementation based on your machinery and plot sizes
+#' @export
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
-#' td_single_input
-#' \dontrun{
 #' make_trial_report(
-#'   td_single_input,
-#'   "Test Trial",
-#'   folder_path
+#'   td = td_single_input,
+#'   folder_path = tempdir()
 #' )
-#' }
-#'
-make_trial_report <- function(td, trial_name, folder_path = getwd()) {
-  all_trial_info <- td %>%
+make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
+  all_trial_info <-
+    td %>%
     dplyr::mutate(land_unit = ifelse(unit_system == "metric", "hectares", "acres")) %>%
     dplyr::mutate(trial_name = trial_name) %>%
     dplyr::rowwise() %>%
@@ -94,6 +91,7 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   } else {
+
     machine_table <-
       data.table::data.table(
         width = c(td$harvester_width[1], td$machine_width),
@@ -111,7 +109,17 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       dplyr::mutate(unit_system = td$unit_system[[1]]) %>%
       dplyr::mutate(trial_plot = list(plots)) %>%
       dplyr::mutate(move_vec = list(get_move_vec(ab_line))) %>%
-      dplyr::mutate(center = list(find_center(ab_line, number_in_plot, trial_plot, move_vec, machine_id, width, height))) %>%
+      dplyr::mutate(center = list(
+        find_center(
+          ab_line,
+          number_in_plot,
+          trial_plot,
+          move_vec,
+          machine_id,
+          width,
+          height
+        )
+      )) %>%
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
@@ -122,46 +130,75 @@ make_trial_report <- function(td, trial_name, folder_path = getwd()) {
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
-  dir.create(file.path(folder_path, "ofpe_temp_folder"))
+  #--- save all_trial_info and machine_table as temporary files ---#
+  all_trial_info_path <- tempfile()
+  machine_table_path <- tempfile()
 
-  saveRDS(all_trial_info, file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"))
-  saveRDS(machine_table, file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"))
+  saveRDS(all_trial_info, all_trial_info_path)
+  saveRDS(machine_table, machine_table_path)
 
-  # /*=================================================*/
-  #' # Rmd
-  # /*=================================================*/
+  #++++++++++++++++++++++++++++++++++++
+  #+ Create a report rmd file
+  #++++++++++++++++++++++++++++++++++++
   td_rmd <-
     readLines(if (nrow(all_trial_info) > 1) {
       system.file("rmdtemplate", "make-trial-design-template-two-inputs.Rmd", package = "ofpetrial")
     } else {
       system.file("rmdtemplate", "make-trial-design-template-one-input.Rmd", package = "ofpetrial")
     }) %>%
-    gsub("_all-trial-info-here_", file.path(folder_path, "ofpe_temp_folder", "all_trial_info.rds"), .) %>%
-    gsub("_machine-table-here_", file.path(folder_path, "ofpe_temp_folder", "machine_table.rds"), .) %>%
-    gsub("_trial-name_", all_trial_info$trial_name[[1]], .) %>%
+    gsub("_all-trial-info-here_", all_trial_info_path, .) %>%
+    gsub("_machine-table-here_", machine_table_path, .) %>%
+    gsub(
+      " for _trial-name_",
+      ifelse(
+        is.na(all_trial_info$trial_name[[1]]), # if no trial name specified
+        "",
+        paste0(" for ", all_trial_info$trial_name[[1]]) # if trial name specified
+      ),
+      .
+    ) %>%
     gsub("_length-unit_", ifelse(all_trial_info$unit_system[[1]] == "metric", "meter", "foot"), .) %>%
     gsub("_land-unit_", all_trial_info$land_unit[[1]], .) %>%
     gsub("_field-size_", all_trial_info$field_size[[1]], .) %>%
     gsub("_headland-size_", all_trial_info$headland_size[[1]], .) %>%
     gsub("_sideland-size_", all_trial_info$sideland_size[[1]], .)
 
-  # /*=================================================*/
-  #' # Wrapping up
-  # /*=================================================*/
-  td_file_name <- file.path(folder_path, "trial_design_report.Rmd")
+  #++++++++++++++++++++++++++++++++++++
+  #+ Write out to an rmd file
+  #++++++++++++++++++++++++++++++++++++
+  #--- create a temporary folder and file path ---#
+  # Note: tempfile() does not work. td_rmd needs to be written explicitly
+  # to an .rmd file. temporary files will be deleted upon quitting R
+  # (https://stackoverflow.com/questions/58095164/what-happens-to-tempfiles-created-with-tempfile-in-r)
+  report_rmd_path <- file.path(tempdir(), "temp.rmd")
 
-  writeLines(td_rmd, con = td_file_name)
+  #--- write to a temporary rmd file ---#
+  writeLines(td_rmd, con = report_rmd_path)
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Render the rmd to generate html report
+  #++++++++++++++++++++++++++++++++++++
+  #--- define html file name ---#
+  html_output_file <- file.path(folder_path, "trial_design_report.html")
 
   #--- render ---#
   rmarkdown::render(
-    input = td_file_name,
-    output_file = file.path(folder_path, "trial_design_report.html")
+    input = report_rmd_path,
+    output_file = html_output_file,
+    quiet = TRUE
   )
 
-  unlink(file.path(folder_path, "ofpe_temp_folder"), recursive = TRUE)
-
+  #++++++++++++++++++++++++++++++++++++
+  #+ display the resulting html file on an web browser (or RStudio viewer pane)
+  #++++++++++++++++++++++++++++++++++++
   viewer <- getOption("viewer")
-  viewer(file.path(folder_path, "trial_design_report.html"))
+
+  if (!is.null(viewer) && is.function(viewer)) {
+    # (code to write some content to the file)
+    viewer(html_output_file)
+  } else {
+    utils::browseURL(html_output_file)
+  }
 }
 
 # !==================-=========================================
@@ -738,16 +775,16 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
       .[, 1:2]
 
     shifted_line <- sf::st_linestring(rbind(
-      abline_coords[1,] - 40*move_vec,
-      abline_coords[2,]
-      )) %>%
+      abline_coords[1, ] - 40 * move_vec,
+      abline_coords[2, ]
+    )) %>%
       sf::st_sfc(crs = sf::st_crs(trial_plot$geometry)) %>%
       sf::st_sf()
 
     abline_perp <- shifted_line %>%
-      st_rotate(., pi/2)
+      st_rotate(., pi / 2)
 
-    line <- st_intersection(abline_perp, trial_plot)
+    line <- st_intersection_quietly(abline_perp, trial_plot)$result
 
     ab_coords <- sf::st_coordinates(line$geometry)[, 1:2]
 
@@ -830,19 +867,20 @@ get_move_vec <- function(ab_line) {
 
 # ab_line <- machine_table$ab_line[[2]]
 # number_in_plot <- machine_table$number_in_plot[[2]]
-# plot <- machine_table$trial_plot[[2]]
+# trial_plot <- machine_table$trial_plot[[2]]
 # move_vec <- machine_table$move_vec[[1]]
 # machine_id <- machine_table$machine_id[[2]]
 # machine_width <- machine_table$width[[2]]
 # height <- machine_table$height[[2]]
 
-find_center <- function(ab_line, number_in_plot, plot, move_vec, machine_id, machine_width, height) {
+find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_id, machine_width, height) {
   normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
   perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
 
   # intersect the ab_line and plot polygon
   line_coords <-
-    sf::st_intersection(plot[1, ], ab_line) %>%
+    st_intersection_quietly(trial_plot[1, ], ab_line) %>%
+    .$result %>%
     sf::st_coordinates()
 
   cent <- line_coords[1, 1:2] %>%
@@ -887,8 +925,8 @@ get_plots <- function(all_trial_info) {
     move_vec <- get_move_vec(all_trial_info$ab_lines[[1]])
 
     abline <- sf::st_linestring(rbind(
-      abline_coords[1,] - 40*move_vec,
-      abline_coords[2,]
+      abline_coords[1, ] - 40 * move_vec,
+      abline_coords[2, ]
     )) %>%
       sf::st_sfc(crs = sf::st_crs(all_trial_info$ab_lines[[1]])) %>%
       sf::st_sf()
@@ -897,7 +935,8 @@ get_plots <- function(all_trial_info) {
       all_trial_info$trial_design[[1]][1, ] %>%
       dplyr::mutate(
         plot_id =
-          sf::st_intersection(st_transform_utm(design), sf::st_centroid(abline)) %>%
+          st_intersection_quietly(st_transform_utm(design), sf::st_centroid(abline)) %>%
+            .$result %>%
             dplyr::pull(plot_id) %>%
             min(.)
       )
@@ -940,8 +979,8 @@ get_plots <- function(all_trial_info) {
     move_vec <- get_move_vec(max_input$ab_lines[[1]])
 
     abline <- sf::st_linestring(rbind(
-      abline_coords[1,] - 40*move_vec,
-      abline_coords[2,]
+      abline_coords[1, ] - 40 * move_vec,
+      abline_coords[2, ]
     )) %>%
       sf::st_sfc(crs = sf::st_crs(max_input$ab_lines[[1]])) %>%
       sf::st_sf()
@@ -1072,10 +1111,13 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
 
     map <-
       tmap::tm_shape(plots %>% dplyr::mutate(rate = as.factor(rate)),
-                     bbox = sf::st_bbox(plots)) +
-      tmap::tm_fill(col = "rate",
-                    palette = my_palette,
-                    title = paste0("Trial Plot ", to_title(input), " Rate"))
+        bbox = sf::st_bbox(plots)
+      ) +
+      tmap::tm_fill(
+        col = "rate",
+        palette = my_palette,
+        title = paste0("Trial Plot ", to_title(input), " Rate")
+      )
   }
 
   return(map)
@@ -1159,41 +1201,45 @@ to_title <- function(string) {
   return(title)
 }
 
-text_total_input_amounts <- function(all_trial_info){
-  if(nrow(all_trial_info) == 1){
-    paste0("The total amount of ",
-         all_trial_info$input_name[[1]],
-         " applied on the field will be ",
-         round(all_trial_info$total_input[[1]]),
-         all_trial_info$unit[1],
-         ".")
-  }else if(nrow(all_trial_info) == 2 & length(all_trial_info$unit %>% unique()) == 1){
-   paste0("The total amount of ",
-          all_trial_info$input_name[[1]],
-          " and ",
-          all_trial_info$input_name[[2]],
-          " applied on the field will be ",
-          round(all_trial_info$total_input[[1]]),
-          " and ",
-          round(all_trial_info$total_input[[2]]),
-          " ",
-          all_trial_info$unit[[1]],
-          ", respectively.")
-    }else{
-  paste0("The total amount of ",
-         all_trial_info$input_name[[1]],
-         " and ",
-         all_trial_info$input_name[[2]],
-         " applied on the field will be ",
-         round(all_trial_info$total_input[[1]]),
-         " ",
-         all_trial_info$unit[[1]],
-         " and ",
-         round(all_trial_info$total_input[[2]]),
-         " ",
-         all_trial_info$unit[[2]],
-         ", respectively.")
-    }
-
+text_total_input_amounts <- function(all_trial_info) {
+  if (nrow(all_trial_info) == 1) {
+    paste0(
+      "The total amount of ",
+      all_trial_info$input_name[[1]],
+      " applied on the field will be ",
+      round(all_trial_info$total_input[[1]]),
+      all_trial_info$unit[1],
+      "."
+    )
+  } else if (nrow(all_trial_info) == 2 & length(all_trial_info$unit %>% unique()) == 1) {
+    paste0(
+      "The total amount of ",
+      all_trial_info$input_name[[1]],
+      " and ",
+      all_trial_info$input_name[[2]],
+      " applied on the field will be ",
+      round(all_trial_info$total_input[[1]]),
+      " and ",
+      round(all_trial_info$total_input[[2]]),
+      " ",
+      all_trial_info$unit[[1]],
+      ", respectively."
+    )
+  } else {
+    paste0(
+      "The total amount of ",
+      all_trial_info$input_name[[1]],
+      " and ",
+      all_trial_info$input_name[[2]],
+      " applied on the field will be ",
+      round(all_trial_info$total_input[[1]]),
+      " ",
+      all_trial_info$unit[[1]],
+      " and ",
+      round(all_trial_info$total_input[[2]]),
+      " ",
+      all_trial_info$unit[[2]],
+      ", respectively."
+    )
+  }
 }
-

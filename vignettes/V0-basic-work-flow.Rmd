@@ -139,7 +139,7 @@ trial_design <- assign_rates(exp_data, rate_info = list(n_rate_info, seed_rate_i
 Here is the visualization of the trial design done by `viz`.
 
 ```{r}
-viz(trial_design)
+viz(trial_design, abline = TRUE)
 ```
 
 Along with the spatial pattern of the input rates, the applicator/planter ab-line and harvester ab-line are drawn by default.
@@ -164,8 +164,7 @@ After creating a trial design you can download a trial report that serves as a g
 
 ```{r, eval = FALSE}
 make_trial_report(
-  td = td,
-  trial_name = "testing",
+  td = trial_design,
   folder_path = getwd()
 )
 ```

@@ -12,13 +12,13 @@
 #' @examples
 #' #--- load trial design ---#
 #' data(td_two_input)
-#' \dontrun{
+#' 
 #' write_trial_files(
 #'   td = td_two_input,
-#'   folder_path = NA,
-#'   zip = TRUE
+#'   folder_path = tempdir(),
+#'   zip = FALSE
 #' )
-#' }
+#' 
 write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zip_name = NA) {
   # write_trial_files(td, folder_path = here::here("test"), zip = TRUE)
   # folder_path <- here::here(getwd(), "test")

@@ -32,11 +32,11 @@ Write out all the necessary files to implement the trial design created. Exporte
 \examples{
 #--- load trial design ---#
 data(td_two_input)
-\dontrun{
+
 write_trial_files(
   td = td_two_input,
-  folder_path = NA,
-  zip = TRUE
+  folder_path = tempdir(),
+  zip = FALSE
 )
-}
+
 }
