@@ -92,7 +92,6 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   } else {
-
     machine_table <-
       data.table::data.table(
         width = c(td$harvester_width[1], td$machine_width),
@@ -131,9 +130,15 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
-  #--- save all_trial_info and machine_table as temporary files ---#
-  all_trial_info_path <- file.path(tempdir(), "all_trial_info.rds")
-  machine_table_path <- file.path(tempdir(), "machine_table_path.rds")
+  if ((Sys.info()["sysname"] == "windows")) {
+    temp_directory <- folder_path
+  } else {
+    #--- save all_trial_info and machine_table as temporary files ---#
+    temp_directory <- tempdir()
+  }
+
+  all_trial_info_path <- file.path(temp_directory, "all_trial_info.rds")
+  machine_table_path <- file.path(temp_directory, "machine_table_path.rds")
 
   saveRDS(all_trial_info, all_trial_info_path)
   saveRDS(machine_table, machine_table_path)
@@ -180,7 +185,7 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
   # Note: tempfile() does not work. td_rmd needs to be written explicitly
   # to an .rmd file. temporary files will be deleted upon quitting R
   # (https://stackoverflow.com/questions/58095164/what-happens-to-tempfiles-created-with-tempfile-in-r)
-  report_rmd_path <- file.path(tempdir(), "temp.rmd")
+  report_rmd_path <- file.path(temp_directory, "temp.rmd")
 
   #--- write to a temporary rmd file ---#
   writeLines(td_rmd, con = report_rmd_path)
@@ -197,6 +202,11 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
     output_file = html_output_file,
     quiet = TRUE
   )
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Remove all the temporary/intermediate fiels
+  #++++++++++++++++++++++++++++++++++++
+  unlink(temp_directory, recursive = TRUE)
 
   #++++++++++++++++++++++++++++++++++++
   #+ display the resulting html file on an web browser (or RStudio viewer pane)
