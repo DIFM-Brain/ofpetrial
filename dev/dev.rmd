@@ -35,6 +35,7 @@ usethis::use_package("tidyr")
 usethis::use_package("ggpubr")
 usethis::use_package("ggExtra")
 usethis::use_package("zip")
+usethis::use_package("bookdown")
 # usethis::use_package("RColorBrewer")
 usethis::use_package("measurements")
 # usethis::use_package("knitr")
@@ -93,3 +94,4 @@ devtools::document()
 ```{r}
 devtools::submit_cran()
 ```
+

@@ -1,6 +1,6 @@
 Package: ofpetrial
 Type: Package
-Title: Design On-farm Precision Field Agronomic Trials
+Title: Design On-Farm Precision Field Agronomic Trials
 Version: 0.1.0
 Authors@R:
   c(
@@ -38,7 +38,8 @@ Imports:
     rmarkdown,
     tmap,
     magrittr,
-    dplyr
+    dplyr,
+    bookdown
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
