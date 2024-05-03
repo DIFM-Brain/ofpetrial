@@ -206,7 +206,7 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
   #++++++++++++++++++++++++++++++++++++
   #+ Remove all the temporary/intermediate fiels
   #++++++++++++++++++++++++++++++++++++
-  unlink(temp_directory, recursive = TRUE)
+  # unlink(temp_directory, recursive = TRUE)
 
   #++++++++++++++++++++++++++++++++++++
   #+ display the resulting html file on an web browser (or RStudio viewer pane)
@@ -1227,7 +1227,8 @@ text_total_input_amounts <- function(all_trial_info) {
       "The total amount of ",
       all_trial_info$input_name[[1]],
       " applied on the field will be ",
-      round(all_trial_info$total_input[[1]]),
+      round(all_trial_info$total_input[[1]]), 
+      " ",
       all_trial_info$unit[1],
       "."
     )

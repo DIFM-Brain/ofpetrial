@@ -4,7 +4,7 @@
 #'
 #' @param td (tibble) a tibble of a trial design created by applying assign_rate() to experimental plots made by make_exp_plots().
 #' @param folder_path (character) path to the folder in which the files will be saved
-#' @param ext (character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by st_write()
+#' @param ext (character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by sf::st_write()
 #' @param zip (logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.
 #' @param zip_name (character) name of the zip file created when zip = TRUE.
 #' @returns nothing
@@ -68,7 +68,8 @@ write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zi
 
   sf::st_write(
     td$harvest_ab_lines[[1]] %>% sf::st_transform(4326),
-    dsn = dsn
+    dsn = dsn,
+    quiet = TRUE
   )
 
   # st_read(here::here("test", "harvester-ab-line.shp")) %>% plot()
@@ -116,7 +117,8 @@ write_td <- function(input_name, trial_design, folder_path, ext) {
 
   sf::st_write(
     trial_design %>% sf::st_transform(4326),
-    dsn = dsn
+    dsn = dsn,
+    quiet = TRUE
   )
 }
 
@@ -129,6 +131,7 @@ write_ap_abline <- function(input_name, abline_type, ab_lines, folder_path, ext)
   # try this and change message
   sf::st_write(
     ab_lines %>% sf::st_transform(4326),
-    dsn = dsn
+    dsn = dsn,
+    quiet = TRUE
   )
 }
