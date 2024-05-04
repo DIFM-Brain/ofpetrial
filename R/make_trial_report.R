@@ -130,7 +130,7 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
   }
 
-  if ((Sys.info()["sysname"] == "windows")) {
+  if ((Sys.info()["sysname"] %in% c("windows", "Windows"))) {
     temp_directory <- folder_path
   } else {
     #--- save all_trial_info and machine_table as temporary files ---#
