@@ -16,7 +16,7 @@ vignette for this package is
 ## Installation
 
 You can install the development version of ofpetrial from
-[Github](https://github.com/DIFM-Brain/TrialDesign):
+[Github](https://github.com/DIFM-Brain/ofpetrial):
 
 ``` r
 devtools::install_github("DIFM-Brain/ofpetrial")
@@ -62,6 +62,12 @@ exp_data <-
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
+#> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+#> Warning: There was 1 warning in `dplyr::mutate()`.
+#> ℹ In argument: `experiment_plots_dissolved = list(...)`.
+#> ℹ In row 1.
+#> Caused by warning:
+#> ! package 'sf' was built under R version 4.2.3
 
 viz(exp_data, type = "layout", abline = TRUE)
 ```
@@ -93,8 +99,8 @@ dplyr::glimpse(n_rate_info)
 #> $ design_type         <chr> "ls"
 #> $ gc_rate             <dbl> 180
 #> $ unit                <chr> "lb"
-#> $ tgt_rate_original   <list> <100, 140, 180, 220,…
-#> $ tgt_rate_equiv      <list> <82.0, 114.8, 147.6,…
+#> $ tgt_rate_original   <list> <100, 140, 180, 220, 260>
+#> $ tgt_rate_equiv      <list> <82.0, 114.8, 147.6, 180.4, 213.2>
 #> $ min_rate            <lgl> NA
 #> $ max_rate            <lgl> NA
 #> $ num_rates           <int> 5

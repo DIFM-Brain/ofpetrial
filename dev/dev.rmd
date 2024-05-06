@@ -77,15 +77,14 @@ usethis::use_vignette("V7-visualize-from-scratch")
 # Build vignette website 
 
 ```{r}
+#--- document the functions ---#
+devtools::document()
+
 #--- build pkgdown website ---#
 pkgdown::build_site()
 ```
 
-# Submission
-
-```{r}
-devtools::document()
-```
+# Submission to CRAN
 
 ```{r}
 devtools::submit_cran()

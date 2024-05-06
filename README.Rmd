@@ -24,7 +24,7 @@ The `ofpetrial` package allows the user to design agronomic input experiments in
 
 ## Installation
 
-You can install the development version of ofpetrial from [Github](https://github.com/DIFM-Brain/TrialDesign):
+You can install the development version of ofpetrial from [Github](https://github.com/DIFM-Brain/ofpetrial):
 
 ```{r, eval = FALSE}
 devtools::install_github("DIFM-Brain/ofpetrial")
