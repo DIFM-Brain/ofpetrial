@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ofpetrial: Design On-farm Precision Experiments
+# ofpetrial: Design on-farm Precision Experiments
 
 <!-- badges: start -->
 

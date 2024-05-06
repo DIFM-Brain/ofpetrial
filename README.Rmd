@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ofpetrial: Design On-farm Precision Experiments
+# ofpetrial: Design on-farm Precision Experiments
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
