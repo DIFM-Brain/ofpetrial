@@ -367,7 +367,7 @@ experiment plots.</p>
 <p>Here is the visualization of the trial design done by
 <code>viz</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">trial_design</span>, abline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="V0-basic-work-flow_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by
@@ -404,8 +404,7 @@ displaying how the provided ab-lines and machines will line up inside
 the trial plots.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_trial_report.html">make_trial_report</a></span><span class="op">(</span></span>
-<span>  td <span class="op">=</span> <span class="va">td</span>,</span>
-<span>  trial_name <span class="op">=</span> <span class="st">"testing"</span>,</span>
+<span>  td <span class="op">=</span> <span class="va">trial_design</span>,</span>
 <span>  folder_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>

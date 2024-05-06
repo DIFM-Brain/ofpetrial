@@ -4,7 +4,7 @@
 .RData
 .Ruserdata
 test/*
-!test/*.rmd
+dev/*.md
 debug/*
 *.DS_Store
 *.gitignore

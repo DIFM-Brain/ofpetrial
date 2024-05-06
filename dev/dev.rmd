@@ -81,10 +81,6 @@ usethis::use_vignette("V7-visualize-from-scratch")
 pkgdown::build_site()
 ```
 
-```{r}
-usethis::edit_r_environ()
-```
-
 # Submission
 
 ```{r}

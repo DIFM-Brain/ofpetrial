@@ -104,7 +104,7 @@
 
 
 <dt>ext</dt>
-<dd><p>(character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by st_write()</p></dd>
+<dd><p>(character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by sf::st_write()</p></dd>
 
 
 <dt>zip</dt>
@@ -126,13 +126,18 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- load trial design ---#</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">td_two_input</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">write_trial_files</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  td <span class="op">=</span> <span class="va">td_two_input</span>,</span></span>
-<span class="r-in"><span>  folder_path <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>  zip <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  folder_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  zip <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing the trial design as .shp files. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing the trial design as .shp files. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing the ab-lines as .shp files. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing the ab-lines as .shp files. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Writing the harvester ab-line as .shp file. </span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
