@@ -14,7 +14,6 @@
 #' #--- load trial design ---#
 #' data(td_two_input)
 #' viz(td_two_input)
-#' viz(td_two_input, type = "plot_id")
 #'
 viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline = FALSE) {
   #++++++++++++++++++++++++++++++++++++

@@ -1,11 +1,11 @@
 #' Create trial design report
 #'
-#' This function creates a report describing the trial design created by the user with assign_rates() and includes figures showing machine alignment
+#' This function creates an html report describing the trial design created by the user with assign_rates() and includes figures showing machine alignment
 #'
 #' @param td trial design created by assign_rates()
 #' @param trial_name (character) name of trial to be used in report
 #' @param folder_path (character) path to the folder in which the report will be saved 
-#' @param keep_rmd (logical) If TRUE, the original rmd file will be saved in folder_path. Otherwise, deleted upon creating an html report.
+#' @param keep_rmd (logical) If FALSE (Default), the original rmd file will be deleted upon creating an html report. Otherwise, the rmd file will be saved in the folder specified by `folder_path`.
 #' @returns path to the resulting html file (invisible)
 #' @import bookdown
 #' @export

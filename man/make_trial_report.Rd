@@ -13,13 +13,13 @@ make_trial_report(td, folder_path = getwd(), trial_name = NA, keep_rmd = FALSE)
 
 \item{trial_name}{(character) name of trial to be used in report}
 
-\item{keep_rmd}{(logical) If TRUE, the original rmd file will be saved in folder_path. Otherwise, deleted upon creating an html report.}
+\item{keep_rmd}{(logical) If FALSE (Default), the original rmd file will be deleted upon creating an html report. Otherwise, the rmd file will be saved in the folder specified by `folder_path`.}
 }
 \value{
-path to the resulting html file
+path to the resulting html file (invisible)
 }
 \description{
-This function creates a report describing the trial design created by the user with assign_rates() and includes figures showing machine alignment
+This function creates an html report describing the trial design created by the user with assign_rates() and includes figures showing machine alignment
 }
 \examples{
 #--- load experiment made by assign_rates() ---#
