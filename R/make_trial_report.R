@@ -4,18 +4,19 @@
 #'
 #' @param td trial design created by assign_rates()
 #' @param trial_name (character) name of trial to be used in report
-#' @param folder_path (character) path to the folder in which the report will be saved
-#' @returns html document with trial design description and figures to guide trial implementation based on your machinery and plot sizes
+#' @param folder_path (character) path to the folder in which the report will be saved 
+#' @param keep_rmd (logical) If TRUE, the original rmd file will be saved in folder_path. Otherwise, deleted upon creating an html report.
+#' @returns path to the resulting html file (invisible)
 #' @import bookdown
 #' @export
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
 #' data(td_single_input)
 #' make_trial_report(
-#'   td = td_single_input,
-#'   folder_path = tempdir()
+#'   td = td_single_input
 #' )
-make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
+
+make_trial_report <- function(td, folder_path = getwd(), trial_name = NA, keep_rmd = FALSE) {
   all_trial_info <-
     td %>%
     dplyr::mutate(land_unit = ifelse(unit_system == "metric", "hectares", "acres")) %>%
@@ -131,12 +132,13 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
   }
 
   # if ((Sys.info()["sysname"] %in% c("windows", "Windows"))) {
-  if ((.Platform$OS.type %in% c("windows", "Windows"))) {
-    temp_directory <- folder_path
-  } else {
-    #--- save all_trial_info and machine_table as temporary files ---#
-    temp_directory <- tempdir()
-  }
+  # if ((.Platform$OS.type %in% c("windows", "Windows"))) {
+  temp_directory <- file.path(folder_path, "temp_make_trial_report")
+  dir.create(temp_directory)
+  # } else {
+  #   #--- save all_trial_info and machine_table as temporary files ---#
+  #   temp_directory <- tempdir()
+  # }
 
   all_trial_info_path <- file.path(temp_directory, "all_trial_info.rds")
   machine_table_path <- file.path(temp_directory, "machine_table_path.rds")
@@ -195,19 +197,19 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
   #+ Render the rmd to generate html report
   #++++++++++++++++++++++++++++++++++++
   #--- define html file name ---#
-  html_output_file <- file.path(folder_path, "trial_design_report.html")
+  html_output_file_path <- file.path(folder_path, "trial_design_report.html")
 
   #--- render ---#
   rmarkdown::render(
     input = report_rmd_path,
-    output_file = html_output_file,
+    output_file = html_output_file_path,
     quiet = TRUE
   )
 
   #++++++++++++++++++++++++++++++++++++
   #+ Remove all the temporary/intermediate fiels
   #++++++++++++++++++++++++++++++++++++
-  # unlink(temp_directory, recursive = TRUE)
+  unlink(temp_directory, recursive = TRUE)
 
   #++++++++++++++++++++++++++++++++++++
   #+ display the resulting html file on an web browser (or RStudio viewer pane)
@@ -216,10 +218,12 @@ make_trial_report <- function(td, trial_name = NA, folder_path = getwd()) {
 
   if (!is.null(viewer) && is.function(viewer)) {
     # (code to write some content to the file)
-    viewer(html_output_file)
+    viewer(html_output_file_path)
   } else {
-    utils::browseURL(html_output_file)
+    utils::browseURL(html_output_file_path)
   }
+
+  return(invisible(html_output_file_path))
 }
 
 # !==================-=========================================
@@ -1228,7 +1232,7 @@ text_total_input_amounts <- function(all_trial_info) {
       "The total amount of ",
       all_trial_info$input_name[[1]],
       " applied on the field will be ",
-      round(all_trial_info$total_input[[1]]), 
+      round(all_trial_info$total_input[[1]]),
       " ",
       all_trial_info$unit[1],
       "."

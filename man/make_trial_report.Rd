@@ -4,17 +4,19 @@
 \alias{make_trial_report}
 \title{Create trial design report}
 \usage{
-make_trial_report(td, trial_name = NA, folder_path = getwd())
+make_trial_report(td, folder_path = getwd(), trial_name = NA, keep_rmd = FALSE)
 }
 \arguments{
 \item{td}{trial design created by assign_rates()}
 
+\item{folder_path}{(character) path to the folder in which the report will be saved}
+
 \item{trial_name}{(character) name of trial to be used in report}
 
-\item{folder_path}{(character) path to the folder in which the report will be saved}
+\item{keep_rmd}{(logical) If TRUE, the original rmd file will be saved in folder_path. Otherwise, deleted upon creating an html report.}
 }
 \value{
-html document with trial design description and figures to guide trial implementation based on your machinery and plot sizes
+path to the resulting html file
 }
 \description{
 This function creates a report describing the trial design created by the user with assign_rates() and includes figures showing machine alignment
@@ -23,7 +25,6 @@ This function creates a report describing the trial design created by the user w
 #--- load experiment made by assign_rates() ---#
 data(td_single_input)
 make_trial_report(
-  td = td_single_input,
-  folder_path = tempdir()
+  td = td_single_input
 )
 }

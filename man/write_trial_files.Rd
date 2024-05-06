@@ -17,7 +17,7 @@ write_trial_files(
 
 \item{folder_path}{(character) path to the folder in which the files will be saved}
 
-\item{ext}{(character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by st_write()}
+\item{ext}{(character) Default = "shp". Extension to use to save the files, "geojson" or any other extension supported by sf::st_write()}
 
 \item{zip}{(logical) Default = FALSE. If TRUE, all the files that are being written will be zipped.}
 
