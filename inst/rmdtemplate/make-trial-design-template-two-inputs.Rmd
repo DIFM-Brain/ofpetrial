@@ -139,8 +139,9 @@ rep_table <- all_trial_info %>%
         .groups = "drop"
       ) %>%
       data.frame() %>%
-      dplyr::select(Replicates)
-  ))
+      dplyr::select(rate, Replicates) %>%
+      dplyr::rename("Treatment Rates" = "rate")
+  )) 
 
 knitr::kable(list(rep_table$rep_table[[1]], rep_table$rep_table[[2]]),
   caption = paste0("Replicate of each ", to_title(rep_table$input_name[[1]]), " and ", to_title(rep_table$input_name[[2]]), " Target Rate"),
@@ -228,7 +229,7 @@ for (i in 1:(nrow(machine_table) - 2)) {
   ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
+  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#00A3FF"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
   labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
   labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
 
@@ -271,7 +272,7 @@ for (i in 2:(nrow(machine_table) - 1)) {
   ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-    colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
+    colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#00A3FF"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
   labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
   labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
 }
@@ -317,7 +318,7 @@ for (i in nrow(machine_table)) {
   ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
+  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#00A3FF"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
   labels_polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
   labels_ablines[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator AB-Line"}else if(machine_table$machine_type[i] == "planter"){"Planter AB-Line"}else{"Harvester AB-Line"}
 
@@ -359,7 +360,7 @@ for (i in 1:nrow(machine_table)) {
   # ab_maps[[i]] <- paste0("machine_table$map_ab[[", i, "]]")
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
-  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#0072B2"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
+  colors[i] <-  if(machine_table$machine_type[i] == "applicator"){"#00A3FF"}else if(machine_table$machine_type[i] == "planter"){"lawngreen"}else{"#E69F00"}
   polygons[i] <- if(machine_table$machine_type[i] == "applicator"){"Applicator"}else if(machine_table$machine_type[i] == "planter"){"Planter"}else{"Harvester"}
 }
 
