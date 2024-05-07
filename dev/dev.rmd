@@ -56,23 +56,34 @@ usethis::use_build_ignore(c("dev_notes.md", "checklist.md", "notes.md", "organiz
 usethis::use_data_raw("generate_data.R")
 ```
 
-## Vignette and other documents
+## Vignette
+
+```{r}
+usethis::use_vignette("basic-work-flow")
+```
+
+## Article
+
+```{r}
+usethis::use_article("V0-basic-work-flow")
+usethis::use_article("V1-trial-design-options")
+usethis::use_article("V2-ab-line")
+usethis::use_article("V3-change-rates-manually")
+usethis::use_article("V4-diagnose-td")
+usethis::use_article("V5-understanding-structure")
+usethis::use_article("V6-non-regular-field")
+usethis::use_article("V7-visualize-from-scratch")
+```
+
+## Other documents
 
 ```{r}
 usethis::use_readme_rmd()
 usethis::use_news_md()
 usethis::use_cran_comments()
-usethis::use_vignette("V0-basic-work-flow")
-usethis::use_vignette("V1-trial-design-options")
-usethis::use_vignette("V2-ab-line")
-usethis::use_vignette("V3-change-rates-manually")
-usethis::use_vignette("V4-diagnose-td")
-usethis::use_vignette("V5-understanding-structure")
-usethis::use_vignette("V6-non-regular-field")
-usethis::use_vignette("V7-visualize-from-scratch")
-
-# usethis::use_vignette("random-vs-orthogonal")
 ```
+
+
 
 # Build vignette website 
 

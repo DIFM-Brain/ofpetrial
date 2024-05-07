@@ -23,8 +23,10 @@ This function creates an html report describing the trial design created by the 
 }
 \examples{
 #--- load experiment made by assign_rates() ---#
+\dontrun{
 data(td_single_input)
 make_trial_report(
   td = td_single_input
 )
+}
 }

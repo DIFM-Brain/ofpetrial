@@ -1,8 +1,8 @@
 ---
-title: "Modify or create trial design maps from scratch"
+title: "Modify trial design maps or make them from scratch"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Modify or create trial design maps from scratch}
+  %\VignetteIndexEntry{Modify trial design maps or make them from scratch}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

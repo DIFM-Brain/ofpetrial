@@ -1,219 +1,225 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/1-trial-design-options.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/1-trial-design-options.html</loc>
   </url>
   <url>
-    <loc>/articles/2-ab-line.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/2-ab-line.html</loc>
   </url>
   <url>
-    <loc>/articles/3-change-rates-manually.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/3-change-rates-manually.html</loc>
   </url>
   <url>
-    <loc>/articles/V0-basic-work-flow.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/A0-basic-work-flow.html</loc>
   </url>
   <url>
-    <loc>/articles/V0-example-work-flows.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V0-basic-work-flow.html</loc>
   </url>
   <url>
-    <loc>/articles/V1-trial-design-options.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V0-example-work-flows.html</loc>
   </url>
   <url>
-    <loc>/articles/V2-ab-line.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V1-trial-design-options.html</loc>
   </url>
   <url>
-    <loc>/articles/V3-change-rates-manually.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V2-ab-line.html</loc>
   </url>
   <url>
-    <loc>/articles/V4-diagnose-td.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V3-change-rates-manually.html</loc>
   </url>
   <url>
-    <loc>/articles/V5-understanding-structure.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V4-diagnose-td.html</loc>
   </url>
   <url>
-    <loc>/articles/V6-non-regular-field.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V5-understanding-structure.html</loc>
   </url>
   <url>
-    <loc>/articles/V7-more-examples.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V6-non-regular-field.html</loc>
   </url>
   <url>
-    <loc>/articles/V7-visualize-from-scratch.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V7-more-examples.html</loc>
   </url>
   <url>
-    <loc>/articles/V8-visualize-from-scratch.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V7-visualize-from-scratch.html</loc>
   </url>
   <url>
-    <loc>/articles/ab-line.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/V8-visualize-from-scratch.html</loc>
   </url>
   <url>
-    <loc>/articles/change-rates-manually.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/ab-line.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/basic-work-flow.html</loc>
   </url>
   <url>
-    <loc>/articles/random-vs-orthogonal.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/change-rates-manually.html</loc>
   </url>
   <url>
-    <loc>/articles/trial-design-options.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/index.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/random-vs-orthogonal.html</loc>
   </url>
   <url>
-    <loc>/checklist.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/articles/trial-design-options.html</loc>
   </url>
   <url>
-    <loc>/dev_notes.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/checklist.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/dev_notes.html</loc>
   </url>
   <url>
-    <loc>/notes.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/index.html</loc>
   </url>
   <url>
-    <loc>/reference/add_base_rate.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/add_blocks.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/notes.html</loc>
   </url>
   <url>
-    <loc>/reference/assign_rates.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/add_base_rate.html</loc>
   </url>
   <url>
-    <loc>/reference/change_rate_by_block.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/add_blocks.html</loc>
   </url>
   <url>
-    <loc>/reference/change_rate_by_plot.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/assign_rates.html</loc>
   </url>
   <url>
-    <loc>/reference/change_rate_by_strip.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/change_rate_by_block.html</loc>
   </url>
   <url>
-    <loc>/reference/change_rates.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/change_rate_by_plot.html</loc>
   </url>
   <url>
-    <loc>/reference/check_alignment.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/change_rate_by_strip.html</loc>
   </url>
   <url>
-    <loc>/reference/check_cor_inputs.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/change_rates.html</loc>
   </url>
   <url>
-    <loc>/reference/check_ortho_inputs.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/check_alignment.html</loc>
   </url>
   <url>
-    <loc>/reference/check_ortho_with_chars.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/check_cor_inputs.html</loc>
   </url>
   <url>
-    <loc>/reference/diagnose.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/check_ortho_inputs.html</loc>
   </url>
   <url>
-    <loc>/reference/exp_data.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/check_ortho_with_chars.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/diagnose.html</loc>
   </url>
   <url>
-    <loc>/reference/make_exp_plots.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/exp_data.html</loc>
   </url>
   <url>
-    <loc>/reference/make_input_plot_data.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/make_input_rate_data.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/make_exp_plots.html</loc>
   </url>
   <url>
-    <loc>/reference/make_trial_report.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/make_input_plot_data.html</loc>
   </url>
   <url>
-    <loc>/reference/ofpetrial-package.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/make_input_rate_data.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/make_trial_report.html</loc>
   </url>
   <url>
-    <loc>/reference/plot.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/ofpetrial-package.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_info.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/plot.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot_f.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/plot_info.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot_fd.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot_fs.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot_f.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot_m.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot_fd.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot_md.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot_fs.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_plot_ms.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot_m.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_rate.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot_md.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_rates_d.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_plot_ms.html</loc>
   </url>
   <url>
-    <loc>/reference/prep_rates_s.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_rate.html</loc>
   </url>
   <url>
-    <loc>/reference/rate_info.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_rates_d.html</loc>
   </url>
   <url>
-    <loc>/reference/td_curved.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/prep_rates_s.html</loc>
   </url>
   <url>
-    <loc>/reference/td_single_input.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/rate_info.html</loc>
   </url>
   <url>
-    <loc>/reference/td_two_input.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/td_curved.html</loc>
   </url>
   <url>
-    <loc>/reference/trial_design.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/td_single_input.html</loc>
   </url>
   <url>
-    <loc>/reference/trial_design_report.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/td_two_input.html</loc>
   </url>
   <url>
-    <loc>/reference/viz.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/trial_design.html</loc>
   </url>
   <url>
-    <loc>/reference/viz_ep.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/trial_design_report.html</loc>
   </url>
   <url>
-    <loc>/reference/viz_exp_plots.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/viz.html</loc>
   </url>
   <url>
-    <loc>/reference/viz_td.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/viz_ep.html</loc>
   </url>
   <url>
-    <loc>/reference/write_design_files.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/viz_exp_plots.html</loc>
   </url>
   <url>
-    <loc>/reference/write_trial_files.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/viz_td.html</loc>
   </url>
   <url>
-    <loc>/todo.html</loc>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/write_design_files.html</loc>
+  </url>
+  <url>
+    <loc>https://difm-brain.github.io/ofpetrial/reference/write_trial_files.html</loc>
+  </url>
+  <url>
+    <loc>https://difm-brain.github.io/ofpetrial/todo.html</loc>
   </url>
 </urlset>

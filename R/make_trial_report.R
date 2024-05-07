@@ -11,10 +11,12 @@
 #' @export
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
+#' \dontrun{
 #' data(td_single_input)
 #' make_trial_report(
 #'   td = td_single_input
 #' )
+#' }
 
 make_trial_report <- function(td, folder_path = getwd(), trial_name = NA, keep_rmd = FALSE) {
   all_trial_info <-

@@ -2,6 +2,7 @@ pandoc: 2.19.1
 pkgdown: 2.0.8
 pkgdown_sha: ~
 articles:
+  basic-work-flow: basic-work-flow.html
   V0-basic-work-flow: V0-basic-work-flow.html
   V1-trial-design-options: V1-trial-design-options.html
   V2-ab-line: V2-ab-line.html
@@ -10,5 +11,8 @@ articles:
   V5-understanding-structure: V5-understanding-structure.html
   V6-non-regular-field: V6-non-regular-field.html
   V7-visualize-from-scratch: V7-visualize-from-scratch.html
-last_built: 2024-05-06T18:41Z
+last_built: 2024-05-07T13:51Z
+urls:
+  reference: https://difm-brain.github.io/ofpetrial/reference
+  article: https://difm-brain.github.io/ofpetrial/articles
 
