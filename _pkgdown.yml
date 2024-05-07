@@ -1,6 +1,7 @@
 url: https://difm-brain.github.io/ofpetrial/
 
 template:
+  bootstrap: 5
   params:
     ganalytics: G-B09QYRX8XQ
 

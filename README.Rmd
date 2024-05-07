@@ -32,7 +32,7 @@ devtools::install_github("DIFM-Brain/ofpetrial")
 
 ## Example
 
-Here, we demonstrate how to use the `ofpetrial` package to create two-input on-farm experiment trial designs (more detailed instructions on the basic workflow is provided in [this article](https://difm-brain.github.io/ofpetrial/articles/V0-basic-work-flow.html)).  
+Here, we demonstrate how to use the `ofpetrial` package to create a single-input on-farm experiment trial design (more detailed instructions on the basic workflow is provided in [this article](https://difm-brain.github.io/ofpetrial/articles/V0-basic-work-flow.html)).  
 
 ```{r}
 library(ofpetrial)
