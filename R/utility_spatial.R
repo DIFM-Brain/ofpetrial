@@ -226,7 +226,7 @@ create_strips <- function(field, plot_heading, plot_width, radius) {
 #++++++++++++++++++++++++++++++++++++
 st_transform_utm <- function(sf) {
   if (grepl("longitude", sf::st_crs(sf)$wkt) != TRUE) {
-    print("Not in lat/long. Returning original object.")
+    message("Not in lat/long. Returning original object.")
     return(sf)
   } else {
     utmzone <- utm_zone(mean(sf::st_bbox(sf)[c(1, 3)]))

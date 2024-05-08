@@ -80,18 +80,26 @@ usethis::use_article("V7-visualize-from-scratch")
 ```{r}
 usethis::use_readme_rmd()
 usethis::use_news_md()
+```
+
+```{r}
+devtools::check()
 usethis::use_cran_comments()
 ```
 
+# Build package and website
 
-
-# Build vignette website 
+## Package documents
 
 ```{r}
 #--- document the functions ---#
 devtools::document()
+```
 
-#--- build pkgdown website ---#
+## Build vignette website 
+
+```{r}
+rmarkdown::render("/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/vignettes/articles/index.Rmd")
 pkgdown::build_site()
 ```
 

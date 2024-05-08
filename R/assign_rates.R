@@ -275,7 +275,7 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
     strip_list <- vector(mode = "list", max_strip_id)
 
     for (i in 1:max(exp_sf$strip_id)) {
-      # print(i)
+
       working_strip <- dplyr::filter(exp_sf, strip_id == i)
       start_rank <- full_start_seq_long[i + shift_counter]
       num_plots_ws <- nrow(working_strip)
@@ -304,8 +304,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
           pull(rate_rank)
 
         duplication_score <- mean(rate_ranks == neighbor_rate_ranks)
-
-        # print(paste0("dup score = ", duplication_score))
 
         if (duplication_score > 0.5) {
           # create a new start_rank sequence that starts with a value except the current one
@@ -835,7 +833,7 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
     rates_ls <- rates
   } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
     #--- if min_rate, max_rate, and num_rates are specified ---#
-    cat("Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates")
+    message("Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates")
     rates_ls <-
       get_rates(
         min_rate,
@@ -844,7 +842,7 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
         num_rates
       )
   } else {
-    cat("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
+    message("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
   }
 
   #++++++++++++++++++++++++++++++++++++
@@ -858,7 +856,7 @@ find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate
       )
   } else if (design_type == "sparse") {
     if (!gc_rate %in% rates_ls) {
-      return(print(
+      return(message(
         "Error: You specified the trial rates directly using the rates argument, but they do not include gc_rate. For the sparse design, please include gc_rate in the rates."
       ))
     } else {
@@ -956,7 +954,7 @@ get_design_for_second <- function(input_trial_data, first_design, rate_jump_thre
 
     if (row_index %in% round(num_plots * seq(0.1, 1, by = 0.1), digits = 0)) {
       percentage <- track_data[plot_id == row_index, index]
-      print(paste(paste0(rep("==", percentage), collapse = ""), percentage * 10, "% complete"))
+      message(paste(paste0(rep("==", percentage), collapse = ""), percentage * 10, "% complete"))
     }
 
     #--- find the strip id for the working plot ---#
