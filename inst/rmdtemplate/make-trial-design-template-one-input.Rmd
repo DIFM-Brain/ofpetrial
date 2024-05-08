@@ -121,11 +121,15 @@ rep_table <- all_trial_info %>%
         Replicates = dplyr::n(),
         .groups = "drop"
       ) %>%
-      dplyr::select(Replicates)
+      dplyr::select(rate, Replicates) %>%
+      dplyr::rename("Treatment Rates" = "rate")
   ))
 
 rep_table$rep_table[[1]] %>%
-  knitr::kable(caption = paste0("Replicates of each ", to_title(rep_table$input_name[[1]]), " Target Rate"))
+  # kbl() %>%
+  # kable_paper("hover", full_width = F)
+  knitr::kable(caption = paste0("Replicates of each ", to_title(rep_table$input_name[[1]]), " Target Rate"),
+               full_width = F)
 ```
 
 ## AB-Lines
@@ -154,7 +158,7 @@ kable(ab_line_harvest,
 
 Because areas near the border of the field are used to turn machinery around and may be exposed to different amounts of sun and wind than are areas in the field’s interior, data from border areas are not used in the experiment. Therefore, the first step in putting the trial design “in the ground” is to apply the input around border areas, in the same way the farmer would if not participating in the trial design. Figure \@ref(fig:headland-map) identifies the border areas for this field. 
 
-```{r headland-map, echo = FALSE, fig.cap = "Map of Field Borders", fig.height = 6, include = TRUE}
+```{r headland-map, echo = FALSE, fig.cap = "Map of Field Borders", fig.height = 8, include = TRUE}
 all_trial_info$map_headlands[[1]] + tmap::tm_layout(
   legend.outside = "TRUE",
   frame = FALSE,
@@ -167,7 +171,7 @@ all_trial_info$map_headlands[[1]] + tmap::tm_layout(
 
 Once the trial design is made, its shapefile should be uploaded into the application monitor, as any other commercial site-specific input application prescription. Then the operator should center the `r machine_table$machine_type[[1]]` on the corresponding AB-line labeled `r paste0("ab-lines-farmer-", machine_table$machine_type[[1]])` provided in the trial design files.  Figure \@ref(fig:machine-alignment-1) shows the `r machine_table$machine_type[[1]]` inside a trial plot along with its respective AB-line. `r text_sections_used(all_trial_info, machine_table, 1, unit_system)`
 
-```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+```{r machine-alignment-1, echo=FALSE, fig.cap = paste0("Alignment of ", to_title(machine_table$machine_type[[1]]), " inside a Trial Plot"), fig.height=8, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
 section_maps <- list()
@@ -181,7 +185,7 @@ for (i in 1:(nrow(machine_table) - 1)) {
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
   colors[i] <- if (machine_table$machine_type[i] == "applicator") {
-    "#0072B2"
+    "#00A3FF"
   } else if (machine_table$machine_type[i] == "planter") {
     "lawngreen"
   } else {
@@ -233,7 +237,7 @@ After the applying the input to put the trial in the ground, the “as-applied�
 
 When the trial design is created, the downloaded files also include a shapefile labeled "ab-lines-farmer-harvester", which the farmer should use to center the harvester at harvest time. Figure \@ref(fig:machine-alignment-harvester) shows the harvester and its AB-line inside a trial plot.
 
-```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Harvester inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+```{r machine-alignment-harvester, echo=FALSE, fig.cap="Alignment of Harvester inside a Trial Plot", fig.height=8, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
@@ -246,7 +250,7 @@ for (i in nrow(machine_table)) {
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
   colors[i] <- if (machine_table$machine_type[i] == "applicator") {
-    "#0072B2"
+    "#00A3FF"
   } else if (machine_table$machine_type[i] == "planter") {
     "lawngreen"
   } else {
@@ -293,7 +297,7 @@ machine_table$map_plot[[1]] +
 
 Figure \@ref(fig:machine-alignment-all) shows all of the machinery inside a trial plot, showing the proper alignment of the machine passes based on the widths provided in the trial design function. While the AB-lines are not included in this figure for clarity, we can see where they are by following the arrow of the machines. `r trial_text_ablines(machine_table)` This is the intended alignment given the `r trial_text_machine_sizes_and_plot_width(machine_table, all_trial_info, unit_system)` If the harvester is correctly centered, then the `r text_harvester_passes(all_trial_info, unit_system)`
 
-```{r machine-alignment-all, echo=FALSE, fig.cap="Alignment of all Machinery inside a Trial Plot", fig.height=6, message=FALSE, warning=FALSE, include = TRUE}
+```{r machine-alignment-all, echo=FALSE, fig.cap="Alignment of all Machinery inside a Trial Plot", fig.height=8, message=FALSE, warning=FALSE, include = TRUE}
 ab_maps <- list()
 poly_maps <- list()
 label_maps <- list()
@@ -305,7 +309,7 @@ for (i in 1:nrow(machine_table)) {
   poly_maps[[i]] <- paste0("machine_table$map_poly[[", i, "]]")
   label_maps[[i]] <- paste0("machine_table$map_label[[", i, "]]")
   colors[i] <- if (machine_table$machine_type[i] == "applicator") {
-    "#0072B2"
+    "#00A3FF"
   } else if (machine_table$machine_type[i] == "planter") {
     "lawngreen"
   } else {
