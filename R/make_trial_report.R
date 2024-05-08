@@ -769,6 +769,7 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # trial_plot <- machine_table$trial_plot[[1]]
 # move_vec <- machine_table$move_vec[[1]]
 # input <- machine_table$input_name[[1]]
+# height <- machine_table$height[[1]]
 # unit_system <- "imperial"
 make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info, height) {
   if (is.na(input) == FALSE) {
@@ -792,19 +793,46 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
       st_coordinates() %>%
       .[, -(3:4)] # remove the last two columns
 
+    # find starting side of polygon (opposite of direction of move_vec)
+    if(move_vec[1] >= 0 & move_vec[2] > 0){ # when we are moving in a general NE or N direction
+      point <- trial_plot_coords %>%
+        data.frame(.) %>%
+        dplyr::filter(X <= median(X)) %>%
+        dplyr::filter(Y < median(Y)) %>%
+        .[1,]
+    }else if(move_vec[1] < 0 & move_vec[2] <= 0){ # SW or S direction
+      point <- trial_plot_coords %>%
+        data.frame(.) %>%
+        dplyr::filter(X >= median(X)) %>%
+        dplyr::filter(Y > median(Y)) %>%
+        .[1,]
+    }else if(move_vec[1] >= 0 & move_vec[2] < 0){ # SE or E direction
+      point <- trial_plot_coords %>%
+        data.frame(.) %>%
+        dplyr::filter(X < median(X)) %>%
+        dplyr::filter(Y >= median(Y)) %>%
+        .[1,]
+    }else if(move_vec[1] < 0 & move_vec[2] >= 0){ # NW or W direction
+      point <- trial_plot_coords %>%
+        data.frame(.) %>%
+        dplyr::filter(X > median(X)) %>%
+        dplyr::filter(Y <= median(Y)) %>%
+        .[1,]
+    }
 
-    # need to check if the trial plot always begins at point one, but I believe so
-    plot_lines <- data.table(line = 1:2,
+    # find the two lines that are close to the width of the plot
+    plot_lines <- data.table(line = 1:4,
                              distance = c(st_distance(st_point(trial_plot_coords[1,]), st_point(trial_plot_coords[2,])),
-                                          # st_distance(st_point(trial_plot_coords[2,]), st_point(trial_plot_coords[3,])),
-                                          # st_distance(st_point(trial_plot_coords[3,]), st_point(trial_plot_coords[4,])),
+                                          st_distance(st_point(trial_plot_coords[2,]), st_point(trial_plot_coords[3,])),
+                                          st_distance(st_point(trial_plot_coords[3,]), st_point(trial_plot_coords[4,])),
                                           st_distance(st_point(trial_plot_coords[4,]), st_point(trial_plot_coords[1,])))) %>%
       dplyr::mutate(diff = abs(plot_width - distance)) %>%
       dplyr::arrange(diff) %>%  # arrange in descending order
-      dplyr::slice(1) %>%
+      dplyr::slice(1:2) %>%
       dplyr::pull(line)
 
-    if(plot_lines == 1){
+    # find the line that is in the set of plot_lines and also contains the earlier point found
+    if(1 %in% plot_lines & (setequal(point, trial_plot_coords[1,]) | setequal(point, trial_plot_coords[2,]))){
       point1 = st_point(trial_plot_coords[1,]) %>%
         as.matrix() %>%
         .[1, ]
@@ -814,7 +842,27 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
         as.matrix() %>%
         .[1, ]
       point2 = point2 + move_vec * height * 1.4
-    }else if(plot_lines == 2){
+    }else if(2 %in% plot_lines & (setequal(point, trial_plot_coords[2,]) | setequal(point, trial_plot_coords[3,]))){
+      point1 = st_point(trial_plot_coords[2,]) %>%
+        as.matrix() %>%
+        .[1, ]
+      point1 = point1 + move_vec * height * 1.4
+
+      point2 = st_point(trial_plot_coords[3,]) %>%
+        as.matrix() %>%
+        .[1, ]
+      point2 = point2 + move_vec * height * 1.4
+    }else if(3 %in% plot_lines & (setequal(point, trial_plot_coords[3,]) | setequal(point, trial_plot_coords[4,]))){
+      point1 = st_point(trial_plot_coords[3,]) %>%
+        as.matrix() %>%
+        .[1, ]
+      point1 = point1 + move_vec * height * 1.4
+
+      point2 = st_point(trial_plot_coords[4,]) %>%
+        as.matrix() %>%
+        .[1, ]
+      point2 = point2 + move_vec * height * 1.4
+    }else if(4 %in% plot_lines & (setequal(point, trial_plot_coords[4,]) | setequal(point, trial_plot_coords[1,]))){
       point1 = st_point(trial_plot_coords[4,]) %>%
         as.matrix() %>%
         .[1, ]
@@ -922,26 +970,64 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
     st_coordinates() %>%
     .[, -(3:4)] # remove the last two columns
 
+  # find starting side of polygon (opposite of direction of move_vec)
+  if(move_vec[1] >= 0 & move_vec[2] > 0){ # when we are moving in a general NE or N direction
+    point <- trial_plot_coords %>%
+      data.frame(.) %>%
+      dplyr::filter(X <= median(X)) %>%
+      dplyr::filter(Y < median(Y)) %>%
+      .[1,]
+  }else if(move_vec[1] < 0 & move_vec[2] <= 0){ # SW or S direction
+    point <- trial_plot_coords %>%
+      data.frame(.) %>%
+      dplyr::filter(X >= median(X)) %>%
+      dplyr::filter(Y > median(Y)) %>%
+      .[1,]
+  }else if(move_vec[1] >= 0 & move_vec[2] < 0){ # SE or E direction
+    point <- trial_plot_coords %>%
+      data.frame(.) %>%
+      dplyr::filter(X < median(X)) %>%
+      dplyr::filter(Y >= median(Y)) %>%
+      .[1,]
+  }else if(move_vec[1] < 0 & move_vec[2] >= 0){ # NW or W direction
+    point <- trial_plot_coords %>%
+      data.frame(.) %>%
+      dplyr::filter(X > median(X)) %>%
+      dplyr::filter(Y <= median(Y)) %>%
+      .[1,]
+  }
 
-  # need to check if the trial plot always begins at point one, but I believe so
-  plot_lines <- data.table(line = 1:2,
+  # find the two lines that are close to the width of the plot
+  plot_lines <- data.table(line = 1:4,
                            distance = c(st_distance(st_point(trial_plot_coords[1,]), st_point(trial_plot_coords[2,])),
-                                        # st_distance(st_point(trial_plot_coords[2,]), st_point(trial_plot_coords[3,])),
-                                        # st_distance(st_point(trial_plot_coords[3,]), st_point(trial_plot_coords[4,])),
+                                        st_distance(st_point(trial_plot_coords[2,]), st_point(trial_plot_coords[3,])),
+                                        st_distance(st_point(trial_plot_coords[3,]), st_point(trial_plot_coords[4,])),
                                         st_distance(st_point(trial_plot_coords[4,]), st_point(trial_plot_coords[1,])))) %>%
     dplyr::mutate(diff = abs(plot_width - distance)) %>%
     dplyr::arrange(diff) %>%  # arrange in descending order
-    dplyr::slice(1) %>%
+    dplyr::slice(1:2) %>%
     dplyr::pull(line)
 
   # get center of line
-  if(plot_lines == 1){
+  if(1 %in% plot_lines & (setequal(point, trial_plot_coords[1,]) | setequal(point, trial_plot_coords[2,]))){
     cent = st_linestring(rbind(trial_plot_coords[1,],
                                trial_plot_coords[2,])) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
-  }else if(plot_lines == 2){
+  }else if(2 %in% plot_lines & (setequal(point, trial_plot_coords[2,]) | setequal(point, trial_plot_coords[3,]))){
+    cent = st_linestring(rbind(trial_plot_coords[2,],
+                               trial_plot_coords[3,])) %>%
+      st_sfc() %>%
+      st_sf() %>%
+      st_centroid()
+  }else if(3 %in% plot_lines & (setequal(point, trial_plot_coords[3,]) | setequal(point, trial_plot_coords[4,]))){
+    cent = st_linestring(rbind(trial_plot_coords[3,],
+                               trial_plot_coords[4,])) %>%
+      st_sfc() %>%
+      st_sf() %>%
+      st_centroid()
+  }else if(4 %in% plot_lines & (setequal(point, trial_plot_coords[4,]) | setequal(point, trial_plot_coords[1,]))){
     cent = st_linestring(rbind(trial_plot_coords[4,],
                                trial_plot_coords[1,])) %>%
       st_sfc() %>%
