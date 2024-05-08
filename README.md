@@ -9,7 +9,9 @@
 <!-- badges: end -->
 
 The `ofpetrial` package allows the user to design agronomic input
-experiments in a reproducible manner without using ArcGIS or QGIS.
+experiments in a reproducible manner without using ArcGIS or QGIS. The
+[vignette](https://difm-brain.github.io/ofpetrial/) for this package
+provides more detailed guidance on how to use the package.
 
 ## Installation
 
