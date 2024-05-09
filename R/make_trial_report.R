@@ -88,7 +88,7 @@ make_trial_report <- function(td, folder_path = getwd(), trial_name = NA, keep_r
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info, height))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, unit_system, all_trial_info, height, input_name))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -115,7 +115,7 @@ make_trial_report <- function(td, folder_path = getwd(), trial_name = NA, keep_r
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info, height))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, unit_system, all_trial_info, height, input_name))) %>%
       dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
@@ -771,8 +771,8 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # input <- machine_table$input_name[[1]]
 # height <- machine_table$height[[1]]
 # unit_system <- "imperial"
-make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info, height) {
-  if (is.na(input) == FALSE) {
+make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_info, height, input_name) {
+  if (is.na(input_name) == FALSE) {
     # directions for figure creation
     perp_move_vec <- rotate_vec(move_vec, 90)
     opp_move_vec <- rotate_vec(move_vec, 180) %>%
@@ -781,13 +781,13 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
 
     # get plot width
     plot_width <- all_trial_info %>%
-      dplyr::filter(input_name == input) %>%
-      dplyr::pull(plot_width)
+      dplyr::pull(plot_width) %>%
+      max()
 
-    # plot for given input
+    # plot with maximum size
     trial_plot <- trial_plot %>%
-      dplyr::filter(input_name == input) %>%
-      .[1, ]
+      dplyr::mutate(area = as.numeric(st_area(.))) %>%
+      dplyr::filter(area == max(area))
 
     trial_plot_coords <- trial_plot %>%
       st_coordinates() %>%
@@ -955,15 +955,15 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
   normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
   perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
 
-  # get plot width
+  # get max plot width
   plot_width <- all_trial_info %>%
-    dplyr::filter(input_name == input) %>%
-    dplyr::pull(plot_width)
+    dplyr::pull(plot_width) %>%
+    max()
 
-  # plot for given input
+  # use trial plot with maximum size
   trial_plot <- trial_plot %>%
-    dplyr::filter(input_name == input) %>%
-    .[1, ]
+    dplyr::mutate(area = as.numeric(st_area(.))) %>%
+    dplyr::filter(area == max(area))
 
   # get coordinates of the plot vertices
   trial_plot_coords <- trial_plot %>%
