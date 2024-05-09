@@ -90,7 +90,7 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
       dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, unit_system, all_trial_info, height, input_name))) %>%
-      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot))) %>%
+      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot, width, all_trial_info, move_vec))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
@@ -117,7 +117,7 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
       dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, unit_system, all_trial_info, height, input_name))) %>%
-      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot))) %>%
+      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot, width, all_trial_info, move_vec))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
@@ -1298,7 +1298,36 @@ tmap_plot_legend <- function(trial_plot) {
   return(legend)
 }
 
-tmap_label <- function(center, machine_type, trial_plot, number_in_plot) {
+# center = machine_table$center[[1]]
+# machine_type = machine_table$machine_type[[1]]
+# trial_plot = machine_table$trial_plot[[1]]
+# number_in_plot = machine_table$number_in_plot[[1]]
+# machine_width = machine_table$width[[1]]
+# all_trial_info
+# move_vec = machine_table$move_vec[[1]]
+tmap_label <- function(center, machine_type, trial_plot, number_in_plot, machine_width, all_trial_info, move_vec) {
+  max_plot_width = all_trial_info %>%
+    dplyr::pull(plot_width) %>%
+    max()
+
+  normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
+  perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
+
+  if(max_plot_width/machine_width < 1){ # if the machine is larger than the plot, we need to shift the center over to see the text
+    center = st_shift(
+      st_point(center) %>%
+        st_sfc() %>%
+        st_sf(),
+      if ((normalized_move_vec[1] > 0) |
+          (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
+        perp_move_vec * (max_plot_width/2 - machine_width/2)
+      } else {
+        - perp_move_vec * (max_plot_width/2 - machine_width/2)
+      }
+    )  %>%
+      sf::st_coordinates()
+  }
+
   labels <- list()
   for (i in 1:nrow(center)) {
     labels[[i]] <- paste0("tmap::tm_shape(st_point(center[", i, ", ]) %>% sf::st_sfc(crs = sf::st_crs(trial_plot)) %>% sf::st_sf() %>% dplyr::mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = sf::st_bbox(trial_plot)) + tmap::tm_text(\"label\", size = ifelse(number_in_plot <= 2, 0.8, 0.7))")
