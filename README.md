@@ -15,6 +15,16 @@ provides more detailed guidance on how to use the package.
 
 ## Installation
 
+### CRAN version
+
+You can install the CRAN version of the `ofpetrial` package.
+
+``` r
+install.packages("ofpetrial")
+```
+
+### Development version
+
 You can install the development version of ofpetrial from
 [Github](https://github.com/DIFM-Brain/ofpetrial):
 
@@ -62,11 +72,17 @@ exp_data <-
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
+#> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+#> Warning: There was 1 warning in `dplyr::mutate()`.
+#> ℹ In argument: `experiment_plots_dissolved = list(...)`.
+#> ℹ In row 1.
+#> Caused by warning:
+#> ! package 'sf' was built under R version 4.2.3
 
 viz(exp_data, type = "layout", abline = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ### Assign rates
 
@@ -115,7 +131,7 @@ Here is the visualization of the trial design done by `viz`.
 viz(trial_design)
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by default.

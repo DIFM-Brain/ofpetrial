@@ -42,7 +42,8 @@ Imports:
     tmap,
     magrittr,
     dplyr,
-    bookdown
+    bookdown,
+    leaflet
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)

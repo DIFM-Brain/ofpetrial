@@ -15,6 +15,16 @@ pesticide, seed, and cover crop.
 
 ## Installation
 
+### CRAN version
+
+You can install the CRAN version of the `ofpetrial` package.
+
+``` r
+install.packages("ofpetrial")
+```
+
+### Development version
+
 You can install the development version of ofpetrial from
 [Github](https://github.com/DIFM-Brain/ofpetrial):
 
@@ -66,7 +76,7 @@ exp_data <-
 viz(exp_data, type = "layout", abline = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 ### Assign rates
 
@@ -115,7 +125,7 @@ Here is the visualization of the trial design done by `viz`.
 viz(trial_design)
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
 Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by default.

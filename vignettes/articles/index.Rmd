@@ -24,6 +24,16 @@ The `ofpetrial` package allows the user to design agronomic on-farm input experi
 
 ## Installation
 
+### CRAN version
+
+You can install the CRAN version of the `ofpetrial` package.
+
+```{r, eval = FALSE}
+install.packages("ofpetrial")
+```
+
+### Development version
+
 You can install the development version of ofpetrial from [Github](https://github.com/DIFM-Brain/ofpetrial):
 
 ```{r, eval = FALSE}
