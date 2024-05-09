@@ -19,7 +19,7 @@
 #'   zip = FALSE
 #' )
 #' 
-write_trial_files <- function(td, folder_path = NA, ext = "shp", zip = FALSE, zip_name = NA) {
+write_trial_files <- function(td, folder_path, ext = "shp", zip = FALSE, zip_name = NA) {
   # write_trial_files(td, folder_path = here::here("test"), zip = TRUE)
   # folder_path <- here::here(getwd(), "test")
   folder_path <- ifelse(is.na(folder_path), getwd(), folder_path)

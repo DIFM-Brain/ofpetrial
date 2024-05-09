@@ -4,13 +4,7 @@
 \alias{write_trial_files}
 \title{Write trial design files for field implementation}
 \usage{
-write_trial_files(
-  td,
-  folder_path = NA,
-  ext = "shp",
-  zip = FALSE,
-  zip_name = NA
-)
+write_trial_files(td, folder_path, ext = "shp", zip = FALSE, zip_name = NA)
 }
 \arguments{
 \item{td}{(tibble) a tibble of a trial design created by applying assign_rate() to experimental plots made by make_exp_plots().}

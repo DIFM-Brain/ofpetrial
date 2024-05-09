@@ -8,10 +8,10 @@
 [![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The `ofpetrial` package allows the user to design agronomic input
-experiments in a reproducible manner without using ArcGIS or QGIS. The
-[vignette](https://difm-brain.github.io/ofpetrial/) for this package
-provides more detailed guidance on how to use the package.
+The `ofpetrial` package allows the user to design agronomic on-farm
+input experiments in a reproducible manner without using ArcGIS or QGIS.
+It can be used to design trials for various inputs, such as fertilizer,
+pesticide, seed, and cover crop.
 
 ## Installation
 

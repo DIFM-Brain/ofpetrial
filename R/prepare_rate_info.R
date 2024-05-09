@@ -47,11 +47,11 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
     rates_ls <- rates
     num_rates <- length(rates)
     if (!(gc_rate %in% rates)) {
-      cat("Please note that gc_rate is not one of the rates you specified.")
+      message("Please note that gc_rate is not one of the rates you specified.")
     }
   } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
     #--- if min_rate, max_rate, and num_rates are specified ---#
-    cat("Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates")
+    message("Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates")
     rates_ls <-
       get_rates(
         min_rate,
@@ -60,7 +60,7 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
         num_rates
       )
   } else {
-    cat("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
+    message("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
   }
 
   #++++++++++++++++++++++++++++++++++++
@@ -68,14 +68,14 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   #++++++++++++++++++++++++++++++++++++
   if (is.na(design_type)) {
     #--- do nothing ---#
-    print("You did not specify design_type. It is assumed to be of type ls.")
+    message("You did not specify design_type. It is assumed to be of type ls.")
   } else if (design_type %in% c("ls", "str", "rstr", "rb")) {
     #--- do nothing ---#
   } else if (design_type == "sparse") {
     if (!gc_rate %in% rates_ls) {
-      return(print(
+      stop(
         "Error: You specified the trial rates directly using the rates argument, but they do not include gc_rate. For the sparse design, please include gc_rate in the rates."
-      ))
+      )
     }
   } else if (design_type == "ejca") {
     if (length(rates_ls) %% 2 == 1) {
