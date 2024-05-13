@@ -10,8 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
+  comment = "#>"
 )
 ```
 
@@ -157,7 +156,7 @@ Here, let's check the correlation between the seed and NH3 rates.
 )
 ```
 
-<!-- The correlation coefficient is `r round(cor_inputs, digits = 2)`, which is certainly acceptable. -->
+The correlation coefficient is `r round(cor_inputs, digits = 2)`, which is certainly acceptable.
 
 # Make a trial design report
 

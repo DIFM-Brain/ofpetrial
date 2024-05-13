@@ -450,7 +450,9 @@ make_trial_plots_by_input <- function(field,
 
   #--- create strips ---#
   #* only the angle of plot is used from plot_heading
-  strips <- create_strips(field, plot_heading, plot_width, radius)
+  strips <- 
+    create_strips(field, plot_heading, plot_width, radius) %>%
+    st_make_valid()
 
   # ggplot(filter(strips, group == 1)) +
   #   geom_sf()

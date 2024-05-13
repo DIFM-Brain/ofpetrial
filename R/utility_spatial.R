@@ -504,6 +504,7 @@ prepare_ablines <- function(ab_line, field, plot_width) {
 #* Make harvester (yield) polygons based on harvester ab-line
 #* +++++++++++++++++++++++++++++++++++
 make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
+
   base_ab_lines_data <-
     prepare_ablines(
       ab_line = harvest_ab_line,
@@ -532,7 +533,9 @@ make_harvest_path <- function(harvester_width, harvest_ab_line, field_sf) {
 
   #--- create strips ---#
   #* only the angle of plot is used from plot_heading
-  strips <- create_strips(field_sf, plot_heading, harvester_width, radius)
+  strips <-
+    create_strips(field_sf, plot_heading, harvester_width, radius) %>%
+    st_make_valid()
 
   # ggplot() +
   #   geom_sf(data = strips, aes(fill = group)) +
