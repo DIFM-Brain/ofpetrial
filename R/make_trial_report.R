@@ -89,8 +89,8 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info, height))) %>%
-      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, unit_system, all_trial_info, height, input_name))) %>%
+      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot, width, all_trial_info, move_vec))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
@@ -116,8 +116,8 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
       dplyr::mutate(machine_poly = list(make_machine_polygon(width, height, center, move_vec, st_crs(trial_plot)))) %>%
       dplyr::mutate(map_ab = list(tmap_abline(ab_line, machine_type, trial_plot))) %>%
       dplyr::mutate(map_poly = list(tmap_machine(machine_poly, machine_type, trial_plot))) %>%
-      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, input_name, unit_system, all_trial_info, height))) %>%
-      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot))) %>%
+      dplyr::mutate(width_line = list(make_plot_width_line(trial_plot, move_vec, unit_system, all_trial_info, height, input_name))) %>%
+      dplyr::mutate(map_label = list(tmap_label(center, machine_type, trial_plot, number_in_plot, width, all_trial_info, move_vec))) %>%
       dplyr::mutate(map_plot = list(tmap_plot_all(trial_plot))) %>%
       dplyr::mutate(map_plot_indiv = list(tmap_plot_indiv(trial_plot, input_name, all_trial_info))) %>%
       dplyr::mutate(plot_legend = list(tmap_plot_legend(trial_plot)))
@@ -772,8 +772,8 @@ make_section_polygon <- function(width, machine_poly, sections_used, move_vec, c
 # input <- machine_table$input_name[[1]]
 # height <- machine_table$height[[1]]
 # unit_system <- "imperial"
-make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_trial_info, height) {
-  if (is.na(input) == FALSE) {
+make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_info, height, input_name) {
+  if (is.na(input_name) == FALSE) {
     # directions for figure creation
     perp_move_vec <- rotate_vec(move_vec, 90)
     opp_move_vec <- rotate_vec(move_vec, 180) %>%
@@ -782,13 +782,13 @@ make_plot_width_line <- function(trial_plot, move_vec, input, unit_system, all_t
 
     # get plot width
     plot_width <- all_trial_info %>%
-      dplyr::filter(input_name == input) %>%
-      dplyr::pull(plot_width)
+      dplyr::pull(plot_width) %>%
+      max()
 
-    # plot for given input
+    # plot with maximum size
     trial_plot <- trial_plot %>%
-      dplyr::filter(input_name == input) %>%
-      .[1, ]
+      dplyr::mutate(area = as.numeric(st_area(.))) %>%
+      dplyr::filter(area == max(area))
 
     trial_plot_coords <- trial_plot %>%
       st_coordinates() %>%
@@ -956,15 +956,15 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
   normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
   perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
 
-  # get plot width
+  # get max plot width
   plot_width <- all_trial_info %>%
-    dplyr::filter(input_name == input) %>%
-    dplyr::pull(plot_width)
+    dplyr::pull(plot_width) %>%
+    max()
 
-  # plot for given input
+  # use trial plot with maximum size
   trial_plot <- trial_plot %>%
-    dplyr::filter(input_name == input) %>%
-    .[1, ]
+    dplyr::mutate(area = as.numeric(st_area(.))) %>%
+    dplyr::filter(area == max(area))
 
   # get coordinates of the plot vertices
   trial_plot_coords <- trial_plot %>%
@@ -1298,7 +1298,36 @@ tmap_plot_legend <- function(trial_plot) {
   return(legend)
 }
 
-tmap_label <- function(center, machine_type, trial_plot, number_in_plot) {
+# center = machine_table$center[[1]]
+# machine_type = machine_table$machine_type[[1]]
+# trial_plot = machine_table$trial_plot[[1]]
+# number_in_plot = machine_table$number_in_plot[[1]]
+# machine_width = machine_table$width[[1]]
+# all_trial_info
+# move_vec = machine_table$move_vec[[1]]
+tmap_label <- function(center, machine_type, trial_plot, number_in_plot, machine_width, all_trial_info, move_vec) {
+  max_plot_width = all_trial_info %>%
+    dplyr::pull(plot_width) %>%
+    max()
+
+  normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
+  perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
+
+  if(max_plot_width/machine_width < 1){ # if the machine is larger than the plot, we need to shift the center over to see the text
+    center = st_shift(
+      st_point(center) %>%
+        st_sfc() %>%
+        st_sf(),
+      if ((normalized_move_vec[1] > 0) |
+          (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
+        perp_move_vec * (max_plot_width/2 - machine_width/2)
+      } else {
+        - perp_move_vec * (max_plot_width/2 - machine_width/2)
+      }
+    )  %>%
+      sf::st_coordinates()
+  }
+
   labels <- list()
   for (i in 1:nrow(center)) {
     labels[[i]] <- paste0("tmap::tm_shape(st_point(center[", i, ", ]) %>% sf::st_sfc(crs = sf::st_crs(trial_plot)) %>% sf::st_sf() %>% dplyr::mutate(label = if(machine_type == \"planter\"){\"Planter\"}else if(machine_type == \"applicator\"){\"Applicator\"}else{\"Harvester\"}), bbox = sf::st_bbox(trial_plot)) + tmap::tm_text(\"label\", size = ifelse(number_in_plot <= 2, 0.8, 0.7))")
