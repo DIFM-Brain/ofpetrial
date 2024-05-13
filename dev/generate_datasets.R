@@ -29,7 +29,7 @@ plot_info <-
     unit_system = "imperial",
     machine_width = 30,
     section_num = 1,
-    harvester_width = 20,
+    harvester_width = 30,
     headland_length = 30,
     side_length = 60
   )
@@ -49,18 +49,9 @@ exp_data <-
 
 usethis::use_data(exp_data, overwrite = TRUE)
 
-# exp_data$field_sf %>% st_crs() %>% .$wkt %>% grepl("[^ -~]", .)
-
 #++++++++++++++++++++++++++++++++++++
 #+ rate information
 #++++++++++++++++++++++++++++++++++++
-base_info <-
-  add_base_rate(
-    "uan28",
-    "gallons",
-    15
-  )
-
 rate_info <-
   prep_rate(
     plot_info = plot_info,
@@ -69,8 +60,7 @@ rate_info <-
     rates = c(10, 20, 30, 40, 50),
     design_type = "ls",
     rank_seq_ws = c(1, 2, 3, 4, 5),
-    rank_seq_as = c(1, 2, 3, 4, 5),
-    base_rate = base_info
+    rank_seq_as = c(1, 2, 3, 4, 5)
   )
 
 usethis::use_data(rate_info, overwrite = TRUE)
@@ -107,10 +97,10 @@ n_plot_info <-
   prep_plot(
     input_name = "NH3",
     unit_system = "imperial",
-    machine_width = 45,
+    machine_width = 30,
     section_num = 1,
     harvester_width = 30,
-    plot_width = 45
+    plot_width = 30
   )
 
 input_plot_info <- list(seed_plot_info, n_plot_info)
@@ -153,9 +143,9 @@ object.size(td_two_input)
 
 usethis::use_data(td_two_input, overwrite = TRUE)
 
-# !===========================================================
-# ! Trial design for a curved field
-# !===========================================================
+#++++++++++++++++++++++++++++++++++++
+#+ Trial design for a curved field
+#++++++++++++++++++++++++++++++++++++
 n_plot_info <-
   prep_plot(
     input_name = "NH3",

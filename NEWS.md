@@ -1,4 +1,10 @@
-# ofpetrial 0.1.0
+
+
+# version 0.1.1
+
++ option of using leaflet to see experimental plots on a satellite image of the field was added to `viz()`
+
+# version 0.1.0
 
 The first complete set of functions that make the package functional and useful for the users to design and implement on-farm precision experiments.
 
