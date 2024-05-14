@@ -116,3 +116,14 @@ rhub::rhub_check()
 devtools::submit_cran()
 ```
 
+# Version 0.1.1
+
+```{r}
+devtools::document()
+rhub::rhub_check()
+```
+
+```{r}
+usethis::use_version("patch")
+devtools::submit_cran()
+```

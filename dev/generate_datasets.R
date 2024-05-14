@@ -246,7 +246,20 @@ input_unit_conversion_table <-
 generic_unit_conversion_table <- data.table(
   from = c("hectares", "acres", "meters", "feet", "kg", "pounds", "acres", "m2"),
   to = c("acres", "hectares", "feet", "meters", "pounds", "kg", "m2", "acres"),
-  conv_factor = c(1/0.40468564224, 0.40468564224, 1/0.3048, 0.3048, 1/0.45359237, 0.45359237, 4046.856422, 1/4046.856422)
+  conv_factor = c(1 / 0.40468564224, 0.40468564224, 1 / 0.3048, 0.3048, 1 / 0.45359237, 0.45359237, 4046.856422, 1 / 4046.856422)
+)
+
+#++++++++++++++++++++++++++++++++++++
+#+ Rotation matrix
+#++++++++++++++++++++++++++++++++++++
+rotate_mat_p90 <- matrix(
+  c(
+    cos(pi / 2),
+    sin(pi / 2),
+    -sin(pi / 2),
+    cos(pi / 2)
+  ),
+  nrow = 2
 )
 
 #++++++++++++++++++++++++++++++++++++
@@ -259,6 +272,7 @@ usethis::use_data(
   input_type_table,
   my_palettes_grey,
   my_palettes_green,
+  rotate_mat_p90,
   internal = TRUE,
   overwrite = TRUE
 )

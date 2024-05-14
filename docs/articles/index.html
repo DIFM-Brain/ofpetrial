@@ -103,14 +103,27 @@
 <!-- badges: start -->
 <p><a href="https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
 <p>The <code>ofpetrial</code> package allows the user to design
-agronomic input experiments in a reproducible manner without using
-ArcGIS or QGIS.</p>
+agronomic on-farm input experiments in a reproducible manner without
+using ArcGIS or QGIS. It can be used to design trials for various
+inputs, such as fertilizer, pesticide, seed, and cover crop.</p>
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>You can install the development version of ofpetrial from <a href="https://github.com/DIFM-Brain/ofpetrial" class="external-link">Github</a>:</p>
+<div class="section level4">
+<h4 id="cran-version">CRAN version<a class="anchor" aria-label="anchor" href="#cran-version"></a>
+</h4>
+<p>You can install the CRAN version of the <code>ofpetrial</code>
+package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ofpetrial"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
+</h4>
+<p>You can install the development version of ofpetrial from <a href="https://github.com/DIFM-Brain/ofpetrial" class="external-link">Github</a>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DIFM-Brain/ofpetrial"</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
@@ -119,14 +132,14 @@ ArcGIS or QGIS.</p>
 create a single-input on-farm experiment trial design (more detailed
 instructions on the basic workflow is provided in <a href="https://difm-brain.github.io/ofpetrial/articles/V0-basic-work-flow.html">this
 article</a>).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://difm-brain.github.io/ofpetrial/">ofpetrial</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
 <h4 id="create-experimental-plots">Create experimental plots<a class="anchor" aria-label="anchor" href="#create-experimental-plots"></a>
 </h4>
 <p>We start with specifying plot and machine information for inputs
 using <code>prep_plot</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n_plot_info</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/prep_plot.html">prep_plot</a></span><span class="op">(</span></span>
 <span>    input_name <span class="op">=</span> <span class="st">"NH3"</span>,</span>
@@ -139,7 +152,7 @@ using <code>prep_plot</code>.</p>
 <span><span class="co">#&gt; </span></span></code></pre></div>
 <p>Now, we can create experiment plots based on them using
 <code><a href="../reference/make_exp_plots.html">make_exp_plots()</a></code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exp_data</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/make_exp_plots.html">make_exp_plots</a></span><span class="op">(</span></span>
 <span>    input_plot_info <span class="op">=</span> <span class="va">n_plot_info</span>,</span>
@@ -155,13 +168,13 @@ using <code>prep_plot</code>.</p>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> package 'sf' was built under R version 4.2.3</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">exp_data</span>, type <span class="op">=</span> <span class="st">"layout"</span>, abline <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 </div>
 <div class="section level4">
 <h4 id="assign-rates">Assign rates<a class="anchor" aria-label="anchor" href="#assign-rates"></a>
 </h4>
 <p>We first prepare nitrogen rates.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#!===========================================================</span></span>
 <span><span class="co"># ! Assign rates</span></span>
 <span><span class="co"># !===========================================================</span></span>
@@ -192,13 +205,13 @@ using <code>prep_plot</code>.</p>
 <span><span class="co">#&gt; $ rate_jump_threshold <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA</span></span></code></pre></div>
 <p>We can now use <code><a href="../reference/assign_rates.html">assign_rates()</a></code> to assign rates to
 experiment plots.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">trial_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/assign_rates.html">assign_rates</a></span><span class="op">(</span><span class="va">exp_data</span>, rate_info <span class="op">=</span> <span class="va">n_rate_info</span><span class="op">)</span></span></code></pre></div>
 <p>Here is the visualization of the trial design done by
 <code>viz</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/viz.html">viz</a></span><span class="op">(</span><span class="va">trial_design</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
+<p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
 <p>Along with the spatial pattern of the input rates, the
 applicator/planter ab-line and harvester ab-line are drawn by
 default.</p>
@@ -207,7 +220,7 @@ default.</p>
 <h4 id="write-the-trial-design-files-for-implementation">Write the trial design files for implementation<a class="anchor" aria-label="anchor" href="#write-the-trial-design-files-for-implementation"></a>
 </h4>
 <p>You can write out the trial design as a shape file.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/write_trial_files.html">write_trial_files</a></span><span class="op">(</span><span class="va">td</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
