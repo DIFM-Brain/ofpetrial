@@ -115,9 +115,10 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         td_rows %>%
         dplyr::mutate(data_for_plot = list(
           data.table::data.table(rate = unique(trial_design$rate)) %>%
-            .[, rata_equiv := convert_rates(input_name, unit, gc_rate)] %>%
+            .[, rata_equiv := convert_rates(input_name, unit, rate)] %>%
             .[order(rate), ] %>%
             .[, all_units := factor(paste(rate, " | ", rata_equiv))] %>%
+            .[rata_equiv == rate, all_units := factor(rate)] %>%
             dplyr::left_join(trial_design, ., by = "rate")
         )) %>%
         dplyr::mutate(need_equiv_rate = list(
@@ -210,13 +211,15 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
           )
       }
     } else {
+
       gg_td <-
         td_rows %>%
         dplyr::mutate(data_for_plot = list(
           data.table::data.table(rate = unique(trial_design$rate)) %>%
-            .[, rata_equiv := convert_rates(input_name, unit, gc_rate)] %>%
+            .[, rata_equiv := convert_rates(input_name, unit, rate)] %>%
             .[order(rate), ] %>%
             .[, all_units := factor(paste(rate, " | ", rata_equiv))] %>%
+            .[rata_equiv == rate, all_units := factor(rate)] %>%
             dplyr::left_join(trial_design, ., by = "rate")
         )) %>%
         dplyr::mutate(need_equiv_rate = list(
