@@ -40,7 +40,8 @@ st_tilt <- function(data_sf, angle, base_sf = FALSE, merge = TRUE) {
   data_geom <- sf::st_geometry(data_sf)
 
   data_tilted <- ((data_geom - base_point) * rot(angle / 180 * pi) + base_point) %>%
-    sf::st_set_crs(sf::st_crs(data_sf))
+    sf::st_set_crs(sf::st_crs(data_sf)) %>%
+    st_make_valid()
 
   if (merge == TRUE) {
     data_sf$geometry <- data_tilted
