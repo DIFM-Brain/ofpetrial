@@ -27,7 +27,7 @@ This function creates an html report describing the trial design created by the 
 data(td_single_input)
 make_trial_report(
   td = td_single_input,
-  folder_path = getwd()
+  folder_path = tempdir()
 )
 }
 }

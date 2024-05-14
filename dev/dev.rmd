@@ -104,7 +104,13 @@ rmarkdown::render("/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/vignettes/article
 pkgdown::build_site()
 ```
 
+# Check Atlas build
+
+```{r}
+rhub::rhub_check()
+```
 # Submission to CRAN
+
 
 ```{r}
 devtools::submit_cran()

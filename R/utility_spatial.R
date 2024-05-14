@@ -191,15 +191,47 @@ get_angle_lines <- function(line_1, line_2) {
 create_strips <- function(field, plot_heading, plot_width, radius) {
   circle <- sf::st_buffer(st_centroid_quietly(field), radius)
 
+  make_polygon <- function(base_point, strip_length, plot_width) {
+    point_0 <- base_point
+    point_1 <- point_0 + c(0, 1) * strip_length # go north
+    point_2 <- point_1 + c(1, 0) * plot_width
+    point_3 <- point_2 - c(0, 1) * strip_length
+    point_4 <- point_0
+
+    temp_polygon <- rbind(
+      point_0,
+      point_1,
+      point_2,
+      point_3,
+      point_4
+    ) %>%
+      list() %>%
+      sf::st_polygon()
+
+    return(temp_polygon)
+  }
+
+  circle_bbox <- st_bbox(circle)
+  num_strips <- ceiling((circle_bbox["xmax"] - circle_bbox["xmin"]) / plot_width)
+  strip_length <- circle_bbox["ymax"] - circle_bbox["ymin"]
+
   strips <-
-    sf::st_make_grid(circle, cellsize = c(plot_width, radius * 2 + 50)) %>%
-    sf::st_as_sf() %>%
-    cbind(., sf::st_coordinates(st_centroid_quietly(.))) %>%
+    data.table(
+      x = circle_bbox["xmin"] + plot_width * 1:num_strips,
+      y = circle_bbox["ymin"]
+    ) %>%
+    rowwise() %>%
+    dplyr::mutate(base_point = list(
+      c(x, y)
+    )) %>%
+    dplyr::mutate(geometry = list(
+      make_polygon(base_point, strip_length, plot_width)
+    )) %>%
     data.table() %>%
-    .[order(X), ] %>%
-    .[, group := .GRP, by = .(X, Y)] %>%
-    setnames("x", "geometry") %>%
-    sf::st_as_sf()
+    sf::st_as_sf() %>%
+    st_set_crs(st_crs(field)) %>%
+    dplyr::select(geometry) %>%
+    dplyr::mutate(group = 1:nrow(.))
 
   vertical_line <-
     rbind(
