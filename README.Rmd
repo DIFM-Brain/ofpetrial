@@ -18,7 +18,12 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
+`r badger::badge_cran_checks("badger")`
+`r badger::badge_repostatus("Active")`
+`r badger::badge_cran_download("ofpetrial", "grand-total", "blue")`
 <!-- badges: end -->
+
+<!-- <a href = "https://difm-brain.github.io/ofpetrial/" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/ofpetrial"></a> -->
 
 The `ofpetrial` package allows the user to design agronomic input experiments in a reproducible manner without using ArcGIS or QGIS. The [vignette](https://difm-brain.github.io/ofpetrial/) for this package provides more detailed guidance on how to use the package.
 

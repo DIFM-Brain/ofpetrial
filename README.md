@@ -6,7 +6,15 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+checks](https://badges.cranchecks.info/summary/badger.svg)](https://cran.r-project.org/web/checks/check_results_badger.html)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/ofpetrial?color=blue)](https://cran.r-project.org/package=ofpetrial)
 <!-- badges: end -->
+
+<!-- <a href = "https://difm-brain.github.io/ofpetrial/" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/grand-total/ofpetrial"></a> -->
 
 The `ofpetrial` package allows the user to design agronomic input
 experiments in a reproducible manner without using ArcGIS or QGIS. The
@@ -99,18 +107,18 @@ n_rate_info <-
 dplyr::glimpse(n_rate_info)
 #> Rows: 1
 #> Columns: 12
-#> $ input_name          [3m[38;5;246m<chr>[39m[23m "NH3"
-#> $ design_type         [3m[38;5;246m<chr>[39m[23m "ls"
-#> $ gc_rate             [3m[38;5;246m<dbl>[39m[23m 180
-#> $ unit                [3m[38;5;246m<chr>[39m[23m "lb"
-#> $ tgt_rate_original   [3m[38;5;246m<list>[39m[23m <100, 140, 180, 220, 260>
-#> $ tgt_rate_equiv      [3m[38;5;246m<list>[39m[23m <82.0, 114.8, 147.6, 180.4, 213.2>
-#> $ min_rate            [3m[38;5;246m<lgl>[39m[23m NA
-#> $ max_rate            [3m[38;5;246m<lgl>[39m[23m NA
-#> $ num_rates           [3m[38;5;246m<int>[39m[23m 5
-#> $ rank_seq_ws         [3m[38;5;246m<list>[39m[23m <5, 4, 3, 2, 1>
-#> $ rank_seq_as         [3m[38;5;246m<list>[39m[23m <NULL>
-#> $ rate_jump_threshold [3m[38;5;246m<lgl>[39m[23m NA
+#> $ input_name          <chr> "NH3"
+#> $ design_type         <chr> "ls"
+#> $ gc_rate             <dbl> 180
+#> $ unit                <chr> "lb"
+#> $ tgt_rate_original   <list> <100, 140, 180, 220, 260>
+#> $ tgt_rate_equiv      <list> <82.0, 114.8, 147.6, 180.4, 2…
+#> $ min_rate            <lgl> NA
+#> $ max_rate            <lgl> NA
+#> $ num_rates           <int> 5
+#> $ rank_seq_ws         <list> <5, 4, 3, 2, 1>
+#> $ rank_seq_as         <list> <NULL>
+#> $ rate_jump_threshold <lgl> NA
 ```
 
 We can now use `assign_rates()` to assign rates to experiment plots.

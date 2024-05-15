@@ -328,3 +328,5 @@ td <-
 
 viz(td, type = "rates")
 ```
+
+# References

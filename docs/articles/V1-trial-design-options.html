@@ -179,7 +179,7 @@ are multiple plots with the same <code>plot_id</code> values, but a
 combination of <code>strip_id</code> and <code>plot_id</code> uniquely
 identifies a plot.</p>
 <p>The <code>rank_seq_ws</code> option specifies the order of rate
-rankings to be repetead <strong>withing</strong> a strip (this is why
+rankings to be repetead <strong>within</strong> a strip (this is why
 <code>_ws</code> at the end of the function). Suppose you have
 <code>rank_seq_ws = c(5, 4, 3, 2, 1)</code>. <code>5</code> refers to
 the 5th-ranked (highest) rate, which is 260 because we have
@@ -192,7 +192,7 @@ of <strong>the very first</strong> plot of each strip
 <code>rank_seq_as = c(1, 4, 3, 2, 5)</code>, then the first plot
 (<code>plot_id == 1</code>) of the first strip
 (<code>strip_id == 1</code>) will be assigned rate rank of 1. The first
-plot of 5th strip ((<code>strip_id == 5</code>)) will be assigned rate
+plot of 5th strip (<code>strip_id == 5</code>) will be assigned rate
 rank of 5. This sequence will be repeated until the first plot of all
 the strips are assigned a rate rank. Now, for a given strip, rate ranks
 specified by <code>rank_seq_ws</code> will be repeated <strong>starting
