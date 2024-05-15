@@ -1,4 +1,4 @@
-# One-time operation
+# Version 0.0
 
 ## Add R CMD check button to the github repository
 ```{r}
@@ -88,8 +88,6 @@ devtools::check()
 usethis::use_cran_comments()
 ```
 
-# Build package and website
-
 ## Package documents
 
 ```{r}
@@ -104,13 +102,13 @@ rmarkdown::render("/Users/tmieno2/Dropbox/DIFM_Brain/ofpetrial/vignettes/article
 pkgdown::build_site()
 ```
 
-# Check Atlas build
+## Check Atlas build
 
 ```{r}
 rhub::rhub_check()
 ```
-# Submission to CRAN
 
+## Submission to CRAN
 
 ```{r}
 devtools::submit_cran()

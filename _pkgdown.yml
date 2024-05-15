@@ -42,10 +42,9 @@ reference:
 
 navbar:
   title: ~
+  href: index.html
   type: default
   left:
-    - text: Home
-      href: index.html
     - text: Reference
       href: reference/index.html
     - text: Articles
@@ -68,3 +67,4 @@ navbar:
         href: articles/V7-visualize-from-scratch.html
     - text: News
       href: news/index.html
+      

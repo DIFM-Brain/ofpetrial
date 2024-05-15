@@ -15,7 +15,8 @@ Authors@R:
       given = "Brittani",
       family = "Edge",
       role = c("aut", "ctb"),
-      email = "bedge2@illinois.edu"
+      email = "bedge2@illinois.edu",
+      comment = c(ORCID = "0009-0005-2051-1048")
     )
   )
 Maintainer: Taro Mieno <tmieno2@unl.edu>

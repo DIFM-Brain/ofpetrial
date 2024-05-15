@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ofpetrial</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,9 +25,6 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="nav-link" href="../index.html">Home</a>
-</li>
-<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
@@ -67,48 +64,52 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1" id="version-011">version 0.1.1<a class="anchor" aria-label="anchor" href="#version-011"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1" id="ofpetrial-011">ofpetrial 0.1.1<a class="anchor" aria-label="anchor" href="#ofpetrial-011"></a></h2>
 <ul><li>option of using leaflet to see experimental plots on a satellite image of the field was added to <code><a href="../reference/viz.html">viz()</a></code>
+</li>
+<li>
+<code>create_strips()</code> (an internal function) was overhauled to pass R CMD check on Fedora with ATLAS. Specifically, <code>st_tilt()</code>, which used to be used in the function, has been abandoned.</li>
+<li>fixed the bug in <code><a href="../reference/viz.html">viz()</a></code> which presented <code>gc_rate</code>
 </li>
 </ul></div>
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="version-010">version 0.1.0<a class="anchor" aria-label="anchor" href="#version-010"></a></h2><p class="text-muted">CRAN release: 2024-05-08</p>
+<h2 class="pkg-version" data-toc-text="0.1" id="ofpetrial-01">ofpetrial 0.1<a class="anchor" aria-label="anchor" href="#ofpetrial-01"></a></h2>
 <p>The first complete set of functions that make the package functional and useful for the users to design and implement on-farm precision experiments.</p>
 <div class="section level3">
-<h3 id="prepare-plot-and-rate-information-0-1-0">Prepare plot and rate information<a class="anchor" aria-label="anchor" href="#prepare-plot-and-rate-information-0-1-0"></a></h3>
+<h3 id="prepare-plot-and-rate-information-0-1">Prepare plot and rate information<a class="anchor" aria-label="anchor" href="#prepare-plot-and-rate-information-0-1"></a></h3>
 <ul><li>prep_plot()</li>
 <li>prep_rate()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="generate-trial-designs-0-1-0">Generate trial designs<a class="anchor" aria-label="anchor" href="#generate-trial-designs-0-1-0"></a></h3>
+<h3 id="generate-trial-designs-0-1">Generate trial designs<a class="anchor" aria-label="anchor" href="#generate-trial-designs-0-1"></a></h3>
 <ul><li>make_exp_plots()</li>
 <li>assign_rates()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="modify-input-rates-0-1-0">Modify input rates<a class="anchor" aria-label="anchor" href="#modify-input-rates-0-1-0"></a></h3>
+<h3 id="modify-input-rates-0-1">Modify input rates<a class="anchor" aria-label="anchor" href="#modify-input-rates-0-1"></a></h3>
 <ul><li>add_blocks()</li>
 <li>change_rates()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="diagnose-trial-design-0-1-0">Diagnose trial design<a class="anchor" aria-label="anchor" href="#diagnose-trial-design-0-1-0"></a></h3>
+<h3 id="diagnose-trial-design-0-1">Diagnose trial design<a class="anchor" aria-label="anchor" href="#diagnose-trial-design-0-1"></a></h3>
 <ul><li>check_ortho_inputs()</li>
 <li>check_ortho_with_chars()</li>
 <li>check_alignment()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="visualization-0-1-0">Visualization<a class="anchor" aria-label="anchor" href="#visualization-0-1-0"></a></h3>
+<h3 id="visualization-0-1">Visualization<a class="anchor" aria-label="anchor" href="#visualization-0-1"></a></h3>
 <ul><li>viz()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="make-trial-design-reports-0-1-0">Make trial design reports<a class="anchor" aria-label="anchor" href="#make-trial-design-reports-0-1-0"></a></h3>
+<h3 id="make-trial-design-reports-0-1">Make trial design reports<a class="anchor" aria-label="anchor" href="#make-trial-design-reports-0-1"></a></h3>
 <ul><li>make_trial_report()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="write-out-files-0-1-0">Write out files<a class="anchor" aria-label="anchor" href="#write-out-files-0-1-0"></a></h3>
+<h3 id="write-out-files-0-1">Write out files<a class="anchor" aria-label="anchor" href="#write-out-files-0-1"></a></h3>
 <ul><li>write_trial_files()</li>
 </ul></div>
 <div class="section level3">
-<h3 id="data-0-1-0">Data<a class="anchor" aria-label="anchor" href="#data-0-1-0"></a></h3>
+<h3 id="data-0-1">Data<a class="anchor" aria-label="anchor" href="#data-0-1"></a></h3>
 <ul><li>plot_info</li>
 <li>exp_data</li>
 <li>rate_info</li>
