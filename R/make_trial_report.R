@@ -28,7 +28,7 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
     # dplyr::mutate(input_type = get_input_type(input_name)) %>%
     dplyr::mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     dplyr::mutate(plot_number = get_plot_number(trial_design)) %>%
-    dplyr::mutate(plot_length = list(get_plot_length(trial_design, plot_width))) %>%
+    dplyr::mutate(plot_length = list(get_plot_length(trial_design, plot_width, unit_system))) %>%
     dplyr::mutate(num_harv_pass_in_plot = plot_width / harvester_width) %>%
     dplyr::mutate(rate_number = get_rate_number(trial_design)) %>%
     dplyr::mutate(rates = list(get_trial_rates(trial_design))) %>%
@@ -631,10 +631,11 @@ get_plot_number <- function(trial_design) {
     nrow()
 }
 
-get_plot_length <- function(trial_design, plot_width) {
+get_plot_length <- function(trial_design, plot_width, unit_system) {
   trial_design %>%
-    dplyr::mutate(area = as.numeric(st_area(.)) / plot_width) %>%
-    dplyr::pull(area) %>%
+    dplyr::mutate(length = as.numeric(st_area(.)) / plot_width) %>%
+    dplyr::mutate(length = ifelse(unit_system == "imperial", conv_unit(length, "meters", "feet"), length)) %>%
+    dplyr::pull(length) %>%
     quantile(., c(0.1, 0.9)) %>%
     round(.)
 }
