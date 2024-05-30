@@ -57,12 +57,12 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
           palette = c("red", "grey")
         )
     )) %>%
-    mutate(total_input = list(
+    dplyr::mutate(total_input = list(
       trial_design %>%
-        mutate(area = as.numeric(st_area(.))) %>%
-        mutate(acres = area * 0.000247105) %>%
-        mutate(total_input = sum(acres * as.numeric(as.character(rate)))) %>%
-        pull(total_input) %>%
+        dplyr::mutate(area = as.numeric(st_area(.))) %>%
+        dplyr::mutate(acres = area * 0.000247105) %>%
+        dplyr::mutate(total_input = sum(acres * as.numeric(as.character(rate)))) %>%
+        dplyr::pull(total_input) %>%
         unique()
     ))
 
@@ -968,7 +968,7 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
 
   # get coordinates of the plot vertices
   trial_plot_coords <- trial_plot %>%
-    st_coordinates() %>%
+    sf::st_coordinates() %>%
     .[, -(3:4)] # remove the last two columns
 
   # find starting side of polygon (opposite of direction of move_vec)
@@ -1078,12 +1078,27 @@ get_plots <- function(all_trial_info) {
     design <-
       all_trial_info$trial_design[[1]] %>%
       dplyr::mutate(plot_id = dplyr::row_number()) %>%
-      dplyr::filter(type == "Trial Area")
+      dplyr::filter(type == "Trial Area") %>%
+      st_transform_utm()
 
     abline <- all_trial_info$ab_lines[[1]]
+    if(all_trial_info$machine_width[[1]] == 2*all_trial_info$plot_width[[1]]){
+
+      move_vec = get_move_vec(abline)
+      normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
+      perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
+
+
+     abline = sf::st_as_sf(st_shift(
+        abline,
+        c(-1, 1) * perp_move_vec * (1),
+        merge = FALSE
+      ))
+
+    }
 
     first_plot <-
-      all_trial_info$trial_design[[1]][1, ] %>%
+      design %>%
       dplyr::mutate(
         plot_id =
           st_intersection_quietly(st_transform_utm(design), sf::st_centroid(abline)) %>%
