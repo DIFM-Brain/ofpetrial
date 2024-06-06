@@ -39,7 +39,6 @@ prep_plot <- function(input_name,
                       max_plot_width = NA,
                       min_plot_length = NA,
                       max_plot_length = NA) {
-
   #--- dimension check ---#
   fms_ls <- c(length(input_name), length(machine_width), length(section_num), length(plot_width))
   if (any(fms_ls != 1)) {
@@ -49,7 +48,7 @@ prep_plot <- function(input_name,
   section_width <- machine_width / section_num
 
   #++++++++++++++++++++++++++++++++++++
-  #+ Settig plot width and length
+  #+ Setting plot width and length
   #++++++++++++++++++++++++++++++++++++
   if (is.na(max_plot_width)) {
     max_plot_width <-
@@ -91,14 +90,26 @@ prep_plot <- function(input_name,
   #++++++++++++++++++++++++++++++++++++
   #+ Check and notify the mixed treatment problems (with potential suggestions)
   #++++++++++++++++++++++++++++++++++++
-  lcm_found <- lcm_check(section_width, harvester_width, max_plot_width)
+  lcm_found <- !is.na(get_lcm(section_width, harvester_width, max_plot_width))
+
   proposed_plot_width <- find_plotwidth(section_width, harvester_width, max_plot_width)
 
   if (is.na(plot_width)) {
     plot_width <- proposed_plot_width
+    if (lcm_found) {
+      message(
+        "Since plot width was not provided via the `plot_with` option`, it was set to a least common multiplier of the widths of the machines."
+      )
+    } else {
+      message(
+        paste0(
+          "Since plot width was not provided via the `plot_with` option`, we searched for a least common multiplier of the widths of the machines. Unfortunately, there is no such plot width. This means that you will inevitably face mixed-treatment problems to a certain extent. The plot width of ", proposed_plot_width, " we selected ensures that at least one harvest path within the path of ", input_name, " does not have the problems."
+        )
+      )
+    }
   } else {
     if (plot_width %% section_width != 0) {
-      stop("Plot width provided is not a multiple of the machine (section) width.")
+      warning_message <- "Please note that the plot width specified is not a multiple of the machine (section) width. This means that you will inevitably face mixed-treatment problems to a certain extent."
     }
     warning_message <- NULL
     if (lcm_found & plot_width %% proposed_plot_width == 0 & proposed_plot_width < plot_width) {
@@ -174,10 +185,11 @@ prep_plot <- function(input_name,
 # !===========================================================
 find_plotwidth <- function(section_width, harvester_width, max_plot_width) {
   #--- least common multiple (lcm) ---#
-  plot_width <- lcm(section_width, harvester_width)
+  # lcm would return max_plot_width + 1 if it cannot find lcm below max_plot_width
+  plot_width <- get_lcm(section_width, harvester_width, max_plot_width)
 
-  #--- if the lcm is greater than the maximum plot width ---#
-  if (plot_width > max_plot_width) {
+  #--- if the lcm is not found within max_plot_width ---#
+  if (is.na(plot_width)) {
     width_ratio <- section_width / harvester_width
 
     if (width_ratio == 1) {
@@ -196,33 +208,37 @@ find_plotwidth <- function(section_width, harvester_width, max_plot_width) {
   return(plot_width)
 }
 
-lcm_check <- function(section_width, harvester_width, max_plot_width) {
-  plot_width <- lcm(section_width, harvester_width)
-
-  #--- if the lcm is greater than the maximum plot width ---#
-  if (plot_width <= max_plot_width) {
-    lcm_found <- TRUE
-  } else {
-    lcm_found <- FALSE
-  }
-
-  return(lcm_found)
-}
-
 #--- find the least common multiple of two numbers ---#
-lcm <- function(x, y) {
-  if (x > y) {
-    greater <- x
-  } else {
-    greater <- y
+# section_width <- 20
+# harvester_width <- 39
+# max_plot_width <- 120
+
+get_lcm <- function(section_width, harvester_width, max_plot_width) {
+  lcm <- NA
+  greater <- max(section_width, harvester_width)
+  lcm_ls <- seq(greater, max_plot_width, greater)
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ First try
+  #++++++++++++++++++++++++++++++++++++
+  lcm_true <- (lcm_ls %% section_width == 0) & (lcm_ls %% harvester_width == 0)
+
+  if (any(lcm_true)) {
+    lcm <- lcm_ls[min(which(lcm_true))]
   }
 
-  while (TRUE) {
-    if ((greater %% x == 0) && (greater %% y == 0)) {
-      lcm <- greater
-      break
-    }
-    greater <- greater + 1
-  }
+  # #++++++++++++++++++++++++++++++++++++
+  # #+ Second try with looser condition
+  # #++++++++++++++++++++++++++++++++++++
+  # if (is.na(lcm)) {
+  #   pmin((lcm_ls %% section_width), (abs((lcm_ls %% section_width) - section_width)))
+
+  #   lcm_approx_true <- ((lcm_ls %% section_width) < 0.03 * harvester_width) & (lcm_ls %% harvester_width < 0.03 * harvester_width)
+
+  #   if (any(lcm_approx_true)) {
+  #     lcm <- lcm_ls[min(which(lcm_approx_true))]
+  #   }
+  # }
+
   return(lcm)
 }
