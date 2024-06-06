@@ -275,7 +275,6 @@ assign_rates_by_input <- function(exp_sf, rates_data, rank_seq_ws, rank_seq_as, 
     strip_list <- vector(mode = "list", max_strip_id)
 
     for (i in 1:max(exp_sf$strip_id)) {
-
       working_strip <- dplyr::filter(exp_sf, strip_id == i)
       start_rank <- full_start_seq_long[i + shift_counter]
       num_plots_ws <- nrow(working_strip)
@@ -690,6 +689,18 @@ get_starting_rank_as_ls <- function(rank_seq_ws) {
 
   if (num_rates <= 3) { # no degrees of freedom (does not matter which)
     rank_seq_as <- sample(1:num_rates, num_rates)
+  } else if (num_rates >= 9) {
+    # Since the number of rates are too large, we give up finding the best.
+
+    temp_seq <- 1:num_rates
+    rank_seq_as <- rep(0, num_rates)
+
+    #--- even position ---#
+    # reverse the values so that we have up and down in the resulting sequence
+    rank_seq_as[(temp_seq %% 2 == 0)] <- rev(temp_seq[(temp_seq %% 2 == 0)])
+
+    #--- odd position ---#
+    rank_seq_as[(temp_seq %% 2 != 0)] <- temp_seq[(temp_seq %% 2 != 0)]
   } else {
     rank_seq_as <-
       lapply(

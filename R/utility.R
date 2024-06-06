@@ -184,5 +184,5 @@ conv_unit <- function(value, unit_from, unit_to){
     dplyr::filter(from == unit_from & to == unit_to) %>%
     dplyr::pull(conv_factor)
 
-  return(value*factor)
+  return(value * factor)
 }
