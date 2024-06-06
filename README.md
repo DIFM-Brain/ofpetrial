@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DIFM-Brain/ofpetrial/actions/workflows/R-CMD-check.yaml)
 [![CRAN
-checks](https://badges.cranchecks.info/summary/badger.svg)](https://cran.r-project.org/web/checks/check_results_badger.html)
+checks](https://badges.cranchecks.info/summary/ofpetrial.svg)](https://cran.r-project.org/web/checks/check_results_ofpetrial.html)
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -80,6 +80,13 @@ exp_data <-
     abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
     abline_type = "free"
   )
+#> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0;
+#> sf_use_s2() is TRUE
+#> Warning: There was 1 warning in `dplyr::mutate()`.
+#> ℹ In argument: `experiment_plots_dissolved = list(...)`.
+#> ℹ In row 1.
+#> Caused by warning:
+#> ! package 'sf' was built under R version 4.2.3
 
 viz(exp_data, type = "layout", abline = TRUE)
 ```
