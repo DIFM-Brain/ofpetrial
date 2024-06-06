@@ -209,19 +209,21 @@ find_plotwidth <- function(section_width, harvester_width, max_plot_width) {
 }
 
 #--- find the least common multiple of two numbers ---#
-# section_width <- 20
-# harvester_width <- 39
-# max_plot_width <- 120
-
 get_lcm <- function(section_width, harvester_width, max_plot_width) {
   lcm <- NA
   greater <- max(section_width, harvester_width)
   lcm_ls <- seq(greater, max_plot_width, greater)
 
-  #++++++++++++++++++++++++++++++++++++
-  #+ First try
-  #++++++++++++++++++++++++++++++++++++
-  lcm_true <- (lcm_ls %% section_width == 0) & (lcm_ls %% harvester_width == 0)
+  get_abs_dif <- function(a, b) {
+    quotient <- a %/% b
+    pmin(abs(a - quotient * b), abs(a - (quotient + 1) * b))
+  }
+
+  dif_section <- get_abs_dif(lcm_ls, section_width)
+  dif_harvest <- get_abs_dif(lcm_ls, harvester_width)
+
+  #--- as long as the difference is less 0.05 ---#
+  lcm_true <- (dif_section <= 0.05) & (dif_harvest <= 0.05)
 
   if (any(lcm_true)) {
     lcm <- lcm_ls[min(which(lcm_true))]
