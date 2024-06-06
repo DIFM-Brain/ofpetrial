@@ -181,8 +181,8 @@ return_permutations <- function(x) {
 conv_unit <- function(value, unit_from, unit_to){
 
   factor <- generic_unit_conversion_table %>%
-    filter(from == unit_from & to == unit_to) %>%
-    pull(conv_factor)
+    dplyr::filter(from == unit_from & to == unit_to) %>%
+    dplyr::pull(conv_factor)
 
   return(value*factor)
 }
