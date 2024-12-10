@@ -96,7 +96,7 @@ Let's now assign input rates to the experimental plots we just created. Before d
 
 ## Prepare rate information
 
-You can use `prep_rate()` to prepare rate information before assigning rates to the experimental plots. For nitrogen, exact rates were specified through the `rates` option, and trial design type is specified to be "ls" (short for Latin Square). For seed, the minimum and maximum rates, and the number of rates were specified. In this case, the code interally finds the rates automatilly for you.  
+You can use `prep_rate()` to prepare rate information before assigning rates to the experimental plots. For nitrogen, exact rates were specified through the `rates` option, and trial design type is specified to be "ls" (short for Latin Square). For seed, the minimum and maximum rates, and the number of rates were specified. In this case, the code internally finds the rates automatically for you.  
 
 ```{r}
 #!===========================================================

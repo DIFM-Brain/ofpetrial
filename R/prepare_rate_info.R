@@ -41,17 +41,89 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   input_trial_data <- dplyr::select(plot_info, input_name)
 
   #++++++++++++++++++++++++++++++++++++
+  #+ Make rates data (rates and their ranks)
+  #++++++++++++++++++++++++++++++++++++
+  rates_data <-
+    find_rates_data(
+      gc_rate = gc_rate,
+      rates = rates,
+      min_rate = min_rate,
+      max_rate = max_rate,
+      num_rates = num_rates,
+      design_type = design_type
+    )
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Convert original unit to equivalent
+  #++++++++++++++++++++++++++++++++++++
+  # try to convert if the input is anything other than seed
+  # if the combination of input and inut is not found, the conversion factor is simply 1
+
+  #--- original rates ---#
+  tgt_rate_original <- rates_data$rate
+
+  #--- trial rates ---#
+  tgt_rate_equiv <- convert_rates(input_trial_data$input_name, unit, tgt_rate_original)
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Assign all the values to the returnig object
+  #++++++++++++++++++++++++++++++++++++
+
+  # creating final data set
+  input_trial_data$rates_data <- list(rates_data)
+  input_trial_data$design_type <- design_type
+  input_trial_data$num_rates <- nrow(rates_data)
+  input_trial_data$gc_rate <- gc_rate
+  input_trial_data$unit <- unit
+  input_trial_data$tgt_rate_original <- list(tgt_rate_original)
+  input_trial_data$tgt_rate_equiv <- list(tgt_rate_equiv)
+  input_trial_data$rank_seq_ws <- list(rank_seq_ws)
+  input_trial_data$rank_seq_as <- list(rank_seq_as)
+  input_trial_data$rate_jump_threshold <- rate_jump_threshold
+
+  return(input_trial_data)
+}
+
+
+
+
+# !===========================================================
+# ! Helper internal functions
+# !===========================================================
+
+find_rates_data <- function(gc_rate, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA) {
+  #* +++++++++++++++++++++++++++++++++++
+  #* Debug
+  #* +++++++++++++++++++++++++++++++++++
+  # gc_rate <- 180
+  # unit <- "lb"
+  # rates <- c(100, 140, 180, 220, 260)
+  # design_type <- "ls"
+  # min_rate <- NA
+  # max_rate <- NA
+  # num_rates <- 5
+  # design_type <- NA
+  # rank_seq_ws <- NULL
+  # rank_seq_as <- NULL
+  #* +++++++++++++++++++++++++++++++++++
+  #* Main
+  #* +++++++++++++++++++++++++++++++++++
+
+  if (is.na(design_type)) {
+    #--- if design_type not specified, use ls ---#
+    design_type <- "ls"
+  } else {
+    design_type <- design_type
+  }
+
+  #++++++++++++++++++++++++++++++++++++
   #+Specify the trial rates
   #++++++++++++++++++++++++++++++++++++
   if (!is.null(rates)) {
     rates_ls <- rates
-    num_rates <- length(rates)
-    if (!(gc_rate %in% rates)) {
-      message("Please note that gc_rate is not one of the rates you specified.")
-    }
   } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
     #--- if min_rate, max_rate, and num_rates are specified ---#
-    message("Trial rates were not directly specified via the {rates} option, so the trial rates will be calculated using min_rate, max_rate, gc_rate, and num_rates")
+    message("Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates")
     rates_ls <-
       get_rates(
         min_rate,
@@ -66,72 +138,52 @@ prep_rate <- function(plot_info, gc_rate, unit, rates = NULL, min_rate = NA, max
   #++++++++++++++++++++++++++++++++++++
   #+ Order (rank) rates based on design type
   #++++++++++++++++++++++++++++++++++++
-  if (is.na(design_type)) {
-    #--- do nothing ---#
-    message("You did not specify design_type. It is assumed to be of type ls.")
-  } else if (design_type %in% c("ls", "str", "rstr", "rb")) {
-    #--- do nothing ---#
+  if (design_type %in% c("ls", "str", "rstr", "rb")) {
+    rates_data <-
+      data.table::data.table(
+        rate = rates_ls,
+        rate_rank = 1:length(rates_ls)
+      )
   } else if (design_type == "sparse") {
     if (!gc_rate %in% rates_ls) {
-      stop(
+      return(message(
         "Error: You specified the trial rates directly using the rates argument, but they do not include gc_rate. For the sparse design, please include gc_rate in the rates."
-      )
+      ))
+    } else {
+      rates_ls <- rates_ls[!rates_ls %in% gc_rate]
+      rates_data <-
+        data.table::data.table(
+          rate = append(gc_rate, rates_ls),
+          rate_rank = 1:(length(rates_ls) + 1)
+        )
     }
   } else if (design_type == "ejca") {
     if (length(rates_ls) %% 2 == 1) {
       stop(
         "Error: You cannot have an odd number of rates for the ejca design. Please either specify rates directly with even numbers of rates or specify an even number for num_rates along with min_rate and max_rate."
       )
+    } else {
+      rates_data <-
+        data.table::data.table(
+          rate = rates_ls,
+          rate_rank = 1:length(rates_ls)
+        )
     }
   } else {
     stop("Error: design_type you specified does not match any of the design type options available.")
   }
 
-  # # conversions
-  # warning(paste0("Please ensure that the applicator is compatible with applying ", input_trial_data$input_name, " in ", unit, "."))
-
-  tgt_rate_original <- rates_ls
-
-  #++++++++++++++++++++++++++++++++++++
-  #+ Convert origninal unit to equivalent
-  #++++++++++++++++++++++++++++++++++++
-  # try to convert if the input is anything other than seed
-  # if the combination of input and inut is not found, the conversion factor is simply 1
-
-  #--- trial rates ---#
-  tgt_rate_equiv <- convert_rates(input_trial_data$input_name, unit, rates_ls)
-
-  #++++++++++++++++++++++++++++++++++++
-  #+ Assign all the values to the returnig object
-  #++++++++++++++++++++++++++++++++++++
-
-  # creating final data set
-  input_trial_data$design_type <- design_type
-  input_trial_data$gc_rate <- gc_rate
-  input_trial_data$unit <- unit
-  input_trial_data$tgt_rate_original <- list(tgt_rate_original)
-  input_trial_data$tgt_rate_equiv <- list(tgt_rate_equiv)
-  input_trial_data$min_rate <- min_rate
-  input_trial_data$max_rate <- max_rate
-  input_trial_data$num_rates <- num_rates
-  input_trial_data$rank_seq_ws <- list(rank_seq_ws)
-  input_trial_data$rank_seq_as <- list(rank_seq_as)
-  input_trial_data$rate_jump_threshold <- rate_jump_threshold
-
-  return(input_trial_data)
+  return(rates_data)
 }
-
-
-# !===========================================================
-# ! Helper internal functions
-# !===========================================================
 # Convert nitrogen units to N_equivalent
 
 convert_rates <- function(input_name,
                           unit,
                           rate,
                           conversion_type = "to_n_equiv") {
-  if (input_name == "seed") {
+
+
+  if (!(input_name %in% input_unit_conversion_table$type)) {
     converted_rate <- rate
   } else {
     # change rates to the imperial form for the table

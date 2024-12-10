@@ -18,13 +18,18 @@
 #'   folder_path = tempdir()
 #' )
 #' }
-
 make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE) {
+
   all_trial_info <-
     td %>%
     dplyr::mutate(land_unit = ifelse(unit_system == "metric", "hectares", "acres")) %>%
     dplyr::mutate(trial_name = trial_name) %>%
     dplyr::rowwise() %>%
+    dplyr::mutate(exp_plots = list(make_sf_utm(exp_plots))) %>%
+    dplyr::mutate(headland = list(make_sf_utm(headland))) %>%
+    dplyr::mutate(ab_lines = list(make_sf_utm(ab_lines))) %>%
+    dplyr::mutate(harvest_ab_lines = list(make_sf_utm(harvest_ab_lines))) %>%
+    dplyr::mutate(field_sf = list(make_sf_utm(field_sf))) %>%
     # dplyr::mutate(input_type = get_input_type(input_name)) %>%
     dplyr::mutate(field_size = get_field_size(trial_design, land_unit)) %>%
     dplyr::mutate(plot_number = get_plot_number(trial_design)) %>%
@@ -67,6 +72,7 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
     ))
 
   plots <- get_plots(all_trial_info)
+
   if (nrow(td) == 1) {
     machine_table <-
       data.table::data.table(
@@ -796,84 +802,88 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
       .[, -(3:4)] # remove the last two columns
 
     # find starting side of polygon (opposite of direction of move_vec)
-    if(move_vec[1] >= 0 & move_vec[2] > 0){ # when we are moving in a general NE or N direction
+    if (move_vec[1] >= 0 & move_vec[2] > 0) { # when we are moving in a general NE or N direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
         dplyr::filter(X <= median(X)) %>%
         dplyr::filter(Y < median(Y)) %>%
-        .[1,]
-    }else if(move_vec[1] < 0 & move_vec[2] <= 0){ # SW or S direction
+        .[1, ]
+    } else if (move_vec[1] < 0 & move_vec[2] <= 0) { # SW or S direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
         dplyr::filter(X >= median(X)) %>%
         dplyr::filter(Y > median(Y)) %>%
-        .[1,]
-    }else if(move_vec[1] >= 0 & move_vec[2] < 0){ # SE or E direction
+        .[1, ]
+    } else if (move_vec[1] >= 0 & move_vec[2] < 0) { # SE or E direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
         dplyr::filter(X < median(X)) %>%
         dplyr::filter(Y >= median(Y)) %>%
-        .[1,]
-    }else if(move_vec[1] < 0 & move_vec[2] >= 0){ # NW or W direction
+        .[1, ]
+    } else if (move_vec[1] < 0 & move_vec[2] >= 0) { # NW or W direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
         dplyr::filter(X > median(X)) %>%
         dplyr::filter(Y <= median(Y)) %>%
-        .[1,]
+        .[1, ]
     }
 
     # find the two lines that are close to the width of the plot
-    plot_lines <- data.table(line = 1:4,
-                             distance = c(st_distance(st_point(trial_plot_coords[1,]), st_point(trial_plot_coords[2,])),
-                                          st_distance(st_point(trial_plot_coords[2,]), st_point(trial_plot_coords[3,])),
-                                          st_distance(st_point(trial_plot_coords[3,]), st_point(trial_plot_coords[4,])),
-                                          st_distance(st_point(trial_plot_coords[4,]), st_point(trial_plot_coords[1,])))) %>%
+    plot_lines <- data.table(
+      line = 1:4,
+      distance = c(
+        st_distance(st_point(trial_plot_coords[1, ]), st_point(trial_plot_coords[2, ])),
+        st_distance(st_point(trial_plot_coords[2, ]), st_point(trial_plot_coords[3, ])),
+        st_distance(st_point(trial_plot_coords[3, ]), st_point(trial_plot_coords[4, ])),
+        st_distance(st_point(trial_plot_coords[4, ]), st_point(trial_plot_coords[1, ]))
+      )
+    ) %>%
       dplyr::mutate(diff = abs(plot_width - distance)) %>%
-      dplyr::arrange(diff) %>%  # arrange in descending order
+      dplyr::arrange(diff) %>% # arrange in descending order
       dplyr::slice(1:2) %>%
       dplyr::pull(line)
 
     # find the line that is in the set of plot_lines and also contains the earlier point found
-    if(1 %in% plot_lines & (setequal(point, trial_plot_coords[1,]) | setequal(point, trial_plot_coords[2,]))){
-      point1 = st_point(trial_plot_coords[1,]) %>%
+    if (1 %in% plot_lines & (setequal(point, trial_plot_coords[1, ]) | setequal(point, trial_plot_coords[2, ]))) {
+      point1 <- st_point(trial_plot_coords[1, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point1 = point1 + move_vec * height * 1.4
+      point1 <- point1 + move_vec * height * 1.4
 
-      point2 = st_point(trial_plot_coords[2,]) %>%
+      point2 <- st_point(trial_plot_coords[2, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point2 = point2 + move_vec * height * 1.4
-    }else if(2 %in% plot_lines & (setequal(point, trial_plot_coords[2,]) | setequal(point, trial_plot_coords[3,]))){
-      point1 = st_point(trial_plot_coords[2,]) %>%
+      point2 <- point2 + move_vec * height * 1.4
+    } else if (2 %in% plot_lines & (setequal(point, trial_plot_coords[2, ]) | setequal(point, trial_plot_coords[3, ]))) {
+      point1 <- st_point(trial_plot_coords[2, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point1 = point1 + move_vec * height * 1.4
+      point1 <- point1 + move_vec * height * 1.4
 
-      point2 = st_point(trial_plot_coords[3,]) %>%
+      point2 <- st_point(trial_plot_coords[3, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point2 = point2 + move_vec * height * 1.4
-    }else if(3 %in% plot_lines & (setequal(point, trial_plot_coords[3,]) | setequal(point, trial_plot_coords[4,]))){
-      point1 = st_point(trial_plot_coords[3,]) %>%
+      point2 <- point2 + move_vec * height * 1.4
+    } else if (3 %in% plot_lines & (setequal(point, trial_plot_coords[3, ]) | setequal(point, trial_plot_coords[4, ]))) {
+      point1 <- st_point(trial_plot_coords[3, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point1 = point1 + move_vec * height * 1.4
+      point1 <- point1 + move_vec * height * 1.4
 
-      point2 = st_point(trial_plot_coords[4,]) %>%
+      point2 <- st_point(trial_plot_coords[4, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point2 = point2 + move_vec * height * 1.4
-    }else if(4 %in% plot_lines & (setequal(point, trial_plot_coords[4,]) | setequal(point, trial_plot_coords[1,]))){
-      point1 = st_point(trial_plot_coords[4,]) %>%
+      point2 <- point2 + move_vec * height * 1.4
+    } else if (4 %in% plot_lines & (setequal(point, trial_plot_coords[4, ]) | setequal(point, trial_plot_coords[1, ]))) {
+      point1 <- st_point(trial_plot_coords[4, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point1 = point1 + move_vec * height * 1.4
+      point1 <- point1 + move_vec * height * 1.4
 
-      point2 = st_point(trial_plot_coords[1,]) %>%
+      point2 <- st_point(trial_plot_coords[1, ]) %>%
         as.matrix() %>%
         .[1, ]
-      point2 = point2 + move_vec * height * 1.4
+      point2 <- point2 + move_vec * height * 1.4
     }
 
     arrow_ll <- point1 - 1 * opp_move_vec
@@ -919,10 +929,10 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
       ) +
       tmap::tm_shape(label_line, bbox = sf::st_bbox(trial_plot$geometry)) +
       tmap::tm_text("label",
-                    col = "red",
-                    size = 1,
-                    fontface = "bold",
-                    along.lines = T
+        col = "red",
+        size = 1,
+        fontface = "bold",
+        along.lines = T
       )
   } else {
     NULL
@@ -973,80 +983,92 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
     .[, -(3:4)] # remove the last two columns
 
   # find starting side of polygon (opposite of direction of move_vec)
-  if(move_vec[1] >= 0 & move_vec[2] > 0){ # when we are moving in a general NE or N direction
+  if (move_vec[1] >= 0 & move_vec[2] > 0) { # when we are moving in a general NE or N direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%
       dplyr::filter(X <= median(X)) %>%
       dplyr::filter(Y < median(Y)) %>%
-      .[1,]
-  }else if(move_vec[1] < 0 & move_vec[2] <= 0){ # SW or S direction
+      .[1, ]
+  } else if (move_vec[1] < 0 & move_vec[2] <= 0) { # SW or S direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%
       dplyr::filter(X >= median(X)) %>%
       dplyr::filter(Y > median(Y)) %>%
-      .[1,]
-  }else if(move_vec[1] >= 0 & move_vec[2] < 0){ # SE or E direction
+      .[1, ]
+  } else if (move_vec[1] >= 0 & move_vec[2] < 0) { # SE or E direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%
       dplyr::filter(X < median(X)) %>%
       dplyr::filter(Y >= median(Y)) %>%
-      .[1,]
-  }else if(move_vec[1] < 0 & move_vec[2] >= 0){ # NW or W direction
+      .[1, ]
+  } else if (move_vec[1] < 0 & move_vec[2] >= 0) { # NW or W direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%
       dplyr::filter(X > median(X)) %>%
       dplyr::filter(Y <= median(Y)) %>%
-      .[1,]
+      .[1, ]
   }
 
   # find the two lines that are close to the width of the plot
-  plot_lines <- data.table(line = 1:4,
-                           distance = c(st_distance(st_point(trial_plot_coords[1,]), st_point(trial_plot_coords[2,])),
-                                        st_distance(st_point(trial_plot_coords[2,]), st_point(trial_plot_coords[3,])),
-                                        st_distance(st_point(trial_plot_coords[3,]), st_point(trial_plot_coords[4,])),
-                                        st_distance(st_point(trial_plot_coords[4,]), st_point(trial_plot_coords[1,])))) %>%
+  plot_lines <- data.table(
+    line = 1:4,
+    distance = c(
+      st_distance(st_point(trial_plot_coords[1, ]), st_point(trial_plot_coords[2, ])),
+      st_distance(st_point(trial_plot_coords[2, ]), st_point(trial_plot_coords[3, ])),
+      st_distance(st_point(trial_plot_coords[3, ]), st_point(trial_plot_coords[4, ])),
+      st_distance(st_point(trial_plot_coords[4, ]), st_point(trial_plot_coords[1, ]))
+    )
+  ) %>%
     dplyr::mutate(diff = abs(plot_width - distance)) %>%
-    dplyr::arrange(diff) %>%  # arrange in descending order
+    dplyr::arrange(diff) %>% # arrange in descending order
     dplyr::slice(1:2) %>%
     dplyr::pull(line)
 
   # get center of line
-  if(1 %in% plot_lines & (setequal(point, trial_plot_coords[1,]) | setequal(point, trial_plot_coords[2,]))){
-    cent = st_linestring(rbind(trial_plot_coords[1,],
-                               trial_plot_coords[2,])) %>%
+  if (1 %in% plot_lines & (setequal(point, trial_plot_coords[1, ]) | setequal(point, trial_plot_coords[2, ]))) {
+    cent <- st_linestring(rbind(
+      trial_plot_coords[1, ],
+      trial_plot_coords[2, ]
+    )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
-  }else if(2 %in% plot_lines & (setequal(point, trial_plot_coords[2,]) | setequal(point, trial_plot_coords[3,]))){
-    cent = st_linestring(rbind(trial_plot_coords[2,],
-                               trial_plot_coords[3,])) %>%
+  } else if (2 %in% plot_lines & (setequal(point, trial_plot_coords[2, ]) | setequal(point, trial_plot_coords[3, ]))) {
+    cent <- st_linestring(rbind(
+      trial_plot_coords[2, ],
+      trial_plot_coords[3, ]
+    )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
-  }else if(3 %in% plot_lines & (setequal(point, trial_plot_coords[3,]) | setequal(point, trial_plot_coords[4,]))){
-    cent = st_linestring(rbind(trial_plot_coords[3,],
-                               trial_plot_coords[4,])) %>%
+  } else if (3 %in% plot_lines & (setequal(point, trial_plot_coords[3, ]) | setequal(point, trial_plot_coords[4, ]))) {
+    cent <- st_linestring(rbind(
+      trial_plot_coords[3, ],
+      trial_plot_coords[4, ]
+    )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
-  }else if(4 %in% plot_lines & (setequal(point, trial_plot_coords[4,]) | setequal(point, trial_plot_coords[1,]))){
-    cent = st_linestring(rbind(trial_plot_coords[4,],
-                               trial_plot_coords[1,])) %>%
+  } else if (4 %in% plot_lines & (setequal(point, trial_plot_coords[4, ]) | setequal(point, trial_plot_coords[1, ]))) {
+    cent <- st_linestring(rbind(
+      trial_plot_coords[4, ],
+      trial_plot_coords[1, ]
+    )) %>%
       st_sfc() %>%
       st_sf() %>%
       st_centroid()
   }
 
   # now move the center to be where the first pass of the machine will be in the plot
-  cent = st_shift(
+  cent <- st_shift(
     cent,
     if ((normalized_move_vec[1] > 0) |
-        (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
-      -perp_move_vec * (plot_width/2 - machine_width/2)
+      (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
+      -perp_move_vec * (plot_width / 2 - machine_width / 2)
     } else {
-      perp_move_vec * (plot_width/2 - machine_width/2)
+      perp_move_vec * (plot_width / 2 - machine_width / 2)
     }
-  )  %>%
+  ) %>%
     sf::st_coordinates()
 
   cent <- cent + normalized_move_vec * (height * 2.8 * machine_id)
@@ -1059,7 +1081,7 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
             sf::st_sfc() %>%
             sf::st_sf(),
           if ((normalized_move_vec[1] > 0) |
-              (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
+            (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
             perp_move_vec * machine_width
           } else {
             -perp_move_vec * machine_width
@@ -1083,19 +1105,17 @@ get_plots <- function(all_trial_info) {
       st_transform_utm()
 
     abline <- all_trial_info$ab_lines[[1]]
-    if(all_trial_info$machine_width[[1]] == 2*all_trial_info$plot_width[[1]]){
-
-      move_vec = get_move_vec(abline)
+    if (all_trial_info$machine_width[[1]] == 2 * all_trial_info$plot_width[[1]]) {
+      move_vec <- get_move_vec(abline)
       normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
       perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
 
 
-     abline = sf::st_as_sf(st_shift(
+      abline <- sf::st_as_sf(st_shift(
         abline,
         c(-1, 1) * perp_move_vec * (1),
         merge = FALSE
       ))
-
     }
 
     first_plot <-
@@ -1103,9 +1123,9 @@ get_plots <- function(all_trial_info) {
       dplyr::mutate(
         plot_id =
           st_intersection_quietly(st_transform_utm(design), sf::st_centroid(abline)) %>%
-          .$result %>%
-          dplyr::pull(plot_id) %>%
-          min(.)
+            .$result %>%
+            dplyr::pull(plot_id) %>%
+            min(.)
       )
 
     if (nrow(all_trial_info) == 2) {
@@ -1152,8 +1172,8 @@ get_plots <- function(all_trial_info) {
     plot1 <-
       design1 %>%
       dplyr::filter(plot_id == st_intersection(st_transform_utm(design1), sf::st_centroid(abline)) %>%
-                      dplyr::pull(plot_id) %>%
-                      min(.)) %>%
+        dplyr::pull(plot_id) %>%
+        min(.)) %>%
       st_transform_utm(.) %>%
       dplyr::mutate(input_name = max_input$input_name) %>%
       dplyr::select(rate, strip_id, plot_id, type, input_name)
@@ -1322,25 +1342,25 @@ tmap_plot_legend <- function(trial_plot) {
 # all_trial_info
 # move_vec = machine_table$move_vec[[1]]
 tmap_label <- function(center, machine_type, trial_plot, number_in_plot, machine_width, all_trial_info, move_vec) {
-  max_plot_width = all_trial_info %>%
+  max_plot_width <- all_trial_info %>%
     dplyr::pull(plot_width) %>%
     max()
 
   normalized_move_vec <- move_vec / sqrt(sum(move_vec^2)) # normalized direction aka normal vector
   perp_move_vec <- rotate_vec(normalized_move_vec, 90) # perpendicular vector to the normal vector
 
-  if(max_plot_width/machine_width < 1){ # if the machine is larger than the plot, we need to shift the center over to see the text
-    center = st_shift(
+  if (max_plot_width / machine_width < 1) { # if the machine is larger than the plot, we need to shift the center over to see the text
+    center <- st_shift(
       st_point(center) %>%
         st_sfc() %>%
         st_sf(),
       if ((normalized_move_vec[1] > 0) |
-          (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
-        perp_move_vec * (max_plot_width/2 - machine_width/2)
+        (normalized_move_vec[1] == 0 & normalized_move_vec[2] > 0)) {
+        perp_move_vec * (max_plot_width / 2 - machine_width / 2)
       } else {
-        - perp_move_vec * (max_plot_width/2 - machine_width/2)
+        -perp_move_vec * (max_plot_width / 2 - machine_width / 2)
       }
-    )  %>%
+    ) %>%
       sf::st_coordinates()
   }
 

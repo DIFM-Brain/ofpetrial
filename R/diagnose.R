@@ -91,6 +91,10 @@ check_alignment <- function(td) {
   checks <-
     td %>%
     dplyr::select(input_name, exp_plots, harvester_width, harvest_ab_lines, field_sf) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(exp_plots = list(make_sf_utm(exp_plots))) %>%
+    dplyr::mutate(harvest_ab_lines = list(make_sf_utm(harvest_ab_lines))) %>%
+    dplyr::mutate(field_sf = list(make_sf_utm(field_sf))) %>%
     tidyr::unnest(harvest_ab_lines) %>%
     dplyr::rename(harvest_ab_line = x) %>%
     dplyr::rowwise() %>%

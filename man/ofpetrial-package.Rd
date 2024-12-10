@@ -21,7 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Brittani Edge \email{bedge2@illinois.edu} [contributor]
+  \item Brittani Edge \email{bedge2@illinois.edu} (\href{https://orcid.org/0009-0005-2051-1048}{ORCID}) [contributor]
 }
 
 }

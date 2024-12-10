@@ -3,6 +3,7 @@
 export("%>%")
 export(add_blocks)
 export(assign_rates)
+export(assign_rates_conditional)
 export(change_rates)
 export(check_alignment)
 export(check_ortho_inputs)

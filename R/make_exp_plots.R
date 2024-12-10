@@ -397,6 +397,17 @@ make_exp_plots <- function(input_plot_info,
       side_length
     ) %>%
     dplyr::mutate(abline_type = abline_type) %>%
+    dplyr::mutate(exp_plots  = list(sf::st_transform(exp_plots, 4326))) %>%
+    dplyr::mutate(headland  = list(sf::st_transform(headland, 4326))) %>%
+    dplyr::mutate(ab_lines  = list(
+      if (!is.null(ab_lines)){
+        sf::st_transform(ab_lines, 4326)
+      } else {
+        ab_lines
+      }
+    )) %>%
+    dplyr::mutate(harvest_ab_lines = list(sf::st_transform(harvest_ab_lines, 4326))) %>%
+    dplyr::mutate(field_sf = list(sf::st_transform(field_sf, 4326))) %>%
     dplyr::ungroup()
 
   return(trial_data_return)

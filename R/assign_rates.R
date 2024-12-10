@@ -23,33 +23,20 @@
 #' viz(td)
 assign_rates <- function(exp_data, rate_info) {
   if ("data.frame" %in% class(rate_info)) {
-    input_trial_data <-
+    input_trial_data_with_rates <-
       rate_info %>%
-      dplyr::left_join(exp_data, ., by = "input_name")
+      dplyr::left_join(exp_data, ., by = "input_name") %>%
+      dplyr::rowwise()
   } else if ("list" %in% class(rate_info)) {
-    input_trial_data <-
+    input_trial_data_with_rates <-
       data.table::rbindlist(rate_info, fill = TRUE) %>%
-      dplyr::left_join(exp_data, ., by = "input_name")
+      dplyr::left_join(exp_data, ., by = "input_name") %>%
+      dplyr::rowwise()
   }
 
   #++++++++++++++++++++++++++++++++++++
   #+ Prepare rate information
   #++++++++++++++++++++++++++++++++++++
-  input_trial_data_with_rates <-
-    input_trial_data %>%
-    dplyr::rowwise() %>%
-    #--- create rates data  ---#
-    dplyr::mutate(rates_data = list(
-      find_rates_data(
-        gc_rate = gc_rate,
-        unit = unit,
-        rates = tgt_rate_original,
-        min_rate = min_rate,
-        max_rate = max_rate,
-        num_rates = num_rates,
-        design_type = design_type
-      )
-    ))
 
   # !===========================================================
   # ! Assign rates
@@ -61,31 +48,31 @@ assign_rates <- function(exp_data, rate_info) {
   # rank_seq_as <- input_trial_data_with_rates$rank_seq_as[[1]]
   # design_type <- input_trial_data_with_rates$design_type[[1]]
 
-  if (nrow(input_trial_data) == 2) {
+  if (nrow(input_trial_data_with_rates) == 2) {
     #++++++++++++++++++++++++++++++++++++
     #+ two-input case
     #++++++++++++++++++++++++++++++++++++
     # if two-input experiment and the experimental plots are identical, then check if joint processing is necessary
-    num_rates_ls <- input_trial_data$num_rates %>% unlist()
+    num_rates_ls <- input_trial_data_with_rates$num_rates %>% unlist()
 
     # if the number of rates of an input is the multiple of the other
     multiple_of_the_other <- (num_rates_ls[which.max(num_rates_ls)] %% num_rates_ls[-which.max(num_rates_ls)] == 0)
 
     # are the geometries identical?
     geometry_identical <-
-      if (!length(input_trial_data$exp_plots[[1]]$geometry) == length(input_trial_data$exp_plots[[2]]$geometry)) {
+      if (!length(input_trial_data_with_rates$exp_plots[[1]]$geometry) == length(input_trial_data_with_rates$exp_plots[[2]]$geometry)) {
         # if the numbers of plots are different
         FALSE
       } else {
         # if the numbers of plots are the same and they are identical
-        all(input_trial_data$exp_plots[[1]]$geometry == input_trial_data$exp_plots[[2]]$geometry)
+        all(input_trial_data_with_rates$exp_plots[[1]]$geometry == input_trial_data_with_rates$exp_plots[[2]]$geometry)
       }
 
     # whether any of rank_seq_as and rank_seq_es is specified
     no_rank_seq_specified <- all(lapply(input_trial_data_with_rates$rank_seq_as, is.null) %>% unlist()) & all(lapply(input_trial_data_with_rates$rank_seq_ws, is.null) %>% unlist())
 
     # are both design types "ls" (not random)?
-    both_ls <- all(input_trial_data$design_type == "ls" | is.na(input_trial_data$design_type))
+    both_ls <- all(input_trial_data_with_rates$design_type == "ls" | is.na(input_trial_data_with_rates$design_type))
 
     # whether you need to crete designs separately
     require_joint_designing <- geometry_identical & both_ls & multiple_of_the_other & no_rank_seq_specified
@@ -108,7 +95,7 @@ assign_rates <- function(exp_data, rate_info) {
 
         design_second_input <-
           get_design_for_second(
-            input_trial_data = input_trial_data_with_rates,
+            input_trial_data = input_trial_data_with_rates[2, ],
             first_design = design_first_input,
             rate_jump_threshold = input_trial_data_with_rates$rate_jump_threshold[[2]]
           )
@@ -214,6 +201,219 @@ assign_rates <- function(exp_data, rate_info) {
   return(trial_design)
 }
 
+#' Assign rates to the plots of experimental plots for a single input based on existing trial designs created by assign_rates()
+#'
+#' This functions assign input rates for the plots created by make_exp_plots() for a single input according to the rate design specified by the user in rate_info. It assigns rates to the input so that the resulting design avoids significant correlation with the rate of another input specified as existing_design.
+#'
+#' @param exp_data experiment plots created by make_exp_plots()
+#' @param rate_info rate information created by prep_rate()
+#' @param existing_design trial design of another input created with assign_rates()
+#' @returns trial design as sf (experiment plots with rates assigned)
+#' @import data.table
+#' @export
+#' @examples
+#' #--- load experiment plots made by make_exp_plots() ---#
+#' data(td_single_input)
+#' exp_data
+#'
+#'seed_plot_info <-
+#'  prep_plot(
+#'    input_name = "seed",
+#'    unit_system = "imperial",
+#'    machine_width = 60,
+#'    section_num = 24,
+#'    harvester_width = 30,
+#'    plot_width = 30
+#'  )
+#'
+#'exp_data <-
+#'  make_exp_plots(
+#'    input_plot_info = seed_plot_info,
+#'    boundary_data = system.file("extdata", "boundary-simple1.shp", package = "ofpetrial"),
+#'    abline_data = system.file("extdata", "ab-line-simple1.shp", package = "ofpetrial"),
+#'    abline_type = "free"
+#'  )
+#'
+#'seed_rate_info <-
+#'  prep_rate(
+#'    plot_info = seed_plot_info,
+#'    gc_rate = 32000,
+#'    unit = "seed",
+#'    min_rate = 16000,
+#'    max_rate = 40000,
+#'    num_rates = 5,
+#'    design_type = "ls"
+#'  )
+#'
+#'assign_rates_conditional(
+#'  exp_data = exp_data, 
+#'  rate_info = seed_rate_info, 
+#'  existing_design = td_single_input
+#')
+
+assign_rates_conditional <- function(exp_data, rate_info, existing_design) {
+  if ("data.frame" %in% class(rate_info)) {
+    input_trial_data_with_rates <-
+      rate_info %>%
+      dplyr::left_join(exp_data, ., by = "input_name") %>%
+      dplyr::rowwise()
+  } else if ("list" %in% class(rate_info)) {
+    stop("Error: you cannot assign rates for two inputs using this function.")
+  }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Existing trial designs
+  #++++++++++++++++++++++++++++++++++++
+
+  if (nrow(existing_design) == 2) {
+    td_geometry_identical <-
+      if (!length(existing_design$exp_plots[[1]]$geometry) == length(existing_design$exp_plots[[2]]$geometry)) {
+        # if the numbers of plots are different
+        FALSE
+      } else {
+        # if the numbers of plots are the same and they are identical
+        all(existing_design$exp_plots[[1]]$geometry == existing_design$exp_plots[[2]]$geometry)
+      }
+
+    if (!td_geometry_identical) {
+      stop("It seems you are trying to add a third input. This package does not accommodate a three-input-type experiment.")
+    }
+
+    first_design <-
+      existing_design$trial_design[[1]] %>%
+      dplyr::rename(rate_1 = rate) %>%
+      left_join(
+        .,
+        existing_design$trial_design[[2]] %>%
+          sf::st_drop_geometry() %>%
+          dplyr::select(rate, strip_id, plot_id) %>%
+          dplyr::rename(rate_2 = rate),
+        by = c("plot_id", "strip_id")
+      ) %>%
+      data.table() %>%
+      .[, rate_rank := .GRP, by = .(rate_1, rate_2)] %>%
+      .[type != "headland", ]
+  } else {
+    first_design <-
+      existing_design$trial_design[[1]] %>%
+      data.table() %>%
+      .[, rate_rank := .GRP, by = .(rate)]
+  }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Check if joint consideration is necessary
+  #++++++++++++++++++++++++++++++++++++
+
+  num_rates_ls <- c(input_trial_data_with_rates$num_rates, max(first_design$rate_rank)) %>% unlist()
+
+  # if the number of rates of an input is the multiple of the other
+  multiple_of_the_other <- (num_rates_ls[which.max(num_rates_ls)] %% num_rates_ls[-which.max(num_rates_ls)] == 0)
+
+  # are the geometries identical?
+  geometry_identical <-
+    if (!length(input_trial_data_with_rates$exp_plots[[1]]$geometry) == length(first_design$geometry)) {
+      # if the numbers of plots are different
+      FALSE
+    } else {
+      # if the numbers of plots are the same and they are identical
+      all(input_trial_data_with_rates$exp_plots[[1]]$geometry == first_design$geometry)
+    }
+
+  # whether any of rank_seq_as and rank_seq_es is specified
+  no_rank_seq_specified <- all(lapply(input_trial_data_with_rates$rank_seq_as, is.null) %>% unlist()) & all(lapply(input_trial_data_with_rates$rank_seq_ws, is.null) %>% unlist())
+
+  # are both design types "ls" (not random)?
+  both_ls <- all(input_trial_data_with_rates$design_type == "ls" | is.na(input_trial_data_with_rates$design_type))
+
+  # whether you need to crete designs separately
+  require_joint_designing <- geometry_identical & both_ls & multiple_of_the_other & no_rank_seq_specified
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Assign rates
+  #++++++++++++++++++++++++++++++++++++
+  if (require_joint_designing) {
+    #---------------------
+    #- If not just create a design independently
+    #---------------------
+
+    design_second_input <-
+      get_design_for_second(
+        input_trial_data = input_trial_data_with_rates,
+        first_design = first_design,
+        rate_jump_threshold = input_trial_data_with_rates$rate_jump_threshold[[1]]
+      )
+
+    input_trial_data_with_rates$experiment_design <- list(design_second_input)
+
+    plots_with_rates_assigned <-
+      input_trial_data_with_rates %>%
+      dplyr::mutate(experiment_design = list(
+        experiment_design %>%
+          dplyr::select(rate, strip_id, plot_id) %>%
+          dplyr::mutate(type = "experiment")
+      ))
+
+  } else {
+    #---------------------
+    #- If so create a design conditional on the other deign
+    #---------------------
+    plots_with_rates_assigned <-
+      input_trial_data_with_rates %>%
+      dplyr::mutate(experiment_design = list(
+        assign_rates_by_input(
+          exp_sf = exp_plots,
+          rates_data = rates_data,
+          rank_seq_ws = rank_seq_ws,
+          rank_seq_as = rank_seq_as,
+          design_type = design_type,
+          rate_jump_threshold = rate_jump_threshold
+        ) %>%
+          dplyr::select(rate, strip_id, plot_id) %>%
+          dplyr::mutate(type = "experiment")
+      ))
+  }
+
+  #++++++++++++++++++++++++++++++++++++
+  #+ Complete a trial design
+  #++++++++++++++++++++++++++++++++++++
+  trial_design <-
+    plots_with_rates_assigned %>%
+    dplyr::mutate(headland = list(
+      dplyr::mutate(headland, rate = gc_rate) %>%
+        dplyr::select(rate) %>%
+        dplyr::mutate(strip_id = NA, plot_id = NA, type = "headland")
+    )) %>%
+    dplyr::mutate(input_type = list(
+      dplyr::case_when(
+        input_name == "seed" ~ "S",
+        input_name %in% c("uan28", "uan32", "urea", "NH3", "cover") ~ "N",
+        input_name %in% "chicken_manure" ~ "M",
+        input_name %in% "forage_pea" ~ "P",
+        # === needs to change this ===#
+        input_name %in% c("potash", "K") ~ "K",
+        input_name == "KCL" ~ "C",
+        input_name == "boron" ~ "B"
+      )
+    )) %>%
+    dplyr::mutate(trial_design = list(
+      rbind(
+        experiment_design,
+        headland
+      ) %>%
+        sf::st_transform(4326)
+    )) %>%
+    dplyr::mutate(trial_design = list(
+      if ("tgts_K" %in% names(trial_design)) {
+        dplyr::mutate(trial_design, tgts = trial_design$tgts_K * 1000) %>%
+          dplyr::relocate(tgts_K, tgts)
+      } else {
+        trial_design
+      }
+    )) %>%
+    dplyr::ungroup()
+
+  return(trial_design)
+}
 
 # !==================-=========================================
 # ! Helper internal functions
@@ -812,90 +1012,7 @@ get_rank_for_rb <- function(num_rates, data) {
   return(rate_rank_ls)
 }
 
-find_rates_data <- function(gc_rate, unit, rates = NULL, min_rate = NA, max_rate = NA, num_rates = 5, design_type = NA) {
-  #* +++++++++++++++++++++++++++++++++++
-  #* Debug
-  #* +++++++++++++++++++++++++++++++++++
-  # gc_rate <- 180
-  # unit <- "lb"
-  # rates <- c(100, 140, 180, 220, 260)
-  # design_type <- "ls"
-  # min_rate <- NA
-  # max_rate <- NA
-  # num_rates <- 5
-  # design_type <- NA
-  # rank_seq_ws <- NULL
-  # rank_seq_as <- NULL
-  #* +++++++++++++++++++++++++++++++++++
-  #* Main
-  #* +++++++++++++++++++++++++++++++++++
 
-  if (is.na(design_type)) {
-    #--- if design_type not specified, use ls ---#
-    design_type <- "ls"
-  } else {
-    design_type <- design_type
-  }
-
-  #++++++++++++++++++++++++++++++++++++
-  #+Specify the trial rates
-  #++++++++++++++++++++++++++++++++++++
-  if (!is.null(rates)) {
-    rates_ls <- rates
-  } else if (!is.null(min_rate) & !is.null(max_rate) & !is.null(num_rates)) {
-    #--- if min_rate, max_rate, and num_rates are specified ---#
-    message("Trial rates were not directly specified, so the trial rates were calculated using min_rate, max_rate, gc_rate, and num_rates")
-    rates_ls <-
-      get_rates(
-        min_rate,
-        max_rate,
-        gc_rate,
-        num_rates
-      )
-  } else {
-    message("Please provide either {rates} as a vector or all of {min_rate, max_rate, and num_rates}.")
-  }
-
-  #++++++++++++++++++++++++++++++++++++
-  #+ Order (rank) rates based on design type
-  #++++++++++++++++++++++++++++++++++++
-  if (design_type %in% c("ls", "str", "rstr", "rb")) {
-    rates_data <-
-      data.table::data.table(
-        rate = rates_ls,
-        rate_rank = 1:length(rates_ls)
-      )
-  } else if (design_type == "sparse") {
-    if (!gc_rate %in% rates_ls) {
-      return(message(
-        "Error: You specified the trial rates directly using the rates argument, but they do not include gc_rate. For the sparse design, please include gc_rate in the rates."
-      ))
-    } else {
-      rates_ls <- rates_ls[!rates_ls %in% gc_rate]
-      rates_data <-
-        data.table::data.table(
-          rate = append(gc_rate, rates_ls),
-          rate_rank = 1:(length(rates_ls) + 1)
-        )
-    }
-  } else if (design_type == "ejca") {
-    if (length(rates_ls) %% 2 == 1) {
-      stop(
-        "Error: You cannot have an odd number of rates for the ejca design. Please either specify rates directly with even numbers of rates or specify an even number for num_rates along with min_rate and max_rate."
-      )
-    } else {
-      rates_data <-
-        data.table::data.table(
-          rate = rates_ls,
-          rate_rank = 1:length(rates_ls)
-        )
-    }
-  } else {
-    stop("Error: design_type you specified does not match any of the design type options available.")
-  }
-
-  return(rates_data)
-}
 
 
 #++++++++++++++++++++++++++++++++++++
@@ -907,7 +1024,7 @@ get_design_for_second <- function(input_trial_data, first_design, rate_jump_thre
   #++++++++++++++++++++++++++++++++++++
   #+ Prepare basic information for the second input
   #++++++++++++++++++++++++++++++++++++
-  trial_data_second <- input_trial_data[2, ]
+  trial_data_second <- input_trial_data
   second_design <- trial_data_second$exp_plots[[1]]
   rates_data_second <- trial_data_second$rates_data[[1]]
   num_rates <- nrow(rates_data_second)
