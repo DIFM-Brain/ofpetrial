@@ -125,3 +125,14 @@ rhub::rhub_check()
 usethis::use_version("patch")
 devtools::submit_cran()
 ```
+
+# Version 0.1.3
+
+```{r}
+devtools::document()
+```
+
+```{r}
+usethis::use_version("patch")
+devtools::submit_cran()
+```

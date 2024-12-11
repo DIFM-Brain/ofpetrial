@@ -25,7 +25,7 @@ install.packages("ofpetrial")
 
 ### Development version
 
-You can install the development version of ofpetrial from
+You can install the development version of the package from
 [Github](https://github.com/DIFM-Brain/ofpetrial):
 
 ``` r

@@ -8,6 +8,7 @@
 + `create_strips()` (an internal function) was overhauled to pass R CMD check on Fedora with ATLAS. Specifically, `st_tilt()`, which used to be used in the function, has been abandoned.
 + fixed the bug in `viz()` which presented `gc_rate`
 
+
 # ofpetrial 0.1
 
 The first complete set of functions that make the package functional and useful for the users to design and implement on-farm precision experiments.

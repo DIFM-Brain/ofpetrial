@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Taro  Mieno \email{tmieno2@unl.edu} (\href{https://orcid.org/0000-0002-0614-0771}{ORCID}) [copyright holder]
+\strong{Maintainer}: Taro Mieno \email{tmieno2@unl.edu} (\href{https://orcid.org/0000-0002-0614-0771}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
