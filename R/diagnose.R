@@ -162,10 +162,12 @@ check_alignment <- function(td) {
 #' @export
 #' @examples
 #' data(td_single_input)
+#' 
 #' yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
 #' ssurgo_sf <-
 #'   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %>%
 #'   dplyr::mutate(mukey = factor(mukey))
+#'
 #' topo_rast <-
 #'   c(
 #'     terra::rast(system.file("extdata", "slope.tif", package = "ofpetrial")),
@@ -176,7 +178,7 @@ check_alignment <- function(td) {
 #'   check_ortho_with_chars(
 #'     td = td_single_input,
 #'     sp_data_list = list(yield_sf, ssurgo_sf, topo_rast),
-#'     vars_list = list("Yld_Vol_Dr", c("mukey", "clay"), names(topo_rast))
+#'     vars_list = list("Yld_Vol_Dr", "clay", names(topo_rast))
 #'   )
 #'
 #' checks$summary_data[[1]]
@@ -218,9 +220,9 @@ check_ortho_with_chars <- function(td, sp_data_list, vars_list) {
 #++++++++++++++++++++++++++++++++++++
 #+ summarize one set of characteristic variables and spatial data
 #++++++++++++++++++++++++++++++++++++
-# trial_design <- diagnostics$trial_design[[1]]
-# spatial_data <- diagnostics$spatial_data[[1]]
-# char_vars <- diagnostics$variable[[1]]
+# trial_design <- diagnostics$trial_design[[2]]
+# spatial_data <- diagnostics$spatial_data[[2]]
+# char_vars <- diagnostics$variable[[2]]
 
 summarize_chars <- function(trial_design, spatial_data, char_vars) {
   rate_design <- dplyr::select(trial_design, rate)
