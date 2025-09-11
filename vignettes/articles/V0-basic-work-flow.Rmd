@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 Here, we demonstrate a typical workflow of using the `ofpetrial` package to create a trial design through an example of two-input on-farm experiment trial.
 
 ```{r setup}
-library(ofpetrial)
+# library(ofpetrial)
 ```
 
 # Create experimental plots
