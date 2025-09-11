@@ -55,48 +55,48 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
     gg_td <-
       td_rows %>%
       dplyr::mutate(g_fig = list(
-        ggplot() +
-          geom_sf(data = trial_design, aes(fill = factor(block_id))) +
-          geom_sf_text(
+        ggplot2::ggplot() +
+          ggplot2::geom_sf(data = trial_design, ggplot2::aes(fill = factor(block_id))) +
+          ggplot2::geom_sf_text(
             data = trial_design,
-            aes(label = block_id),
+            ggplot2::aes(label = block_id),
             size = text_size,
             fun.geometry = st_centroid_quietly
           ) +
           scale_fill_discrete(name = "Block ID") +
-          theme_void() +
-          ggtitle(paste0("Block ID of experiment plots for ", input_name))
+          ggplot2::theme_void() +
+          ggplot2::ggtitle(paste0("Block ID of experiment plots for ", input_name))
       ))
   } else if (type == "strip_id") {
     gg_td <-
       td_rows %>%
       dplyr::mutate(g_fig = list(
-        ggplot() +
-          geom_sf(data = trial_design, aes(fill = factor(strip_id))) +
-          geom_sf_text(
+        ggplot2::ggplot() +
+          ggplot2::geom_sf(data = trial_design, ggplot2::aes(fill = factor(strip_id))) +
+          ggplot2::geom_sf_text(
             data = trial_design,
-            aes(label = strip_id),
+            ggplot2::aes(label = strip_id),
             size = text_size,
             fun.geometry = st_centroid_quietly
           ) +
           scale_fill_discrete(name = "Strip ID") +
-          theme_void() +
-          ggtitle(paste0("Strip ID of experiment plots for ", input_name))
+          ggplot2::theme_void() +
+          ggplot2::ggtitle(paste0("Strip ID of experiment plots for ", input_name))
       ))
   } else if (type == "plot_id") {
     gg_td <-
       td_rows %>%
       dplyr::mutate(g_fig = list(
-        ggplot() +
-          geom_sf(data = trial_design, fill = NA) +
-          geom_sf_text(
+        ggplot2::ggplot() +
+          ggplot2::geom_sf(data = trial_design, fill = NA) +
+          ggplot2::geom_sf_text(
             data = trial_design,
-            aes(label = plot_id),
+            ggplot2::aes(label = plot_id),
             size = text_size,
             fun.geometry = st_centroid_quietly
           ) +
-          theme_void() +
-          ggtitle(paste0("Plot ID of experiment plots for ", input_name))
+          ggplot2::theme_void() +
+          ggplot2::ggtitle(paste0("Plot ID of experiment plots for ", input_name))
       ))
   } else if (type == "rates") {
     # input_name <- gg_td$input_name[[1]]
@@ -127,7 +127,7 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         dplyr::mutate(legend_title = list(
           get_legend_title(
             unit_system,
-            need_equiv_rate,
+            need_equiv_rate = FALSE,
             input_name,
             input_type,
             unit
@@ -228,26 +228,26 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         dplyr::mutate(legend_title = list(
           get_legend_title(
             unit_system,
-            need_equiv_rate,
+            need_equiv_rate = FALSE,
             input_name,
             input_type,
             unit
           )
         )) %>%
         dplyr::mutate(g_tr = list(
-          ggplot() +
-            geom_sf(
+          ggplot2::ggplot() +
+            ggplot2::geom_sf(
               data = field_sf,
               fill = NA
             ) +
-            geom_sf(
+            ggplot2::geom_sf(
               data = data_for_plot,
-              aes(fill = factor(all_units)),
+              ggplot2::aes(fill = factor(all_units)),
               color = "black"
             ) +
             scale_fill_brewer(name = legend_title, palette = "Greens") +
-            theme_void() +
-            ggtitle(
+            ggplot2::theme_void() +
+            ggplot2::ggtitle(
               paste0(
                 "Trial design",
                 " (",
@@ -266,9 +266,9 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
         dplyr::mutate(g_fig = list(
           if (abline == TRUE) {
             g_tr +
-              geom_sf(data = ab_lines, aes(color = "applicator/planter ab-line")) +
-              geom_sf(data = harvest_ab_lines, aes(color = "harvester ab-line")) +
-              scale_color_manual(
+              ggplot2::geom_sf(data = ab_lines, ggplot2::aes(color = "applicator/planter ab-line")) +
+              ggplot2::geom_sf(data = harvest_ab_lines, ggplot2::aes(color = "harvester ab-line")) +
+              ggplot2::scale_color_manual(
                 name = "",
                 values = c(
                   "applicator/planter ab-line" = "red", "harvester ab-line" = "blue"
@@ -284,18 +284,18 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
     gg_td <-
       td_rows %>%
       dplyr::mutate(g_exp = list(
-        ggplot() +
-          geom_sf(data = field_sf, fill = NA) +
-          geom_sf(data = exp_plots, fill = NA, color = "blue") +
-          theme_void() +
-          ggtitle(paste0("Trial plots for ", input_name))
+        ggplot2::ggplot() +
+          ggplot2::geom_sf(data = field_sf, fill = NA) +
+          ggplot2::geom_sf(data = exp_plots, fill = NA, color = "blue") +
+          ggplot2::theme_void() +
+          ggplot2::ggtitle(paste0("Trial plots for ", input_name))
       )) %>%
       dplyr::mutate(g_fig = list(
         if (abline == TRUE) {
           g_exp +
-            geom_sf(data = ab_lines, aes(color = "applicator/planter ab-line")) +
-            geom_sf(data = harvest_ab_lines, aes(color = "harvester ab-line")) +
-            scale_color_manual(
+            ggplot2::geom_sf(data = ab_lines, ggplot2::aes(color = "applicator/planter ab-line")) +
+            ggplot2::geom_sf(data = harvest_ab_lines, ggplot2::aes(color = "harvester ab-line")) +
+            ggplot2::scale_color_manual(
               name = "",
               values = c(
                 "applicator/planter ab-line" = "red", "harvester ab-line" = "blue"
@@ -323,18 +323,18 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
     gg_td <-
       td_rows %>%
       dplyr::mutate(g_ab = list(
-        ggplot() +
-          geom_sf(data = dplyr::filter(trial_design, strip_id %in% 1:3)) +
-          geom_sf(data = ab_lines, color = "red") +
-          theme_void() +
-          ggtitle(paste0("Applicator/Planter ab-line\n", "(", input_name, ")"))
+        ggplot2::ggplot() +
+          ggplot2::geom_sf(data = dplyr::filter(trial_design, strip_id %in% 1:3)) +
+          ggplot2::geom_sf(data = ab_lines, color = "red") +
+          ggplot2::theme_void() +
+          ggplot2::ggtitle(paste0("Applicator/Planter ab-line\n", "(", input_name, ")"))
       )) %>%
       dplyr::mutate(g_h_ab = list(
-        ggplot() +
-          geom_sf(data = dplyr::filter(trial_design, strip_id %in% 1:3)) +
-          geom_sf(data = harvest_ab_lines, color = "blue") +
-          theme_void() +
-          ggtitle("Harvester ab-line")
+        ggplot2::ggplot() +
+          ggplot2::geom_sf(data = dplyr::filter(trial_design, strip_id %in% 1:3)) +
+          ggplot2::geom_sf(data = harvest_ab_lines, color = "blue") +
+          ggplot2::theme_void() +
+          ggplot2::ggtitle("Harvester ab-line")
       )) %>%
       dplyr::mutate(g_fig = list(
         ggpubr::ggarrange(g_ab, g_h_ab, ncol = ifelse(stack_ab_orientation == "vertical", 1, 2))
