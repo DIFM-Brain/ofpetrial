@@ -942,8 +942,8 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
 get_move_vec <- function(ab_line){
   lags <- st_coordinates(ab_line) %>%
     data.frame() %>%
-    dplyr::mutate(dx = X - lag(X, n = 1),
-           dy = Y - lag(Y, n = 1))
+    dplyr::mutate(dx = X - dplyr::lag(X, n = 1),
+           dy = Y - dplyr::lag(Y, n = 1))
 
   vec <- c(lags$dx[2], lags$dy[2])
   move_vec <- vec / sqrt(sum(vec^2))
