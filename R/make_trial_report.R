@@ -57,9 +57,9 @@ make_trial_report <- function(td, folder_path, trial_name = NA, keep_rmd = FALSE
     dplyr::mutate(map_headlands = list(
       tmap::tm_shape(trial_design) +
         tmap::tm_polygons(
-          col = "type",
-          title = "Type of Field Area",
-          palette = c("red", "grey")
+          fill = "type",
+          fill.legend = tmap::tm_legend(title = "Type of Field Area"),
+          fill.scale = tmap::tm_scale_categorical(values = c("red", "grey"))
         )
     )) %>%
     dplyr::mutate(total_input = list(
@@ -927,11 +927,10 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
         lwd = 2
       ) +
       tmap::tm_shape(label_line, bbox = sf::st_bbox(trial_plot$geometry)) +
-      tmap::tm_text("label",
-        col = "red",
-        size = 1,
-        fontface = "bold",
-        along.lines = T
+      tmap::tm_labels("label",
+                      col = "red",
+                      size = 1,
+                      fontface = "bold"
       )
   } else {
     NULL
@@ -1189,6 +1188,9 @@ get_plots <- function(all_trial_info) {
   return(plots)
 }
 
+# ab_line <- machine_table$ab_line[[1]]
+# machine_type <- machine_table$machine_type[[1]]
+# trial_plot <- machine_table$trial_plot[[1]]
 tmap_abline <- function(ab_line, machine_type, trial_plot) {
   tmap::tm_shape(ab_line, bbox = st_bbox(trial_plot)) +
     tmap::tm_lines(
@@ -1204,6 +1206,9 @@ tmap_abline <- function(ab_line, machine_type, trial_plot) {
     )
 }
 
+# ab_line <- machine_table$ab_line[[1]]
+# machine_type <- machine_table$machine_type[[1]]
+# trial_plot <- machine_table$trial_plot[[1]]
 tmap_machine <- function(machine_poly, machine_type, trial_plot) {
   tmap::tm_shape(machine_poly, bbox = sf::st_bbox(trial_plot)) +
     tmap::tm_borders(col = if (machine_type == "planter") {
@@ -1214,14 +1219,14 @@ tmap_machine <- function(machine_poly, machine_type, trial_plot) {
       "#E69F00"
     }, lwd = 3) +
     tmap::tm_fill(
-      col = if (machine_type == "planter") {
+      fill = if (machine_type == "planter") {
         "lawngreen"
       } else if (machine_type == "applicator") {
         "#00A3FF"
       } else {
         "#E69F00"
       },
-      alpha = 1
+      fill_alpha = 1
     )
 }
 
@@ -1287,10 +1292,9 @@ tmap_plot_indiv <- function(trial_plot, input, all_trial_info) {
         bbox = sf::st_bbox(plots)
       ) +
       tmap::tm_fill(
-        col = "rate",
-        palette = my_palette,
-        title = paste0("Trial Plot ", to_title(input), " Rate")
-      )
+        fill = "rate",
+        fill.scale = tmap::tm_scale_categorical(values = my_palette),
+        fill.legend = tmap::tm_legend(title = paste0("Trial Plot ", to_title(input), " Rate")))
   }
 
   return(map)
@@ -1305,7 +1309,7 @@ tmap_plot_legend <- function(trial_plot) {
     length() == 1) {
     legend <- tmap::tm_add_legend(
       title = "Trial Plots",
-      type = "symbol",
+      type = "symbols",
       labels = c("Trial Plot"),
       col = c("black"),
       shape = 0,
@@ -1321,7 +1325,7 @@ tmap_plot_legend <- function(trial_plot) {
     legend <-
       tmap::tm_add_legend(
         title = "Trial Plots",
-        type = "symbol",
+        type = "symbols",
         labels = c(paste0(to_title(plots[1]), " Trial Plot"), paste0(to_title(plots[2]), " Trial Plot")),
         col = c("black", "gray"),
         shape = 0,
