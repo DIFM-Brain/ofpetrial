@@ -1,3 +1,7 @@
+# ofpetrial 0.1.3
+
++ made the codes compatible with the latest version of `ggplot2` and `tmap`.
+
 # ofpetrial 0.1.2
 
 + add `assign_rates_conditional()`, which assign rates to experimental plots for a single input given existing trial designs for another input.
