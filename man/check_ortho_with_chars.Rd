@@ -33,7 +33,4 @@ checks <-
     vars_list = list("clay")
   )
 
-checks$summary_data[[1]]
-
-checks$summary_fig[[1]]
 }
