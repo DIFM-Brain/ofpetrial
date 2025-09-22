@@ -163,16 +163,15 @@ check_alignment <- function(td) {
 #' @examples
 #' data(td_single_input)
 #' 
-#' yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
-#' 
-#'
-#' topo_rast <- terra::rast(system.file("extdata", "slope.tif", package = "ofpetrial"))
+#' ssurgo_sf <-
+#'   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %>%
+#'   dplyr::mutate(mukey = factor(mukey))
 #'
 #' checks <-
 #'   check_ortho_with_chars(
 #'     td = td_single_input,
-#'     sp_data_list = list(yield_sf, topo_rast),
-#'     vars_list = list("Yld_Vol_Dr", names(topo_rast))
+#'     sp_data_list = list(ssurgo_sf),
+#'     vars_list = list("clay")
 #'   )
 #'
 #' checks$summary_data[[1]]
