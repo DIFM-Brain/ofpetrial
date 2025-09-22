@@ -20,17 +20,30 @@ a list
 Check the orthogonality of the trial input rates and observed characteristics provided by the user
 }
 \examples{
+donttest{
 data(td_single_input)
+
+yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
 
 ssurgo_sf <-
   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) \%>\%
   dplyr::mutate(mukey = factor(mukey))
 
+topo_rast <-
+  c(
+    terra::rast(system.file("extdata", "slope.tif", package = "ofpetrial")),
+    terra::rast(system.file("extdata", "twi.tif", package = "ofpetrial"))
+  )
+
 checks <-
   check_ortho_with_chars(
     td = td_single_input,
-    sp_data_list = list(ssurgo_sf),
-    vars_list = list("clay")
+    sp_data_list = list(yield_sf, ssurgo_sf, topo_rast),
+    vars_list = list("Yld_Vol_Dr", "clay", names(topo_rast))
   )
 
+checks$summary_data[[1]]
+
+checks$summary_fig[[1]]
+}
 }
