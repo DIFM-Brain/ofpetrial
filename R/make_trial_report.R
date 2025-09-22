@@ -11,7 +11,7 @@
 #' @export
 #' @examples
 #' #--- load experiment made by assign_rates() ---#
-#' \donttest{
+#' \dontrun{
 #' data(td_single_input)
 #' make_trial_report(
 #'   td = td_single_input,
