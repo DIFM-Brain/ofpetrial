@@ -20,11 +20,10 @@ a list
 Check the orthogonality of the trial input rates and observed characteristics provided by the user
 }
 \examples{
-donttest{
+\donttest{
 data(td_single_input)
 
 yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
-
 ssurgo_sf <-
   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) \%>\%
   dplyr::mutate(mukey = factor(mukey))

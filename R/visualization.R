@@ -257,7 +257,8 @@ viz <- function(td, type = "rates", input_index = c(1, 2), text_size = 3, abline
                   design_type == "rstr" ~ "Randomized Strip",
                   design_type == "rb" ~ "Randomized Block",
                   design_type == "ejca" ~ "Extra Jump-conscious Alternate",
-                  design_type == "sparse" ~ "Sparse"
+                  design_type == "sparse" ~ "Sparse",
+                  design_type == "niplorp" ~ "Nitrogen-induced Profit Loss Recovery Program"
                 ),
                 ")"
               )

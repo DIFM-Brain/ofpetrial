@@ -10,13 +10,14 @@
 #' @import data.table
 #' @import sf
 #' @examples
+#' \donttest{
 #' n_plot_info <-
 #'   prep_plot(
 #'     input_name = "NH3",
 #'     unit_system = "imperial",
-#'     machine_width = 30,
+#'     machine_width = 60,
 #'     section_num = 1,
-#'     harvester_width = 20,
+#'     harvester_width = 30,
 #'     headland_length = 30,
 #'     side_length = 60
 #'   )
@@ -30,6 +31,7 @@
 #'   )
 #'
 #' exp_data$exp_plots
+#' }
 #' @export
 
 make_exp_plots <- function(input_plot_info,

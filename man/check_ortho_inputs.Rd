@@ -17,8 +17,10 @@ Check the correlation between the rates of the two inputs for a two-input experi
 }
 \examples{
 #--- load a trial design for a two-input experiment ---#
+\donttest{
 data(td_two_input)
 
 #--- check correlation ---#
 check_ortho_inputs(td_two_input)
+}
 }

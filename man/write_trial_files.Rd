@@ -25,6 +25,7 @@ Write out all the necessary files to implement the trial design created. Exporte
 }
 \examples{
 #--- load trial design ---#
+\donttest{
 data(td_two_input)
 
 write_trial_files(
@@ -32,5 +33,5 @@ write_trial_files(
   folder_path = tempdir(),
   zip = FALSE
 )
-
+}
 }

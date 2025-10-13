@@ -8,10 +8,12 @@
 #' @export
 #' @examples
 #' #--- load a trial design for a two-input experiment ---#
+#' \donttest{
 #' data(td_two_input)
 #'
 #' #--- check correlation ---#
 #' check_ortho_inputs(td_two_input)
+#' }
 check_ortho_inputs <- function(td) {
   #* +++++++++++++++++++++++++++++++++++
   #* Debug
@@ -161,11 +163,10 @@ check_alignment <- function(td) {
 #' @import ggplot2
 #' @export
 #' @examples
-#' donttest{
+#' \donttest{
 #' data(td_single_input)
 #' 
 #' yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
-#' 
 #' ssurgo_sf <-
 #'   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %>%
 #'   dplyr::mutate(mukey = factor(mukey))

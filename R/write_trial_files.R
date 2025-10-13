@@ -11,6 +11,7 @@
 #' @export
 #' @examples
 #' #--- load trial design ---#
+#' \donttest{
 #' data(td_two_input)
 #' 
 #' write_trial_files(
@@ -18,7 +19,7 @@
 #'   folder_path = tempdir(),
 #'   zip = FALSE
 #' )
-#' 
+#' }
 write_trial_files <- function(td, folder_path, ext = "shp", zip = FALSE, zip_name = NA) {
   # write_trial_files(td, folder_path = here::here("test"), zip = TRUE)
   # folder_path <- here::here(getwd(), "test")
