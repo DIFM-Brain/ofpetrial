@@ -45,13 +45,23 @@ get_rates <- function(min_rate,
       }
     }
 
-    rates_low <- seq(min_rate, gc_rate, length = num_low) %>% round()
-    rates_high <- seq(gc_rate, max_rate, length = num_high) %>% round()
+    rates_low <- seq(min_rate, gc_rate, length = num_low) %>% round_rates()
+    rates_high <- seq(gc_rate, max_rate, length = num_high) %>% round_rates()
 
     rates <- c(rates_low, rates_high) %>% unique()
   }
 
   return(rates)
+}
+
+round_rates <- function(x){
+  if(median(x) > 50){
+    round(x, 0)
+  }else if(median(x) < 50 & median(x) > 10){
+    round(x, 1)
+  }else{
+    round(x, 2)
+  }
 }
 
 #++++++++++++++++++++++++++++++++++++
