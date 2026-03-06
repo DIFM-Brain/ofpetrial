@@ -804,15 +804,15 @@ make_plot_width_line <- function(trial_plot, move_vec, unit_system, all_trial_in
     if (move_vec[1] >= 0 & move_vec[2] > 0) { # when we are moving in a general NE or N direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
-        dplyr::filter(X <= median(X)) %>%
-        dplyr::filter(Y < median(Y)) %>%
-        .[1, ]
+        dplyr::mutate(XY = X + Y) %>%
+        dplyr::filter(XY == min(XY)) %>%
+        .[1, -3]
     } else if (move_vec[1] < 0 & move_vec[2] <= 0) { # SW or S direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
-        dplyr::filter(X >= median(X)) %>%
-        dplyr::filter(Y > median(Y)) %>%
-        .[1, ]
+        dplyr::mutate(XY = X + Y) %>%
+        dplyr::filter(XY == max(XY)) %>%
+        .[1, -3]
     } else if (move_vec[1] >= 0 & move_vec[2] < 0) { # SE or E direction
       point <- trial_plot_coords %>%
         data.frame(.) %>%
@@ -982,15 +982,15 @@ find_center <- function(ab_line, number_in_plot, trial_plot, move_vec, machine_i
   if (move_vec[1] >= 0 & move_vec[2] > 0) { # when we are moving in a general NE or N direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%
-      dplyr::filter(X <= median(X)) %>%
-      dplyr::filter(Y < median(Y)) %>%
-      .[1, ]
+      dplyr::mutate(XY = X + Y) %>%
+      dplyr::filter(XY == min(XY)) %>%
+      .[1, -3]
   } else if (move_vec[1] < 0 & move_vec[2] <= 0) { # SW or S direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%
-      dplyr::filter(X >= median(X)) %>%
-      dplyr::filter(Y > median(Y)) %>%
-      .[1, ]
+      dplyr::mutate(XY = X + Y) %>%
+      dplyr::filter(XY == max(XY)) %>%
+      .[1, -3]
   } else if (move_vec[1] >= 0 & move_vec[2] < 0) { # SE or E direction
     point <- trial_plot_coords %>%
       data.frame(.) %>%

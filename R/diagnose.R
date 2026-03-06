@@ -165,7 +165,7 @@ check_alignment <- function(td) {
 #' @examples
 #' \donttest{
 #' data(td_single_input)
-#' 
+#'
 #' yield_sf <- sf::st_read(system.file("extdata", "yield-simple1.shp", package = "ofpetrial"))
 #' ssurgo_sf <-
 #'   sf::st_read(system.file("extdata", "ssurgo-simple1.shp", package = "ofpetrial")) %>%
@@ -300,7 +300,7 @@ summarize_indiv_char <- function(joined_data, var) {
 
     g_fig <-
       (
-        ggplot(joined_data, aes(y = rate, x = var)) +
+        ggplot(joined_data, aes(y = rate, x = as.numeric(var))) +
           geom_point() +
           ylab("Input Rate") +
           xlab(var) +
